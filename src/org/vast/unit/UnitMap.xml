@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UnitMap>
+   <!--~~~~~~~~~~~~-->
+   <!-- Time Units -->
+   <!--~~~~~~~~~~~~-->
+   <Unit>
+      <name>second</name>
+      <uri>urn:ogc:def:unit:second</uri>
+      <uri>urn:ogc:def:unit:seconds</uri>
+      <symbol>s</symbol>
+      <scaleToSI>1.0</scaleToSI>
+   </Unit>
+   <!--~~~~~~~~~~~~~~~~-->
+   <!-- Distance Units -->
+   <!--~~~~~~~~~~~~~~~~-->
+   <Unit>
+      <name>meter</name>
+      <uri>urn:ogc:def:unit:meter</uri>
+      <uri>urn:ogc:def:unit:meters</uri>
+      <symbol>m</symbol>
+   </Unit>
+   <Unit>
+      <name>feet</name>
+      <uri>urn:ogc:def:unit:foot</uri>
+      <uri>urn:ogc:def:unit:feet</uri>
+      <symbol type="usual">ft</symbol>
+      <symbol type="UCUM">[ft-us]</symbol>
+      <meter power="1" scale="0.3048"/>
+   </Unit>
+   <!--~~~~~~~~~~~~~-->
+   <!-- Angle Units -->
+   <!--~~~~~~~~~~~~~-->
+   <Unit>
+      <name>radian</name>
+      <uri>urn:ogc:def:unit:radian</uri>
+      <symbol type="usual">rad</symbol>
+      <symbol type="UCUM">rad</symbol>
+      <radian power="1">1.0</radian>
+   </Unit>
+   <Unit>
+      <name>degree</name>
+      <uri>urn:ogc:def:unit:degree</uri>
+      <symbol type="UCUM">deg</symbol>
+      <radian power="1" scale="0.017453292519943295769236907684886"/>
+   </Unit>
+   <!--~~~~~~~~~~~~~-->
+   <!-- Other Units -->
+   <!--~~~~~~~~~~~~~-->
+   <Unit>
+      <name>pascal</name>
+      <description>bla bla bla</description>
+      <uri>urn:ogc:def:unit:pascal</uri>
+      <symbol type="UCUM">Pa</symbol>
+      <meter power="-1" scale="1.0"/>
+      <kilogram power="1" scale="1.0"/>
+      <second power="-2" scale="1.0"/>
+   </Unit>
+</UnitMap>

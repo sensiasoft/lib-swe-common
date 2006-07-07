@@ -1,0 +1,416 @@
+/***************************** BEGIN LICENSE BLOCK ***************************
+
+ The contents of this file are subject to the Mozilla Public License Version
+ 1.1 (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ http://www.mozilla.org/MPL/MPL-1.1.html
+ 
+ Software distributed under the License is distributed on an "AS IS" basis,
+ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ for the specific language governing rights and limitations under the License.
+ 
+ The Original Code is the "SensorML DataProcessing Engine".
+ 
+ The Initial Developer of the Original Code is the
+ University of Alabama in Huntsville (UAH).
+ Portions created by the Initial Developer are Copyright (C) 2006
+ the Initial Developer. All Rights Reserved.
+ 
+ Contributor(s): 
+ Alexandre Robin <robin@nsstc.uah.edu>
+ 
+ ******************************* END LICENSE BLOCK ***************************/
+
+package org.vast.unit;
+
+
+/**
+ * <p><b>Title:</b><br/>
+ * Unit
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Unit object containing relationship to SI base units.
+ * </p>
+ *
+ * <p>Copyright (c) 2005</p>
+ * @author Alexandre Robin
+ * @date May 4, 2006
+ * @version 1.0
+ */
+public class Unit
+{
+    protected String name;
+    protected String symbol;
+    protected String description;
+    protected String expression;
+    
+    protected double meter = 0.0;
+    protected double kilogram = 0.0;
+    protected double second = 0.0;
+    protected double ampere = 0.0;
+    protected double kelvin = 0.0;
+    protected double mole = 0.0;
+    protected double candela = 0.0;
+    protected double radian = 0.0;
+    protected double pi = 0.0;
+    protected double logBase = 0.0;
+    protected double logScale = 0.0;
+    protected double scaleToSI = 1.0;
+    protected boolean metric = false;
+    
+
+    /**
+     * Copies this unit integrally
+     * @return a copy of this unit
+     */
+    public Unit copy()
+    {
+        Unit newUnit = new Unit();
+        
+        newUnit.name = this.name;
+        newUnit.symbol = this.symbol;
+        newUnit.description = this.description;
+        newUnit.expression = this.expression;
+        
+        newUnit.meter = this.meter;
+        newUnit.kilogram = this.kilogram;
+        newUnit.second = this.second;
+        newUnit.radian = this.radian;
+        newUnit.ampere = this.ampere;
+        newUnit.kelvin = this.kelvin;
+        newUnit.mole = this.mole;
+        newUnit.candela = this.candela;
+        newUnit.pi = this.pi;
+        newUnit.logBase = this.logBase;
+        newUnit.logScale = this.logScale;
+        newUnit.scaleToSI = this.scaleToSI;
+        newUnit.metric = this.metric;
+        
+        return newUnit;
+    }
+    
+    
+    /**
+     * Checks that this unit is physically compatible with the
+     * given unit, which also means that it is possible to
+     * convert from one to the other and vice versa.
+     * @param unit
+     * @return
+     */
+    public boolean isCompatible(Unit unit)
+    {
+        // check that powers are equal for all SI base units
+        if (this.meter != unit.meter)
+            return false;
+        
+        if (this.kilogram != unit.kilogram)
+            return false;
+        
+        if (this.second != unit.second)
+            return false;
+        
+        if (this.radian != unit.radian)
+            return false;
+        
+        if (this.ampere != unit.ampere)
+            return false;
+        
+        if (this.kelvin != unit.kelvin)
+            return false;
+        
+        if (this.mole != unit.mole)
+            return false;
+        
+        if (this.candela != unit.candela)
+            return false;
+        
+        return true;
+    }
+    
+    
+    /**
+     * Raises this unit to the given power, thus modifying
+     * all powers of metric base SI coefs.
+     * @param power
+     */
+    public void power(double power)
+    {
+        this.meter *= power;
+        this.kilogram *= power;
+        this.second *= power;
+        this.radian *= power;
+        this.ampere *= power;
+        this.kelvin *= power;
+        this.mole *= power;
+        this.candela *= power;
+        this.pi *= power;        
+        this.scaleToSI = Math.pow(this.scaleToSI, power);
+    }
+    
+    
+    /**
+     * Multiply this unit by another unit to generate a complex unit
+     * @param unit
+     */
+    public void multiply(Unit unit)
+    {
+        this.meter += unit.meter;
+        this.kilogram += unit.kilogram;
+        this.second += unit.second;
+        this.radian += unit.radian;
+        this.ampere += unit.ampere;
+        this.kelvin += unit.kelvin;
+        this.mole += unit.mole;
+        this.candela += unit.candela;
+        this.pi += unit.pi;
+        this.scaleToSI *= unit.scaleToSI;
+    }
+    
+    
+    public void multiply(double scale)
+    {
+        this.scaleToSI *= scale;
+    }
+    
+    
+    public String getName()
+    {
+        return name;
+    }
+
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+
+    public String getSymbol()
+    {
+        return symbol;
+    }
+
+
+    public void setSymbol(String symbol)
+    {
+        this.symbol = symbol;
+    }
+    
+    
+    public String getDescription()
+    {
+        return description;
+    }
+
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+
+    public boolean isMetric()
+    {
+        return metric;
+    }
+
+
+    public void setMetric(boolean metric)
+    {
+        this.metric = metric;
+    }
+
+
+    public double getAmpere()
+    {
+        return ampere;
+    }
+
+
+    public void setAmpere(double ampere)
+    {
+        this.ampere = ampere;
+    }
+
+
+    public double getCandela()
+    {
+        return candela;
+    }
+
+
+    public void setCandela(double candela)
+    {
+        this.candela = candela;
+    }
+
+
+    public double getKelvin()
+    {
+        return kelvin;
+    }
+
+
+    public void setKelvin(double kelvin)
+    {
+        this.kelvin = kelvin;
+    }
+
+
+    public double getKilogram()
+    {
+        return kilogram;
+    }
+
+
+    public void setKilogram(double kilogram)
+    {
+        this.kilogram = kilogram;
+    }
+
+
+    public double getLogBase()
+    {
+        return logBase;
+    }
+
+
+    public void setLogBase(double logBase)
+    {
+        this.logBase = logBase;
+    }
+
+
+    public double getLogScale()
+    {
+        return logScale;
+    }
+
+
+    public void setLogScale(double logScale)
+    {
+        this.logScale = logScale;
+    }
+
+
+    public double getMeter()
+    {
+        return meter;
+    }
+
+
+    public void setMeter(double meter)
+    {
+        this.meter = meter;
+    }
+
+
+    public double getMole()
+    {
+        return mole;
+    }
+
+
+    public void setMole(double mole)
+    {
+        this.mole = mole;
+    }
+
+
+    public double getPi()
+    {
+        return pi;
+    }
+
+
+    public void setPi(double pi)
+    {
+        this.pi = pi;
+    }
+
+
+    public double getRadian()
+    {
+        return radian;
+    }
+
+
+    public void setRadian(double radian)
+    {
+        this.radian = radian;
+    }
+
+
+    public double getSecond()
+    {
+        return second;
+    }
+
+
+    public void setSecond(double second)
+    {
+        this.second = second;
+    }
+    
+    
+    public double getScaleToSI()
+    {
+        return scaleToSI * Math.pow(Math.PI, pi);
+    }
+
+
+    public void setScaleToSI(double scaleToSI)
+    {
+        this.scaleToSI = scaleToSI;
+    }
+    
+    
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        
+        addUnitString(buf, radian, "rad");
+        addUnitString(buf, meter, "m");
+        addUnitString(buf, kilogram, "kg");
+        addUnitString(buf, second, "s");
+        addUnitString(buf, ampere, "A");
+        addUnitString(buf, kelvin, "K");
+        addUnitString(buf, mole, "mol");
+        addUnitString(buf, candela, "cd");
+        
+        double scale = getScaleToSI(); 
+        if (scale != 1.0)
+            buf.insert(0, scale + " ");
+        
+        buf.insert(0, symbol + " = ");
+        
+        return buf.toString();
+    }
+    
+    
+    private void addUnitString(StringBuffer buf, double val, String sym)
+    {
+        if (val != 0)
+        {
+            if (buf.length() > 0)
+                buf.append('.');
+            
+            buf.append(sym);
+            if (val != 1)
+                buf.append((int)val);                        
+        }
+    }
+
+
+    public String getExpression()
+    {
+        return expression;
+    }
+
+
+    public void setExpression(String expression)
+    {
+        this.expression = expression;
+    }
+}
