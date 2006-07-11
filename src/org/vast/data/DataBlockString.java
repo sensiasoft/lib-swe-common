@@ -174,37 +174,103 @@ public class DataBlockString extends AbstractDataBlock
 
 	public byte getByteValue()
 	{
-		return Byte.parseByte(primitiveArray[startIndex]);
+	    byte val;
+        
+        try
+        {
+            val = Byte.parseByte(primitiveArray[startIndex]);
+        }
+        catch (NumberFormatException e)
+        {
+            val = -1;
+        }
+        
+        return val;
 	}
 
 
 	public short getShortValue()
 	{
-		return Short.parseShort(primitiveArray[startIndex]);
+	    short val;
+        
+        try
+        {
+            val = Short.parseShort(primitiveArray[startIndex]);
+        }
+        catch (NumberFormatException e)
+        {
+            val = -1;
+        }
+        
+        return val;
 	}
 
 
 	public int getIntValue()
 	{
-		return Integer.parseInt(primitiveArray[startIndex]);
+	    int val;
+        
+        try
+        {
+            val = Integer.parseInt(primitiveArray[startIndex]);
+        }
+        catch (NumberFormatException e)
+        {
+            val = -1;
+        }
+        
+        return val;
 	}
 
 
 	public long getLongValue()
 	{
-		return Long.parseLong(primitiveArray[startIndex]);
+	    long val;
+        
+        try
+        {
+            val = Long.parseLong(primitiveArray[startIndex]);
+        }
+        catch (NumberFormatException e)
+        {
+            val = -1;
+        }
+        
+        return val;
 	}
 
 
 	public float getFloatValue()
 	{
-		return Float.parseFloat(primitiveArray[startIndex]);
+	    float val;
+        
+        try
+        {
+            val = Float.parseFloat(primitiveArray[startIndex]);
+        }
+        catch (NumberFormatException e)
+        {
+            val = Float.NaN;
+        }
+        
+        return val;
 	}
 
 
 	public double getDoubleValue()
 	{
-		return Double.parseDouble(primitiveArray[startIndex]);
+        double val;
+        
+        try
+        {
+            val = Double.parseDouble(primitiveArray[startIndex]);
+        }
+        catch (NumberFormatException e)
+        {
+            val = Double.NaN;
+        }
+        
+        return val;
 	}
 
 
