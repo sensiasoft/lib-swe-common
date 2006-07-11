@@ -124,11 +124,7 @@ public class DataBlockTuple extends AbstractDataBlock
 
 	public void resize(int size)
 	{
-		// resize all sub blocks
-		for (int i=0; i<blockArray.length; i++)
-			blockArray[i].resize(size);
 		
-		this.atomCount = size * blockArray.length;
 	}
 
 

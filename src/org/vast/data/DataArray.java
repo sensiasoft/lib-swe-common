@@ -125,6 +125,7 @@ public class DataArray extends AbstractDataComponent
             if (dataBlock instanceof DataBlockMixed)
             {
                 // TODO getComponent for array with DataBlockMixed
+                throw new IllegalStateException("Error: DataArrays should never contain a DataBlockMixed");
             }            
             else if (dataBlock instanceof DataBlockParallel)
             {
@@ -176,7 +177,7 @@ public class DataArray extends AbstractDataComponent
 	        if (childBlock instanceof DataBlockParallel)
 	        {
 	        	newBlock = childBlock.copy();
-                newSize = ((DataBlockParallel)childBlock).blockArray[0].atomCount * arraySize;
+                newSize = childBlock.atomCount * arraySize;
 	        }
             
             // create parallel block
@@ -184,7 +185,7 @@ public class DataArray extends AbstractDataComponent
             {
                 DataBlockParallel parallelBlock = new DataBlockParallel();
                 parallelBlock.blockArray = ((DataBlockTuple)childBlock).blockArray;
-                newSize = arraySize;
+                newSize = childBlock.atomCount * arraySize;
                 newBlock = parallelBlock;
             }
             
@@ -232,6 +233,7 @@ public class DataArray extends AbstractDataComponent
     	{
     		int oldSize = arraySize;
     	
+            // assign variable size value to arraySize
 	    	if (sizeData != null)
 	    	{
 	    		DataBlock data = sizeData.getData();
@@ -239,17 +241,35 @@ public class DataArray extends AbstractDataComponent
 	    		if (data != null)
 	    			arraySize = data.getIntValue();
 	    	}
+            
+            // take care of variable size child array
+            if (component instanceof DataArray)
+            {
+                if (((DataArray)component).isVariableSize())
+                    ((DataArray)component).updateSize();
+            }
+            
+            // update scalar count
+            this.scalarCount = component.scalarCount * arraySize;
 	    	
-	    	if (dataBlock != null)
+            // stop here if parent also has variable size
+            if (parent instanceof DataArray)
+            {
+                if (((DataArray)parent).isVariableSize())
+                    return;
+            }
+            
+            // resize underlying datablock
+            if (dataBlock != null)
 			{
-				dataBlock.resize(component.scalarCount * arraySize);
-				scalarCount = dataBlock.atomCount;
+				dataBlock.resize(scalarCount);
 				setData(dataBlock);
 			}
 	    	
+            // also update parent components??
 	    	if (parent != null)
-	    	{
-	    		parent.dataBlock.atomCount += component.scalarCount * (arraySize - oldSize);
+	    	{               
+                parent.dataBlock.atomCount += component.scalarCount * (arraySize - oldSize);
 	    		// TODO parent of parent should also be updated and so on...
 	    	}
     	}

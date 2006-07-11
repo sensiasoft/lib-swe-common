@@ -133,9 +133,9 @@ public class DataBlockParallel extends AbstractDataBlock
 	{
 		// resize all sub blocks
 		for (int i=0; i<blockArray.length; i++)
-			blockArray[i].resize(size);
+			blockArray[i].resize(size/blockArray.length);
 		
-		this.atomCount = size * blockArray.length;
+		this.atomCount = size;
 	}
 
 
