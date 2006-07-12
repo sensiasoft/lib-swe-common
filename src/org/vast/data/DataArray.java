@@ -43,11 +43,13 @@ import org.ogc.cdm.common.*;
 public class DataArray extends AbstractDataComponent
 {
     protected AbstractDataComponent component = null;
-    protected DataValue sizeData = null;
     protected int arraySize = -1;
     protected boolean variableSize;
-    
+    protected DataValue sizeData = null;
+    protected String sizeDataName = null;
+    protected int stepsToSizeData = -1;
 
+    
     public DataArray()
     {
     }  
@@ -74,9 +76,26 @@ public class DataArray extends AbstractDataComponent
     	DataArray newArray = new DataArray();
     	newArray.name = this.name;
     	newArray.properties = this.properties;    	
-    	newArray.component = this.component.copy();
     	newArray.arraySize = this.arraySize;
     	newArray.variableSize = this.variableSize;
+        newArray.addComponent(this.component.copy());
+        
+        // also keep track of sizeData component
+        if (this.variableSize && this.getSizeData() != null)
+        {
+            // find where sizeData component is
+            int step = 0;
+            AbstractDataComponent dataComponent = this;
+            while (dataComponent.getComponent(sizeData.name) != sizeData)
+            {
+                dataComponent = dataComponent.parent;
+                step++;
+            }
+            
+            newArray.sizeDataName = sizeData.name;
+            newArray.stepsToSizeData = step;
+        }
+        
     	return newArray;
     }
     
@@ -234,7 +253,7 @@ public class DataArray extends AbstractDataComponent
     		int oldSize = arraySize;
     	
             // assign variable size value to arraySize
-	    	if (sizeData != null)
+	    	if (this.getSizeData() != null)
 	    	{
 	    		DataBlock data = sizeData.getData();
 	    		
@@ -288,7 +307,7 @@ public class DataArray extends AbstractDataComponent
             int oldSize = arraySize;
             arraySize = newSize;
         
-            if (sizeData != null)
+            if (this.getSizeData() != null)
             {
                 DataBlock data = sizeData.getData();
                 
@@ -322,6 +341,7 @@ public class DataArray extends AbstractDataComponent
         {
         	this.arraySize = newSize;
             this.variableSize = false;
+            this.sizeData = null;
         }
     }
     
@@ -335,11 +355,14 @@ public class DataArray extends AbstractDataComponent
     @Override
     public int getComponentCount()
     {
-    	if (variableSize && sizeData != null)
+    	if (variableSize)
     	{
-    		DataBlock data = sizeData.getData();   		
-    		if (data != null)
-    			return data.getIntValue();
+    		if (this.getSizeData() != null)
+            {   
+                DataBlock data = sizeData.getData();   		
+        		if (data != null)
+        			return data.getIntValue();
+            }
     	}
     	
     	return this.arraySize;
@@ -378,6 +401,14 @@ public class DataArray extends AbstractDataComponent
 
     public DataValue getSizeData()
     {
+        if (sizeData != null)
+            return sizeData;
+        
+        // try to find sizeData in the parent hierarchy
+        AbstractDataComponent dataComponent = this;
+        for (int i=0; i<stepsToSizeData; i++)
+            dataComponent = dataComponent.parent;
+        sizeData = (DataValue)dataComponent.getComponent(sizeDataName);        
         return sizeData;
     }
 
