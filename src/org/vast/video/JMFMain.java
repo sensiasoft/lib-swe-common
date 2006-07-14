@@ -141,8 +141,9 @@ public class JMFMain implements ControllerListener{
             return false;
         }
     }
-    public byte[] getFrame(int frameCount){
-    	if(frameCount%100!=0)return null;
+    public Buffer getFrame(int frameCount){
+    	//if(frameCount%100!=0)return null;
+    	Buffer b = buf;
     	int[] rawData = (int[]) buf.getData();
     	if (rawData == null)
             return null;
@@ -178,7 +179,7 @@ public class JMFMain implements ControllerListener{
             currentFrame = 0;
         framePositioner.seek(currentFrame);
     	buf = frameGrabber.grabFrame();
-        return texData; 
+        return b; 
     }
 	public void controllerUpdate(ControllerEvent evt) {
 		if( evt instanceof ConfigureCompleteEvent ||
