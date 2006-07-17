@@ -5,7 +5,7 @@ import javax.media.*;
 import javax.media.format.*;
 import javax.media.control.*;
 
-import com.sun.media.codec.video.jpeg.NativeDecoder;
+import .video.jpeg.NativeDecoder;
 
 
 public class JMFMain implements ControllerListener{
