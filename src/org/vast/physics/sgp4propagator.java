@@ -395,8 +395,8 @@ public class sgp4propagator
         vy = xmy * cosuk - sinnok * sinuk;
         vz = sinik * cosuk;
 
-        Vector3D eciPosition = new Vector3D(rk * ux, rk * uy, rk * uz);
-        Vector3D eciVelocity = new Vector3D(rdotk * ux + rfdotk * vx,
+        Vector3d eciPosition = new Vector3d(rk * ux, rk * uy, rk * uz);
+        Vector3d eciVelocity = new Vector3d(rdotk * ux + rfdotk * vx,
                                             rdotk * uy + rfdotk * vy,
                                             rdotk * uz + rfdotk * vz);
 

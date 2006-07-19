@@ -51,66 +51,68 @@ public class NadirPointing
      * @param upAxis number of the axis (1:x, 2:y, 3:z)  to put in the up direction
      * @return the 3x3 rotation matrix
      */
-    public static Matrix3x3 getRotationMatrix(Vector3D position, Vector3D toEcfNorth, int forwardAxis, int upAxis)
+    public static Matrix3d getRotationMatrix(Vector3d position, Vector3d toEcfNorth, int forwardAxis, int upAxis)
     {
-        Vector3D up, heading, other;
+        Vector3d up = new Vector3d();
+        Vector3d heading = new Vector3d();
+        Vector3d other = new Vector3d();
 
-        double[] lla = MapProjection.ECFtoLLA(position.getX(), position.getY(), position.getZ(), new Datum());
+        double[] lla = MapProjection.ECFtoLLA(position.x, position.y, position.z, new Datum());
         double[] ecf = MapProjection.LLAtoECF(lla[0], lla[1], -3e3, new Datum());        
-        Vector3D nearPoint = new Vector3D(ecf[0], ecf[1], ecf[2]);
+        Vector3d nearPoint = new Vector3d(ecf[0], ecf[1], ecf[2]);
         
-        up = Vector3D.subtractVectors(position, nearPoint);
+        up.sub(position, nearPoint);
         up.normalize();
 
         if ((forwardAxis == 1) && (upAxis == 3))
         {
-            other = up.cross(toEcfNorth);
+            other.cross(up, toEcfNorth);
             other.normalize();
-            heading = other.cross(up);
-            return new Matrix3x3(heading, other, up);
+            heading.cross(other, up);
+            return new Matrix3d(heading, other, up);
         }
 
         if ((forwardAxis == 1) && (upAxis == 2))
         {
-            other = toEcfNorth.cross(up);
+            other.cross(toEcfNorth, up);
             other.normalize();
-            heading = up.cross(other);
-            return new Matrix3x3(heading, up, other);
+            heading.cross(up, other);
+            return new Matrix3d(heading, up, other);
         }
 
         if ((forwardAxis == 2) && (upAxis == 1))
         {
-            other = up.cross(toEcfNorth);
+            other.cross(up, toEcfNorth);
             other.normalize();
-            heading = other.cross(up);
-            return new Matrix3x3(up, heading, other);
+            heading.cross(other, up);
+            return new Matrix3d(up, heading, other);
         }
 
         if ((forwardAxis == 2) && (upAxis == 3))
         {
-            other = toEcfNorth.cross(up);
+            other.cross(toEcfNorth, up);
             other.normalize();
-            heading = up.cross(other);
-            return new Matrix3x3(other, heading, up);
+            heading.cross(up, other);
+            return new Matrix3d(other, heading, up);
         }
 
         if ((forwardAxis == 3) && (upAxis == 1))
         {
-            other = toEcfNorth.cross(up);
+            other.cross(toEcfNorth, up);
             other.normalize();
-            heading = up.cross(other);
-            return new Matrix3x3(up, other, heading);
+            heading.cross(up, other);
+            return new Matrix3d(up, other, heading);
         }
 
         if ((forwardAxis == 3) && (upAxis == 2))
         {
-            other = up.cross(toEcfNorth);
+            other.cross(up, toEcfNorth);
             other.normalize();
-            heading = other.cross(up);
-            return new Matrix3x3(other, up, heading);
+            heading.cross(other, up);
+            return new Matrix3d(other, up, heading);
         }
 
-        return new Matrix3x3();
+        return new Matrix3d();
     }
 
 
@@ -119,10 +121,12 @@ public class NadirPointing
      * @param ecfPosition ECF
      * @return ECFVelocity with new velocity vector
      */
-    public static Vector3D getEcfVectorToNorth(Vector3D ecfPosition)
+    public static Vector3d getEcfVectorToNorth(Vector3d ecfPosition)
     {
         double polarRadius = (new Datum()).polarRadius;
-        Vector3D northPole = new Vector3D(0.0, 0.0, polarRadius);
-        return Vector3D.subtractVectors(northPole, ecfPosition);
+        Vector3d northPole = new Vector3d(0.0, 0.0, polarRadius);
+        Vector3d res = new Vector3d();
+        res.sub(northPole, ecfPosition);
+        return res;
     }
 }

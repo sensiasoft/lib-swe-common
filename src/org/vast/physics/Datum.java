@@ -32,7 +32,7 @@ public class Datum
     public double polarRadius;
     public double f;
     public double e2;
-    public Vector3D deltaOrigin;
+    public Vector3d deltaOrigin;
 
 
     public Datum()
@@ -42,6 +42,6 @@ public class Datum
         f = 1 / 298.257223563;
         e2 = 2*f - f*f;
         polarRadius = equatorRadius * (1 - f);
-        deltaOrigin = new Vector3D(0.0, 0.0, 0.0);
+        deltaOrigin = new Vector3d(0.0, 0.0, 0.0);
     }
 }

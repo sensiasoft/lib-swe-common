@@ -117,9 +117,9 @@ public class RayIntersectEllipsoid
 			y[1] = vertex[1] / yRadius;
 			y[2] = vertex[2] / zRadius;
 
-			alpha = Vector.dot(x, x);
-			beta = Vector.dot(x, y);
-			gamma = Vector.dot(y, y) - 1.0;
+			alpha = Vector3d.dot(x, x);
+			beta = Vector3d.dot(x, y);
+			gamma = Vector3d.dot(y, y) - 1.0;
 
 			dscrm = beta * beta - alpha * gamma;
 

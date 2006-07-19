@@ -30,13 +30,13 @@ public class MechanicalState
 {
     public double julianTime;
 
-    public Vector3D linearPosition;
-    public Vector3D linearVelocity;
-    public Vector3D linearAcceleration;
+    public Vector3d linearPosition;
+    public Vector3d linearVelocity;
+    public Vector3d linearAcceleration;
 
-    public Quaternion angularPosition;
-    public Quaternion angularVelocity;
-    public Quaternion angularAcceleration;
+    public Quat4d angularPosition;
+    public Quat4d angularVelocity;
+    public Quat4d angularAcceleration;
 
 
     public MechanicalState()
