@@ -1,18 +1,17 @@
 package org.vast.video;
 
-import java.nio.ByteBuffer;
+import com.sun.media.util.ByteBuffer;
 import javax.media.*;
 import javax.media.format.*;
 import javax.media.control.*;
-
-import .video.jpeg.NativeDecoder;
+import com.sun.media.codec.video.jpeg.NativeDecoder;
 
 
 public class JMFMain implements ControllerListener{
 	Processor p;
 	int[] waitSync = new int[0];
 	boolean stateTransOK = true;
-	Buffer buf;
+	Buffer buf=null;
 	FrameGrabbingControl frameGrabber;
     FramePositioningControl framePositioner;
 	int theData[];
@@ -105,15 +104,23 @@ public class JMFMain implements ControllerListener{
     }
     public void init(){
        	
-    	frameGrabber = (FrameGrabbingControl)p.getControl("javax.media.control.FrameGrabbingControl");
-        framePositioner = (FramePositioningControl)p.getControl("javax.media.control.FramePositioningControl");
+    	try{
+    		frameGrabber = (FrameGrabbingControl)p.getControl("javax.media.control.FrameGrabbingControl");
+    	    framePositioner = (FramePositioningControl)p.getControl("javax.media.control.FramePositioningControl");
         
-        framePositioner.seek(0);
-    	buf = frameGrabber.grabFrame();
-        
-    	dataLength = buf.getLength();
-		dataOffset = buf.getOffset();
-        dataLength = dataLength-dataOffset;
+    	    framePositioner.seek(0);
+    	    while(buf==null){
+    	    	buf = frameGrabber.grabFrame();
+    	    }
+    	    dataLength = buf.getLength();
+    	    dataOffset = buf.getOffset();
+    	    dataLength = dataLength-dataOffset;
+    	}catch(Exception e){
+    		System.err.println("init of JMFMain haulted: " + e);
+    	}
+    	finally{
+    		System.out.println("Everything is running smoothly");
+    	}
     }
     public boolean waitForState(int state){
 		synchronized(waitSync){
@@ -167,11 +174,8 @@ public class JMFMain implements ControllerListener{
                 texData[i+2] = 0;
             }
         }   	
-    	/*for(int i = 0; i < totalSize; i ++){
-    		
-    	}*/
+    
         	
-        int tmp=0;
         if(dataLength==0){System.exit(0);}
         
         currentFrame++;
