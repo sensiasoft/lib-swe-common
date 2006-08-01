@@ -40,21 +40,23 @@ package org.vast.util;
 public class DefaultExceptionHandler implements ExceptionHandler
 {
 
-    public String getErrorMessage(Throwable e, String message)
+    public String getErrorMessage(Throwable e, String message, boolean debug)
     {
         String exceptionName = e.getClass().getName();
         exceptionName = exceptionName.substring(exceptionName.lastIndexOf('.')+1);
         String className = e.getStackTrace()[0].getClassName();
         className = className.substring(className.lastIndexOf('.')+1);
-        message += exceptionName + " in " + className + "." + e.getStackTrace()[0].getMethodName();
+        
+        if (debug)
+            message += exceptionName + " in " + className + "." + e.getStackTrace()[0].getMethodName() + ": ";
 
         if (e.getMessage() != null)
-            message += ": " + e.getMessage().toString() + "\n";
+            message += e.getMessage().toString() + "\n";
 
         if (e.getCause() != null)
         {
             message += "\tCause: ";
-            message = getErrorMessage(e.getCause(), message);
+            message = getErrorMessage(e.getCause(), message, debug);
         }
 
         return message;
@@ -63,11 +65,9 @@ public class DefaultExceptionHandler implements ExceptionHandler
 
     public void handleException(Throwable e, boolean debug)
     {
-        if (debug)
-            e.printStackTrace();
-        else if (e instanceof RuntimeException)
+        if (e instanceof RuntimeException)
             e.printStackTrace();
         else
-            System.err.println(getErrorMessage(e, "\n"));
+            System.err.println(getErrorMessage(e, "\n", debug));
     }
 }
