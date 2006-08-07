@@ -151,7 +151,7 @@ public class JMFMain implements ControllerListener{
     public Buffer getFrame(int frameCount){
     	//if(frameCount%100!=0)return null;
     	Buffer b = buf;
-    	int[] rawData = (int[]) buf.getData();
+    	/*int[] rawData = (int[]) buf.getData();
     	if (rawData == null)
             return null;
         
@@ -173,7 +173,7 @@ public class JMFMain implements ControllerListener{
                 texData[i+1] = 0;
                 texData[i+2] = 0;
             }
-        }   	
+        }   */	
     
         	
         if(dataLength==0){System.exit(0);}
