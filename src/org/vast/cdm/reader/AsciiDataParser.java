@@ -47,7 +47,9 @@ public class AsciiDataParser extends DataParser
 	 */
 	public void parse(InputStream inputStream) throws CDMException
 	{
-		try
+        stopParsing = false;
+        
+        try
 		{
 			Reader reader = new InputStreamReader(inputStream);
 			tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();

@@ -44,6 +44,9 @@ public class MapProjection
 
     public final static double [] LLAtoECF(double latitude, double longitude, double altitude, Datum datum)
     {
+        if (datum == null)
+            datum = new Datum();
+        
         double a = datum.equatorRadius;
         double e2 = datum.e2;
 
@@ -61,6 +64,9 @@ public class MapProjection
 
     public final static double [] ECFtoLLA(double x, double y, double z, Datum datum)
     {
+        if (datum == null)
+            datum = new Datum();
+        
         // Method from Peter Dana
         double a = datum.equatorRadius;
         double b = datum.polarRadius;

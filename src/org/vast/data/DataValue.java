@@ -132,9 +132,9 @@ public class DataValue extends AbstractDataComponent
     {
         StringBuffer text = new StringBuffer();
         text.append("DataValue: ");                
-        text.append(this.getName() + " (" + this.dataType + ") = ");
-        if (dataBlock != null)
-            text.append(dataBlock.getStringValue() + "\n");
+        text.append(this.getName() + " (" + this.dataType + ")");
+        //if (dataBlock != null)
+        //    text.append(" = " + dataBlock.getStringValue() + "\n");
         return text.toString();
     }
     
