@@ -222,7 +222,7 @@ public class DataArrayIndexer extends DataIndexer
     
 
     @Override
-    public void getNext()
+    public void next()
     {       
         boolean next = true;
         
@@ -239,7 +239,7 @@ public class DataArrayIndexer extends DataIndexer
                 {
                     int nextIndex = data.startIndex + currentIndex * atomCount + indexer.componentIndex;
                     indexer.updateStartIndex(nextIndex);
-                    indexer.getNext();
+                    indexer.next();
                     if (indexer.hasNext)
                         next = false;
                 }
@@ -254,7 +254,7 @@ public class DataArrayIndexer extends DataIndexer
                 {
                     int nextIndex = data.startIndex + currentIndex;
                     indexer.updateStartIndex(nextIndex);
-                    indexer.getNext();
+                    indexer.next();
                     if (indexer.hasNext)
                         next = false;
                 }

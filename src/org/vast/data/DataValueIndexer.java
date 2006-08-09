@@ -87,7 +87,7 @@ public class DataValueIndexer extends DataIndexer
     
 
     @Override
-    public void getNext()
+    public void next()
     {
         this.applyVisitors();        
         this.hasNext = false;

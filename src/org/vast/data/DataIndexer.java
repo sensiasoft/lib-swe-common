@@ -46,7 +46,7 @@ public abstract class DataIndexer
     protected AbstractDataBlock data;
     protected int componentIndex;
     protected int scalarCount;
-    public boolean hasNext;
+    protected boolean hasNext;
     public boolean doVisitors = false;
     protected DataVisitor[] visitorList;
     protected DataIndexer[] indexerList;    
@@ -55,7 +55,7 @@ public abstract class DataIndexer
     
     public abstract void getData(int i, int j, int k);
     public abstract void setData(AbstractDataBlock data);
-    public abstract void getNext();
+    public abstract void next();
     public abstract int skip(int num);
     public abstract void updateStartIndex(int startIndex);
     public abstract void updateScalarCount();
@@ -64,6 +64,12 @@ public abstract class DataIndexer
     
     public DataIndexer()
     {
+    }
+    
+    
+    public boolean hasNext()
+    {
+        return hasNext;
     }
     
     

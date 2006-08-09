@@ -186,7 +186,7 @@ public class DataGroupIndexer extends DataIndexer
     
 
     @Override
-    public void getNext()
+    public void next()
     {
         this.hasNext = false;
         this.applyVisitors();
@@ -201,7 +201,7 @@ public class DataGroupIndexer extends DataIndexer
                 {
                     int nextIndex = data.startIndex + indexer.componentIndex;
                     indexer.updateStartIndex(nextIndex);
-                    indexer.getNext();
+                    indexer.next();
                     if (indexer.hasNext)
                         this.hasNext = true;
                 }
@@ -215,7 +215,7 @@ public class DataGroupIndexer extends DataIndexer
                 if (indexer.hasNext)
                 {
                     indexer.updateStartIndex(data.startIndex);
-                    indexer.getNext();
+                    indexer.next();
                     if (indexer.hasNext)
                         this.hasNext = true;
                 }
@@ -229,7 +229,7 @@ public class DataGroupIndexer extends DataIndexer
                 if (indexer.hasNext)
                 {
                     //indexer.updateStartIndex(data.startIndex);
-                    indexer.getNext();
+                    indexer.next();
                     if (indexer.hasNext)
                         this.hasNext = true;
                 }
