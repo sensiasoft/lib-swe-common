@@ -85,6 +85,13 @@ public class DataValueIndexer extends DataIndexer
         this.applyVisitors();
     }
     
+    
+    @Override
+    public void clearData()
+    {
+        this.data = null;
+    }
+    
 
     @Override
     public void next()

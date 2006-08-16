@@ -184,6 +184,18 @@ public class DataGroupIndexer extends DataIndexer
         }
     }
     
+    
+    @Override
+    public void clearData()
+    {
+        this.data = null;
+        for (int i = 0; i < indexerList.length; i++)
+        {
+            DataIndexer indexer = indexerList[i];
+            indexer.clearData();
+        }
+    }
+    
 
     @Override
     public void next()

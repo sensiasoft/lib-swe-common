@@ -55,6 +55,7 @@ public abstract class DataIndexer
     
     public abstract void getData(int i, int j, int k);
     public abstract void setData(AbstractDataBlock data);
+    public abstract void clearData();
     public abstract void next();
     public abstract int skip(int num);
     public abstract void updateStartIndex(int startIndex);
