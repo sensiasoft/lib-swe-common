@@ -53,9 +53,8 @@ public class DataArrayIndexer extends DataIndexer
     }
     
     
-    public DataArrayIndexer(DataArray arrayComponent, int componentIndex)
+    public DataArrayIndexer(int componentIndex)
     {
-        this.component = arrayComponent;
         this.componentIndex = componentIndex;
         this.indexerList = new DataIndexer[0];
     }
@@ -64,7 +63,6 @@ public class DataArrayIndexer extends DataIndexer
     public DataArrayIndexer copy()
     {
         DataArrayIndexer newIndexer = new DataArrayIndexer();
-        newIndexer.component = this.component;
         newIndexer.componentIndex = this.componentIndex;
         newIndexer.scalarCount = this.scalarCount;
         newIndexer.arraySize = this.arraySize;

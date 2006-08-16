@@ -50,9 +50,8 @@ public class DataGroupIndexer extends DataIndexer
     }
     
     
-    public DataGroupIndexer(DataGroup groupComponent, int componentIndex)
+    public DataGroupIndexer(int componentIndex)
     {
-        this.component = groupComponent;
         this.componentIndex = componentIndex;
         this.indexerList = new DataIndexer[0];
     }
@@ -61,7 +60,6 @@ public class DataGroupIndexer extends DataIndexer
     public DataGroupIndexer copy()
     {
         DataGroupIndexer newIndexer = new DataGroupIndexer();
-        newIndexer.component = this.component;
         newIndexer.componentIndex = this.componentIndex;
         newIndexer.scalarCount = this.scalarCount;
         newIndexer.interleavedBlock = this.interleavedBlock;

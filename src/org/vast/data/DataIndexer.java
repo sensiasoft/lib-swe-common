@@ -23,8 +23,6 @@
 
 package org.vast.data;
 
-import org.ogc.cdm.common.DataComponent;
-
 
 /**
  * <p><b>Title:</b><br/>
@@ -42,7 +40,6 @@ import org.ogc.cdm.common.DataComponent;
  */
 public abstract class DataIndexer
 {
-    protected DataComponent component;
     protected AbstractDataBlock data;
     protected int componentIndex;
     protected int scalarCount;
@@ -149,25 +146,5 @@ public abstract class DataIndexer
             
             this.doVisitors = false;
         }
-    }
-
-    
-    /**
-     * Get associated Data Component
-     * @return
-     */
-    public DataComponent getComponent()
-    {
-        return component;
-    }
-
-    
-    /**
-     * Set associated Data Component
-     * @param component
-     */
-    public void setComponent(DataComponent component)
-    {
-        this.component = component;
     }
 }

@@ -89,7 +89,7 @@ public class IndexerTreeBuilder
                 indexer = indexerMap.get(component);
                 if (indexer == null)
                 {
-                    indexer = new DataGroupIndexer((DataGroup)component, currentIndex);
+                    indexer = new DataGroupIndexer(currentIndex);
                     indexerMap.put(component, indexer);
                 }
             }
@@ -111,7 +111,7 @@ public class IndexerTreeBuilder
             indexer = indexerMap.get(component);            
             if (indexer == null)
             {
-                indexer = new DataArrayIndexer((DataArray)component, currentIndex);
+                indexer = new DataArrayIndexer(currentIndex);
                 indexerMap.put(component, indexer);                
                 
                 ((DataArrayIndexer)indexer).atomCount = countDescendants(component, 0);
@@ -157,7 +157,7 @@ public class IndexerTreeBuilder
             indexer = indexerMap.get(component);            
             if (indexer == null)
             {
-                indexer = new DataValueIndexer((DataValue)component, currentIndex);
+                indexer = new DataValueIndexer(currentIndex);
                 indexerMap.put(component, indexer);
                 
                 // add to parentIndexer if not null
@@ -245,7 +245,7 @@ public class IndexerTreeBuilder
         DataIndexer sizeIndexer = indexerMap.get(sizeData);            
         if (sizeIndexer == null)
         {
-            sizeIndexer = new DataValueIndexer(sizeData, index);
+            sizeIndexer = new DataValueIndexer(index);
             parentIndexer.insertChildIndexer(sizeIndexer);
             indexerMap.put(sizeData, sizeIndexer);
         }        

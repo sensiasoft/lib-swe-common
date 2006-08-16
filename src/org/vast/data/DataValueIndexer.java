@@ -47,9 +47,8 @@ public class DataValueIndexer extends DataIndexer
     }
     
     
-    public DataValueIndexer(DataValue scalarComponent, int componentIndex)
+    public DataValueIndexer(int componentIndex)
     {
-        this.component = scalarComponent;
         this.componentIndex = componentIndex;
     }
     
@@ -57,7 +56,6 @@ public class DataValueIndexer extends DataIndexer
     public DataValueIndexer copy()
     {
         DataValueIndexer newIndexer = new DataValueIndexer();
-        newIndexer.component = this.component;
         newIndexer.componentIndex = this.componentIndex;
         newIndexer.visitorList = this.visitorList;        
         return newIndexer;
