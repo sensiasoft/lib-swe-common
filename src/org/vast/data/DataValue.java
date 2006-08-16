@@ -86,6 +86,13 @@ public class DataValue extends AbstractDataComponent
     
     
     @Override
+    public void clearData()
+    {
+        this.dataBlock = null;
+    }
+    
+    
+    @Override
     protected AbstractDataBlock createDataBlock()
     {
     	switch (dataType)

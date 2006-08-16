@@ -206,6 +206,12 @@ public abstract class AbstractDataComponent implements DataComponent
 	 * @throws DataException
 	 */
 	public abstract void setData(DataBlock dataBlock);
+    
+    
+    /**
+     * Clears dataBlock from this container
+     */
+    public abstract void clearData();
 	
 	
 	/**

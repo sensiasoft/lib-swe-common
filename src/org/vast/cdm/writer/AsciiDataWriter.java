@@ -78,6 +78,7 @@ public class AsciiDataWriter extends DataWriter
 			try
 			{
 				outputStream.close();
+                dataComponents.clearData();
 			}
 			catch (IOException e)
 			{

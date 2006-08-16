@@ -178,6 +178,14 @@ public class DataArray extends AbstractDataComponent
     }
     
     
+    @Override
+    public void clearData()
+    {
+        this.dataBlock = null;
+        component.clearData();
+    }
+    
+    
     /**
      * Create the right data block to carry this array data
      * It can be either a scalar array (DataBlockDouble, etc...)

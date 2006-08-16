@@ -194,6 +194,18 @@ public class DataGroup extends AbstractDataComponent
     }
     
     
+    @Override
+    public void clearData()
+    {
+        this.dataBlock = null;
+        for (int i = 0; i < componentList.size(); i++)
+        {
+            AbstractDataComponent nextComponent = componentList.get(i);
+            nextComponent.clearData();
+        }
+    }
+    
+    
     /**
      * Create object adapted to carry data for this container
      * TODO could save the calculated structure and do a shallow copy for the nexts...

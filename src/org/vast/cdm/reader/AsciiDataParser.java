@@ -77,8 +77,7 @@ public class AsciiDataParser extends DataParser
 			try
 			{
 				inputStream.close();
-                if (!componentStack.isEmpty())
-                    dataHandler.endData(dataComponents, dataComponents.getData());
+                dataComponents.clearData();
 			}
 			catch (IOException e)
 			{

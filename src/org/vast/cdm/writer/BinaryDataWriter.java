@@ -96,6 +96,7 @@ public class BinaryDataWriter extends DataWriter
 			try
 			{
 				outputStream.close();
+                dataComponents.clearData();
 			}
 			catch (IOException e)
 			{
