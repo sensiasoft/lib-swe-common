@@ -60,6 +60,99 @@ public class DateTimeFormat extends SimpleDateFormat
 	}
 	
 	
+    /**
+     * Parses an ISO8601 period string and return the length of the period.
+     * @param iso8601
+     * @return length of period in seconds 
+     * @throws ParseException
+     */
+    static public double parseIsoPeriod(String iso8601) throws ParseException
+    {
+        if (iso8601.charAt(0) != 'P')
+            return 0;
+        
+        iso8601.trim();
+        
+        double periodInSeconds = 0.0;
+        StringBuffer numBuffer = new StringBuffer();
+        int index = 1;
+        boolean time = false;
+        
+        try
+        {
+            while (index < iso8601.length())
+            {
+                char nextChar = iso8601.charAt(index);
+                
+                switch (nextChar)
+                {
+                    case 'T':
+                        time = true;
+                        break;
+                
+                    case 'Y':
+                        int years = Integer.parseInt(numBuffer.toString());
+                        periodInSeconds += years * 365 * 24 * 3600;
+                        numBuffer.setLength(0);
+                        break;
+                        
+                    case 'M':
+                        if (time)
+                        {
+                            int minutes = Integer.parseInt(numBuffer.toString());
+                            periodInSeconds += minutes * 60;
+                            numBuffer.setLength(0);
+                        }
+                        else
+                        {
+                            int months = Integer.parseInt(numBuffer.toString());
+                            periodInSeconds += months * 30 * 24 * 3600;
+                            numBuffer.setLength(0);
+                        }
+                        break;
+                        
+                    case 'D':
+                        int days = Integer.parseInt(numBuffer.toString());
+                        periodInSeconds += days * 24 * 3600;
+                        numBuffer.setLength(0);
+                        break;
+                        
+                    case 'H':
+                        int hours = Integer.parseInt(numBuffer.toString());
+                        periodInSeconds += hours * 3600;
+                        numBuffer.setLength(0);
+                        break;
+                        
+                    case 'S':
+                        int seconds = Integer.parseInt(numBuffer.toString());
+                        periodInSeconds += seconds;
+                        numBuffer.setLength(0);
+                        break;
+                        
+                    // otherwise it's a number
+                    default:
+                        numBuffer.append(nextChar);
+                        break;
+                }
+                
+                index++;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            throw new ParseException("Invalid ISO 8601 period string", index);
+        }
+        
+        return periodInSeconds;
+    }
+    
+    
+    /**
+     * Parses an ISO8601 data/time string and return the corresponding unix time
+     * @param iso8601
+     * @return unix/julian time stamp
+     * @throws ParseException
+     */
 	static public double parseIso(String iso8601) throws ParseException
 	{
 		try
