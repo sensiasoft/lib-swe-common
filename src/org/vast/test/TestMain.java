@@ -6,11 +6,9 @@ package org.vast.test;
 import java.util.List;
 
 import org.ogc.cdm.common.DataComponent;
-import org.vast.data.DataGroup;
 //import org.vast.data.DataValue;
 import org.vast.io.xml.DOMReader;
 import org.vast.process.DataProcess;
-import org.vast.process.ProcessChain;
 import org.vast.sensorML.metadata.Metadata;
 import org.vast.sensorML.reader.*;
 import org.vast.sensorML.system.SMLSystem;
