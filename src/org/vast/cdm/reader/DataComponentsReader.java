@@ -94,16 +94,21 @@ public class DataComponentsReader implements DataComponentReader
     {
         AbstractDataComponent container = null;
         
-        if (dom.getFirstChildElement(dataElement) == null)
+        if (dataElement.getLocalName().endsWith("Range"))
+        {
+            container = readRange(dataElement);
+        }
+        else if (dom.getFirstChildElement(dataElement) == null)
         {
             container = readParameter(dataElement);
         }
+        else if (dom.existAttribute(dataElement, "arraySize"))
+        {
+            container = readDataArray(dataElement);
+        }
         else
         {
-            if (dom.existAttribute(dataElement, "arraySize"))
-                container = readDataArray(dataElement);
-            else
-                container = readDataGroup(dataElement);
+            container = readDataGroup(dataElement);
         } 
         
         // add id to hashtable if present
@@ -248,6 +253,53 @@ public class DataComponentsReader implements DataComponentReader
         }
         
         return paramValue;
+    }
+    
+    
+    private DataGroup readRange(Element rangeElement) throws CDMException
+    {
+        DataValue paramVal = null;
+        DataGroup rangeValues = new DataGroup(2);
+        String valueText = dom.getElementValue(rangeElement, "");      
+        String eltName = rangeElement.getLocalName();
+        
+        // Create Data component Object
+        if (eltName.startsWith("Quantity") || eltName.startsWith("Time"))
+        {
+            paramVal = new DataValue(DataType.DOUBLE);
+        }
+        else if (eltName.startsWith("Count"))
+        {
+            paramVal = new DataValue(DataType.INT);
+        }
+        else
+            throw new CDMException("Only Quantity, Time and Count ranges are allowed");
+        
+        // read attributes
+        readAttributes(paramVal, rangeElement);
+        rangeValues.setProperty(DataComponent.DEF, "urn:ogc:def:data:range");
+        
+        // add params to DataGroup
+        rangeValues.addComponent("min", paramVal);
+        rangeValues.addComponent("max", paramVal.copy());
+        
+        // Parse the two values
+        if (valueText != null)
+        {
+            rangeValues.assignNewDataBlock();
+            try
+            {
+                String[] vals = valueText.split(" ");
+                parseToken((DataValue)rangeValues.getComponent(0), vals[0], '\0');
+                parseToken((DataValue)rangeValues.getComponent(1), vals[1], '\0');
+            }
+            catch (Exception e)
+            {
+                throw new CDMException("Error while parsing range values", e);
+            }
+        }
+        
+        return rangeValues;
     }
     
     

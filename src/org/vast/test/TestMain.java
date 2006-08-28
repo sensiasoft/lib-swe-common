@@ -3,11 +3,17 @@ package org.vast.test;
 
 //import java.io.InputStream;
 //import org.vast.data.DataArray;
+import java.util.List;
+
+import org.ogc.cdm.common.DataComponent;
 import org.vast.data.DataGroup;
 //import org.vast.data.DataValue;
 import org.vast.io.xml.DOMReader;
+import org.vast.process.DataProcess;
 import org.vast.process.ProcessChain;
+import org.vast.sensorML.metadata.Metadata;
 import org.vast.sensorML.reader.*;
+import org.vast.sensorML.system.SMLSystem;
 //import org.vast.unit.Unit;
 //import org.vast.unit.UnitParserUCUM;
 import org.vast.util.*;
@@ -240,30 +246,54 @@ public class TestMain
 //            }
 //            
 
-            
-          /***************************/
-          /* test sat TLE/SGP4 chain */
-          /***************************/
-          String baseFolder = "file:///d:/Projects/NSSTC/OWS-Servers/WEB-INF/src/org/vast/sos_footprints/";
-          //DOMReader dom = new DOMReader(baseFolder + "Orbital_Positioning.xml#PROCESS_CHAIN", false);
-          DOMReader dom = new DOMReader(baseFolder + "Scanner_GeoLocation.xml#PROCESS_CHAIN", false);
-          SystemReader systemReader = new SystemReader(dom);
-          systemReader.setReadMetadata(false);
-          systemReader.setCreateExecutableProcess(true);
-          ProcessLoader.reloadMaps(baseFolder + "ProcessMap.xml");
-          ProcessChain process = (ProcessChain)systemReader.readProcess(dom.getBaseElement());
-          process.setChildrenThreadsOn(false);
-          process.init();
-          process.createNewInputBlocks();
+          DOMReader dom = new DOMReader("file:///c:/jstars.xml#jstars", false);
+          SystemReader reader = new SystemReader(dom);
+          reader.setReadMetadata(true);
+          SMLSystem system = reader.readSystem(dom.getBaseElement());
+          Metadata meta = (Metadata)system.getProperty(DataProcess.METADATA);
           
-          System.out.println(process.needSync() ? "sync on" : "sync off");
-          //process.getInputList().getComponent("julianTime").getData().setDoubleValue(0.0);//86400.0 / 2);
-          process.getInputList().getComponent("scanTime").getData().setDoubleValue(0.0);
-          process.getInputList().getComponent("scanIndex").getData().setDoubleValue(0.5);
-          process.execute();
-                   
-          DataGroup llaVector = (DataGroup) process.getOutputList().getComponent("sampleLocation");
-          System.out.println(llaVector);
+          // read characteristics list
+          List<DataComponent> capList = meta.getCapabilities();
+          for (int i=0; i< capList.size(); i++)
+          {
+             DataComponent cap = capList.get(i); 
+             String carName = cap.getName();
+             System.out.println(carName);
+             
+             for (int c=0; c<cap.getComponentCount(); c++)
+             {
+                DataComponent property = cap.getComponent(c);
+                String propName = property.getName();
+                System.out.println("\t" + propName);
+             }
+          }
+          
+          System.exit(0);
+
+            
+//          /***************************/
+//          /* test sat TLE/SGP4 chain */
+//          /***************************/
+//          String baseFolder = "file:///d:/Projects/NSSTC/OWS-Servers/WEB-INF/src/org/vast/sos_footprints/";
+//          //DOMReader dom = new DOMReader(baseFolder + "Orbital_Positioning.xml#PROCESS_CHAIN", false);
+//          DOMReader dom = new DOMReader(baseFolder + "Scanner_GeoLocation.xml#PROCESS_CHAIN", false);
+//          SystemReader systemReader = new SystemReader(dom);
+//          systemReader.setReadMetadata(false);
+//          systemReader.setCreateExecutableProcess(true);
+//          ProcessLoader.reloadMaps(baseFolder + "ProcessMap.xml");
+//          ProcessChain process = (ProcessChain)systemReader.readProcess(dom.getBaseElement());
+//          process.setChildrenThreadsOn(false);
+//          process.init();
+//          process.createNewInputBlocks();
+//          
+//          System.out.println(process.needSync() ? "sync on" : "sync off");
+//          //process.getInputList().getComponent("julianTime").getData().setDoubleValue(0.0);//86400.0 / 2);
+//          process.getInputList().getComponent("scanTime").getData().setDoubleValue(0.0);
+//          process.getInputList().getComponent("scanIndex").getData().setDoubleValue(0.5);
+//          process.execute();
+//                   
+//          DataGroup llaVector = (DataGroup) process.getOutputList().getComponent("sampleLocation");
+//          System.out.println(llaVector);
           
 //          DataGroup eciVector = (DataGroup) process.getProcess("sgp4").getOutputList().getComponent("ECI_location");
 //          for (int i=0; i<3; i++)
