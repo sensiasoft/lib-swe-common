@@ -43,6 +43,7 @@ public class DataArrayIndexer extends DataIndexer
     protected int currentIndex;
     protected int arraySize;
     protected int atomCount;
+    protected int indexOffset = 0;
     protected boolean interleavedBlock;
     protected boolean tupleBlock;
     protected boolean hasChildArray;
@@ -171,10 +172,10 @@ public class DataArrayIndexer extends DataIndexer
 
 
     @Override
-    public void getData(int u, int v, int w)
+    public void getData(int[] indexList)
     {
         this.applyVisitors();
-        currentIndex = u;
+        currentIndex = indexList[indexOffset];
         
         // try to get requested element from each child indexer
         if (interleavedBlock)
@@ -184,7 +185,7 @@ public class DataArrayIndexer extends DataIndexer
                 DataIndexer indexer = indexerList[i];
                 int nextIndex = data.startIndex + currentIndex * atomCount + indexer.componentIndex;
                 indexer.updateStartIndex(nextIndex);
-                indexer.getData(v, w, 0);
+                indexer.getData(indexList);
             }
         }
         else if (tupleBlock)
@@ -194,7 +195,7 @@ public class DataArrayIndexer extends DataIndexer
                 int childSize = ((DataArrayIndexer)indexerList[0]).arraySize;
                 int nextIndex = data.startIndex + currentIndex * childSize;
                 indexerList[0].updateStartIndex(nextIndex);
-                indexerList[0].getData(v, w, 0);
+                indexerList[0].getData(indexList);
             }
             else
             {
@@ -203,7 +204,7 @@ public class DataArrayIndexer extends DataIndexer
                     DataIndexer indexer = indexerList[i];
                     int nextIndex = data.startIndex + currentIndex;
                     indexer.updateStartIndex(nextIndex);
-                    indexer.getData(v, w, 0);
+                    indexer.getData(indexList);
                 }
             }
         }
@@ -213,7 +214,7 @@ public class DataArrayIndexer extends DataIndexer
             {
                 DataIndexer indexer = indexerList[i];
                 // indexer.updateStartIndex(data.startIndex);
-                indexer.getData(v, w, 0);
+                indexer.getData(indexList);
             }
         }
     }
@@ -305,5 +306,17 @@ public class DataArrayIndexer extends DataIndexer
     {
         super.reset();
         this.currentIndex = 0;
+    }
+
+
+    public int getIndexOffset()
+    {
+        return indexOffset;
+    }
+
+
+    public void setIndexOffset(int indexOffset)
+    {
+        this.indexOffset = indexOffset;
     }
 }

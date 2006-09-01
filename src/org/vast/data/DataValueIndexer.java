@@ -77,7 +77,7 @@ public class DataValueIndexer extends DataIndexer
     
     
     @Override
-    public void getData(int i, int j, int k)
+    public void getData(int[] indexList)
     {
         this.doVisitors = true;
         this.applyVisitors();

@@ -216,6 +216,38 @@ public class DateTimeFormat extends SimpleDateFormat
 	}
 	
 	
+    /**
+     * Formats a period in seconds to ISO8601 time period standard
+     * using only seconds
+     * @param periodSeconds
+     * @return
+     */
+    static public String formatIsoPeriod(double periodSeconds)
+    {
+        return "PT" + periodSeconds + "S";
+    }
+    
+    
+    /**
+     * Formats a period in seconds to ISO8601 period standard
+     * starting with the given unit and going down as much as required
+     * @param periodSeconds
+     * @param startWithUnit
+     * @return
+     */
+    static public String formatIsoPeriod(double periodSeconds, char biggestUnit)
+    {
+        // TODO implement formatIsoPeriod(seconds, startUnit)
+        return "PT" + periodSeconds + "S";
+    }
+    
+    
+    /**
+     * Formats a julianTime to ISO8601 standard
+     * @param julianTime
+     * @param timeZone
+     * @return
+     */
 	static public String formatIso(double julianTime, int timeZone)
 	{
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");

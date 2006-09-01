@@ -50,7 +50,7 @@ public abstract class DataIndexer
     protected DataIndexer parentIndexer;
     
     
-    public abstract void getData(int i, int j, int k);
+    public abstract void getData(int[] indexList);
     public abstract void setData(AbstractDataBlock data);
     public abstract void clearData();
     public abstract void next();

@@ -147,7 +147,7 @@ public class DataGroupIndexer extends DataIndexer
     
     
     @Override
-    public void getData(int u, int v, int w)
+    public void getData(int[] indexList)
     {
         this.applyVisitors();
         
@@ -159,7 +159,7 @@ public class DataGroupIndexer extends DataIndexer
                 DataIndexer indexer = indexerList[i];
                 int nextIndex = data.startIndex + indexer.componentIndex;
                 indexer.updateStartIndex(nextIndex);
-                indexer.getData(u, v, w);
+                indexer.getData(indexList);
             }
         }
         else if (tupleBlock)
@@ -168,7 +168,7 @@ public class DataGroupIndexer extends DataIndexer
             {
                 DataIndexer indexer = indexerList[i];
                 indexer.updateStartIndex(data.startIndex);
-                indexer.getData(u, v, w);
+                indexer.getData(indexList);
             }
         }
         else
@@ -177,7 +177,7 @@ public class DataGroupIndexer extends DataIndexer
             {
                 DataIndexer indexer = indexerList[i];
                 // indexer.updateStartIndex(data.startIndex);
-                indexer.getData(u, v, w);
+                indexer.getData(indexList);
             }
         }
     }

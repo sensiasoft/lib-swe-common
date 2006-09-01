@@ -48,6 +48,7 @@ public class IndexerTreeBuilder
     protected Hashtable<DataComponent, DataIndexer> indexerMap;
     protected DataComponent rootComponent;
     protected DataIndexer rootIndexer;
+    protected int arrayCount = 0;
     
     
     public IndexerTreeBuilder(DataComponent rootComponent)
@@ -112,6 +113,8 @@ public class IndexerTreeBuilder
             if (indexer == null)
             {
                 indexer = new DataArrayIndexer(currentIndex);
+                ((DataArrayIndexer)indexer).indexOffset = arrayCount;
+                arrayCount++;
                 indexerMap.put(component, indexer);                
                 
                 ((DataArrayIndexer)indexer).atomCount = countDescendants(component, 0);
