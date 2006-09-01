@@ -124,13 +124,7 @@ public class TimeExtent
      */
     public double getBaseTime()
     {
-        if (baseAtNow)
-        {
-            baseTime = System.currentTimeMillis() / 1000;
-            return baseTime; 
-        }
-        else
-            return baseTime;
+        return baseTime;
     }
 
 
@@ -176,23 +170,13 @@ public class TimeExtent
 
     public double getAdjustedLeadTime()
     {
-        if (endNow)
-        {
-            return System.currentTimeMillis() / 1000;
-        }
-        else
-            return (getBaseTime() + timeBias + leadTimeDelta);
+        return (getBaseTime() + timeBias + leadTimeDelta);
     }
 
 
     public double getAdjustedLagTime()
     {
-        if (beginNow)
-        {
-            return System.currentTimeMillis() / 1000;
-        }
-        else
-            return (getBaseTime() + timeBias - lagTimeDelta);
+        return (getBaseTime() + timeBias - lagTimeDelta);
     }
     
     
