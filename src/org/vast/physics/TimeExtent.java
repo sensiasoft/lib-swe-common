@@ -34,7 +34,7 @@ public class TimeExtent
 {
     protected double baseTime = Double.NaN;
     protected double timeBias = 0;
-    protected double timeStep = 1;
+    protected double timeStep = 0;
     protected double leadTimeDelta = 0;
     protected double lagTimeDelta = 0;
     protected boolean baseAtNow;  // if true baseTime is associated to machine clock
