@@ -42,6 +42,14 @@ import org.vast.math.*;;
 public class MapProjection
 {
 
+    public final static double [] LLAtoMerc(double lat, double lon, double alt)
+    {
+        double sinLat = Math.sin(lat);
+        double y = 0.5 * Math.log((1 + sinLat) / (1 - sinLat));
+        return new double [] {lon, y, alt};
+    }
+    
+    
     public final static double [] LLAtoECF(double latitude, double longitude, double altitude, Datum datum)
     {
         if (datum == null)
