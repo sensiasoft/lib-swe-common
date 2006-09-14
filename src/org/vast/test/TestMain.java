@@ -9,6 +9,7 @@ import org.ogc.cdm.common.DataComponent;
 //import org.vast.data.DataValue;
 import org.vast.io.xml.DOMReader;
 import org.vast.process.DataProcess;
+import org.vast.process.ProcessChain;
 import org.vast.sensorML.metadata.Metadata;
 import org.vast.sensorML.reader.*;
 import org.vast.sensorML.system.SMLSystem;
@@ -244,29 +245,29 @@ public class TestMain
 //            }
 //            
 
-          DOMReader dom = new DOMReader("file:///c:/jstars.xml#jstars", false);
-          SystemReader reader = new SystemReader(dom);
-          reader.setReadMetadata(true);
-          SMLSystem system = reader.readSystem(dom.getBaseElement());
-          Metadata meta = (Metadata)system.getProperty(DataProcess.METADATA);
-          
-          // read characteristics list
-          List<DataComponent> capList = meta.getCapabilities();
-          for (int i=0; i< capList.size(); i++)
-          {
-             DataComponent cap = capList.get(i); 
-             String carName = cap.getName();
-             System.out.println(carName);
-             
-             for (int c=0; c<cap.getComponentCount(); c++)
-             {
-                DataComponent property = cap.getComponent(c);
-                String propName = property.getName();
-                System.out.println("\t" + propName);
-             }
-          }
-          
-          System.exit(0);
+//          DOMReader dom = new DOMReader("file:///c:/jstars.xml#jstars", false);
+//          SystemReader reader = new SystemReader(dom);
+//          reader.setReadMetadata(true);
+//          SMLSystem system = reader.readSystem(dom.getBaseElement());
+//          Metadata meta = (Metadata)system.getProperty(DataProcess.METADATA);
+//          
+//          // read characteristics list
+//          List<DataComponent> capList = meta.getCapabilities();
+//          for (int i=0; i< capList.size(); i++)
+//          {
+//             DataComponent cap = capList.get(i); 
+//             String carName = cap.getName();
+//             System.out.println(carName);
+//             
+//             for (int c=0; c<cap.getComponentCount(); c++)
+//             {
+//                DataComponent property = cap.getComponent(c);
+//                String propName = property.getName();
+//                System.out.println("\t" + propName);
+//             }
+//          }
+//          
+//          System.exit(0);
 
             
 //          /***************************/
@@ -381,7 +382,31 @@ public class TestMain
 //               String dp = process.getOutputList().getComponent("windChillTemp2").getData().getStringValue();
 //               System.out.println(i + ": " + wc + " - " + dp);
 //            }
-
+          /**************************/
+          /* test chain with switch */
+          /**************************/
+          DOMReader dom = new DOMReader("file:///d:/Projects/NSSTC/STT3/projects/Doppler_Process.xml#DOPPLER_PROCESS", false);
+          SystemReader systemReader = new SystemReader(dom);
+          systemReader.setReadMetadata(false);
+          systemReader.setCreateExecutableProcess(true);
+          //ProcessLoader.reloadMaps(TestMain.class.getResource("ProcessMap.xml").toString());
+          ProcessLoader.reloadMaps("file:///d:/Projects/NSSTC/STT3/conf/ProcessMap.xml");
+          ProcessChain process = (ProcessChain)systemReader.readProcess(dom.getBaseElement());
+          process.setChildrenThreadsOn(false);
+          process.init();
+          process.createNewInputBlocks();
+          System.out.println(process.needSync() ? "sync on" : "sync off");
+          
+          // set input time range            
+          DataComponent input = process.getInputList().getComponent("timeRange");
+          input.getComponent("start").getData().setDoubleValue(0);
+          input.getComponent("stop").getData().setDoubleValue(1);
+          process.setInputReady(0);
+          
+          // execute chain
+          process.execute();
+          String wc = process.getOutputList().getComponent("windChillTemp1").getData().getStringValue();
+          String dp = process.getOutputList().getComponent("windChillTemp2").getData().getStringValue();
 		}
 		catch (Exception e)
 		{
