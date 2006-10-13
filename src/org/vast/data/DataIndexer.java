@@ -81,6 +81,7 @@ public abstract class DataIndexer
         indexerList = new DataIndexer[oldMappers.length + 1];
         System.arraycopy(oldMappers, 0, indexerList, 0, oldMappers.length);
         indexerList[oldMappers.length] = newIndexer;
+        newIndexer.parentIndexer = this;
     }
     
     
@@ -94,6 +95,7 @@ public abstract class DataIndexer
         indexerList = new DataIndexer[oldMappers.length + 1];
         System.arraycopy(oldMappers, 0, indexerList, 1, oldMappers.length);
         indexerList[0] = newIndexer;
+        newIndexer.parentIndexer = this;
     }
      
     

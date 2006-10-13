@@ -47,6 +47,7 @@ public class DataArrayIndexer extends DataIndexer
     protected boolean interleavedBlock;
     protected boolean tupleBlock;
     protected boolean hasChildArray;
+    protected DataIndexer varSizeIndexer;
         
     
     private DataArrayIndexer()
@@ -140,9 +141,9 @@ public class DataArrayIndexer extends DataIndexer
             {
                 for (int i = 0; i < indexerList.length; i++)
                 {
-                    DataIndexer indexer = indexerList[i];
-                    childBlock = ((DataBlockParallel)data).blockArray[indexer.componentIndex];
-                    indexer.setData(childBlock);
+                    //DataIndexer indexer = indexerList[i];
+                    //childBlock = ((DataBlockParallel)data).blockArray[indexer.componentIndex];
+                    indexerList[i].setData(data.copy());
                 }
             }
         }
@@ -318,5 +319,47 @@ public class DataArrayIndexer extends DataIndexer
     public void setIndexOffset(int indexOffset)
     {
         this.indexOffset = indexOffset;
+    }
+
+
+    public int getAtomCount()
+    {
+        return atomCount;
+    }
+
+
+    public void setAtomCount(int atomCount)
+    {
+        this.atomCount = atomCount;
+    }
+
+
+    public int getArraySize()
+    {
+        return arraySize;
+    }
+
+
+    public void setArraySize(int arraySize)
+    {
+        this.arraySize = arraySize;
+    }
+
+
+    public void setHasChildArray(boolean hasChildArray)
+    {
+        this.hasChildArray = hasChildArray;
+    }
+
+
+    public DataIndexer getVarSizeIndexer()
+    {
+        return varSizeIndexer;
+    }
+
+
+    public void setVarSizeIndexer(DataIndexer varSizeIndexer)
+    {
+        this.varSizeIndexer = varSizeIndexer;
     }
 }

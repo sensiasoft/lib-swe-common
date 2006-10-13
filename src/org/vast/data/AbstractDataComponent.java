@@ -77,6 +77,16 @@ public abstract class AbstractDataComponent implements DataComponent
      * @param startIndex
      */
     protected abstract void updateStartIndex(int startIndex);
+    
+    
+    /**
+     * Return parent component
+     * @return
+     */
+    public AbstractDataComponent getParent()
+    {
+        return parent;
+    }
 
 	
 	/**
