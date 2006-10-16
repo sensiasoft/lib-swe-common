@@ -62,111 +62,113 @@ import org.vast.math.*;
 public class RayIntersectEllipsoid
 {
 	boolean foundFlag = false;
-	double xRadius, yRadius, zRadius;
+    double[] R = new double[3]; 
 
 
 	//constructor looking for ellipsoid dimensions
 	public RayIntersectEllipsoid(double xI, double yI, double zI)
 	{
-		xRadius = xI;
-		yRadius = yI;
-		zRadius = zI;
+        R[0] = xI;
+        R[1] = yI;
+        R[2] = zI;
 	}
 
 
 	public RayIntersectEllipsoid(double[] intercept)
 	{
-		xRadius = intercept[0];
-		yRadius = intercept[1];
-		zRadius = intercept[2];
+        R[0] = intercept[0];
+        R[1] = intercept[1];
+        R[2] = intercept[2];
 	}
 
 
 	public RayIntersectEllipsoid(Datum datum)
 	{
-		xRadius = datum.equatorRadius;
-		yRadius = datum.equatorRadius;
-		zRadius = datum.polarRadius;
+		R[0] = datum.equatorRadius;
+        R[1] = datum.equatorRadius;
+        R[2] = datum.polarRadius;
 	}
 
 
-	public double[] getIntersection(double[] vertex, double[] direction)
+	public double[] getIntersection(Vector3d vertex, Vector3d direction)
 	{
-		double alpha, beta, gamma, dscrm, scalar;//, den;
-		foundFlag = false;
+		foundFlag = true;
 
 		double[] result = new double[3];
-
-		double[] U = new double[3];
-		double[] x = new double[3];
-		double[] y = new double[3];
-
-		//den = Math.sqrt(vertex[0] * vertex[0] + vertex[1] * vertex[1] + vertex[2] * vertex[2]);
+		double[] U0 = new double[3];
+        double[] U1 = new double[3];
+		double[] P0 = new double[3];
+		double[] P1 = new double[3];
 		
-		try
-		{
-			U[0] = direction[0];
-			U[1] = direction[1];
-			U[2] = direction[2];
+		// get ray direction in ec coordinates
+        U0[0] = direction.x;
+        U0[1] = direction.y;
+        U0[2] = direction.z;
+        
+        // get ray origin in ec coordinate
+        P0[0] = vertex.x;
+        P0[1] = vertex.y;
+        P0[2] = vertex.z;
+        
+        // scale vectors using ellipsoid radius
+        for (int i=0; i<3; i++)
+        {
+            P1[i] = P0[i] / R[i];
+            U1[i] = U0[i] / R[i];
+        }
+        
+        // computes polynomial coefficients (at^2 + bt + c = 0)
+        double a = 0.0;
+        double b = 0.0;
+        double c = -1.0;
+        for (int i=0; i<3; i++)
+        {
+            a += U1[i]*U1[i];
+            b += P1[i]*U1[i];
+            c += P1[i]*P1[i];
+        }
 
-			x[0] = U[0] / xRadius;
-			x[1] = U[1] / yRadius;
-			x[2] = U[2] / zRadius;
+        // computes discriminant
+        double dscrm = b * b - a * c;
+        double scalar = 0.0;
+        
+        // case of no valid solution
+        if (dscrm < 0.0 || c < 0.0)
+        {
+            // set max ray length to geocentric distance
+            scalar = Math.sqrt(c/a);
+            System.err.println("No intersection found");
+            foundFlag = false;
+        }
+        
+        // case of P exactly on ellipsoid surface
+        else if (c == 0.0)
+        {
+            for (int i=0; i<3; i++)
+                result[i] = P0[i];
+            return result;
+        }
+        
+        // always use smallest solution
+        else if (b > 0.0)
+        {
+            scalar = (-b + Math.sqrt(dscrm)) / a;
+        }
+        else
+        {
+            scalar = (-b - Math.sqrt(dscrm)) / a;
+        }
+                    
+        // assign new values to intersection point output
+        for (int i=0; i<3; i++)
+            result[i] = P0[i] + U0[i]*scalar;
 
-			y[0] = vertex[0] / xRadius;
-			y[1] = vertex[1] / yRadius;
-			y[2] = vertex[2] / zRadius;
-
-			alpha = Vector3d.dot(x, x);
-			beta = Vector3d.dot(x, y);
-			gamma = Vector3d.dot(y, y) - 1.0;
-
-			dscrm = beta * beta - alpha * gamma;
-
-			if (dscrm < 0.0)
-			{
-				//            result[0] = result[1] = result[2] = 0.0;
-				foundFlag = false;
-				//            dscrm= -dscrm;
-			}
-			else if (gamma < 0.0)
-			{
-				scalar = (-beta + Math.sqrt(dscrm)) / alpha;
-				result[0] = vertex[0] + (U[0] * scalar);
-				result[1] = vertex[1] + (U[1] * scalar);
-				result[2] = vertex[2] + (U[2] * scalar);
-				foundFlag = true;
-			}
-			else if (gamma == 0.0)
-			{
-				result[0] = vertex[0];
-				result[1] = vertex[1];
-				result[2] = vertex[2];
-				foundFlag = true;
-			}
-			else if (beta < 0.0)
-			{
-				scalar = (-beta - Math.sqrt(dscrm)) / alpha;
-				result[0] = vertex[0] + (U[0] * scalar);
-				result[1] = vertex[1] + (U[1] * scalar);
-				result[2] = vertex[2] + (U[2] * scalar);
-				foundFlag = true;
-			}
-			else
-			{
-				result[0] = result[1] = result[2] = 0.0;
-				foundFlag = false;
-			}
-
-		}
-		catch (ArithmeticException ex)
-		{
-			foundFlag = false;
-		}
-
-		if (!foundFlag)
-			throw new IllegalStateException("No Intersection Found");
-		
-		return result;
+        return result; 
 	}
+
+
+    public boolean getFoundFlag()
+    {
+        return foundFlag;
+    }
 }
