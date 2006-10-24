@@ -224,7 +224,7 @@ public class DateTimeFormat extends SimpleDateFormat
      */
     static public String formatIsoPeriod(double periodSeconds)
     {
-        return "PT" + periodSeconds + "S";
+        return "PT" + (int)periodSeconds + "S";
     }
     
     
