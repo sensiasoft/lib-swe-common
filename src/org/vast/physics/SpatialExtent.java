@@ -39,8 +39,7 @@ public class SpatialExtent
 	protected double minY = Double.NaN;
 	protected double maxY = Double.NaN;
 	protected double minZ = Double.NaN;
-	protected double maxZ = Double.NaN;
-    protected boolean tilingEnabled;
+	protected double maxZ = Double.NaN;    
 
 
     public SpatialExtent()
@@ -91,10 +90,10 @@ public class SpatialExtent
     {
         if (Double.isNaN(minX)) return true;
         if (Double.isNaN(minY)) return true;
-        if (Double.isNaN(minZ)) return true;
+        //if (Double.isNaN(minZ)) return true;
         if (Double.isNaN(maxX)) return true;
         if (Double.isNaN(maxY)) return true;
-        if (Double.isNaN(maxZ)) return true;
+        //if (Double.isNaN(maxZ)) return true;
         return false;
     }
     
