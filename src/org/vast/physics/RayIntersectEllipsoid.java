@@ -137,7 +137,7 @@ public class RayIntersectEllipsoid
         {
             // set max ray length to geocentric distance
             scalar = Math.sqrt(c/a);
-            System.err.println("No intersection found");
+            //System.err.println("No intersection found");
             foundFlag = false;
         }
         
