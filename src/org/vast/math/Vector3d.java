@@ -43,6 +43,7 @@ package org.vast.math;
 public class Vector3d extends javax.vecmath.Vector3d
 {
     static final long serialVersionUID = 0;
+    protected String crs;
     
     
     public Vector3d()
@@ -200,5 +201,17 @@ public class Vector3d extends javax.vecmath.Vector3d
         x = q.x;
         y = q.y;
         z = q.z;
+    }
+
+
+    public String getCrs()
+    {
+        return crs;
+    }
+
+
+    public void setCrs(String crs)
+    {
+        this.crs = crs;
     }
 }

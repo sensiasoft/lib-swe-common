@@ -86,6 +86,15 @@ public class SpatialExtent
     }
     
     
+    public double getMaxDistance()
+    {
+        double dx = (maxX - minX);
+        double dy = (maxY - minY);
+        double dz = (maxZ - minZ);
+        return Math.max(Math.max(dx, dy), dz);
+    }
+    
+    
     public boolean isNull()
     {
         if (Double.isNaN(minX)) return true;
