@@ -48,7 +48,7 @@ public class Matrix4d extends javax.vecmath.Matrix4d
     public Matrix4d()
     {
         super();
-        setIdentity();
+        this.setIdentity();
     }
     
     
@@ -111,5 +111,86 @@ public class Matrix4d extends javax.vecmath.Matrix4d
         this.getRotationScale(rotPortion);
         rotPortion.mul(mat);
         this.setRotationScale(rotPortion);
+    }
+    
+    
+    /**
+     * Rotate about x-axis (right-handed rotation)
+     * @param angleRadians
+     */
+    public void rotateX(double angleRadians)
+    {
+        if (angleRadians == 0)
+            return;
+        
+        double c, s, m;
+        c = Math.cos(angleRadians);
+        s = Math.sin(angleRadians);
+
+        m = m10;
+        m10 = s * m20 + c * m;
+        m20 = c * m20 - s * m;
+        
+        m = m11;
+        m11 = s * m21 + c * m;
+        m21 = c * m21 - s * m;
+        
+        m = m12;
+        m12 = s * m22 + c * m;
+        m22 = c * m22 - s * m;
+    }
+
+
+    /**
+     * Rotate about y-axis (right-handed rotation)
+     * @param angleRadians
+     */
+    public void rotateY(double angleRadians)
+    {
+        if (angleRadians == 0)
+            return;
+        
+        double c, s, m;
+        c = Math.cos(angleRadians);
+        s = Math.sin(angleRadians);
+
+        m = m00;
+        m00 = -s * m20 + c * m;
+        m20 = c * m20 + s * m;
+        
+        m = m01;
+        m01 = -s * m21 + c * m;
+        m21 = c * m21 + s * m;
+        
+        m = m02;
+        m02 = -s * m22 + c * m;
+        m22 = c * m22 + s * m;
+    }
+
+
+    /**
+     * Rotate about z-axis (right-handed rotation)
+     * @param angleRadians
+     */
+    public void rotateZ(double angleRadians)
+    {
+        if (angleRadians == 0)
+            return;
+        
+        double c, s, m;
+        c = Math.cos(angleRadians);
+        s = Math.sin(angleRadians);
+
+        m = m00;
+        m00 = s * m10 + c * m;
+        m10 = c * m10 - s * m;
+        
+        m = m01;
+        m01 = s * m11 + c * m;
+        m11 = c * m11 - s * m;
+        
+        m = m02;
+        m02 = s * m12 + c * m;
+        m12 = c * m12 - s * m;
     }
 }

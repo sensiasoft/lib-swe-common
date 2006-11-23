@@ -80,11 +80,11 @@ public class Vector3d extends javax.vecmath.Vector3d
      * Rotates vector around X axis by given angle
      * @param angleRadians double
      */
-    public void rotX(double angleRadians)
+    public void rotateX(double angleRadians)
     {
         double c,s;
-        c = Math.cos( -angleRadians);
-        s = Math.sin( -angleRadians);
+        c = Math.cos(angleRadians);
+        s = Math.sin(angleRadians);
         Vector3d v = this.copy();
         y = c * v.y + s * v.z;
         z = -s * v.y + c * v.z;
@@ -95,11 +95,11 @@ public class Vector3d extends javax.vecmath.Vector3d
      * Rotates vector around Y axis by given angle
      * @param angleRadians double
      */
-    public void rotY(double angleRadians)
+    public void rotateY(double angleRadians)
     {
         double c, s;
-        c = Math.cos( -angleRadians);
-        s = Math.sin( -angleRadians);
+        c = Math.cos(angleRadians);
+        s = Math.sin(angleRadians);
         Vector3d v = this.copy();
         x = c * v.x - s * v.z;
         z = s * v.x + c * v.z;
@@ -110,11 +110,11 @@ public class Vector3d extends javax.vecmath.Vector3d
      * Rotates vector around Z axis by given angle
      * @param angleRadians double
      */
-    public void rotZ(double angleRadians)
+    public void rotateZ(double angleRadians)
     {
         double c, s;
-        c = Math.cos( -angleRadians);
-        s = Math.sin( -angleRadians);
+        c = Math.cos(angleRadians);
+        s = Math.sin(angleRadians);
         Vector3d v = this.copy();
         x = c * v.x + s * v.y;
         y = -s * v.x + c * v.y;
@@ -131,14 +131,14 @@ public class Vector3d extends javax.vecmath.Vector3d
         double y = this.y;
         double z = this.z;
         
-        this.x = m.getElement(0, 0) * x + m.getElement(1, 0) * y
-            + m.getElement(2, 0) * z + m.getElement(3, 0);
+        this.x = m.getElement(0, 0) * x + m.getElement(0, 1) * y
+            + m.getElement(0, 2) * z + m.getElement(0, 3);
 
-        this.y = m.getElement(0, 1) * x + m.getElement(1, 1) * y
-            + m.getElement(2, 1) * z + m.getElement(3, 1);
+        this.y = m.getElement(1, 0) * x + m.getElement(1, 1) * y
+            + m.getElement(1, 2) * z + m.getElement(1, 3);
 
-        this.z = m.getElement(0, 2) * x + m.getElement(1, 2) * y
-            + m.getElement(2, 2) * z + m.getElement(3, 2);
+        this.z = m.getElement(2, 0) * x + m.getElement(2, 1) * y
+            + m.getElement(2, 2) * z + m.getElement(2, 3);
     }
 
 
@@ -153,11 +153,13 @@ public class Vector3d extends javax.vecmath.Vector3d
         double y = this.y;
         double z = this.z;
 
-        this.x = m.getElement(0, 0) * x + m.getElement(1, 0) * y
-            + m.getElement(2, 0) * z;
-        this.y = m.getElement(0, 1) * x + m.getElement(1, 1) * y
-            + m.getElement(2, 1) * z;
-        this.z = m.getElement(0, 2) * x + m.getElement(1, 2) * y
+        this.x = m.getElement(0, 0) * x + m.getElement(0, 1) * y
+            + m.getElement(0, 2) * z;
+
+        this.y = m.getElement(1, 0) * x + m.getElement(1, 1) * y
+            + m.getElement(1, 2) * z;
+
+        this.z = m.getElement(2, 0) * x + m.getElement(2, 1) * y
             + m.getElement(2, 2) * z;
     }
 
@@ -172,11 +174,13 @@ public class Vector3d extends javax.vecmath.Vector3d
         double y = this.y;
         double z = this.z;
 
-        this.x = m.getElement(0, 0) * x + m.getElement(1, 0) * y
-            + m.getElement(2, 0) * z;
-        this.y = m.getElement(0, 1) * x + m.getElement(1, 1) * y
-            + m.getElement(2, 1) * z;
-        this.z = m.getElement(0, 2) * x + m.getElement(1, 2) * y
+        this.x = m.getElement(0, 0) * x + m.getElement(0, 1) * y
+            + m.getElement(0, 2) * z;
+
+        this.y = m.getElement(1, 0) * x + m.getElement(1, 1) * y
+            + m.getElement(1, 2) * z;
+
+        this.z = m.getElement(2, 0) * x + m.getElement(2, 1) * y
             + m.getElement(2, 2) * z;
     }
     

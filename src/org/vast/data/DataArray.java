@@ -143,7 +143,6 @@ public class DataArray extends AbstractDataComponent
             
             if (dataBlock instanceof DataBlockMixed)
             {
-                // TODO getComponent for array with DataBlockMixed
                 throw new IllegalStateException("Error: DataArrays should never contain a DataBlockMixed");
             }            
             else if (dataBlock instanceof DataBlockParallel)

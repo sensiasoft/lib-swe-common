@@ -17,12 +17,11 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+ Alexandre Robin <robin@nsstc.uah.edu>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.math;
-
 
 /**
  * <p><b>Title:</b>
@@ -43,54 +42,136 @@ package org.vast.math;
 public class Matrix3d extends javax.vecmath.Matrix3d
 {
     static final long serialVersionUID = 0;
-    
-    
+
+
     public Matrix3d()
     {
         super();
+        this.setIdentity();
     }
-    
-    
+
+
     public Matrix3d(double[] components)
     {
         super(components);
     }
-    
-    
+
+
     public Matrix3d(double m00, double m01, double m02, double m10, double m11, double m12, double m20, double m21, double m22)
     {
         super(m00, m01, m02, m10, m11, m12, m20, m21, m22);
     }
-    
-    
+
+
     public Matrix3d(Vector3d v1, Vector3d v2, Vector3d v3)
     {
         this.setColumn(0, v1.x, v1.y, v1.z);
         this.setColumn(1, v2.x, v2.y, v2.z);
         this.setColumn(2, v3.x, v3.y, v3.z);
     }
-    
-    
+
+
     public Matrix3d(Matrix3d mat)
     {
         super(mat);
     }
-    
-    
+
+
     public Matrix3d copy()
     {
         return new Matrix3d(this);
     }
-    
-    
+
+
     public void mulRight(Matrix3d mat)
     {
         super.mul(mat);
     }
-    
-    
+
+
     public void mulLeft(Matrix3d mat)
     {
+
+    }
+
+
+    /**
+     * Rotate about x-axis (right-handed rotation)
+     * @param angleRadians
+     */
+    public void rotateX(double angleRadians)
+    {
+        if (angleRadians == 0)
+            return;
         
+        double c, s, m;
+        c = Math.cos(angleRadians);
+        s = Math.sin(angleRadians);
+
+        m = m10;
+        m10 = s * m20 + c * m;
+        m20 = c * m20 - s * m;
+        
+        m = m11;
+        m11 = s * m21 + c * m;
+        m21 = c * m21 - s * m;
+        
+        m = m12;
+        m12 = s * m22 + c * m;
+        m22 = c * m22 - s * m;
+    }
+
+
+    /**
+     * Rotate about y-axis (right-handed rotation)
+     * @param angleRadians
+     */
+    public void rotateY(double angleRadians)
+    {
+        if (angleRadians == 0)
+            return;
+        
+        double c, s, m;
+        c = Math.cos(angleRadians);
+        s = Math.sin(angleRadians);
+
+        m = m00;
+        m00 = s * m20 + c * m;
+        m20 = c * m20 - s * m;
+        
+        m = m01;
+        m01 = s * m21 + c * m;
+        m21 = c * m21 - s * m;
+        
+        m = m02;
+        m02 = s * m22 + c * m;
+        m22 = c * m22 - s * m;
+    }
+
+
+    /**
+     * Rotate about z-axis (right-handed rotation)
+     * @param angleRadians
+     */
+    public void rotateZ(double angleRadians)
+    {
+        if (angleRadians == 0)
+            return;
+        
+        double c, s, m;
+        c = Math.cos(angleRadians);
+        s = Math.sin(angleRadians);
+
+        m = m00;
+        m00 = s * m10 + c * m;
+        m10 = c * m10 - s * m;
+        
+        m = m01;
+        m01 = s * m11 + c * m;
+        m11 = c * m11 - s * m;
+        
+        m = m02;
+        m02 = s * m12 + c * m;
+        m12 = c * m12 - s * m;
     }
 }
