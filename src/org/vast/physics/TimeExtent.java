@@ -170,19 +170,13 @@ public class TimeExtent
 
     public double getAdjustedLeadTime()
     {
-        if (baseAtNow || endNow)
-            return Double.POSITIVE_INFINITY;
-        else
-            return (getBaseTime() + timeBias + leadTimeDelta);
+        return (getBaseTime() + timeBias + leadTimeDelta);
     }
 
 
     public double getAdjustedLagTime()
     {
-        if (baseAtNow || beginNow)
-            return Double.POSITIVE_INFINITY;
-        else
-            return (getBaseTime() + timeBias - lagTimeDelta);
+        return (getBaseTime() + timeBias - lagTimeDelta);
     }
     
     
