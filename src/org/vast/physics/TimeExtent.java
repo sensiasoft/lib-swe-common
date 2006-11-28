@@ -32,6 +32,9 @@ package org.vast.physics;
  */
 public class TimeExtent
 {
+    public final static double NOW = Double.MIN_VALUE;
+    public final static double UNKNOWN = Double.MAX_VALUE;
+    
     protected double baseTime = Double.NaN;
     protected double timeBias = 0;
     protected double timeStep = 0;
