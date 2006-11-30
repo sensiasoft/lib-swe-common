@@ -52,6 +52,8 @@ public class DefaultExceptionHandler implements ExceptionHandler
 
         if (e.getMessage() != null)
             message += e.getMessage().toString() + "\n";
+        else
+            message += e.getClass().getSimpleName();
 
         if (e.getCause() != null)
         {
