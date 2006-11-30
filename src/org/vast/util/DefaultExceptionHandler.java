@@ -55,7 +55,7 @@ public class DefaultExceptionHandler implements ExceptionHandler
 
         if (e.getCause() != null)
         {
-            message += "\tCause: ";
+            message += "  Cause: ";
             message = getErrorMessage(e.getCause(), message, debug);
         }
 
