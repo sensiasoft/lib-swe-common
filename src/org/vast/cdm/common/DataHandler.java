@@ -21,43 +21,41 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import org.vast.cdm.common.CDMException;
-import org.vast.util.URIResolver;
+package org.vast.cdm.common;
 
 
-public class URIStreamHandler
+
+/**
+ * <p><b>Title:</b><br/>
+ * DataHandler
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Implement this interface to catch events coming from a DataParser
+ * and sort, archive, display or process the decoded data.
+ * </p>
+ *
+ * <p>Copyright (c) 2005</p>
+ * @author Alexandre Robin
+ * @since Aug 12, 2005
+ * @version 1.0
+ */
+public interface DataHandler
 {
-	
-	public static synchronized InputStream openStream(String uri) throws CDMException
-	{
-		try
-		{
-			URI uriObject = new URI(uri);
-			return URIStreamHandler.openStream(uriObject);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new CDMException("Invalid URI syntax");
-		}	
-	}
+    public void beginDataAtom(DataComponent info, DataBlock data);
+    
+    
+    public void endDataAtom(DataComponent info, DataBlock data);
 
-	
-	public static synchronized InputStream openStream(URI uri) throws CDMException
-	{
-		try
-		{
-			URIResolver resolver = new URIResolver(uri);
-			return resolver.openStream();
-		}
-		catch (IOException e)
-		{
-			throw new CDMException("Error while connecting to the data stream");
-		}
-	}
+
+	public void startDataBlock(DataComponent info);
+
+
+	public void endDataBlock(DataComponent info, DataBlock data);
+
+
+	public void startData(DataComponent info);
+
+
+	public void endData(DataComponent info, DataBlock data);
 }

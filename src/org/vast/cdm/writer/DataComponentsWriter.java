@@ -24,8 +24,11 @@
 package org.vast.cdm.writer;
 
 import org.w3c.dom.*;
-import org.ogc.cdm.common.*;
-import org.ogc.cdm.writer.DataComponentWriter;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataBlock;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataComponentWriter;
+import org.vast.cdm.common.DataType;
 import org.vast.data.*;
 import org.vast.io.xml.*;
 

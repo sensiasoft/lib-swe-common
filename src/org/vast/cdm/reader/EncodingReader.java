@@ -24,8 +24,6 @@
 package org.vast.cdm.reader;
 
 import org.w3c.dom.*;
-import org.ogc.cdm.common.*;
-import org.ogc.cdm.reader.*;
 import org.vast.cdm.common.*;
 import org.vast.io.xml.*;
 

@@ -25,8 +25,7 @@ package org.vast.cdm.reader;
 
 import java.io.*;
 import java.net.*;
-import org.ogc.cdm.common.*;
-import org.ogc.cdm.reader.*;
+import org.vast.cdm.common.*;
 
 
 /**

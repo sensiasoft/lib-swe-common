@@ -23,8 +23,6 @@
 
 package org.vast.cdm.common;
 
-import org.ogc.cdm.common.*;
-
 
 public class BinaryOptions
 {

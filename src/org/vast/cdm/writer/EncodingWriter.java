@@ -24,8 +24,6 @@
 package org.vast.cdm.writer;
 
 import org.w3c.dom.*;
-import org.ogc.cdm.common.*;
-import org.ogc.cdm.writer.DataEncodingWriter;
 import org.vast.cdm.common.*;
 import org.vast.io.xml.*;
 

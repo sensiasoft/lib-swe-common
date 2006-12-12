@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import org.ogc.cdm.common.DataType;
+import org.vast.cdm.common.DataType;
 
 
 /**

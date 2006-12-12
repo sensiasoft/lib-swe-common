@@ -21,43 +21,14 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.cdm.common;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import org.vast.cdm.common.CDMException;
-import org.vast.util.URIResolver;
-
-
-public class URIStreamHandler
+public enum Compression
 {
-	
-	public static synchronized InputStream openStream(String uri) throws CDMException
-	{
-		try
-		{
-			URI uriObject = new URI(uri);
-			return URIStreamHandler.openStream(uriObject);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new CDMException("Invalid URI syntax");
-		}	
-	}
-
-	
-	public static synchronized InputStream openStream(URI uri) throws CDMException
-	{
-		try
-		{
-			URIResolver resolver = new URIResolver(uri);
-			return resolver.openStream();
-		}
-		catch (IOException e)
-		{
-			throw new CDMException("Error while connecting to the data stream");
-		}
-	}
+	GZIP,
+    BZIP,
+    JPEG,
+    JPEG2000,
+    MPEG2,
+    MPEG4;
 }

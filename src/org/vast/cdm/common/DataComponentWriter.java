@@ -21,43 +21,28 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.cdm.common;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import org.vast.cdm.common.CDMException;
-import org.vast.util.URIResolver;
+import org.w3c.dom.*;
 
 
-public class URIStreamHandler
+/**
+ * <p><b>Title:</b><br/>
+ * Data Components XML Writer
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Concrete implementations of this interface are responsible for
+ * creating an XML element containing a data components structure
+ * using info specified in the DataComponent object.  
+ * </p>
+ *
+ * <p>Copyright (c) 2005</p>
+ * @author Alexandre Robin
+ * @since Feb 03, 2006
+ * @version 1.0
+ */
+public interface DataComponentWriter
 {
-	
-	public static synchronized InputStream openStream(String uri) throws CDMException
-	{
-		try
-		{
-			URI uriObject = new URI(uri);
-			return URIStreamHandler.openStream(uriObject);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new CDMException("Invalid URI syntax");
-		}	
-	}
-
-	
-	public static synchronized InputStream openStream(URI uri) throws CDMException
-	{
-		try
-		{
-			URIResolver resolver = new URIResolver(uri);
-			return resolver.openStream();
-		}
-		catch (IOException e)
-		{
-			throw new CDMException("Error while connecting to the data stream");
-		}
-	}
+	public Element writeDataComponents(DataComponent dataComponents) throws CDMException;
 }

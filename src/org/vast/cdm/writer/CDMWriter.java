@@ -24,9 +24,12 @@
 package org.vast.cdm.writer;
 
 import java.io.*;
-
-import org.ogc.cdm.common.*;
-import org.ogc.cdm.writer.*;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataDescriptionWriter;
+import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataStreamWriter;
+import org.vast.cdm.common.OutputStreamProvider;
 
 
 /**

@@ -23,7 +23,7 @@
 
 package org.vast.data;
 
-import org.ogc.cdm.common.DataType;
+import org.vast.cdm.common.DataType;
 
 
 /**

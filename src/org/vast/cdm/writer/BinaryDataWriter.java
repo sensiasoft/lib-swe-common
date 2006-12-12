@@ -25,7 +25,6 @@ package org.vast.cdm.writer;
 
 import java.io.*;
 import java.util.Hashtable;
-import org.ogc.cdm.common.*;
 import org.vast.data.*;
 import org.vast.cdm.common.*;
 

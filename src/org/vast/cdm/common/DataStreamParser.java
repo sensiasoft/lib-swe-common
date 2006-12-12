@@ -21,62 +21,72 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.cdm.common;
 
-import java.io.*;
+import java.io.InputStream;
 import java.net.URI;
-import org.vast.cdm.common.*;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Data Parser
+ * Data Stream Parser
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Abstract class for parsing a CDM data stream
+ * Concrete implementations of this interface are responsible for
+ * parsing data with the given encoding format, decoding this data
+ * into DataInfo and DecodedData objects if a DataHandler is 
+ * registered and sending events to registered handlers.  
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Aug 16, 2005
+ * @since Aug 12, 2005
  * @version 1.0
  */
-public abstract class DataParser extends DataIterator implements DataStreamParser
+public interface DataStreamParser
 {
-	protected boolean stopParsing = false;
-		
-	
-	public DataParser()
-	{
-	}
+	public DataHandler getDataHandler();
 	
 	
-	/**
-	 * Stop the parsing from another thread
-	 */
-	public synchronized void stop()
-	{
-		stopParsing = true;
-	}
-	
-	
-	/**
-	 * Default parse method from a URI string
-	 */
-	public void parse(String uri) throws CDMException
-	{
-		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
-	}
+	public RawDataHandler getRawDataHandler();
 
+
+	public ErrorHandler getErrorHandler();
 	
-	/**
-	 * Default parse method from a URI object
-	 */
-	public void parse(URI uri) throws CDMException
-	{
-		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
-	}
+	
+	public DataComponent getDataComponents();
+
+
+	public DataEncoding getDataEncoding();
+
+
+	public void setDataHandler(DataHandler handler);
+	
+	
+	public void setRawDataHandler(RawDataHandler handler);
+
+
+	public void setErrorHandler(ErrorHandler handler);
+
+
+	public void setDataComponents(DataComponent components);
+
+
+	public void setDataEncoding(DataEncoding encoding);
+	
+	
+	public void parse(String uri) throws CDMException;
+
+
+	public void parse(URI uri) throws CDMException;
+
+
+	public void parse(InputStream inputStream) throws CDMException;
+	
+	
+	public void reset();
+	
+	
+	public void stop();
 }

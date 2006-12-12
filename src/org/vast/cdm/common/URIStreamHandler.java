@@ -21,13 +21,12 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.cdm.common;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import org.vast.cdm.common.CDMException;
 import org.vast.util.URIResolver;
 
 

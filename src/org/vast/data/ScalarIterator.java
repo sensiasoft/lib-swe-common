@@ -25,7 +25,7 @@ package org.vast.data;
 
 import java.util.*;
 
-import org.ogc.cdm.common.DataComponent;
+import org.vast.cdm.common.DataComponent;
 
 
 /**

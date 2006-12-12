@@ -21,41 +21,62 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.writer;
+package org.vast.cdm.common;
 
-import org.vast.cdm.common.DataIterator;
-import org.vast.cdm.common.DataStreamWriter;
+import java.io.OutputStream;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Writer
- * </p>
+ * <p><b>Title:</b><br/> DataWriter</p>
  *
  * <p><b>Description:</b><br/>
- * Abstract class for writing a CDM data stream.
+ * Concrete implementations of this interface are responsible for
+ * writing data using the specified encoding format and data components.
+ * Result data should be written in the outputStream.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 10, 2006
+ * @since Aug 12, 2005
  * @version 1.0
  */
-public abstract class DataWriter extends DataIterator implements DataStreamWriter
+public interface DataStreamWriter
 {
-	protected boolean stopWriting = false;
-		
-	
-	public DataWriter()
-	{
-	}
-	
-	
-	/**
-	 * Stop the parsing from another thread
-	 */
-	public synchronized void stop()
-	{
-        stopWriting = true;
-	}
+    public DataHandler getDataHandler();
+    
+    
+    public RawDataHandler getRawDataHandler();
+
+
+    public ErrorHandler getErrorHandler();
+    
+    
+    public DataComponent getDataComponents();
+
+
+    public DataEncoding getDataEncoding();
+
+
+    public void setDataHandler(DataHandler handler);
+    
+    
+    public void setRawDataHandler(RawDataHandler handler);
+
+
+    public void setErrorHandler(ErrorHandler handler);
+
+
+    public void setDataComponents(DataComponent components);
+
+
+    public void setDataEncoding(DataEncoding encoding);
+
+
+	public void write(OutputStream outputStream) throws CDMException;
+    
+    
+    public void reset();
+
+
+	public void stop();
 }

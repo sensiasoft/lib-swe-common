@@ -21,43 +21,27 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.cdm.common;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import org.vast.cdm.common.CDMException;
-import org.vast.util.URIResolver;
+import java.io.OutputStream;
 
 
-public class URIStreamHandler
+/**
+ * <p><b>Title:</b><br/>
+ * Data Stream Provider
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Provide a direct access to the data stream corresponding to
+ * the CDM obtained description.
+ * </p>
+ *
+ * <p>Copyright (c) 2005</p>
+ * @author Alexandre Robin
+ * @since Aug 12, 2005
+ * @version 1.0
+ */
+public interface OutputStreamProvider
 {
-	
-	public static synchronized InputStream openStream(String uri) throws CDMException
-	{
-		try
-		{
-			URI uriObject = new URI(uri);
-			return URIStreamHandler.openStream(uriObject);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new CDMException("Invalid URI syntax");
-		}	
-	}
-
-	
-	public static synchronized InputStream openStream(URI uri) throws CDMException
-	{
-		try
-		{
-			URIResolver resolver = new URIResolver(uri);
-			return resolver.openStream();
-		}
-		catch (IOException e)
-		{
-			throw new CDMException("Error while connecting to the data stream");
-		}
-	}
+	public OutputStream getDataStream() throws CDMException;
 }

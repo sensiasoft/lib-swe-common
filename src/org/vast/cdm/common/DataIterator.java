@@ -24,7 +24,6 @@
 package org.vast.cdm.common;
 
 import java.util.Stack;
-import org.ogc.cdm.common.*;
 import org.vast.data.*;
 
 

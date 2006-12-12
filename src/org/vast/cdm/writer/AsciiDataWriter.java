@@ -24,8 +24,6 @@
 package org.vast.cdm.writer;
 
 import java.io.*;
-
-import org.ogc.cdm.common.*;
 import org.vast.cdm.common.*;
 import org.vast.data.*;
 

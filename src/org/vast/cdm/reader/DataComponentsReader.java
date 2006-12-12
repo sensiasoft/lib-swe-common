@@ -25,11 +25,9 @@ package org.vast.cdm.reader;
 
 import java.text.ParseException;
 import java.util.Hashtable;
-
 import org.w3c.dom.*;
-import org.ogc.cdm.common.*;
-import org.ogc.cdm.reader.*;
 import org.ogc.dic.*;
+import org.vast.cdm.common.*;
 import org.vast.data.*;
 import org.vast.io.xml.*;
 import org.vast.util.*;

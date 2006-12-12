@@ -23,7 +23,6 @@
 
 package org.vast.cdm.common;
 
-import org.ogc.cdm.common.DataEncoding;
 
 
 public class BinaryEncoding implements DataEncoding

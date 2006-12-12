@@ -21,43 +21,45 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.cdm.common;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
-import org.vast.cdm.common.CDMException;
-import org.vast.util.URIResolver;
 
 
-public class URIStreamHandler
+/**
+ * <p><b>Title:</b><br/>
+ * Data Description XML Parser
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Concrete implementations of this interface are responsible for
+ * getting CDM data components and encoding info, parsing it, and
+ * making DataInfo and DataEncoding objects available. It should
+ * also create the appropriate data parser(s) when requested.
+ * </p>
+ *
+ * <p>Copyright (c) 2005</p>
+ * @author Alexandre Robin
+ * @since Aug 12, 2005
+ * @version 1.0
+ */
+public interface DataDescriptionReader
 {
+	public DataComponent getDataComponents();
 	
-	public static synchronized InputStream openStream(String uri) throws CDMException
-	{
-		try
-		{
-			URI uriObject = new URI(uri);
-			return URIStreamHandler.openStream(uriObject);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new CDMException("Invalid URI syntax");
-		}	
-	}
+	
+	public DataEncoding getDataEncoding();
+	
+	
+	public DataStreamParser getDataParser() throws CDMException;
+	
+	
+	public void parse(String uri) throws CDMException;
 
-	
-	public static synchronized InputStream openStream(URI uri) throws CDMException
-	{
-		try
-		{
-			URIResolver resolver = new URIResolver(uri);
-			return resolver.openStream();
-		}
-		catch (IOException e)
-		{
-			throw new CDMException("Error while connecting to the data stream");
-		}
-	}
+
+	public void parse(URI uri) throws CDMException;
+
+
+	public void parse(InputStream inputStream) throws CDMException;
 }

@@ -24,8 +24,8 @@
 package org.vast.data;
 
 import java.util.ListIterator;
-
-import org.ogc.cdm.common.*;
+import org.vast.cdm.common.DataBlock;
+import org.vast.cdm.common.DataComponent;
 
 
 /**
