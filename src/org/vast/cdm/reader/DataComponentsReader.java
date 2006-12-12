@@ -28,6 +28,7 @@ import java.util.Hashtable;
 import org.w3c.dom.*;
 import org.ogc.dic.*;
 import org.vast.cdm.common.*;
+import org.vast.cdm.semantics.DictionaryURN;
 import org.vast.data.*;
 import org.vast.io.xml.*;
 import org.vast.util.*;
