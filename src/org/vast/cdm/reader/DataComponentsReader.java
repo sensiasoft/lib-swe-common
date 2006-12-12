@@ -26,7 +26,6 @@ package org.vast.cdm.reader;
 import java.text.ParseException;
 import java.util.Hashtable;
 import org.w3c.dom.*;
-import org.ogc.dic.*;
 import org.vast.cdm.common.*;
 import org.vast.cdm.semantics.DictionaryURN;
 import org.vast.data.*;
