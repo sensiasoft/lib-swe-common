@@ -21,43 +21,41 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.sweCommon;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import org.vast.cdm.common.CDMException;
-import org.vast.util.URIResolver;
+import org.vast.cdm.common.DataIterator;
+import org.vast.cdm.common.DataStreamWriter;
 
 
-public class URIStreamHandler
+/**
+ * <p><b>Title:</b><br/>
+ * Data Writer
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Abstract class for writing a CDM data stream.
+ * </p>
+ *
+ * <p>Copyright (c) 2005</p>
+ * @author Alexandre Robin
+ * @date Feb 10, 2006
+ * @version 1.0
+ */
+public abstract class DataWriter extends DataIterator implements DataStreamWriter
 {
+	protected boolean stopWriting = false;
+		
 	
-	public static synchronized InputStream openStream(String uri) throws CDMException
+	public DataWriter()
 	{
-		try
-		{
-			URI uriObject = new URI(uri);
-			return URIStreamHandler.openStream(uriObject);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new CDMException("Invalid URI syntax");
-		}	
 	}
-
 	
-	public static synchronized InputStream openStream(URI uri) throws CDMException
+	
+	/**
+	 * Stop the parsing from another thread
+	 */
+	public synchronized void stop()
 	{
-		try
-		{
-			URIResolver resolver = new URIResolver(uri);
-			return resolver.openStream();
-		}
-		catch (IOException e)
-		{
-			throw new CDMException("Error while connecting to the data stream");
-		}
+        stopWriting = true;
 	}
 }

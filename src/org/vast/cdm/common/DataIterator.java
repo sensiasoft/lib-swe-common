@@ -81,7 +81,7 @@ public abstract class DataIterator
         // otherwise parse element
         else
         {
-            dataHandler.beginDataAtom(next, next.getData());
+            dataHandler.beginDataAtom(next);
             processAtom((DataValue)next);
         	dataHandler.endDataAtom(next, next.getData());
         }

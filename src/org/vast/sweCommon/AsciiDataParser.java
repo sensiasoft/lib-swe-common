@@ -21,7 +21,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.sweCommon;
 
 import java.io.*;
 
@@ -29,7 +29,7 @@ import org.vast.cdm.common.*;
 import org.vast.data.*;
 
 
-public class AsciiDataParser extends DataParser
+public class AsciiDataParser extends AbstractDataParser
 {
 	String nextToken;
 	int tupleSize;
@@ -163,7 +163,7 @@ public class AsciiDataParser extends DataParser
     @Override
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
-		char decimalSep = ((AsciiEncoding)dataEncoding).decimalSeparator;		
-		DataComponentsReader.parseToken(scalarInfo, this.nextToken, decimalSep);
+		char decimalSep = ((AsciiEncoding)dataEncoding).decimalSeparator;
+		SweComponentReaderV0.parseToken(scalarInfo, this.nextToken, decimalSep);
 	}
 }

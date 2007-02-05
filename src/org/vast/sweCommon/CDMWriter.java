@@ -21,64 +21,68 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.sweCommon;
 
 import java.io.*;
-import java.net.*;
-import org.vast.cdm.common.*;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataDescriptionWriter;
+import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataStreamWriter;
+import org.vast.cdm.common.OutputStreamProvider;
 
 
 /**
  * <p><b>Title:</b><br/>
- * CDM Reader
+ * CDM Writer
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Abstract class for all CDM readers.
- * This class provides methods to parse any XML document
+ * Abstract class for all CDM writers.
+ * This class provides methods to write an XML document
  * containing CDM data structure, encoding and stream sections.
- * The class has getters to get this info after it has been
- * parsed. Concrete derived classes are actually responsible
- * for finding the XML content for each of these sections and
- * using the corresponding readers to parse it out. This class
- * also has a helper method that constructs the DataParser
- * suited for a given encoding.
+ * The class has setters allowing one to specify a data component
+ * structure and an encoding. Concrete derived classes are
+ * actually responsible for writing the XML content for each of
+ * these sections using the corresponding writers. This class
+ * also has a helper method that constructs the DataWriter
+ * suited for the given encoding.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Aug 16, 2005
+ * @date Feb 10, 2006
  * @version 1.0
  */
-public abstract class CDMReader implements DataDescriptionReader, InputStreamProvider
+public abstract class CDMWriter implements DataDescriptionWriter, OutputStreamProvider
 {
 	protected DataEncoding dataEncoding;
 	protected DataComponent dataComponents;
 		
 
-	public abstract void parse(InputStream inputStream) throws CDMException;
-	public abstract InputStream getDataStream() throws CDMException;
+	public abstract void write(OutputStream inputStream) throws CDMException;
+	public abstract OutputStream getDataStream() throws CDMException;
 	
 	
-	public DataStreamParser getDataParser()
+	public DataStreamWriter getDataWriter()
 	{
-		DataStreamParser parser = null;
+		DataStreamWriter writer = null;
 		
 		switch (dataEncoding.getEncodingType())
 		{
 			case ASCII:
-				parser = new AsciiDataParser();
+				writer = new AsciiDataWriter();
 				break;
 				
 			case BINARY:
-				parser = new BinaryDataParser();
+				writer = new BinaryDataWriter();
 				break;				
 		}
 		
-		parser.setDataEncoding(this.dataEncoding);
-		parser.setDataComponents(this.dataComponents);
-		parser.reset();
-		return parser;
+		writer.setDataEncoding(this.dataEncoding);
+		writer.setDataComponents(this.dataComponents);
+		writer.reset();
+		return writer;
 	}
 	
 	
@@ -92,18 +96,16 @@ public abstract class CDMReader implements DataDescriptionReader, InputStreamPro
 	{
 		return this.dataComponents;
 	}
-	
-	
-	public void parse(String uri) throws CDMException
-	{
-		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
-	}
-
-
-	public void parse(URI uri) throws CDMException
-	{
-		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
-	}
+    
+    
+    public void setDataComponents(DataComponent dataComponents)
+    {
+        this.dataComponents = dataComponents;        
+    }
+    
+    
+    public void setDataEncoding(DataEncoding dataEncoding)
+    {
+        this.dataEncoding = dataEncoding;        
+    }
 }

@@ -21,7 +21,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.sweCommon;
 
 import java.io.DataInputStream;
 import java.io.EOFException;

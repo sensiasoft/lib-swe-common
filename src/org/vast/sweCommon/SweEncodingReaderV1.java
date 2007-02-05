@@ -21,58 +21,55 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.sweCommon;
 
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
-import org.vast.io.xml.*;
+import org.vast.xml.DOMHelper;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Encoding Reader
+ * Swe Encoding Reader V1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Parse the encoding section of the SWE DataDefinition element.
- * This class handles ASCIIBlock and BinaryBlock.
+ * Reads SWE Encoding definition for ASCIIBlock and BinaryBlock.
+ * This is for version 1 of the SWECommon standard.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2006</p>
  * @author Alexandre Robin
- * @date Aug 16, 2005
+ * @date Dec 19, 2006
  * @version 1.0
  */
-public class EncodingReader implements DataEncodingReader
+public class SweEncodingReaderV1 implements DataEncodingReader
 {
-    DOMReader dom;
     
-    
-    public EncodingReader(DOMReader parentReader)
+    public SweEncodingReaderV1()
     {
-        this.dom = parentReader;
     }
  
 
-    public DataEncoding readEncodingProperty(Element propertyElement) throws CDMException
+    public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws CDMException
     {
     	Element encodingElement = dom.getFirstChildElement(propertyElement);
-    	DataEncoding encoding = readDataEncoding(encodingElement);        
+    	DataEncoding encoding = readEncoding(dom, encodingElement);        
         return encoding;
     }
     
     
-    public DataEncoding readDataEncoding(Element encodingElement) throws CDMException
+    public DataEncoding readEncoding(DOMHelper dom, Element encodingElement) throws CDMException
     {
     	DataEncoding encoding = null;
         
         if (encodingElement.getLocalName().equals("AsciiBlock"))
         {
-        	encoding = readAsciiBlock(encodingElement);
+        	encoding = readAsciiBlock(dom, encodingElement);
         }
         else if (encodingElement.getLocalName().equals("BinaryBlock"))
         {
-        	encoding = readBinaryBlock(encodingElement);
+        	encoding = readBinaryBlock(dom, encodingElement);
         }
         else
         	throw new CDMException("Encoding not supported");
@@ -81,7 +78,7 @@ public class EncodingReader implements DataEncodingReader
     }
     
     
-    private AsciiEncoding readAsciiBlock(Element asciiBlockElement) throws CDMException
+    private AsciiEncoding readAsciiBlock(DOMHelper dom, Element asciiBlockElement) throws CDMException
     {
     	AsciiEncoding encoding = new AsciiEncoding();
     	
@@ -93,7 +90,7 @@ public class EncodingReader implements DataEncodingReader
     }
     
     
-    private BinaryEncoding readBinaryBlock(Element binaryBlockElement) throws CDMException
+    private BinaryEncoding readBinaryBlock(DOMHelper dom, Element binaryBlockElement) throws CDMException
     {
     	BinaryEncoding encoding = new BinaryEncoding();
     	
@@ -131,7 +128,7 @@ public class EncodingReader implements DataEncodingReader
     	for (int i=0; i<components.getLength(); i++)
     	{
     		Element componentElt = (Element)components.item(i);
-    		componentEncodings[i] = readBinaryValue(componentElt);
+    		componentEncodings[i] = readBinaryValue(dom, componentElt);
     	}
     	encoding.componentEncodings = componentEncodings;
     	
@@ -139,7 +136,7 @@ public class EncodingReader implements DataEncodingReader
     }
     
 
-    private BinaryOptions readBinaryValue(Element componentElement) throws CDMException
+    private BinaryOptions readBinaryValue(DOMHelper dom, Element componentElement) throws CDMException
     {
         BinaryOptions binaryValue = new BinaryOptions();
         

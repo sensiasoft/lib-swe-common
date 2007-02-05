@@ -23,12 +23,13 @@
 
 package org.vast.cdm.common;
 
+import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Data Components XML Writer
+ * Data Component XML Writer
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -44,5 +45,13 @@ import org.w3c.dom.*;
  */
 public interface DataComponentWriter
 {
-	public Element writeDataComponents(DataComponent dataComponents) throws CDMException;
+	/**
+     * 
+     * TODO writeDataComponent method description
+     * @param dom
+     * @param dataComponents
+     * @return
+     * @throws CDMException
+	 */
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException;
 }

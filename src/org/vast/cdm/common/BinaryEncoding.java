@@ -23,8 +23,23 @@
 
 package org.vast.cdm.common;
 
+import org.vast.sweCommon.BinaryDataParser;
 
 
+/**
+ * <p><b>Title:</b>
+ * BinaryEncoding
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * TODO BinaryEncoding type description
+ * </p>
+ *
+ * <p>Copyright (c) 2005</p>
+ * @author Alexandre Robin
+ * @date Dec 20, 2006
+ * @version 1.0
+ */
 public class BinaryEncoding implements DataEncoding
 {
 	public enum ByteEncoding
@@ -51,6 +66,14 @@ public class BinaryEncoding implements DataEncoding
 	{
 		return EncodingType.BINARY;
 	}
+    
+    
+    public DataStreamParser createDataParser()
+    {
+        DataStreamParser parser = new BinaryDataParser();
+        parser.setDataEncoding(this);
+        return parser;
+    }
 	
 	
 	public String toString()

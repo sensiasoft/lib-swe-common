@@ -21,70 +21,65 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.writer;
+package org.vast.sweCommon;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.DataInputStream;
 
 
 /**
  * <p><b>Title:</b><br/>
- * CDM Output Stream
+ * Data Input Stream for Big Endian
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Extension of DataOutputStream to support writing unsigned int and long
- * values as well as ASCII (0 terminated) strings as byte sequence.
+ * Extension of DataInputStream to support reading unsigned int and long
+ * values as well as ASCII (0 terminated) strings from byte stream.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 10, 2006
+ * @date Nov 28, 2005
  * @version 1.0
  */
-public class CDMOutputStream extends DataOutputStream
+public class DataInputStreamBI extends DataInputStream implements DataInputExt
 {
 	
-	public CDMOutputStream(OutputStream is)
+	public DataInputStreamBI(InputStream is)
 	{
 		super(is);
 	}
 	
 	
-    public void writeUnsignedByte(short val) throws IOException
-    {
-        //TODO
-    }
-    
-    
-    public void writeUnsignedShort(int val) throws IOException
-    {
-        //TODO
-    }
-    
-    
-	public void writeUnsignedInt(long val) throws IOException
+	public long readUnsignedInt() throws IOException
 	{
-		//TODO
+		byte[] b = new byte[4];
+		this.read(b);
+		 
+        return (((long)(b[0] & 255) << 24) +
+                ((long)(b[1] & 255) << 16) +
+                ((long)(b[2] & 255) <<  8) +
+                ((long)(b[3] & 255) <<  0));
 	}
 	
 	
-
-	public void writeUnsignedLong(long val) throws IOException
+	public long readUnsignedLong() throws IOException
 	{
-		this.writeLong(val);
+		return readLong();
 	}
 	
 	
-	/**
-     * Writes a zero terminated ascii string to the stream 
-     * @param asciiString
-     * @throws IOException
-	 */
-	public void writeASCII(String asciiString) throws IOException
+	public String readASCII() throws IOException
 	{
-		this.writeBytes(asciiString);
-		this.writeByte(0);
-    }
+		int val;
+		StringBuffer buf = new StringBuffer();
+		
+		while ((val = in.read()) != 0) 
+		{
+			buf.append((char)val);
+		}
+		
+		return buf.toString();
+	}
 }

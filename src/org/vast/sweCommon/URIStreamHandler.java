@@ -21,62 +21,43 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.sweCommon;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import org.vast.cdm.common.*;
+import java.net.URISyntaxException;
+import org.vast.cdm.common.CDMException;
+import org.vast.util.URIResolver;
 
 
-/**
- * <p><b>Title:</b><br/>
- * Data Parser
- * </p>
- *
- * <p><b>Description:</b><br/>
- * Abstract class for parsing a CDM data stream
- * </p>
- *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @date Aug 16, 2005
- * @version 1.0
- */
-public abstract class DataParser extends DataIterator implements DataStreamParser
+public class URIStreamHandler
 {
-	protected boolean stopParsing = false;
-		
 	
-	public DataParser()
+	public static synchronized InputStream openStream(String uri) throws CDMException
 	{
-	}
-	
-	
-	/**
-	 * Stop the parsing from another thread
-	 */
-	public synchronized void stop()
-	{
-		stopParsing = true;
-	}
-	
-	
-	/**
-	 * Default parse method from a URI string
-	 */
-	public void parse(String uri) throws CDMException
-	{
-		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
+		try
+		{
+			URI uriObject = new URI(uri);
+			return URIStreamHandler.openStream(uriObject);
+		}
+		catch (URISyntaxException e)
+		{
+			throw new CDMException("Invalid URI syntax");
+		}	
 	}
 
 	
-	/**
-	 * Default parse method from a URI object
-	 */
-	public void parse(URI uri) throws CDMException
+	public static synchronized InputStream openStream(URI uri) throws CDMException
 	{
-		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
+		try
+		{
+			URIResolver resolver = new URIResolver(uri);
+			return resolver.openStream();
+		}
+		catch (IOException e)
+		{
+			throw new CDMException("Error while connecting to the data stream");
+		}
 	}
 }

@@ -21,11 +21,11 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.writer;
+package org.vast.sweCommon;
 
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
-import org.vast.io.xml.*;
+import org.vast.xml.DOMHelper;
 
 
 /**
@@ -43,29 +43,32 @@ import org.vast.io.xml.*;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public class EncodingWriter implements DataEncodingWriter
+public class SweEncodingWriterV0 implements DataEncodingWriter
 {
-    DOMWriter dom;
     
-    
-    public EncodingWriter(DOMWriter parentWriter)
-    {
-        dom = parentWriter;
-        dom.addNS("http://www.opengis.net/swe", "swe");
+    public SweEncodingWriterV0()
+    {        
     }
     
     
-    public Element writeDataEncoding(DataEncoding dataEncoding) throws CDMException
+    private void enforceNS(DOMHelper dom)
+    {
+        dom.addUserPrefix("swe", "http://www.opengis.net/swe");
+    }
+    
+    
+    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws CDMException
     {
         Element dataEncElt = null;
+        enforceNS(dom);
         
         if (dataEncoding instanceof AsciiEncoding)
         {
-            dataEncElt = writeAsciiBlock((AsciiEncoding)dataEncoding);
+            dataEncElt = writeAsciiBlock(dom, (AsciiEncoding)dataEncoding);
         }
         else if (dataEncoding instanceof BinaryEncoding)
         {
-            dataEncElt = writeBinaryBlock((BinaryEncoding)dataEncoding);
+            dataEncElt = writeBinaryBlock(dom, (BinaryEncoding)dataEncoding);
         }
         else
             throw new CDMException("Encoding not supported");
@@ -74,7 +77,7 @@ public class EncodingWriter implements DataEncodingWriter
     }
     
     
-    private Element writeAsciiBlock(AsciiEncoding asciiEncoding) throws CDMException
+    private Element writeAsciiBlock(DOMHelper dom, AsciiEncoding asciiEncoding) throws CDMException
     {
         Element dataEncElt = dom.createElement("swe:AsciiBlock");
     	
@@ -86,7 +89,7 @@ public class EncodingWriter implements DataEncodingWriter
     }
     
     
-    private Element writeBinaryBlock(BinaryEncoding binaryEncoding) throws CDMException
+    private Element writeBinaryBlock(DOMHelper dom, BinaryEncoding binaryEncoding) throws CDMException
     {
     	Element binaryEncElt = dom.createElement("swe:BinaryBlock");
         
@@ -114,7 +117,7 @@ public class EncodingWriter implements DataEncodingWriter
         for (int i=0; i<binaryEncoding.componentEncodings.length; i++)
         {
             Element propElt = dom.addElement(binaryEncElt, "+swe:member");
-            Element componentElt = writeBinaryValue(binaryEncoding.componentEncodings[i]);
+            Element componentElt = writeBinaryValue(dom, binaryEncoding.componentEncodings[i]);
             propElt.appendChild(componentElt);
         }
          	
@@ -122,7 +125,7 @@ public class EncodingWriter implements DataEncodingWriter
     }
     
 
-    private Element writeBinaryValue(BinaryOptions binaryOptions) throws CDMException
+    private Element writeBinaryValue(DOMHelper dom, BinaryOptions binaryOptions) throws CDMException
     {
         Element binaryEncElt = dom.createElement("swe:Component");
         

@@ -21,7 +21,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.sweCommon;
 
 import java.text.ParseException;
 import java.util.Hashtable;
@@ -29,84 +29,69 @@ import org.w3c.dom.*;
 import org.vast.cdm.common.*;
 import org.vast.cdm.semantics.DictionaryURN;
 import org.vast.data.*;
-import org.vast.io.xml.*;
+import org.vast.xml.*;
 import org.vast.util.*;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Data Component Reader
+ * Swe Component Reader V1
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Reads CDM Components structures made of Scalar Parameters,
- * DataGroup, DataArray. 
+ * Reads SWE Components structures made of Scalar Parameters,
+ * DataRecord, DataArray, etc. This is for version 1 of the standard.  
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Aug 16, 2005
+ * @date Dec 19, 2006
  * @version 1.0
  */
-public class DataComponentsReader implements DataComponentReader
+public class SweComponentReaderV1 implements DataComponentReader
 {
     public static String tupleSeparator = " ";
     public static String tokenSeparator = ",";
-    protected DOMReader dom;
     protected Hashtable<String, AbstractDataComponent> componentIds;
     
     
-    public DataComponentsReader(DOMReader parentReader)
+    public SweComponentReaderV1()
     {
-        dom = parentReader;
         componentIds = new Hashtable<String, AbstractDataComponent>();
     }
 
 
-    /**
-     * Reads the component property in a data component
-     * @param componentElement Element
-     * @throws SMLReaderException
-     * @return DataComponent
-     */
-    public AbstractDataComponent readComponentProperty(Element propertyElement) throws CDMException
+    public AbstractDataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws CDMException
     {
         Element dataElement = dom.getFirstChildElement(propertyElement);
-        String name = readName(propertyElement);
+        String name = readName(dom, propertyElement);
         
-        AbstractDataComponent container = readDataComponents(dataElement);
+        AbstractDataComponent container = readComponent(dom, dataElement);
         container.setName(name);
         
         return container;
     }
     
     
-    /**
-     * Reads contents of any data component (group/array/scalar)
-     * @param dataElement
-     * @param componentName
-     * @return DataContainer structure
-     * @throws SMLReaderException
-     */
-    public AbstractDataComponent readDataComponents(Element dataElement) throws CDMException
+    public AbstractDataComponent readComponent(DOMHelper dom, Element dataElement) throws CDMException
     {
         AbstractDataComponent container = null;
         
         if (dataElement.getLocalName().endsWith("Range"))
         {
-            container = readRange(dataElement);
+            container = readRange(dom, dataElement);
         }
         else if (dom.getFirstChildElement(dataElement) == null)
         {
-            container = readParameter(dataElement);
+            container = readParameter(dom, dataElement);
         }
         else if (dom.existAttribute(dataElement, "arraySize"))
         {
-            container = readDataArray(dataElement);
+            container = readDataArray(dom, dataElement);
         }
         else
         {
-            container = readDataGroup(dataElement);
+            container = readDataRecord(dom, dataElement);
         } 
         
         // add id to hashtable if present
@@ -124,7 +109,7 @@ public class DataComponentsReader implements DataComponentReader
      * @throws SMLReaderException
      * @return DataGroup
      */
-    private DataGroup readDataGroup(Element dataGroupElement) throws CDMException
+    private DataGroup readDataRecord(DOMHelper dom, Element dataGroupElement) throws CDMException
     {
         // parse all members (can be a different name than member !!)
         NodeList componentList = dom.getAllChildElements(dataGroupElement);
@@ -138,14 +123,14 @@ public class DataComponentsReader implements DataComponentReader
         DataGroup dataGroup = new DataGroup(groupSize);
 
         // read attributes
-        readAttributes(dataGroup, dataGroupElement);
+        readAttributes(dom, dataGroup, dataGroupElement);
 
         // loop through all members
         for (int i = 0; i < groupSize; i++)
         {
             Element dataElement = (Element)componentList.item(i);                
-            AbstractDataComponent dataComponent = readComponentProperty(dataElement);
-            dataGroup.addComponent(readName(dataElement), dataComponent);
+            AbstractDataComponent dataComponent = readComponentProperty(dom, dataElement);
+            dataGroup.addComponent(readName(dom, dataElement), dataComponent);
         }
 
         return dataGroup;
@@ -158,7 +143,7 @@ public class DataComponentsReader implements DataComponentReader
      * @throws SMLReaderException
      * @return DataArray
      */
-    private DataArray readDataArray(Element dataArrayElement) throws CDMException
+    private DataArray readDataArray(DOMHelper dom, Element dataArrayElement) throws CDMException
     {
         int arraySize = 1;
         NodeList children = dom.getAllChildElements(dataArrayElement);
@@ -192,15 +177,15 @@ public class DataComponentsReader implements DataComponentReader
             if (childName.equals("tupleValues"))
             	tupleValuesElement = childElement;
             else
-            	dataComponent = readComponentProperty(childElement);
+            	dataComponent = readComponentProperty(dom, childElement);
         }
 
-        readAttributes(dataArray, dataArrayElement);
+        readAttributes(dom, dataArray, dataArrayElement);
         dataArray.addComponent(dataComponent);
         
         // read tuple values if present
         if (tupleValuesElement != null)
-            readArrayValues(dataArray, tupleValuesElement);
+            readArrayValues(dom, dataArray, tupleValuesElement);
         
         return dataArray;        
     }
@@ -212,7 +197,7 @@ public class DataComponentsReader implements DataComponentReader
      * @return DataValue encapsulating the value
      * @throws SMLReaderException
      */
-    private DataValue readParameter(Element parameterElement) throws CDMException
+    private DataValue readParameter(DOMHelper dom, Element parameterElement) throws CDMException
     {
         DataValue paramValue = null;
         String valueText = dom.getElementValue(parameterElement, "");      
@@ -241,7 +226,7 @@ public class DataComponentsReader implements DataComponentReader
         }
         
     	// read attributes
-    	readAttributes(paramValue, parameterElement);
+    	readAttributes(dom, paramValue, parameterElement);
     	
         // Parse the value
         if (valueText != null)
@@ -254,7 +239,7 @@ public class DataComponentsReader implements DataComponentReader
     }
     
     
-    private DataGroup readRange(Element rangeElement) throws CDMException
+    private DataGroup readRange(DOMHelper dom, Element rangeElement) throws CDMException
     {
         DataValue paramVal = null;
         DataGroup rangeValues = new DataGroup(2);
@@ -274,7 +259,7 @@ public class DataComponentsReader implements DataComponentReader
             throw new CDMException("Only Quantity, Time and Count ranges are allowed");
         
         // read attributes
-        readAttributes(paramVal, rangeElement);
+        readAttributes(dom, paramVal, rangeElement);
         rangeValues.setProperty(DataComponent.DEF, "urn:ogc:def:data:range");
         
         // add params to DataGroup
@@ -306,7 +291,7 @@ public class DataComponentsReader implements DataComponentReader
      * @param propertyElement
      * @return
      */
-    public String readName(Element propertyElement)
+    public String readName(DOMHelper dom, Element propertyElement)
     {
         String name = dom.getAttributeValue(propertyElement, "name");
         
@@ -323,10 +308,10 @@ public class DataComponentsReader implements DataComponentReader
      * @param dataComponent DataContainer
      * @param dataElement Element
      */
-    private void readAttributes(AbstractDataComponent dataComponent, Element parameterElement) throws CDMException
+    private void readAttributes(DOMHelper dom, AbstractDataComponent dataComponent, Element parameterElement) throws CDMException
     {
         // definition URI
-        String defUri = readComponentDefinition(parameterElement);
+        String defUri = readComponentDefinition(dom, parameterElement);
         if (defUri != null)
             dataComponent.setProperty(DataComponent.DEF, defUri);
         
@@ -362,7 +347,7 @@ public class DataComponentsReader implements DataComponentReader
      * @param parameterElement
      * @throws SMLReaderException
      */
-    private String readComponentDefinition(Element parameterElement) throws CDMException
+    private String readComponentDefinition(DOMHelper dom, Element parameterElement) throws CDMException
     {
         String defUri = dom.getAttributeValue(parameterElement, "definition");
         
@@ -398,7 +383,7 @@ public class DataComponentsReader implements DataComponentReader
      * @param tupleValuesElement
      * @throws SMLReaderException
      */
-    private void readArrayValues(DataArray arrayStructure, Element tupleValuesElement) throws CDMException
+    private void readArrayValues(DOMHelper dom, DataArray arrayStructure, Element tupleValuesElement) throws CDMException
     {
         // parse tuple values
         String valueText = dom.getElementValue(tupleValuesElement, "");
@@ -429,7 +414,7 @@ public class DataComponentsReader implements DataComponentReader
                 tupleCounter++;
             }
             
-            DataComponentsReader.parseToken(component, tuples[tokenCounter], '\0');           
+            SweComponentReaderV1.parseToken(component, tuples[tokenCounter], '\0');           
             tokenCounter++;
         }
     }

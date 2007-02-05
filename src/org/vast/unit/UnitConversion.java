@@ -24,9 +24,8 @@
 package org.vast.unit;
 
 import java.util.Hashtable;
-
-import org.vast.io.xml.DOMReader;
-import org.vast.io.xml.DOMReaderException;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
 import org.vast.process.ProcessException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -192,7 +191,7 @@ public class UnitConversion
         try
         {
             // create unit hashtable entries
-            DOMReader dom = new DOMReader(unitFileUrl, false);
+            DOMHelper dom = new DOMHelper(unitFileUrl, false);
             NodeList unitElts = dom.getElements("Unit");
             
             if (urnToUnitMap == null)
@@ -222,7 +221,7 @@ public class UnitConversion
                 urnToUnitMap.put(unit.getSymbol(), unit);
             }
         }
-        catch (DOMReaderException e)
+        catch (DOMHelperException e)
         {
             throw new ProcessException("Error while reading Unit Map File", e);
         }

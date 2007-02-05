@@ -21,41 +21,59 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.writer;
+package org.vast.sweCommon;
 
-import org.vast.cdm.common.DataIterator;
-import org.vast.cdm.common.DataStreamWriter;
+import java.io.DataInput;
+import java.io.IOException;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Data Writer
+ * Data Input Interface Extension
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Abstract class for writing a CDM data stream.
+ * Extension of DataInputStream to support reading unsigned int and long
+ * values as well as ASCII (0 terminated) strings from byte stream.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 10, 2006
+ * @date Nov 28, 2005
  * @version 1.0
  */
-public abstract class DataWriter extends DataIterator implements DataStreamWriter
+public interface DataInputExt extends DataInput
 {
-	protected boolean stopWriting = false;
-		
-	
-	public DataWriter()
-	{
-	}
+
+    public int read() throws IOException;   
+    
+    public void mark(int readLimit) throws IOException;    
+    
+    public void reset() throws IOException;
+    
+    
+    /**
+	 * Reads 4 input bytes and returns a long value in the range 0-2^32.
+	 * @return
+	 * @throws IOException
+	 */
+	public long readUnsignedInt() throws IOException;
 	
 	
 	/**
-	 * Stop the parsing from another thread
+	 * Reads 8 input bytes and returns a long value in the range 0-2^63.
+	 * Values greater than 2^63 won't be read correctly since they are not 
+	 * supported by java.
+	 * @return
+	 * @throws IOException
 	 */
-	public synchronized void stop()
-	{
-        stopWriting = true;
-	}
+	public long readUnsignedLong() throws IOException;
+	
+	
+	/**
+	 * Reads a 0 terminated ASCII string from input stream
+	 * @return
+	 * @throws IOException
+	 */
+	public String readASCII() throws IOException;
 }

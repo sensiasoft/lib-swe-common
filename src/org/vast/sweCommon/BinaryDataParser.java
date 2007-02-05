@@ -21,7 +21,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.writer;
+package org.vast.sweCommon;
 
 import java.io.*;
 import java.util.Hashtable;
@@ -31,27 +31,26 @@ import org.vast.cdm.common.*;
 
 /**
  * <p><b>Title:</b><br/>
- * Binary Data Writer
+ * Binary Data Parser
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Writes CDM binary data stream using the given data components
- * structure and binary encoding information. This supports raw
- * binary and base64 for now.
+ * Parses CDM binary data stream using the data components structure
+ * and the binary encoding information.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 10, 2006
+ * @date Nov 22, 2005
  * @version 1.0
  */
-public class BinaryDataWriter extends DataWriter
+public class BinaryDataParser extends AbstractDataParser
 {
-	CDMOutputStream dataOutput;
+	DataInputExt dataInput;
 	Hashtable<DataValue, BinaryOptions> componentEncodings;
 	
 	
-	public BinaryDataWriter()
+	public BinaryDataParser()
 	{
 	}
 
@@ -59,10 +58,10 @@ public class BinaryDataWriter extends DataWriter
 	/**
 	 * 
 	 */
-	public void write(OutputStream outputStream) throws CDMException
+	public void parse(InputStream inputStream) throws CDMException
 	{
-		OutputStream dataOut = null;
-		stopWriting = false;
+		InputStream dataIn = null;
+		stopParsing = false;
 		
 		try
 		{
@@ -70,11 +69,11 @@ public class BinaryDataWriter extends DataWriter
 			switch (((BinaryEncoding)dataEncoding).byteEncoding)
 			{
 				case BASE64:
-					dataOut = new Base64Encoder(outputStream);
+					dataIn = new Base64Decoder(inputStream);
 					break;
 					
 				case RAW:
-					dataOut = outputStream;
+					dataIn = inputStream;
 					break;
 					
 				default:
@@ -84,17 +83,59 @@ public class BinaryDataWriter extends DataWriter
 			// if a dataHandler is registered, parse each individual element
 			if (dataHandler != null)
 			{
-				dataOutput = new CDMOutputStream(new BufferedOutputStream(dataOut));
+				if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.BIG_ENDIAN)
+				    dataInput = new DataInputStreamBI(new BufferedInputStream(dataIn));
+                else if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.LITTLE_ENDIAN)
+                    dataInput = new DataInputStreamLI(new BufferedInputStream(dataIn));
 				
-				do processNextElement();
-				while(!stopWriting);
+				do
+				{
+					// stop if end of stream
+					if (!moreData())
+						break;
+					
+					processNextElement();
+				}
+				while(!stopParsing);
 			}
+			
+			// if a raw handler is registered, just extract byte arrays
+			// of the whole block size and send it directly.
+			else if (rawHandler != null)
+			{
+				int size = (int)((BinaryEncoding)dataEncoding).byteLength;			
+				int byteLeft = size;
+				int byteRead = 0;
+				byte [] buffer = new byte[size];
+				
+				do
+				{
+					byteRead = dataIn.read(buffer, size-byteLeft, byteLeft);
+					byteLeft -= byteRead;
+					
+					if (byteRead == -1)
+						break;
+					
+					// send endDataAtom event				
+					if (byteLeft == 0)
+					{
+						rawHandler.endData(dataComponents, buffer);
+						buffer = new byte[size];
+						byteLeft = size;
+					}
+				}
+				while(!stopParsing);
+			}
+		}
+		catch (IOException e)
+		{
+			throw new CDMException("Error while reading binary stream", e);
 		}
 		finally
 		{
 			try
 			{
-				outputStream.close();
+				inputStream.close();
                 dataComponents.clearData();
 			}
 			catch (IOException e)
@@ -136,8 +177,8 @@ public class BinaryDataWriter extends DataWriter
             {
                 if (j==0)
                 {
-                    if (dataPath[0].equals(dataComponents.getName()))
-                        data = dataComponents;
+                    if (dataPath[0].equals(this.dataComponents.getName()))
+                        data = this.dataComponents;
                 }
                 else
                     data = data.getComponent(dataPath[j]);
@@ -173,7 +214,7 @@ public class BinaryDataWriter extends DataWriter
 					
 				default:
 					((DataValue)data).setDataType(encodingList[i].type);
-			}		
+			}
 		}
 	}
 	
@@ -185,7 +226,35 @@ public class BinaryDataWriter extends DataWriter
 		BinaryOptions binaryBlock = componentEncodings.get(scalarInfo);
 		
 		// parse token = dataAtom					
-		writeBinaryAtom(scalarInfo, binaryBlock);
+		parseBinaryAtom(scalarInfo, binaryBlock);
+	}
+	
+	
+	/**
+	 * Checks if more data is available from the stream
+	 * @return true if more data needs to be parsed, fasle otherwise
+	 */
+	protected boolean moreData()
+	{
+		try
+		{
+			dataInput.mark(1);
+			int result = dataInput.read();
+			if (result == -1)
+			{
+				return false;
+			}
+			else
+			{
+				dataInput.reset();
+				return true;
+			}				
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	
@@ -196,85 +265,85 @@ public class BinaryDataWriter extends DataWriter
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void writeBinaryAtom(DataValue scalarInfo, BinaryOptions binaryInfo) throws CDMException
+	private void parseBinaryAtom(DataValue scalarInfo, BinaryOptions binaryInfo) throws CDMException
 	{
 		try
 		{
-			switch (scalarInfo.getDataType())
+			switch (binaryInfo.type)
 			{
 				case BOOLEAN:
-					boolean boolValue = scalarInfo.getData().getBooleanValue();
-                    dataOutput.writeBoolean(boolValue);										
+					boolean boolValue = dataInput.readBoolean();
+					scalarInfo.getData().setBooleanValue(boolValue);					
 					break;
 				
 				case BYTE:
-					byte byteValue = scalarInfo.getData().getByteValue();
-                    dataOutput.writeByte(byteValue);
+					byte byteValue = dataInput.readByte();
+					scalarInfo.getData().setByteValue(byteValue);
 					break;
 					
 				case UBYTE:
-					short ubyteValue = scalarInfo.getData().getShortValue();
-					dataOutput.writeUnsignedByte(ubyteValue);
+					int ubyteValue = dataInput.readUnsignedByte();
+					scalarInfo.getData().setIntValue(ubyteValue);
 					break;
 					
 				case SHORT:
-					short shortValue = scalarInfo.getData().getShortValue();
-                    dataOutput.writeByte(shortValue);
+					short shortValue = dataInput.readShort();
+					scalarInfo.getData().setShortValue(shortValue);		
 					break;
 					
 				case USHORT:
-                    int ushortValue = scalarInfo.getData().getIntValue();
-					dataOutput.writeUnsignedShort(ushortValue);
+					int ushortValue = dataInput.readUnsignedShort();
+					scalarInfo.getData().setIntValue(ushortValue);
 					break;
 					
 				case INT:
-					int intValue = scalarInfo.getData().getIntValue();
-                    dataOutput.writeInt(intValue);
+					int intValue = dataInput.readInt();
+					scalarInfo.getData().setIntValue(intValue);
 					break;
 					
 				case UINT:
-					long uintValue = scalarInfo.getData().getLongValue();
-					dataOutput.writeUnsignedInt(uintValue);
+					long uintValue = dataInput.readUnsignedInt();
+					scalarInfo.getData().setLongValue(uintValue);
 					break;
 					
 				case LONG:
-					long longValue = scalarInfo.getData().getLongValue();
-                    dataOutput.writeLong(longValue);
+					long longValue = dataInput.readLong();
+					scalarInfo.getData().setLongValue(longValue);
 					break;
 					
 				case ULONG:
-                    long ulongValue = scalarInfo.getData().getLongValue();
-                    dataOutput.writeLong(ulongValue);
+					long ulongValue = dataInput.readUnsignedLong();
+					scalarInfo.getData().setLongValue(ulongValue);
 					break;
 					
 				case FLOAT:
-					float floatValue = scalarInfo.getData().getFloatValue();
-                    dataOutput.writeFloat(floatValue);
+					float floatValue = dataInput.readFloat();
+					scalarInfo.getData().setFloatValue(floatValue);
 					break;
 					
 				case DOUBLE:
-                    double doubleValue = scalarInfo.getData().getDoubleValue();
-                    dataOutput.writeDouble(doubleValue);
+					double doubleValue = dataInput.readDouble();
+					scalarInfo.getData().setDoubleValue(doubleValue);
 					break;
 					
 				case UTF_STRING:
-					String utfValue = scalarInfo.getData().getStringValue();
-                    dataOutput.writeUTF(utfValue);
+					String utfValue = dataInput.readUTF();
+					scalarInfo.getData().setStringValue(utfValue);
 					break;
 					
 				case ASCII_STRING:
-                    String asciiValue = scalarInfo.getData().getStringValue();
-                    dataOutput.writeASCII(asciiValue);
+					String asciiValue = dataInput.readASCII();
+					scalarInfo.getData().setStringValue(asciiValue);
 					break;
 			}
 		}
 		catch (RuntimeException e)
 		{
-			throw new CDMException("Error while writing component " + scalarInfo.getName(), e);
+            throw new CDMException("Error while parsing component " + scalarInfo.getName(), e);
 		}
 		catch (IOException e)
 		{
-			throw new CDMException("Error while writing binary stream", e);
+			throw new CDMException("Error while reading binary stream", e);
 		}
 	}
 }

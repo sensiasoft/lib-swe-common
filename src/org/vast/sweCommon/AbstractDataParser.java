@@ -21,36 +21,62 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.common;
+package org.vast.sweCommon;
 
-import org.vast.xml.DOMHelper;
-import org.w3c.dom.*;
+import java.io.*;
+import java.net.URI;
+import org.vast.cdm.common.*;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Data Encoding XML Writer
+ * Data Parser
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Concrete implementations of this interface are responsible for
- * creating an XML element containing the data encoding structure
- * corresponding to the specified DataEncoding object.  
+ * Abstract class for parsing a CDM data stream
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @since Aug 12, 2005
+ * @date Aug 16, 2005
  * @version 1.0
  */
-public interface DataEncodingWriter
+public abstract class AbstractDataParser extends DataIterator implements DataStreamParser
 {
+	protected boolean stopParsing = false;
+		
+	
+	public AbstractDataParser()
+	{
+	}
+	
+	
 	/**
-     * Creates a W3C DOM element containing the given encoding information
-     * @param dom
-     * @param dataEncoding
-     * @return
-     * @throws CDMException
+	 * Stop the parsing from another thread
 	 */
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws CDMException;
+	public synchronized void stop()
+	{
+		stopParsing = true;
+	}
+	
+	
+	/**
+	 * Default parse method from a URI string
+	 */
+	public void parse(String uri) throws CDMException
+	{
+		InputStream in = URIStreamHandler.openStream(uri);
+		this.parse(in);
+	}
+
+	
+	/**
+	 * Default parse method from a URI object
+	 */
+	public void parse(URI uri) throws CDMException
+	{
+		InputStream in = URIStreamHandler.openStream(uri);
+		this.parse(in);
+	}
 }

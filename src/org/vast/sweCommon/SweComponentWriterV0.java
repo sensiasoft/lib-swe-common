@@ -21,7 +21,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.writer;
+package org.vast.sweCommon;
 
 import org.w3c.dom.*;
 import org.vast.cdm.common.CDMException;
@@ -30,7 +30,7 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentWriter;
 import org.vast.cdm.common.DataType;
 import org.vast.data.*;
-import org.vast.io.xml.*;
+import org.vast.xml.DOMHelper;
 
 
 /**
@@ -48,21 +48,21 @@ import org.vast.io.xml.*;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public class DataComponentsWriter implements DataComponentWriter
+public class SweComponentWriterV0 implements DataComponentWriter
 {
     public static String tokenSeparator = " ";
     protected boolean writeInlineData = false;
-    protected DOMWriter dom;
+    protected DOMHelper dom;
         
     
-    public DataComponentsWriter(DOMWriter parentWriter)
+    public SweComponentWriterV0(DOMHelper parentWriter)
     {
         dom = parentWriter;
-        dom.addNS("http://www.opengis.net/swe", "swe");
+        dom.addUserPrefix("swe", "http://www.opengis.net/swe");
     }
     
     
-    public Element writeDataComponents(DataComponent dataComponents) throws CDMException
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException
     {
         Element newElt = null;
         
@@ -91,7 +91,7 @@ public class DataComponentsWriter implements DataComponentWriter
     {
         Element propElt = dom.createElement("swe:component");
         writeName(propElt, dataComponents.getName());        
-        Element componentElt = writeDataComponents(dataComponents);
+        Element componentElt = writeComponent(null, dataComponents);
         propElt.appendChild(componentElt);        
         return propElt;
     }

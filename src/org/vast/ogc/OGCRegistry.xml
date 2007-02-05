@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassMap>
+   <!-- -->
+   <Reader type="SOS" subType="GetCapabilities" version="*" class="org.vast.ows.sos.SOSRequestReaderV031"/>
+   <Reader type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.SOSRequestReaderV031"/>
+   <Reader type="SOS" subType="GetObservation" version="0.0.32" class="org.vast.ows.sos.SOSRequestReaderV031"/>
+   <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.SOSRequestReaderV031"/>   
+   <Reader type="SOS" subType="Capabilities" version="0.0.31" class="org.vast.ows.sos.SOSCapabilitiesReaderV031"/>
+   <!-- -->
+   <Writer type="SOS" subType="GetCapabilities" version="*" class="org.vast.ows.sos.SOSRequestWriterV031"/>
+   <Writer type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.SOSRequestWriterV031"/>
+   <Writer type="SOS" subType="GetObservation" version="0.0.32" class="org.vast.ows.sos.SOSRequestWriterV031"/>
+   <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.SOSRequestWriterV031"/>   
+   <!-- -->
+   <Reader type="WCS" subType="GetCapabilities" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
+   <Reader type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
+   <!-- -->
+   <Writer type="WCS" subType="GetCapabilities" version="0.7" class="org.vast.ows.wcs.WCSRequestWriterV07"/>
+   <Writer type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestWriterV07"/>
+   <!-- -->
+   <Reader type="WMS" subType="GetCapabilities" version="*" class="org.vast.ows.wms.WMSRequestReaderV11"/>
+   <Reader type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.WMSRequestReaderV10"/>
+   <Reader type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.WMSRequestReaderV11"/>
+   <Reader type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.WMSRequestReaderV11"/>
+   <Reader type="WMS" subType="Capabilities" version="1.0" class="org.vast.ows.wms.WMSCapabilitiesReaderV10"/>
+   <Reader type="WMS" subType="Capabilities" version="1.1" class="org.vast.ows.wms.WMSCapabilitiesReaderV11"/>
+   <Reader type="WMS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wms.WMSCapabilitiesReaderV11"/>
+   <!-- -->
+   <Writer type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.WMSRequestWriterV10"/>
+   <Writer type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.WMSRequestWriterV11"/>
+   <Writer type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.WMSRequestWriterV11"/>
+   <!-- -->
+   <Reader type="SWECommon" subType="DataComponent" version="*" class="org.vast.sweCommon.SweComponentReaderV0"/>
+   <Reader type="SWECommon" subType="DataEncoding" version="*" class="org.vast.sweCommon.SweEncodingReaderV0"/>
+   <Reader type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentReaderV1"/>
+   <Reader type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingReaderV1"/>
+   <!-- -->
+   <Writer type="SWECommon" subType="DataComponent" version="*" class="org.vast.sweCommon.SweComponentWriterV0"/>
+   <Writer type="SWECommon" subType="DataEncoding" version="*" class="org.vast.sweCommon.SweEncodingWriterV0"/>
+   <Writer type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentWriterV1"/>
+   <Writer type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingWriterV1"/>
+   <!-- -->
+</ClassMap>

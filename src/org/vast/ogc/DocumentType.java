@@ -17,40 +17,47 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+ Alexandre Robin <robin@nsstc.uah.edu>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.common;
-
-import org.vast.xml.DOMHelper;
-import org.w3c.dom.*;
+package org.vast.ogc;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Encoding XML Writer
+ * <p><b>Title:</b>
+ * Document Type
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Concrete implementations of this interface are responsible for
- * creating an XML element containing the data encoding structure
- * corresponding to the specified DataEncoding object.  
+ * Enumeration for different OGC document types such as
+ * SensorML docs, O&M docs, Capabilities docs etc...
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @since Aug 12, 2005
+ * @date Feb 2, 2007
  * @version 1.0
  */
-public interface DataEncodingWriter
+public enum DocumentType
 {
-	/**
-     * Creates a W3C DOM element containing the given encoding information
-     * @param dom
-     * @param dataEncoding
-     * @return
-     * @throws CDMException
-	 */
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws CDMException;
+    // OGC documents types
+    CAPABILITIES,
+    SWECOMMON,
+    SENSORML,
+    OM,
+    
+    // Capabilities document sections types
+    IDENTIFICATION,
+    OPERATIONS,
+    CONTENT,    
+    
+    // SWE Common document sections types
+    DATACOMPONENT,
+    DATAENCODING,
+    
+    // SensorML document section types
+    METADATA,
+    PROCESS,
+    SYSTEM;    
 }

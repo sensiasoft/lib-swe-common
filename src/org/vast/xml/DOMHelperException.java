@@ -21,36 +21,22 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.common;
-
-import org.vast.xml.DOMHelper;
-import org.w3c.dom.*;
+package org.vast.xml;
 
 
-/**
- * <p><b>Title:</b><br/>
- * Data Encoding XML Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
- * Concrete implementations of this interface are responsible for
- * creating an XML element containing the data encoding structure
- * corresponding to the specified DataEncoding object.  
- * </p>
- *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @since Aug 12, 2005
- * @version 1.0
- */
-public interface DataEncodingWriter
+public class DOMHelperException extends Exception
 {
-	/**
-     * Creates a W3C DOM element containing the given encoding information
-     * @param dom
-     * @param dataEncoding
-     * @return
-     * @throws CDMException
-	 */
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws CDMException;
+    static final long serialVersionUID = 0;
+	
+    
+	public DOMHelperException(String message)
+    {
+        super(message);
+    }
+
+    
+    public DOMHelperException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
 }

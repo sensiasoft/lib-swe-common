@@ -21,59 +21,70 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.sweCommon;
 
-import java.io.DataInput;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Data Input Interface Extension
+ * CDM Output Stream
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Extension of DataInputStream to support reading unsigned int and long
- * values as well as ASCII (0 terminated) strings from byte stream.
+ * Extension of DataOutputStream to support writing unsigned int and long
+ * values as well as ASCII (0 terminated) strings as byte sequence.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 28, 2005
+ * @date Feb 10, 2006
  * @version 1.0
  */
-public interface DataInputExt extends DataInput
+public class CDMOutputStream extends DataOutputStream
 {
+	
+	public CDMOutputStream(OutputStream is)
+	{
+		super(is);
+	}
+	
+	
+    public void writeUnsignedByte(short val) throws IOException
+    {
+        //TODO
+    }
+    
+    
+    public void writeUnsignedShort(int val) throws IOException
+    {
+        //TODO
+    }
+    
+    
+	public void writeUnsignedInt(long val) throws IOException
+	{
+		//TODO
+	}
+	
+	
 
-    public int read() throws IOException;   
-    
-    public void mark(int readLimit) throws IOException;    
-    
-    public void reset() throws IOException;
-    
-    
-    /**
-	 * Reads 4 input bytes and returns a long value in the range 0-2^32.
-	 * @return
-	 * @throws IOException
-	 */
-	public long readUnsignedInt() throws IOException;
+	public void writeUnsignedLong(long val) throws IOException
+	{
+		this.writeLong(val);
+	}
 	
 	
 	/**
-	 * Reads 8 input bytes and returns a long value in the range 0-2^63.
-	 * Values greater than 2^63 won't be read correctly since they are not 
-	 * supported by java.
-	 * @return
-	 * @throws IOException
+     * Writes a zero terminated ascii string to the stream 
+     * @param asciiString
+     * @throws IOException
 	 */
-	public long readUnsignedLong() throws IOException;
-	
-	
-	/**
-	 * Reads a 0 terminated ASCII string from input stream
-	 * @return
-	 * @throws IOException
-	 */
-	public String readASCII() throws IOException;
+	public void writeASCII(String asciiString) throws IOException
+	{
+		this.writeBytes(asciiString);
+		this.writeByte(0);
+    }
 }

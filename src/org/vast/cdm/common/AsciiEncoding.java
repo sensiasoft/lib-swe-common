@@ -23,6 +23,8 @@
 
 package org.vast.cdm.common;
 
+import org.vast.sweCommon.AsciiDataParser;
+
 
 
 public class AsciiEncoding implements DataEncoding
@@ -36,6 +38,14 @@ public class AsciiEncoding implements DataEncoding
 	{
 		return EncodingType.ASCII;
 	}
+    
+    
+    public DataStreamParser createDataParser()
+    {
+        DataStreamParser parser = new AsciiDataParser();
+        parser.setDataEncoding(this);
+        return parser;
+    }
 	
 	
 	public String toString()

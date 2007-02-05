@@ -23,6 +23,7 @@
 
 package org.vast.cdm.common;
 
+import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
 
 
@@ -45,5 +46,22 @@ import org.w3c.dom.*;
  */
 public interface DataEncodingReader
 {
-	public DataEncoding readDataEncoding(Element encodingElement) throws CDMException;
+    /**
+     * Reads an element containing encoding information
+     * @param dom
+     * @param encodingElement
+     * @return
+     * @throws CDMException
+     */
+    public DataEncoding readEncoding(DOMHelper dom, Element encodingElement) throws CDMException;
+    
+    
+    /**
+     * Reads a property element which child contains encoding information
+     * @param dom
+     * @param propertyElement
+     * @return
+     * @throws CDMException
+     */
+    public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws CDMException;
 }

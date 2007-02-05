@@ -21,65 +21,64 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.reader;
+package org.vast.xml;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.DataInputStream;
+import org.w3c.dom.*;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Data Input Stream for Big Endian
+ * XML Fragment
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Extension of DataInputStream to support reading unsigned int and long
- * values as well as ASCII (0 terminated) strings from byte stream.
+ * Identifies an XML fragment with a parent document
+ * and a base element node
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 28, 2005
+ * @date Nov 3, 2005
  * @version 1.0
  */
-public class DataInputStreamBI extends DataInputStream implements DataInputExt
+public class XMLFragment
 {
-	
-	public DataInputStreamBI(InputStream is)
+	protected XMLDocument xmlDocument = null;
+	protected Element baseElement = null;
+
+
+	public XMLFragment()
 	{
-		super(is);
 	}
-	
-	
-	public long readUnsignedInt() throws IOException
+
+
+	public XMLFragment(XMLDocument parentDocument, Element baseElement)
 	{
-		byte[] b = new byte[4];
-		this.read(b);
-		 
-        return (((long)(b[0] & 255) << 24) +
-                ((long)(b[1] & 255) << 16) +
-                ((long)(b[2] & 255) <<  8) +
-                ((long)(b[3] & 255) <<  0));
+		setXmlDocument(parentDocument);
+		setBaseElement(baseElement);
 	}
-	
-	
-	public long readUnsignedLong() throws IOException
+
+
+	public Element getBaseElement()
 	{
-		return readLong();
+		return baseElement;
 	}
-	
-	
-	public String readASCII() throws IOException
+
+
+	public void setBaseElement(Element baseElement)
 	{
-		int val;
-		StringBuffer buf = new StringBuffer();
-		
-		while ((val = in.read()) != 0) 
-		{
-			buf.append((char)val);
-		}
-		
-		return buf.toString();
+		this.baseElement = baseElement;
+	}
+
+
+	public XMLDocument getXmlDocument()
+	{
+		return xmlDocument;
+	}
+
+
+	public void setXmlDocument(XMLDocument xmlDocument)
+	{
+		this.xmlDocument = xmlDocument;
 	}
 }

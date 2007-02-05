@@ -21,36 +21,47 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.common;
+package org.vast.xml;
 
-import org.vast.xml.DOMHelper;
 import org.w3c.dom.*;
+import java.util.*;
 
 
-/**
- * <p><b>Title:</b><br/>
- * Data Encoding XML Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
- * Concrete implementations of this interface are responsible for
- * creating an XML element containing the data encoding structure
- * corresponding to the specified DataEncoding object.  
- * </p>
- *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @since Aug 12, 2005
- * @version 1.0
- */
-public interface DataEncodingWriter
+public class XMLNodeList implements NodeList
 {
-	/**
-     * Creates a W3C DOM element containing the given encoding information
-     * @param dom
-     * @param dataEncoding
-     * @return
-     * @throws CDMException
-	 */
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws CDMException;
+    private ArrayList<Node> nodeList = new ArrayList<Node>();
+
+    public XMLNodeList()
+    {
+    }
+
+    public XMLNodeList(XMLNodeList nodeList)
+    {
+        this.nodeList = new ArrayList<Node>(nodeList.getList());
+    }
+
+    public ArrayList<Node> getList()
+    {
+        return this.nodeList;
+    }
+
+    public int getLength()
+    {
+        return nodeList.size();
+    }
+
+    public Node item(int i)
+    {
+        return nodeList.get(i);
+    }
+
+    public void addNode(Node node)
+    {
+        nodeList.add(node);
+    }
+
+    public void clear()
+    {
+        nodeList.clear();
+    }
 }

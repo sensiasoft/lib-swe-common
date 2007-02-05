@@ -42,7 +42,7 @@ package org.vast.cdm.common;
  */
 public interface DataHandler
 {
-    public void beginDataAtom(DataComponent info, DataBlock data);
+    public void beginDataAtom(DataComponent info);
     
     
     public void endDataAtom(DataComponent info, DataBlock data);
