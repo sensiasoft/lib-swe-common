@@ -64,28 +64,30 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     
     public DataComponent readComponent(DOMHelper dom, Element componentElement) throws CDMException
     {
-        DataComponentReader reader = getDataComponentReader(dom);
+        DataComponentReader reader = getDataComponentReader(dom, componentElement);
         return reader.readComponent(dom, componentElement);
     }
 
 
     public DataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws CDMException
     {
-        DataComponentReader reader = getDataComponentReader(dom);
+        Element componentElement = dom.getFirstChildElement(propertyElement);
+        DataComponentReader reader = getDataComponentReader(dom, componentElement);
         return reader.readComponentProperty(dom, propertyElement);
     }
     
     
     public DataEncoding readEncoding(DOMHelper dom, Element encodingElement) throws CDMException
     {
-        DataEncodingReader reader = getDataEncodingReader(dom);
+        DataEncodingReader reader = getDataEncodingReader(dom, encodingElement);
         return reader.readEncoding(dom, encodingElement);
     }
 
 
     public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws CDMException
     {
-        DataEncodingReader reader = getDataEncodingReader(dom);
+        Element componentElement = dom.getFirstChildElement(propertyElement);
+        DataEncodingReader reader = getDataEncodingReader(dom, componentElement);
         return reader.readEncodingProperty(dom, propertyElement);
     }
 
@@ -104,7 +106,7 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     }
     
     
-    private DataComponentReader getDataComponentReader(DOMHelper dom)
+    private DataComponentReader getDataComponentReader(DOMHelper dom, Element componentElt)
     {
         if (dom == previousDom && componentReader != null)
         {
@@ -115,14 +117,14 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
             DataComponentReader reader = (DataComponentReader)OGCRegistry.createReader(
                                                               DocumentType.SWECOMMON.name(),
                                                               DocumentType.DATACOMPONENT.name(),
-                                                              getVersion(dom));
+                                                              getVersion(dom, componentElt));
             componentReader = reader;
             return reader;
         }
     }
     
     
-    private DataEncodingReader getDataEncodingReader(DOMHelper dom)
+    private DataEncodingReader getDataEncodingReader(DOMHelper dom, Element componentElt)
     {
         if (dom == previousDom && encodingReader != null)
         {
@@ -133,7 +135,7 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
             DataEncodingReader reader = (DataEncodingReader)OGCRegistry.createReader(
                                                             DocumentType.SWECOMMON.name(),
                                                             DocumentType.DATAENCODING.name(),
-                                                            getVersion(dom));
+                                                            getVersion(dom, componentElt));
             encodingReader = reader;
             return reader;
         }
@@ -181,11 +183,17 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
      * @param dom
      * @return
      */
-    private String getVersion(DOMHelper dom)
+    private String getVersion(DOMHelper dom, Element sweElt)
     {
         // get version from the last character of namespace URI
-        String sweUri = dom.getXmlDocument().getNSUri("swe");
+        //String sweUri = dom.getXmlDocument().getNSUri("swe");
+        String sweUri = sweElt.getNamespaceURI();
         String version = sweUri.substring(sweUri.lastIndexOf('/') + 1);
+        
+        // check if version is a valid version number otherwise defaults to 0
+        if (!version.matches("^\\d+(\\.\\d+)?(\\.\\d+)?$"))
+            version = "0.0";
+        
         previousDom = dom;
         return version;
     }
