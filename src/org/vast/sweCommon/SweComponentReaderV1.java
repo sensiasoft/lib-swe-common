@@ -83,7 +83,7 @@ public class SweComponentReaderV1 implements DataComponentReader
         }
         else if (dom.getFirstChildElement(dataElement) == null)
         {
-            container = readParameter(dom, dataElement);
+            container = readScalar(dom, dataElement);
         }
         else if (dom.existAttribute(dataElement, "arraySize"))
         {
@@ -197,7 +197,7 @@ public class SweComponentReaderV1 implements DataComponentReader
      * @return DataValue encapsulating the value
      * @throws SMLReaderException
      */
-    private DataValue readParameter(DOMHelper dom, Element parameterElement) throws CDMException
+    private DataValue readScalar(DOMHelper dom, Element parameterElement) throws CDMException
     {
         DataValue paramValue = null;
         String valueText = dom.getElementValue(parameterElement, "");      
@@ -227,7 +227,8 @@ public class SweComponentReaderV1 implements DataComponentReader
         
     	// read attributes
     	readAttributes(dom, paramValue, parameterElement);
-    	
+        readConstraints(dom, parameterElement);
+        
         // Parse the value
         if (valueText != null)
         {
@@ -243,7 +244,7 @@ public class SweComponentReaderV1 implements DataComponentReader
     {
         DataValue paramVal = null;
         DataGroup rangeValues = new DataGroup(2);
-        String valueText = dom.getElementValue(rangeElement, "");      
+        String valueText = dom.getElementValue(rangeElement, "");
         String eltName = rangeElement.getLocalName();
         
         // Create Data component Object
@@ -374,6 +375,12 @@ public class SweComponentReaderV1 implements DataComponentReader
             return DictionaryURN.array;
         else
             return "none";
+    }
+    
+    
+    private Constraints readConstraints(DOMHelper dom, Element parameterElement) throws CDMException
+    {
+        return null;
     }
     
     

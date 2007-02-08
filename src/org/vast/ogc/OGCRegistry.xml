@@ -30,13 +30,13 @@
    <Writer type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.WMSRequestWriterV11"/>
    <Writer type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.WMSRequestWriterV11"/>
    <!-- -->
-   <Reader type="SWECommon" subType="DataComponent" version="*" class="org.vast.sweCommon.SweComponentReaderV0"/>
-   <Reader type="SWECommon" subType="DataEncoding" version="*" class="org.vast.sweCommon.SweEncodingReaderV0"/>
+   <Reader type="SWECommon" subType="DataComponent" version="0.0" class="org.vast.sweCommon.SweComponentReaderV0"/>
+   <Reader type="SWECommon" subType="DataEncoding" version="0.0" class="org.vast.sweCommon.SweEncodingReaderV0"/>
    <Reader type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentReaderV1"/>
    <Reader type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingReaderV1"/>
    <!-- -->
-   <Writer type="SWECommon" subType="DataComponent" version="*" class="org.vast.sweCommon.SweComponentWriterV0"/>
-   <Writer type="SWECommon" subType="DataEncoding" version="*" class="org.vast.sweCommon.SweEncodingWriterV0"/>
+   <Writer type="SWECommon" subType="DataComponent" version="0.0" class="org.vast.sweCommon.SweComponentWriterV0"/>
+   <Writer type="SWECommon" subType="DataEncoding" version="0.0" class="org.vast.sweCommon.SweEncodingWriterV0"/>
    <Writer type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentWriterV1"/>
    <Writer type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingWriterV1"/>
    <!-- -->
