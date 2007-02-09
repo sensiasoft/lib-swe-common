@@ -57,7 +57,7 @@ public class URIStreamHandler
 		}
 		catch (IOException e)
 		{
-			throw new CDMException("Error while connecting to the data stream");
+			throw new CDMException("Error while connecting to the data stream: " + uri);
 		}
 	}
 }

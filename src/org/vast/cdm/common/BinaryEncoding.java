@@ -23,8 +23,6 @@
 
 package org.vast.cdm.common;
 
-import org.vast.sweCommon.BinaryDataParser;
-
 
 /**
  * <p><b>Title:</b>
@@ -68,15 +66,7 @@ public class BinaryEncoding implements DataEncoding
 	}
     
     
-    public DataStreamParser createDataParser()
-    {
-        DataStreamParser parser = new BinaryDataParser();
-        parser.setDataEncoding(this);
-        return parser;
-    }
-	
-	
-	public String toString()
+    public String toString()
 	{
 		StringBuffer buf = new StringBuffer("Binary Encoding:\n");
 		

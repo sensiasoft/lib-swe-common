@@ -57,6 +57,13 @@ public class QName
     }
     
     
+    public QName(String nsUri, String localName)
+    {
+        setNsUri(nsUri);
+        setLocalName(localName);
+    }
+    
+    
     public void setFullName(String qname)
     {
         int sepIndex = qname.indexOf(':');

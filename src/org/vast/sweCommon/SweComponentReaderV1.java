@@ -23,14 +23,18 @@
 
 package org.vast.sweCommon;
 
-import java.text.ParseException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
 import org.vast.cdm.semantics.DictionaryURN;
 import org.vast.data.*;
 import org.vast.xml.*;
-import org.vast.util.*;
+import org.vast.ogc.OGCRegistry;
+import org.vast.unit.Unit;
+import org.vast.unit.UnitParserUCUM;
 
 
 /**
@@ -53,18 +57,20 @@ public class SweComponentReaderV1 implements DataComponentReader
     public static String tupleSeparator = " ";
     public static String tokenSeparator = ",";
     protected Hashtable<String, AbstractDataComponent> componentIds;
+    protected AsciiDataParser asciiParser;
     
     
     public SweComponentReaderV1()
     {
         componentIds = new Hashtable<String, AbstractDataComponent>();
+        asciiParser = new AsciiDataParser();
     }
 
 
-    public AbstractDataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws CDMException
+    public AbstractDataComponent readComponentProperty(DOMHelper dom, Element propertyElt) throws CDMException
     {
-        Element dataElement = dom.getFirstChildElement(propertyElement);
-        String name = readName(dom, propertyElement);
+        Element dataElement = dom.getFirstChildElement(propertyElt);
+        String name = readPropertyName(dom, propertyElt);
         
         AbstractDataComponent container = readComponent(dom, dataElement);
         container.setName(name);
@@ -73,29 +79,29 @@ public class SweComponentReaderV1 implements DataComponentReader
     }
     
     
-    public AbstractDataComponent readComponent(DOMHelper dom, Element dataElement) throws CDMException
+    public AbstractDataComponent readComponent(DOMHelper dom, Element componentElt) throws CDMException
     {
         AbstractDataComponent container = null;
         
-        if (dataElement.getLocalName().endsWith("Range"))
+        if (componentElt.getLocalName().endsWith("DataRecord"))
         {
-            container = readRange(dom, dataElement);
+            container = readDataRecord(dom, componentElt);
         }
-        else if (dom.getFirstChildElement(dataElement) == null)
+        else if (dom.existElement(componentElt, "elementCount"))
         {
-            container = readScalar(dom, dataElement);
+            container = readDataArray(dom, componentElt);
         }
-        else if (dom.existAttribute(dataElement, "arraySize"))
+        if (componentElt.getLocalName().endsWith("Range"))
         {
-            container = readDataArray(dom, dataElement);
+            container = readRange(dom, componentElt);
         }
-        else
+        else 
         {
-            container = readDataRecord(dom, dataElement);
+            container = readScalar(dom, componentElt);
         } 
         
         // add id to hashtable if present
-        String id = dom.getAttributeValue(dataElement, "id");
+        String id = dom.getAttributeValue(componentElt, "id");
         if (id != null)
         	componentIds.put(id, container);
 
@@ -104,34 +110,41 @@ public class SweComponentReaderV1 implements DataComponentReader
 
 
     /**
-     * Reads a DataGroup structure and all its members
-     * @param dataGroupElement Element
-     * @throws SMLReaderException
+     * Reads a DataRecord structure and all its fields
+     * @param recordElt Element
+     * @throws CDMException
      * @return DataGroup
      */
-    private DataGroup readDataRecord(DOMHelper dom, Element dataGroupElement) throws CDMException
+    private DataGroup readDataRecord(DOMHelper dom, Element recordElt) throws CDMException
     {
-        // parse all members (can be a different name than member !!)
-        NodeList componentList = dom.getAllChildElements(dataGroupElement);
-        int groupSize = componentList.getLength();
-
-        // error if no member present
-        if (groupSize == 0)
-            throw new CDMException("DataGroup without member");
-
-        // create data block of the right size
-        DataGroup dataGroup = new DataGroup(groupSize);
-
-        // read attributes
-        readAttributes(dom, dataGroup, dataGroupElement);
-
-        // loop through all members
-        for (int i = 0; i < groupSize; i++)
+        // parse all fields (can be a different element name than "field" if hard typed!!)
+        NodeList componentList = dom.getAllChildElements(recordElt);
+        int childCount = componentList.getLength();
+        
+        // create DataGroup to hold field definitions
+        DataGroup dataGroup = new DataGroup(2);
+        
+        // loop through all child elements
+        for (int i = 0; i < childCount; i++)
         {
-            Element dataElement = (Element)componentList.item(i);                
-            AbstractDataComponent dataComponent = readComponentProperty(dom, dataElement);
-            dataGroup.addComponent(readName(dom, dataElement), dataComponent);
-        }
+            Element childElt = (Element)componentList.item(i);
+            
+            // skip everything in GML namespace (gml:metadata, gml:description, gml:name)
+            if (childElt.getNamespaceURI().contains(OGCRegistry.GML_NS))
+                continue;
+            
+            // add field components
+            DataComponent dataComponent = readComponentProperty(dom, childElt);
+            dataGroup.addComponent(readPropertyName(dom, childElt), dataComponent);
+        }        
+        
+        // error if no field present
+        if (dataGroup.getComponentCount() == 0)
+            throw new CDMException("Invalid DataRecord: Must have AT LEAST ONE field");
+
+        // read common stuffs
+        readGmlProperties(dataGroup, dom, recordElt);
+        readCommonAttributes(dataGroup, dom, recordElt);
 
         return dataGroup;
     }
@@ -139,113 +152,148 @@ public class SweComponentReaderV1 implements DataComponentReader
 
     /**
      * Reads a DataArray structure the unique member
-     * @param dataArrayElement Element
-     * @throws SMLReaderException
+     * @param arrayElt Element
+     * @throws CDMException
      * @return DataArray
      */
-    private DataArray readDataArray(DOMHelper dom, Element dataArrayElement) throws CDMException
+    private DataArray readDataArray(DOMHelper dom, Element arrayElt) throws CDMException
     {
         int arraySize = 1;
-        NodeList children = dom.getAllChildElements(dataArrayElement);
-        Element tupleValuesElement = null;
         DataArray dataArray = null;
-        String arraySizeText = dom.getAttributeValue(dataArrayElement, "arraySize");
         
-        try
+        // if elementCount is referencing another component
+        String countId = dom.getAttributeValue(arrayElt, "elementCount/@href");
+        if (countId != null)
         {
-        	arraySize = Integer.parseInt(arraySizeText);
-        	dataArray = new DataArray(arraySize);
+            DataComponent sizeComponent = componentIds.get(countId);
+            if (sizeComponent == null)
+                throw new CDMException("Invalid elementCount: The elementCount property must reference an existing Count component");
+            dataArray = new DataArray((DataValue)sizeComponent);
         }
-        catch (NumberFormatException e)
+        
+        // else if elementCount is given inline
+        else
         {
-            // try to lookup for an id
-        	AbstractDataComponent sizeComponent = componentIds.get(arraySizeText.substring(1));
-        	
-        	if (sizeComponent == null)
-        		throw new CDMException("Invalid array size");
-        	else
-        		dataArray = new DataArray((DataValue)sizeComponent);
+            try
+            {
+                String countValue = dom.getElementValue(arrayElt, "elementCount/Count/value");
+                arraySize = Integer.parseInt(countValue);
+                if (arraySize <= 0)
+                    throw new CDMException("Invalid elementCount: The elementCount must specify a positive integer value");                
+                dataArray = new DataArray(arraySize);
+            }
+            catch (Exception e)
+            {
+                throw new CDMException("Invalid elementCount: The elementCount must specify a positive integer value");
+            }
         }
                         
-        // loop through all children
-        AbstractDataComponent dataComponent = null;
-        for (int i = 0; i < children.getLength(); i++)
-        {
-            Element childElement = (Element)children.item(i);
-            String childName = childElement.getLocalName();
-            
-            if (childName.equals("tupleValues"))
-            	tupleValuesElement = childElement;
-            else
-            	dataComponent = readComponentProperty(dom, childElement);
-        }
-
-        readAttributes(dom, dataArray, dataArrayElement);
+        // read array component
+        Element elementTypeElt = dom.getElement(arrayElt, "elementType");
+        DataComponent dataComponent = readComponentProperty(dom, elementTypeElt);
         dataArray.addComponent(dataComponent);
         
-        // read tuple values if present
-        if (tupleValuesElement != null)
-            readArrayValues(dom, dataArray, tupleValuesElement);
+        // read common stuffs
+        readGmlProperties(dataArray, dom, arrayElt);
+        readCommonAttributes(dataArray, dom, arrayElt);
+        
+        // read encoding and parse values (if both present) using the appropriate parser
+        Element encodingElt = dom.getElement(arrayElt, "encoding");
+        Element valuesElt = dom.getElement(arrayElt, "values");
+        if (encodingElt != null && valuesElt != null)
+        {
+            SweEncodingReaderV1 encodingReader = new SweEncodingReaderV1();
+            DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
+            DataStreamParser parser = DataParserFactory.createDataParser(encoding);
+            parser.setDataComponents(dataArray);
+            InputStream is = getDataStream(dom, valuesElt);
+            parser.parse(is);
+        }
         
         return dataArray;        
+    }
+    
+    
+    /**
+     * Gets the right input stream for href or inline values
+     * @param dom
+     * @param valuesElt
+     * @return
+     * @throws CDMException
+     */
+    private InputStream getDataStream(DOMHelper dom, Element valuesElt) throws CDMException
+    {
+        String href = dom.getAttributeValue(valuesElt, "@href");
+        if (href != null)
+        {
+            return URIStreamHandler.openStream(href);
+        }
+        else
+        {
+            String values = dom.getElementValue(valuesElt, "");
+            return(new ByteArrayInputStream(values.getBytes()));
+        }
     }
 
 
     /**
-     * Reads a parameter value and atributes (Quantity, Count, Term...)
-     * @param parameterElement
+     * Reads a scalar value and atributes (Quantity, Count, Term...)
+     * @param scalarElt
      * @return DataValue encapsulating the value
      * @throws SMLReaderException
      */
-    private DataValue readScalar(DOMHelper dom, Element parameterElement) throws CDMException
+    private DataValue readScalar(DOMHelper dom, Element scalarElt) throws CDMException
     {
-        DataValue paramValue = null;
-        String valueText = dom.getElementValue(parameterElement, "");      
-        String eltName = parameterElement.getLocalName();
+        DataValue dataValue = null;
+        String valueText = dom.getElementValue(scalarElt, "");      
+        String eltName = scalarElt.getLocalName();
         
         // Create Data component Object
     	if (eltName.equals("Quantity") || eltName.contains("Time"))
         {
-            paramValue = new DataValue(DataType.DOUBLE);
+            dataValue = new DataValue(DataType.DOUBLE);
         }
         else if (eltName.equals("Count"))
         {
-            paramValue = new DataValue(DataType.INT);
+            dataValue = new DataValue(DataType.INT);
         }
         else if (eltName.equals("Boolean"))
         {
-        	paramValue = new DataValue(DataType.BOOLEAN);
+        	dataValue = new DataValue(DataType.BOOLEAN);
         }
         else if (eltName.equals("Category"))
         {
-        	paramValue = new DataValue(DataType.UTF_STRING);
+        	dataValue = new DataValue(DataType.UTF_STRING);
         }
         else
         {
-            paramValue = new DataValue(DataType.OTHER);
+            dataValue = new DataValue(DataType.OTHER);
         }
         
-    	// read attributes
-    	readAttributes(dom, paramValue, parameterElement);
-        readConstraints(dom, parameterElement);
+    	// read common stuffs
+        readGmlProperties(dataValue, dom, scalarElt);
+    	readCommonAttributes(dataValue, dom, scalarElt);
+        readUom(dataValue, dom, scalarElt);
+        readQuality(dom, scalarElt);
+        readConstraints(dom, scalarElt);
         
         // Parse the value
         if (valueText != null)
         {
-        	paramValue.assignNewDataBlock();
-        	parseToken(paramValue, valueText, '\0');
+        	dataValue.assignNewDataBlock();
+            asciiParser.parseToken(dataValue, valueText, '\0');
         }
         
-        return paramValue;
+        return dataValue;
     }
     
     
-    private DataGroup readRange(DOMHelper dom, Element rangeElement) throws CDMException
+    private DataGroup readRange(DOMHelper dom, Element rangeElt) throws CDMException
     {
         DataValue paramVal = null;
         DataGroup rangeValues = new DataGroup(2);
-        String valueText = dom.getElementValue(rangeElement, "");
-        String eltName = rangeElement.getLocalName();
+        String valueText = dom.getElementValue(rangeElt, "");
+        String eltName = rangeElt.getLocalName();
         
         // Create Data component Object
         if (eltName.startsWith("Quantity") || eltName.startsWith("Time"))
@@ -260,8 +308,8 @@ public class SweComponentReaderV1 implements DataComponentReader
             throw new CDMException("Only Quantity, Time and Count ranges are allowed");
         
         // read attributes
-        readAttributes(dom, paramVal, rangeElement);
-        rangeValues.setProperty(DataComponent.DEF, "urn:ogc:def:data:range");
+        readCommonAttributes(paramVal, dom, rangeElt);
+        rangeValues.setProperty(DataComponent.DEF_URI, "urn:ogc:def:data:range");
         
         // add params to DataGroup
         rangeValues.addComponent("min", paramVal);
@@ -274,8 +322,8 @@ public class SweComponentReaderV1 implements DataComponentReader
             try
             {
                 String[] vals = valueText.split(" ");
-                parseToken((DataValue)rangeValues.getComponent(0), vals[0], '\0');
-                parseToken((DataValue)rangeValues.getComponent(1), vals[1], '\0');
+                asciiParser.parseToken((DataValue)rangeValues.getComponent(0), vals[0], '\0');
+                asciiParser.parseToken((DataValue)rangeValues.getComponent(1), vals[1], '\0');
             }
             catch (Exception e)
             {
@@ -289,55 +337,80 @@ public class SweComponentReaderV1 implements DataComponentReader
     
     /**
      * Reads name from element name or 'name' attribute
-     * @param propertyElement
+     * @param propertyElt
      * @return
      */
-    public String readName(DOMHelper dom, Element propertyElement)
+    private String readPropertyName(DOMHelper dom, Element propertyElt)
     {
-        String name = dom.getAttributeValue(propertyElement, "name");
+        String name = dom.getAttributeValue(propertyElt, "name");
         
         if (name == null)
-            name = propertyElement.getLocalName();
+            name = propertyElt.getLocalName();
         
         return name;
     }
     
     
     /**
-     * Retrieve data component properties 
-     * (definition uri, reference frame, axis code, unit...)
+     * Reads gml properties and attributes common to all SWE components
+     * @param dataComponent
+     * @param dom
+     * @param componentElt
+     * @throws CDMException
+     */
+    private void readGmlProperties(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws CDMException
+    {
+        // gml metadata?
+        
+        // gml description
+        String description = dom.getElementValue(componentElt, "gml:description");
+        if (description != null)
+            dataComponent.setProperty(DataComponent.DESC, description);
+        
+        // gml names
+        NodeList nameList = dom.getElements(componentElt, "gml:name");
+        int listSize = nameList.getLength();
+        if (listSize != 0)
+        {
+            ArrayList<QName> names = new ArrayList<QName>(listSize);
+            for (int i=0; i<listSize; i++)
+            {
+                Element nextElt = (Element)nameList.item(i);
+                String value = dom.getElementValue(nextElt, "");
+                String codeSpace = dom.getAttributeValue(nextElt, "@codeSpace");
+                QName name = new QName(codeSpace, value);
+                names.add(name);
+            }
+            dataComponent.setProperty(DataComponent.NAMES, names);
+        }       
+    }
+    
+    
+    /**
+     * Reads common component properties 
+     * (definition uri, reference frame, axisID, unit...)
      * @param dataComponent DataContainer
      * @param dataElement Element
      */
-    private void readAttributes(DOMHelper dom, AbstractDataComponent dataComponent, Element parameterElement) throws CDMException
+    private void readCommonAttributes(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws CDMException
     {
         // definition URI
-        String defUri = readComponentDefinition(dom, parameterElement);
+        String defUri = readComponentDefinition(dom, componentElt);
         if (defUri != null)
-            dataComponent.setProperty(DataComponent.DEF, defUri);
+            dataComponent.setProperty(DataComponent.DEF_URI, defUri);
         
         // reference frame
-        String refFrame = dom.getAttributeValue(parameterElement, "referenceFrame");
+        String refFrame = dom.getAttributeValue(componentElt, "referenceFrame");
         if (refFrame != null)
             dataComponent.setProperty(DataComponent.REF, refFrame);
         
         // local frame
-        String locFrame = dom.getAttributeValue(parameterElement, "localFrame");
+        String locFrame = dom.getAttributeValue(componentElt, "localFrame");
         if (locFrame != null)
             dataComponent.setProperty(DataComponent.LOC, locFrame);
         
-        // scale factor
-        String scale = dom.getAttributeValue(parameterElement, "scale");        
-        if (scale != null)
-        	dataComponent.setProperty(DataComponent.SCALE, new Double(Double.parseDouble(scale)));
-        
-        // read unit attribute
-        String unit = dom.getAttributeValue(parameterElement, "uom");
-        if (unit != null)
-        	dataComponent.setProperty(DataComponent.UOM, unit);
-        
         // read axis code attribute
-        String axisCode = dom.getAttributeValue(parameterElement, "axisCode");
+        String axisCode = dom.getAttributeValue(componentElt, "axisID");
         if (axisCode != null)
         	dataComponent.setProperty(DataComponent.AXIS, axisCode);
     }
@@ -345,18 +418,18 @@ public class SweComponentReaderV1 implements DataComponentReader
     
     /**
      * Derives parameter definition URN from element name
-     * @param parameterElement
+     * @param componentElement
      * @throws SMLReaderException
      */
-    private String readComponentDefinition(DOMHelper dom, Element parameterElement) throws CDMException
+    private String readComponentDefinition(DOMHelper dom, Element componentElement) throws CDMException
     {
-        String defUri = dom.getAttributeValue(parameterElement, "definition");
+        String defUri = dom.getAttributeValue(componentElement, "definition");
         
         if (defUri != null)
             return defUri;
         
         // otherwise derive urn from element name
-        String parameterName = parameterElement.getLocalName();
+        String parameterName = componentElement.getLocalName();
         
         // determine parameter type
         if (parameterName.indexOf("Boolean") != -1)
@@ -378,163 +451,67 @@ public class SweComponentReaderV1 implements DataComponentReader
     }
     
     
-    private Constraints readConstraints(DOMHelper dom, Element parameterElement) throws CDMException
+    /**
+     * Reads the uom code, href or inline content for the given scalar component
+     * @param dataComponent
+     * @param dom
+     * @param componentElt
+     */
+    private void readUom(DataComponent dataComponent, DOMHelper dom, Element scalarElt)
+    {
+        if (!dom.existElement(scalarElt, "uom"))
+            return;
+        
+        // uom code
+        String ucumCode = dom.getAttributeValue(scalarElt, "uom/@code");
+        if (ucumCode != null)
+        {
+            dataComponent.setProperty(DataComponent.UOM_CODE, ucumCode);
+            
+            // also create unit object
+            UnitParserUCUM ucumParser = new UnitParserUCUM();
+            Unit unit = ucumParser.getUnit(ucumCode);
+            if (unit != null)
+                dataComponent.setProperty(DataComponent.UOM_OBJ, unit);
+        }
+        
+        // if no code, read href
+        else
+        {
+            String href = dom.getAttributeValue(scalarElt, "uom/@href");
+            if (ucumCode != null)
+                dataComponent.setProperty(DataComponent.UOM_URI, href);
+        }
+    }
+    
+    
+    /**
+     * Reads the quality component if present inline
+     * @param dom
+     * @param scalarElement
+     * @throws CDMException
+     */
+    private void readQuality(DOMHelper dom, Element scalarElt) throws CDMException
+    {
+        if (!dom.existElement(scalarElt, "quality"))
+            return;
+        
+        Element qualityElt = dom.getElement(scalarElt, "quality/*");
+        DataComponent quality = readScalar(dom, qualityElt);
+        quality.setName("quality");
+    }
+    
+    
+    /**
+     * Reads the constrain list for the given scalar component
+     * @param dom
+     * @param parameterElement
+     * @return
+     * @throws CDMException
+     */
+    private Constraints readConstraints(DOMHelper dom, Element scalarElement) throws CDMException
     {
         return null;
     }
     
-    
-    /**
-     * Read fixed array values from tupleValues element
-     * @param arrayStructure
-     * @param tupleValuesElement
-     * @throws SMLReaderException
-     */
-    private void readArrayValues(DOMHelper dom, DataArray arrayStructure, Element tupleValuesElement) throws CDMException
-    {
-        // parse tuple values
-        String valueText = dom.getElementValue(tupleValuesElement, "");
-        String [] tupleList = valueText.split(tupleSeparator);
-        int size = tupleList.length;
-        
-        // compute right array size and build internal data block
-        arrayStructure.setSize(size);
-        arrayStructure.assignNewDataBlock();
-        
-        // get list of DataValues
-        ScalarIterator it = new ScalarIterator(arrayStructure);
-        int tupleCounter = 0;
-        int tokenCounter = 0;
-        int tokenCount = 0;
-        String [] tuples = null;
-        
-        // loop and read each array token
-        while (it.hasNext())
-        {
-        	DataValue component = (DataValue)it.next();
-            
-            if (tokenCounter >= tokenCount)
-            {
-                tokenCounter = 0;
-                tuples = tupleList[tupleCounter].split(tokenSeparator);
-                tokenCount = tuples.length;
-                tupleCounter++;
-            }
-            
-            SweComponentReaderV1.parseToken(component, tuples[tokenCounter], '\0');           
-            tokenCounter++;
-        }
-    }
-    
-    
-    /**
-     * Parse a token from a tuple depending on the corresponding Data Component Definition 
-     * @param scalarInfo
-     * @param token
-     * @param decimalSep character to be used as the decimal separator. (don't change anything and assume '.' if 0)
-     * @return a DataBlock containing the read data
-     * @throws CDMException
-     * @throws NumberFormatException
-     */
-    public static DataBlock parseToken(DataValue scalarInfo, String token, char decimalSep) throws CDMException, NumberFormatException
-	{
-		// get data block and its data type
-		DataBlock data = scalarInfo.getData();
-		DataType dataType = data.getDataType();
-		
-		// replace decimal separator by a '.'
-		if (decimalSep != 0)
-			token.replace(decimalSep, '.');
-		
-		// get scale factor if present
-		Object propValue = scalarInfo.getProperty(DataComponent.SCALE);
-		double scale = 1.0;
-		if (propValue != null)
-			scale = ((Double)propValue).doubleValue();
-		
-		try
-		{
-			switch (dataType)
-			{
-				case BOOLEAN:
-					try
-					{
-						int intValue = Integer.parseInt(token);
-						if ((intValue != 0) && (intValue != 1))
-							throw new ParseException("", 0);
-						
-						data.setBooleanValue(intValue != 0);
-					}
-					catch (NumberFormatException e)
-					{
-						boolean boolValue = Boolean.parseBoolean(token);
-						data.setBooleanValue(boolValue);
-					} 
-					break;
-					
-				case BYTE:
-					byte byteValue = Byte.parseByte(token);
-					data.setByteValue(byteValue);
-					break;
-					
-				case SHORT:
-					short shortValue = Short.parseShort(token);
-					data.setShortValue(shortValue);
-					break;
-					
-				case INT:
-					int intValue = Integer.parseInt(token);
-					data.setIntValue(intValue);
-					break;
-					
-				case LONG:
-					long longValue = Long.parseLong(token);
-					data.setLongValue(longValue);
-					break;
-					
-				case FLOAT:
-					float floatValue = Float.parseFloat(token);
-					data.setFloatValue(floatValue);
-					break;
-					
-				case DOUBLE:
-					try
-					{
-						double doubleValue = Double.parseDouble(token);
-						data.setDoubleValue(doubleValue * scale);
-					}
-					catch (NumberFormatException e)
-					{
-						// case of ISO time
-						double doubleValue;
-						try
-						{
-							doubleValue = DateTimeFormat.parseIso(token);
-						}
-						catch (ParseException e1)
-						{
-							// TODO Improve this (ok only if NO_DATA character)
-							doubleValue = Double.NaN;
-						}
-						data.setDoubleValue(doubleValue);							
-					}						
-					break;
-					
-				case UTF_STRING:
-				case ASCII_STRING:
-					data.setStringValue(token);
-					break;
-			}
-		}
-        catch (NumberFormatException e)
-        {
-            throw new CDMException("Invalid data " + token + " for parameter " + scalarInfo, e);
-        }
-        catch (ParseException e)
-        {
-        	throw new CDMException("Invalid data " + token + " for parameter " + scalarInfo, e);
-        }
-        
-		return data;
-	}
 }

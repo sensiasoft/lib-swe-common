@@ -29,7 +29,4 @@ public interface DataEncoding
 
 	
 	public EncodingType getEncodingType();
-    
-    
-    public DataStreamParser createDataParser();
 }

@@ -38,7 +38,7 @@ package org.vast.cdm.semantics;
 public class DictionaryURN
 {
     // basic
-    static public final String ogcData = "urn:ogc:phenomenon";
+    static public final String ogcData = "urn:x-ogc:def:phenomenon";
     static public final String bool = ogcData + ":boolean";
     static public final String count = ogcData + ":count";
     static public final String quantity = ogcData + ":quantity";

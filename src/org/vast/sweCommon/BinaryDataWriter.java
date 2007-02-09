@@ -47,7 +47,7 @@ import org.vast.cdm.common.*;
  */
 public class BinaryDataWriter extends DataWriter
 {
-	CDMOutputStream dataOutput;
+	SWEOutputStream dataOutput;
 	Hashtable<DataValue, BinaryOptions> componentEncodings;
 	
 	
@@ -84,7 +84,7 @@ public class BinaryDataWriter extends DataWriter
 			// if a dataHandler is registered, parse each individual element
 			if (dataHandler != null)
 			{
-				dataOutput = new CDMOutputStream(new BufferedOutputStream(dataOut));
+				dataOutput = new SWEOutputStream(new BufferedOutputStream(dataOut));
 				
 				do processNextElement();
 				while(!stopWriting);

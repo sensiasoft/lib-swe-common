@@ -199,9 +199,9 @@ public class SweComponentWriterV1 implements DataComponentWriter
     private void writeAttributes(DataComponent dataComponent, Element dataValueElt) throws CDMException
     {
         // definition URI
-        Object defUri = dataComponent.getProperty(DataComponent.DEF);
+        Object defUri = dataComponent.getProperty(DataComponent.DEF_URI);
         if (defUri != null)
-            dataValueElt.setAttribute(DataComponent.DEF, (String)defUri);
+            dataValueElt.setAttribute(DataComponent.DEF_URI, (String)defUri);
         
         // reference frame
         Object refFrame = dataComponent.getProperty(DataComponent.REF);
@@ -219,9 +219,9 @@ public class SweComponentWriterV1 implements DataComponentWriter
             dataValueElt.setAttribute(DataComponent.SCALE, (String)scale);
         
         // uom attribute
-        Object unit = dataComponent.getProperty(DataComponent.UOM);
+        Object unit = dataComponent.getProperty(DataComponent.UOM_CODE);
         if (unit != null)
-            dataValueElt.setAttribute(DataComponent.UOM, (String)unit);
+            dataValueElt.setAttribute(DataComponent.UOM_CODE, (String)unit);
         
         // axis code attribute
         Object axisCode = dataComponent.getProperty(DataComponent.AXIS);

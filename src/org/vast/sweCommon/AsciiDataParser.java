@@ -24,9 +24,11 @@
 package org.vast.sweCommon;
 
 import java.io.*;
+import java.text.ParseException;
 
 import org.vast.cdm.common.*;
 import org.vast.data.*;
+import org.vast.util.DateTimeFormat;
 
 
 public class AsciiDataParser extends AbstractDataParser
@@ -164,6 +166,112 @@ public class AsciiDataParser extends AbstractDataParser
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
 		char decimalSep = ((AsciiEncoding)dataEncoding).decimalSeparator;
-		SweComponentReaderV0.parseToken(scalarInfo, this.nextToken, decimalSep);
+		parseToken(scalarInfo, this.nextToken, decimalSep);
 	}
+    
+    
+    /**
+     * Parse a token from a tuple depending on the corresponding Data Component Definition 
+     * @param scalarInfo
+     * @param token
+     * @param decimalSep character to be used as the decimal separator. (don't change anything and assume '.' if 0)
+     * @return a DataBlock containing the read data
+     * @throws CDMException
+     * @throws NumberFormatException
+     */
+    protected DataBlock parseToken(DataValue scalarInfo, String token, char decimalSep) throws CDMException, NumberFormatException
+    {
+        // get data block and its data type
+        DataBlock data = scalarInfo.getData();
+        DataType dataType = data.getDataType();
+        
+        // replace decimal separator by a '.'
+        if (decimalSep != 0)
+            token.replace(decimalSep, '.');
+               
+        try
+        {
+            switch (dataType)
+            {
+                case BOOLEAN:
+                    try
+                    {
+                        int intValue = Integer.parseInt(token);
+                        if ((intValue != 0) && (intValue != 1))
+                            throw new ParseException("", 0);
+                        
+                        data.setBooleanValue(intValue != 0);
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        boolean boolValue = Boolean.parseBoolean(token);
+                        data.setBooleanValue(boolValue);
+                    } 
+                    break;
+                    
+                case BYTE:
+                    byte byteValue = Byte.parseByte(token);
+                    data.setByteValue(byteValue);
+                    break;
+                    
+                case SHORT:
+                    short shortValue = Short.parseShort(token);
+                    data.setShortValue(shortValue);
+                    break;
+                    
+                case INT:
+                    int intValue = Integer.parseInt(token);
+                    data.setIntValue(intValue);
+                    break;
+                    
+                case LONG:
+                    long longValue = Long.parseLong(token);
+                    data.setLongValue(longValue);
+                    break;
+                    
+                case FLOAT:
+                    float floatValue = Float.parseFloat(token);
+                    data.setFloatValue(floatValue);
+                    break;
+                    
+                case DOUBLE:
+                    try
+                    {
+                        double doubleValue = Double.parseDouble(token);
+                        data.setDoubleValue(doubleValue);
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        // case of ISO time
+                        double doubleValue;
+                        try
+                        {
+                            doubleValue = DateTimeFormat.parseIso(token);
+                        }
+                        catch (ParseException e1)
+                        {
+                            // TODO Improve this (ok only if NO_DATA character)
+                            doubleValue = Double.NaN;
+                        }
+                        data.setDoubleValue(doubleValue);                           
+                    }                       
+                    break;
+                    
+                case UTF_STRING:
+                case ASCII_STRING:
+                    data.setStringValue(token);
+                    break;
+            }
+        }
+        catch (NumberFormatException e)
+        {
+            throw new CDMException("Invalid data " + token + " for component " + scalarInfo, e);
+        }
+        catch (ParseException e)
+        {
+            throw new CDMException("Invalid data " + token + " for component " + scalarInfo, e);
+        }
+        
+        return data;
+    }
 }

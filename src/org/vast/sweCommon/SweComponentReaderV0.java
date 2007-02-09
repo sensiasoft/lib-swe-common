@@ -23,14 +23,12 @@
 
 package org.vast.sweCommon;
 
-import java.text.ParseException;
 import java.util.Hashtable;
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
 import org.vast.cdm.semantics.DictionaryURN;
 import org.vast.data.*;
 import org.vast.xml.*;
-import org.vast.util.*;
 
 
 /**
@@ -53,18 +51,20 @@ public class SweComponentReaderV0 implements DataComponentReader
     public static String tupleSeparator = " ";
     public static String tokenSeparator = ",";
     protected Hashtable<String, AbstractDataComponent> componentIds;
+    protected AsciiDataParser parser;
     
     
     public SweComponentReaderV0()
     {
         componentIds = new Hashtable<String, AbstractDataComponent>();
+        parser = new AsciiDataParser();
     }
 
 
     public AbstractDataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws CDMException
     {
         Element dataElement = dom.getFirstChildElement(propertyElement);
-        String name = readName(dom, propertyElement);
+        String name = readPropertyName(dom, propertyElement);
         
         AbstractDataComponent container = readComponent(dom, dataElement);
         container.setName(name);
@@ -106,7 +106,7 @@ public class SweComponentReaderV0 implements DataComponentReader
     /**
      * Reads a DataGroup structure and all its members
      * @param dataGroupElement Element
-     * @throws SMLReaderException
+     * @throws CDMException
      * @return DataGroup
      */
     private DataGroup readDataRecord(DOMHelper dom, Element dataGroupElement) throws CDMException
@@ -130,7 +130,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         {
             Element dataElement = (Element)componentList.item(i);                
             AbstractDataComponent dataComponent = readComponentProperty(dom, dataElement);
-            dataGroup.addComponent(readName(dom, dataElement), dataComponent);
+            dataGroup.addComponent(readPropertyName(dom, dataElement), dataComponent);
         }
 
         return dataGroup;
@@ -140,7 +140,7 @@ public class SweComponentReaderV0 implements DataComponentReader
     /**
      * Reads a DataArray structure the unique member
      * @param dataArrayElement Element
-     * @throws SMLReaderException
+     * @throws CDMException
      * @return DataArray
      */
     private DataArray readDataArray(DOMHelper dom, Element dataArrayElement) throws CDMException
@@ -192,10 +192,10 @@ public class SweComponentReaderV0 implements DataComponentReader
 
 
     /**
-     * Reads a parameter value and atributes (Quantity, Count, Term...)
+     * Reads a scalar value (Quantity, Count, Term...) and atributes
      * @param parameterElement
      * @return DataValue encapsulating the value
-     * @throws SMLReaderException
+     * @throws CDMException
      */
     private DataValue readParameter(DOMHelper dom, Element parameterElement) throws CDMException
     {
@@ -232,13 +232,20 @@ public class SweComponentReaderV0 implements DataComponentReader
         if (valueText != null)
         {
         	paramValue.assignNewDataBlock();
-        	parseToken(paramValue, valueText, '\0');
+        	parser.parseToken(paramValue, valueText, '\0');
         }
         
         return paramValue;
     }
     
     
+    /**
+     * Reads a Range component
+     * @param dom
+     * @param rangeElement
+     * @return
+     * @throws CDMException
+     */
     private DataGroup readRange(DOMHelper dom, Element rangeElement) throws CDMException
     {
         DataValue paramVal = null;
@@ -260,7 +267,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         
         // read attributes
         readAttributes(dom, paramVal, rangeElement);
-        rangeValues.setProperty(DataComponent.DEF, "urn:ogc:def:data:range");
+        rangeValues.setProperty(DataComponent.DEF_URI, "urn:ogc:def:data:range");
         
         // add params to DataGroup
         rangeValues.addComponent("min", paramVal);
@@ -273,8 +280,8 @@ public class SweComponentReaderV0 implements DataComponentReader
             try
             {
                 String[] vals = valueText.split(" ");
-                parseToken((DataValue)rangeValues.getComponent(0), vals[0], '\0');
-                parseToken((DataValue)rangeValues.getComponent(1), vals[1], '\0');
+                parser.parseToken((DataValue)rangeValues.getComponent(0), vals[0], '\0');
+                parser.parseToken((DataValue)rangeValues.getComponent(1), vals[1], '\0');
             }
             catch (Exception e)
             {
@@ -291,7 +298,7 @@ public class SweComponentReaderV0 implements DataComponentReader
      * @param propertyElement
      * @return
      */
-    public String readName(DOMHelper dom, Element propertyElement)
+    public String readPropertyName(DOMHelper dom, Element propertyElement)
     {
         String name = dom.getAttributeValue(propertyElement, "name");
         
@@ -313,7 +320,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         // definition URI
         String defUri = readComponentDefinition(dom, parameterElement);
         if (defUri != null)
-            dataComponent.setProperty(DataComponent.DEF, defUri);
+            dataComponent.setProperty(DataComponent.DEF_URI, defUri);
         
         // reference frame
         String refFrame = dom.getAttributeValue(parameterElement, "referenceFrame");
@@ -333,7 +340,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         // read unit attribute
         String unit = dom.getAttributeValue(parameterElement, "uom");
         if (unit != null)
-        	dataComponent.setProperty(DataComponent.UOM, unit);
+        	dataComponent.setProperty(DataComponent.UOM_CODE, unit);
         
         // read axis code attribute
         String axisCode = dom.getAttributeValue(parameterElement, "axisCode");
@@ -345,7 +352,7 @@ public class SweComponentReaderV0 implements DataComponentReader
     /**
      * Derives parameter definition URN from element name
      * @param parameterElement
-     * @throws SMLReaderException
+     * @throws CDMException
      */
     private String readComponentDefinition(DOMHelper dom, Element parameterElement) throws CDMException
     {
@@ -381,7 +388,7 @@ public class SweComponentReaderV0 implements DataComponentReader
      * Read fixed array values from tupleValues element
      * @param arrayStructure
      * @param tupleValuesElement
-     * @throws SMLReaderException
+     * @throws CDMException
      */
     private void readArrayValues(DOMHelper dom, DataArray arrayStructure, Element tupleValuesElement) throws CDMException
     {
@@ -401,7 +408,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         int tokenCount = 0;
         String [] tuples = null;
         
-        // loop and read each array token
+        // loop and read each array token        
         while (it.hasNext())
         {
         	DataValue component = (DataValue)it.next();
@@ -414,120 +421,8 @@ public class SweComponentReaderV0 implements DataComponentReader
                 tupleCounter++;
             }
             
-            SweComponentReaderV0.parseToken(component, tuples[tokenCounter], '\0');           
+            parser.parseToken(component, tuples[tokenCounter], '\0');           
             tokenCounter++;
         }
     }
-    
-    
-    /**
-     * Parse a token from a tuple depending on the corresponding Data Component Definition 
-     * @param scalarInfo
-     * @param token
-     * @param decimalSep character to be used as the decimal separator. (don't change anything and assume '.' if 0)
-     * @return a DataBlock containing the read data
-     * @throws CDMException
-     * @throws NumberFormatException
-     */
-    public static DataBlock parseToken(DataValue scalarInfo, String token, char decimalSep) throws CDMException, NumberFormatException
-	{
-		// get data block and its data type
-		DataBlock data = scalarInfo.getData();
-		DataType dataType = data.getDataType();
-		
-		// replace decimal separator by a '.'
-		if (decimalSep != 0)
-			token.replace(decimalSep, '.');
-		
-		// get scale factor if present
-		Object propValue = scalarInfo.getProperty(DataComponent.SCALE);
-		double scale = 1.0;
-		if (propValue != null)
-			scale = ((Double)propValue).doubleValue();
-		
-		try
-		{
-			switch (dataType)
-			{
-				case BOOLEAN:
-					try
-					{
-						int intValue = Integer.parseInt(token);
-						if ((intValue != 0) && (intValue != 1))
-							throw new ParseException("", 0);
-						
-						data.setBooleanValue(intValue != 0);
-					}
-					catch (NumberFormatException e)
-					{
-						boolean boolValue = Boolean.parseBoolean(token);
-						data.setBooleanValue(boolValue);
-					} 
-					break;
-					
-				case BYTE:
-					byte byteValue = Byte.parseByte(token);
-					data.setByteValue(byteValue);
-					break;
-					
-				case SHORT:
-					short shortValue = Short.parseShort(token);
-					data.setShortValue(shortValue);
-					break;
-					
-				case INT:
-					int intValue = Integer.parseInt(token);
-					data.setIntValue(intValue);
-					break;
-					
-				case LONG:
-					long longValue = Long.parseLong(token);
-					data.setLongValue(longValue);
-					break;
-					
-				case FLOAT:
-					float floatValue = Float.parseFloat(token);
-					data.setFloatValue(floatValue);
-					break;
-					
-				case DOUBLE:
-					try
-					{
-						double doubleValue = Double.parseDouble(token);
-						data.setDoubleValue(doubleValue * scale);
-					}
-					catch (NumberFormatException e)
-					{
-						// case of ISO time
-						double doubleValue;
-						try
-						{
-							doubleValue = DateTimeFormat.parseIso(token);
-						}
-						catch (ParseException e1)
-						{
-							// TODO Improve this (ok only if NO_DATA character)
-							doubleValue = Double.NaN;
-						}
-						data.setDoubleValue(doubleValue);							
-					}						
-					break;
-					
-				case UTF_STRING:
-				case ASCII_STRING:
-					data.setStringValue(token);
-					break;
-			}
-		}
-        catch (NumberFormatException e)
-        {
-            throw new CDMException("Invalid data " + token + " for parameter " + scalarInfo, e);
-        }
-        catch (ParseException e)
-        {
-        	throw new CDMException("Invalid data " + token + " for parameter " + scalarInfo, e);
-        }
-        
-		return data;
-	}
 }

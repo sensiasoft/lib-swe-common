@@ -64,4 +64,5 @@ public interface DataEncodingReader
      * @throws CDMException
      */
     public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws CDMException;
+
 }

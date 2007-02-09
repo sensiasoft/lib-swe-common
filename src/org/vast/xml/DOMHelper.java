@@ -89,16 +89,6 @@ public class DOMHelper
     	
     	// load default prefixes
         addUserPrefix(QName.DEFAULT_PREFIX, "http://default");
-        addUserPrefix("ogc", "http://www.opengis.net/ogc");
-        addUserPrefix("ows", "http://www.opengis.net/ows");
-        addUserPrefix("gml", "http://www.opengis.net/gml");
-    	addUserPrefix("om", "http://www.opengis.net/om");
-        addUserPrefix("swe", "http://www.opengis.net/swe");
-        addUserPrefix("sml", "http://www.opengis.net/sensorML");
-        addUserPrefix("xlink", "http://www.w3.org/1999/xlink");
-        addUserPrefix("sos", "http://www.opengeospatial.net/sos");
-        addUserPrefix("sas", "http://www.opengeospatial.net/sas");
-        addUserPrefix("sps", "http://www.opengeospatial.net/sps");
     }
 
 

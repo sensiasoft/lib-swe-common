@@ -43,12 +43,19 @@ package org.vast.cdm.common;
  */
 public interface DataComponent extends Cloneable
 {
+    public final static String META = "meta";
+    public final static String DESC = "desc";
+    public final static String NAMES = "names";
     public final static String REF = "refFrame"; 
     public final static String LOC = "locFrame";
-    public final static String UOM = "uom";
-    public final static String DEF = "def";
+    public final static String UOM_CODE = "uom_code";
+    public final static String UOM_URI = "uom_uri";
+    public final static String UOM_OBJ = "uom_obj";
+    public final static String DEF_URI = "def_uri";
+    public final static String DEF_OBJ = "def_obj";
     public final static String AXIS = "axis";
     public final static String SCALE = "scale";
+    public final static String QUALITY = "quality";
     
     
     public int getComponentCount();
