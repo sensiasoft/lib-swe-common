@@ -23,10 +23,17 @@
 
 package org.vast.unit;
 
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.vast.util.ExceptionSystem;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 
 /**
@@ -47,9 +54,10 @@ import java.util.regex.Pattern;
 public class UnitParserUCUM implements UnitParser
 {
 	private static Hashtable<String, Double> prefixTable;
-    private static String unitRegex = "[./]?[0-9 a-z A-Z \\[ \\] \\- \\+ \\! \\# \\* \\_]+";
+    private static String termRegex = "[./]?[0-9 a-z A-Z \\[ \\] \\- \\+ \\! \\# \\* \\_]+";
     private static String intRegex = "[./]?[-+]?[0-9]+([-+][0-9])?";
-    private Hashtable<String, Unit> unitTable = new Hashtable<String, Unit>();
+    private static String funcRegex = "^[0-9 a-z A-Z]+\\(.+\\)$";
+    private static Hashtable<String, Unit> unitTable = new Hashtable<String, Unit>();
     
     
     static
@@ -80,12 +88,48 @@ public class UnitParserUCUM implements UnitParser
     }
     
     
+    public UnitParserUCUM()
+    {
+        if (unitTable.isEmpty())
+            this.preloadUCUMUnits();
+    }
+    
+    
+    /**
+     * Call this to get a Unit object corresponding to the given ucum string
+     */
     public Unit getUnit(String ucumDef)
     {
-        Unit uom = new Unit();
+        ucumDef = ucumDef.trim();
+        
+        // first check if we already have it in the table
+        Unit uom = unitTable.get(ucumDef);
+        if (uom != null)
+            return uom.copy();        
+        
+        // otherwise it is probably a composed unit so create a new one
+        uom = new Unit();
+        uom.setExpression(ucumDef);
+        
+        // check if there is a function (special units)
+        if (ucumDef.matches(funcRegex))
+        {
+            int openBracketIndex = ucumDef.indexOf('(');
+            int spaceIndex = ucumDef.indexOf(' ');
+            int closeBracketIndex = ucumDef.indexOf(')');
+            
+            // extract function name, scale and term
+            String funcName = ucumDef.substring(0, openBracketIndex);            
+            String scale = ucumDef.substring(openBracketIndex+1, spaceIndex);
+            ucumDef = ucumDef.substring(spaceIndex+1, closeBracketIndex);
+            
+            // create function
+            UnitFunction func = UnitFunction.createFunction(funcName, Double.parseDouble(scale));
+            uom.setFunction(func);
+        }
         
         // separate tokens between '/' and '.'
-        Pattern pattern = Pattern.compile(unitRegex);
+        Pattern pattern = Pattern.compile(termRegex);
         Matcher matcher = pattern.matcher(ucumDef);
         
         // take care of all following tokens
@@ -103,14 +147,14 @@ public class UnitParserUCUM implements UnitParser
                 parsePower10(token, uom);
             
             else
-                parseUnit(token, uom);
-        }
+                parseUnitCode(token, uom);
+        }        
         
         return uom;
     }
     
     
-    private void parseUnit(String token, Unit uom)
+    private void parseUnitCode(String token, Unit uom)
     {
         Unit unit = null;
         double power = 1.0;
@@ -134,7 +178,7 @@ public class UnitParserUCUM implements UnitParser
             unitString = unitString.substring(1);
         }
                 
-        // try all prefixes and see if they match
+        // first try all prefixes and see if they match
         boolean prefixFound = false;
         Enumeration<String> prefixList = prefixTable.keys();
         while (prefixList.hasMoreElements())
@@ -176,7 +220,10 @@ public class UnitParserUCUM implements UnitParser
         }
         
         // update unit scale factor
-        unit.scaleToSI *= prefixScale;
+        if (unit.function != null)
+            unit.function.scaleFactor *= prefixScale;
+        else
+            unit.scaleToSI *= prefixScale;
         
         // raise unit to given power
         if (power != 1.0)
@@ -234,75 +281,154 @@ public class UnitParserUCUM implements UnitParser
     }
 
 
-    public Hashtable<String, Unit> getUnitTable()
+    public static Hashtable<String, Unit> getUnitTable()
     {
+        if (unitTable.isEmpty())
+            new UnitParserUCUM().preloadUCUMUnits();
+        
         return unitTable;
     }
     
     
-    public void preloadSIUnits()
+    /**
+     * Call this method to preload all units defined in UCUM essence
+     */
+    public void preloadUCUMUnits()
     {
-        Unit unit;
+        try
+        {
+            // load UCUM essence file
+            URL url = UnitParserUCUM.class.getResource("ucum-essence.xml");
+            DOMHelper dom = new DOMHelper(url.toString(), false);
+                    
+            // read all base units first
+            NodeList baseUnitList = dom.getElements("base-unit");
+            for (int i = 0; i < baseUnitList.getLength(); i++)
+            {
+                Element unitElt = (Element) baseUnitList.item(i);
+                String unitCode = dom.getAttributeValue(unitElt, "Code");
+                String unitName = dom.getElementValue(unitElt, "name");                
+                String unitSymbol = readPrintSymbol(dom, unitElt);
+                String property = dom.getElementValue(unitElt, "property");
+                
+                Unit unit = new Unit();
+                unit.setName(unitName);
+                unit.setCode(unitCode);
+                unit.setPrintSymbol(unitSymbol);
+                unit.setExpression(unitCode);
+                unit.setProperty(property);
+                unit.setMetric(true);
+                
+                if (unitCode.equals("m"))
+                    unit.setMeter(1.0);
+                else if (unitCode.equals("s"))
+                    unit.setSecond(1.0);                
+                else if (unitCode.equals("rad"))
+                    unit.setRadian(1.0);
+                else if (unitCode.equals("K"))
+                    unit.setKelvin(1.0);                
+                else if (unitCode.equals("cd"))
+                    unit.setCandela(1.0);
+                else if (unitCode.equals("g"))
+                {
+                    unit.setKilogram(1.0);
+                    unit.setScaleToSI(1e-3);
+                }
+                else if (unitCode.equals("C"))
+                {
+                    unit.setAmpere(1.0);
+                    unit.setSecond(1.0);
+                }
+                
+                unitTable.put(unitCode, unit);
+                //System.out.println(unit);
+            }
+            
+            // process all other units
+            NodeList unitList = dom.getElements("unit");
+            for (int i = 0; i < unitList.getLength(); i++)
+            {
+                Element unitElt = (Element) unitList.item(i);
+                String unitCode = dom.getAttributeValue(unitElt, "Code");
+                String unitName = dom.getElementValue(unitElt, "name");
+                String unitString = dom.getAttributeValue(unitElt, "value/@Unit");
+                String isMetric = dom.getAttributeValue(unitElt, "isMetric");
+                String unitSymbol = readPrintSymbol(dom, unitElt);
+                String property = dom.getElementValue(unitElt, "property");
+    
+                // skip units that we already have and 10*
+                if (unitCode.startsWith("10"))
+                    continue;
+                if (unitTable.get(unitCode) != null)
+                    continue;
+    
+                Unit ucumUnit;
+                try
+                {
+                    ucumUnit = getUnit(unitString);
+                    ucumUnit.setCode(unitCode);
+                    ucumUnit.setPrintSymbol(unitSymbol);
+                    ucumUnit.setName(unitName);
+                    ucumUnit.setProperty(property);
+    
+                    if (isMetric != null && isMetric.equals("yes"))
+                        ucumUnit.setMetric(true);
+                }
+                catch (RuntimeException e)
+                {
+                    System.out.println(unitCode + " = ? [ERROR]");
+                    continue;
+                }
+    
+                String value = dom.getAttributeValue(unitElt, "value/@value");
+                if (value != null)
+                {
+                    double val = Double.parseDouble(value);
+                    ucumUnit.multiply(val);
+                }
+                
+                unitTable.put(unitCode, ucumUnit);
+                //System.out.println(ucumUnit);
+            }
+        }
+        catch (DOMHelperException e)
+        {
+            ExceptionSystem.display(e);
+        }
+    }
+    
+    
+    private String readPrintSymbol(DOMHelper dom, Element unitElt)
+    {
+        Element printSymElt = dom.getElement(unitElt, "printSymbol");
         
-        // PI
-        unit = new Unit();
-        unit.setPi(1.0);
-        unitTable.put("[pi]", unit);
+        // use code if printSymbol not present
+        if (printSymElt == null)
+        {
+            String code = dom.getAttributeValue(unitElt, "Code");
+            // remove brackets if present
+            if (code.matches("^\\[.*\\]$"))
+                code = code.substring(1, code.length()-1);                        
+            return code;
+        }
+                
+        // if there are some HTML tags inside skip them
+        if (dom.existElement(printSymElt, "*"))
+        {
+            StringBuffer buf = new StringBuffer();
+            Element elt = dom.getElement(unitElt, "printSymbol");
+            do
+            {
+                if (elt.getLocalName().equalsIgnoreCase("sub"))
+                    buf.append("_");
+                buf.append(dom.getElementValue(elt, ""));
+                elt = dom.getFirstChildElement(elt);
+            }
+            while (elt != null);
+            return buf.toString();
+        }
         
-        // meter
-        unit = new Unit();
-        unit.setMeter(1.0);
-        unit.setMetric(true);
-        unitTable.put("m", unit);
-        
-        // gram
-        unit = new Unit();
-        unit.setKilogram(1.0);
-        unit.setScaleToSI(1e-3);
-        unit.setMetric(true);
-        unitTable.put("g", unit);
-        
-        // second
-        unit = new Unit();
-        unit.setSecond(1.0);
-        unit.setMetric(true);
-        unitTable.put("s", unit);
-        
-        // Kelvin
-        unit = new Unit();
-        unit.setKelvin(1.0);
-        unit.setMetric(true);
-        unitTable.put("K", unit);
-        
-        // Candela
-        unit = new Unit();
-        unit.setCandela(1.0);
-        unit.setMetric(true);
-        unitTable.put("cd", unit);
-        
-        // Ampere
-        unit = new Unit();
-        unit.setAmpere(1.0);
-        unit.setMetric(true);
-        unitTable.put("A", unit);
-        
-        // Radian
-        unit = new Unit();
-        unit.setRadian(1.0);
-        unit.setMetric(true);
-        unitTable.put("rad", unit);
-        
-        // Mole
-        unit = new Unit();
-        unit.setMole(1.0);
-        unit.setMetric(true);
-        unitTable.put("mol", unit);
-        
-        // Coulomb
-        unit = new Unit();
-        unit.setAmpere(1.0);
-        unit.setSecond(1.0);
-        unit.setMetric(true);
-        unitTable.put("C", unit);
+        // otherwise just return printSymbol value
+        return dom.getElementValue(unitElt, "printSymbol");
     }
 }

@@ -78,10 +78,11 @@ public class XMLDocument
 	}
     
     
-    public XMLDocument(String ns, String qname)
+    public XMLDocument(QName qname)
     {
         this();        
-        domDocument = DOMImplementationImpl.getDOMImplementation().createDocument(ns, qname, null);
+        domDocument = DOMImplementationImpl.getDOMImplementation().createDocument(qname.nsUri, qname.getFullName(), null);
+        addNS(qname.prefix, qname.nsUri);
     }
 
 
@@ -118,8 +119,11 @@ public class XMLDocument
      */
     public void addNS(String prefix, String uri)
     {
-        this.nsUriToPrefix.put(uri, prefix);
-        this.nsPrefixToUri.put(prefix, uri);
+        if (uri != null)
+        {
+            this.nsUriToPrefix.put(uri, prefix);
+            this.nsPrefixToUri.put(prefix, uri);
+        }
     }
 
 

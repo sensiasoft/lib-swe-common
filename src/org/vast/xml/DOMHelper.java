@@ -86,9 +86,6 @@ public class DOMHelper
     	userPrefixTable = new Hashtable<String, String>();
         currentPath = new ArrayList<String>();
         eltQName = new QName();
-    	
-    	// load default prefixes
-        addUserPrefix(QName.DEFAULT_PREFIX, "http://default");
     }
 
 
@@ -151,9 +148,8 @@ public class DOMHelper
     public void createDocument(String qname)
     {
         QName qnameObj = getQName(null, qname);
-        XMLDocument xmlDoc = new XMLDocument(qnameObj.getNsUri(), qnameObj.getFullName());
-        mainFragment = new XMLFragment(xmlDoc, xmlDoc.getDocumentElement());
-        xmlDoc.addNS(qnameObj.prefix, qnameObj.nsUri);
+        XMLDocument xmlDoc = new XMLDocument(qnameObj);
+        mainFragment = new XMLFragment(xmlDoc, xmlDoc.getDocumentElement());        
         loadedDocuments.put("NEW", xmlDoc);
     }
 
@@ -558,6 +554,7 @@ public class DOMHelper
         for (int i = 0; i < children.getLength(); i++)
         {
             Node child = children.item(i);
+            
             if (child.getNodeType() == Node.ELEMENT_NODE)
                 elementList.addNode(child);
 
@@ -1217,9 +1214,7 @@ public class DOMHelper
         
         if (nsUri == null)
         {
-            if (eltQName.prefix == QName.DEFAULT_PREFIX)
-                throw new IllegalStateException("No default namespace URI defined");
-            else
+            if (eltQName.prefix != QName.DEFAULT_PREFIX)
                 throw new IllegalStateException("No namespace URI defined for user prefix " + eltQName.prefix);
         }
         

@@ -41,10 +41,13 @@ package org.vast.unit;
 public class Unit
 {
     protected String name;
-    protected String symbol;
+    protected String code;
+    protected String printSymbol;
+    protected String property;
     protected String description;
     protected String expression;
     
+    // base unit powers
     protected double meter = 0.0;
     protected double kilogram = 0.0;
     protected double second = 0.0;
@@ -54,10 +57,11 @@ public class Unit
     protected double candela = 0.0;
     protected double radian = 0.0;
     protected double pi = 0.0;
-    protected double logBase = 0.0;
-    protected double logScale = 0.0;
+    
+    // function for special units
     protected double scaleToSI = 1.0;
     protected boolean metric = false;
+    protected UnitFunction function;
     
 
     /**
@@ -69,7 +73,9 @@ public class Unit
         Unit newUnit = new Unit();
         
         newUnit.name = this.name;
-        newUnit.symbol = this.symbol;
+        newUnit.code = this.code;        
+        newUnit.printSymbol = this.printSymbol;
+        newUnit.property = this.property;
         newUnit.description = this.description;
         newUnit.expression = this.expression;
         
@@ -82,10 +88,9 @@ public class Unit
         newUnit.mole = this.mole;
         newUnit.candela = this.candela;
         newUnit.pi = this.pi;
-        newUnit.logBase = this.logBase;
-        newUnit.logScale = this.logScale;
         newUnit.scaleToSI = this.scaleToSI;
         newUnit.metric = this.metric;
+        newUnit.function = this.function;
         
         return newUnit;
     }
@@ -165,6 +170,8 @@ public class Unit
         this.candela += unit.candela;
         this.pi += unit.pi;
         this.scaleToSI *= unit.scaleToSI;
+        if (unit.function != null)
+            this.function = unit.function;
     }
     
     
@@ -184,17 +191,53 @@ public class Unit
     {
         this.name = name;
     }
-
-
-    public String getSymbol()
+    
+    
+    public String getCode()
     {
-        return symbol;
+        return code;
     }
 
 
-    public void setSymbol(String symbol)
+    public void setCode(String code)
     {
-        this.symbol = symbol;
+        this.code = code;
+    }
+
+
+    public String getPrintSymbol()
+    {
+        return printSymbol;
+    }
+
+
+    public void setPrintSymbol(String symbol)
+    {
+        this.printSymbol = symbol;
+    }
+    
+    
+    public String getExpression()
+    {
+        return expression;
+    }
+
+
+    public void setExpression(String expression)
+    {
+        this.expression = expression;
+    }
+
+
+    public String getProperty()
+    {
+        return property;
+    }
+
+
+    public void setProperty(String property)
+    {
+        this.property = property;
     }
     
     
@@ -270,30 +313,6 @@ public class Unit
     }
 
 
-    public double getLogBase()
-    {
-        return logBase;
-    }
-
-
-    public void setLogBase(double logBase)
-    {
-        this.logBase = logBase;
-    }
-
-
-    public double getLogScale()
-    {
-        return logScale;
-    }
-
-
-    public void setLogScale(double logScale)
-    {
-        this.logScale = logScale;
-    }
-
-
     public double getMeter()
     {
         return meter;
@@ -366,6 +385,18 @@ public class Unit
     }
     
     
+    public UnitFunction getFunction()
+    {
+        return function;
+    }
+
+
+    public void setFunction(UnitFunction function)
+    {
+        this.function = function;
+    }
+    
+    
     public String toString()
     {
         StringBuffer buf = new StringBuffer();
@@ -377,13 +408,21 @@ public class Unit
         addUnitString(buf, ampere, "A");
         addUnitString(buf, kelvin, "K");
         addUnitString(buf, mole, "mol");
-        addUnitString(buf, candela, "cd");
+        addUnitString(buf, candela, "cd");        
+        buf.insert(0, getScaleToSI() + "*");
         
-        double scale = getScaleToSI(); 
-        if (scale != 1.0)
-            buf.insert(0, scale + " ");
+        // insert function symbol
+        if (this.function != null)
+            buf.insert(0, 1./function.getScaleFactor() + "*" + function.getPrintSymbol() + "(");
         
-        buf.insert(0, symbol + " = ");
+        // insert code =
+        buf.insert(0, getCode() + " = ");
+        
+        if (function != null)
+            buf.append(")");
+        
+        // also append unit name and printSymbol
+        buf.append("  (" + getName() + " - " + getPrintSymbol() + ")");
         
         return buf.toString();
     }
@@ -400,17 +439,5 @@ public class Unit
             if (val != 1)
                 buf.append((int)val);                        
         }
-    }
-
-
-    public String getExpression()
-    {
-        return expression;
-    }
-
-
-    public void setExpression(String expression)
-    {
-        this.expression = expression;
     }
 }

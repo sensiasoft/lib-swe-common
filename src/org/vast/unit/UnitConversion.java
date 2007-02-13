@@ -72,30 +72,7 @@ public class UnitConversion
      */
     public static UnitConverter getConverter(Unit sourceUnit, Unit destUnit)
     {
-        // create a log converter if one of the units is on a log scale
-        if (sourceUnit.logScale != 0 || destUnit.logScale != 0)
-            return new LogUnitConverter(sourceUnit, destUnit);
-        
-        // create a linear converter if units contains offsets
-        if (needsOffset(sourceUnit, destUnit))
-            return new LinearUnitConverter(sourceUnit, destUnit);
-        
-        // otherwise default to a simple scale converter
-        return new ScaleUnitConverter(sourceUnit, destUnit);
-    }
-    
-    
-    /**
-     * Checks if offsets to SI base units are different in
-     * source and destination units.
-     * @param srcUnit
-     * @param destUnit
-     * @return
-     */
-    private static boolean needsOffset(Unit srcUnit, Unit destUnit)
-    {
-        // TODO
-        return false;
+        return new GenericUnitConverter(sourceUnit, destUnit);
     }
     
 	
@@ -204,7 +181,7 @@ public class UnitConversion
                 // create the unit object
                 Unit unit = new Unit();
                 unit.setName(dom.getElementValue(unitElt, "name"));
-                unit.setSymbol(dom.getElementValue(unitElt, "symbol"));
+                unit.setPrintSymbol(dom.getElementValue(unitElt, "symbol"));
                 
                 // adds all uri as keys in the hashtable
                 NodeList uriElts = dom.getElements(unitElt, "uri");         
@@ -218,7 +195,7 @@ public class UnitConversion
                 }
                 
                 // also add the symbol entry in the hash table for faster lookup
-                urnToUnitMap.put(unit.getSymbol(), unit);
+                urnToUnitMap.put(unit.getPrintSymbol(), unit);
             }
         }
         catch (DOMHelperException e)

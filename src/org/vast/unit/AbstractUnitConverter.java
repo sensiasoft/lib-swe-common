@@ -40,7 +40,7 @@ package org.vast.unit;
  */
 public abstract class AbstractUnitConverter implements UnitConverter
 {
-    protected Unit sourceUnit, destinationUnit;
+    protected Unit srcUnit, destUnit;
     protected boolean conversionNeeded = false;
     protected boolean conversionPossible = false;
     
@@ -52,8 +52,8 @@ public abstract class AbstractUnitConverter implements UnitConverter
     
     public AbstractUnitConverter(Unit sourceUnit, Unit destinationUnit)
     {
-        this.sourceUnit = sourceUnit;
-        this.destinationUnit = destinationUnit;        
+        this.srcUnit = sourceUnit;
+        this.destUnit = destinationUnit;        
         conversionPossible = sourceUnit.isCompatible(destinationUnit);
     }
     
@@ -77,26 +77,26 @@ public abstract class AbstractUnitConverter implements UnitConverter
     }
 
 
-    public Unit getDestinationUnit()
+    public Unit getDestUnit()
     {
-        return destinationUnit;
+        return destUnit;
     }
 
 
-    public void setDestinationUnit(Unit destinationUnit)
+    public void setDestUnit(Unit destinationUnit)
     {
-        this.destinationUnit = destinationUnit;
+        this.destUnit = destinationUnit;
     }
 
 
-    public Unit getSourceUnit()
+    public Unit getSrcUnit()
     {
-        return sourceUnit;
+        return srcUnit;
     }
 
 
-    public void setSourceUnit(Unit sourceUnit)
+    public void setSrcUnit(Unit sourceUnit)
     {
-        this.sourceUnit = sourceUnit;
+        this.srcUnit = sourceUnit;
     }
 }

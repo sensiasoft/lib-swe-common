@@ -75,7 +75,7 @@ public class ScaleUnitConverter extends AbstractUnitConverter
     /**
      * If units are compatible, this will compute the conversion
      * factor to go from this unit to the given unit.
-     * @param sourceUnit
+     * @param srcUnit
      * @param destUnit
      * @return
      */

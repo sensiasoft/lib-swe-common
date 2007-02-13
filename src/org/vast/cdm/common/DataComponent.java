@@ -48,14 +48,17 @@ public interface DataComponent extends Cloneable
     public final static String NAMES = "names";
     public final static String REF = "refFrame"; 
     public final static String LOC = "locFrame";
+    public final static String AXIS = "axis";
+    public final static String DEF_URI = "def_uri";
+    public final static String DEF_OBJ = "def_obj";
     public final static String UOM_CODE = "uom_code";
     public final static String UOM_URI = "uom_uri";
     public final static String UOM_OBJ = "uom_obj";
-    public final static String DEF_URI = "def_uri";
-    public final static String DEF_OBJ = "def_obj";
-    public final static String AXIS = "axis";
+    public final static String DIC_URI = "dic_uri";
+    public final static String DIC_OBJ = "dic_obj";
     public final static String SCALE = "scale";
     public final static String QUALITY = "quality";
+    public final static String CONSTRAINTS = "constraints";
     
     
     public int getComponentCount();

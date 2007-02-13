@@ -33,6 +33,8 @@ import org.vast.cdm.semantics.DictionaryURN;
 import org.vast.data.*;
 import org.vast.xml.*;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ows.gml.GMLException;
+import org.vast.ows.gml.GMLUnitReader;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
 
@@ -82,16 +84,17 @@ public class SweComponentReaderV1 implements DataComponentReader
     public AbstractDataComponent readComponent(DOMHelper dom, Element componentElt) throws CDMException
     {
         AbstractDataComponent container = null;
+        String eltName = componentElt.getLocalName();
         
-        if (componentElt.getLocalName().endsWith("DataRecord"))
-        {
-            container = readDataRecord(dom, componentElt);
-        }
-        else if (dom.existElement(componentElt, "elementCount"))
+        if (dom.existElement(componentElt, "elementCount"))
         {
             container = readDataArray(dom, componentElt);
         }
-        if (componentElt.getLocalName().endsWith("Range"))
+        else if (eltName.endsWith("DataRecord")) // also handles SimpleDataRecord
+        {
+            container = readDataRecord(dom, componentElt);
+        }
+        else if (eltName.endsWith("Range"))
         {
             container = readRange(dom, componentElt);
         }
@@ -244,44 +247,35 @@ public class SweComponentReaderV1 implements DataComponentReader
      */
     private DataValue readScalar(DOMHelper dom, Element scalarElt) throws CDMException
     {
-        DataValue dataValue = null;
-        String valueText = dom.getElementValue(scalarElt, "");      
+        DataValue dataValue = null;              
         String eltName = scalarElt.getLocalName();
         
-        // Create Data component Object
-    	if (eltName.equals("Quantity") || eltName.contains("Time"))
-        {
-            dataValue = new DataValue(DataType.DOUBLE);
-        }
+        // Create DataValue Object with appropriate type
+    	if (eltName.equals("Quantity") || eltName.equals("Time"))
+    	    dataValue = new DataValue(DataType.DOUBLE);
         else if (eltName.equals("Count"))
-        {
             dataValue = new DataValue(DataType.INT);
-        }
         else if (eltName.equals("Boolean"))
-        {
         	dataValue = new DataValue(DataType.BOOLEAN);
-        }
-        else if (eltName.equals("Category"))
-        {
+        else if (eltName.equals("Category") || eltName.equals("Text"))
         	dataValue = new DataValue(DataType.UTF_STRING);
-        }
         else
-        {
-            dataValue = new DataValue(DataType.OTHER);
-        }
+            throw new CDMException("Invalid component: " + eltName);
         
     	// read common stuffs
         readGmlProperties(dataValue, dom, scalarElt);
     	readCommonAttributes(dataValue, dom, scalarElt);
         readUom(dataValue, dom, scalarElt);
-        readQuality(dom, scalarElt);
-        readConstraints(dom, scalarElt);
+        readCodeSpace(dataValue, dom, scalarElt);
+        readQuality(dataValue, dom, scalarElt);
+        readConstraints(dataValue, dom, scalarElt);
         
         // Parse the value
-        if (valueText != null)
+        String value = dom.getElementValue(scalarElt, "value");
+        if (value != null)
         {
         	dataValue.assignNewDataBlock();
-            asciiParser.parseToken(dataValue, valueText, '\0');
+            asciiParser.parseToken(dataValue, value, '\0');
         }
         
         return dataValue;
@@ -360,6 +354,8 @@ public class SweComponentReaderV1 implements DataComponentReader
      */
     private void readGmlProperties(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws CDMException
     {
+        dom.addUserPrefix("gml", OGCRegistry.GML_NS);
+        
         // gml metadata?
         
         // gml description
@@ -457,13 +453,16 @@ public class SweComponentReaderV1 implements DataComponentReader
      * @param dom
      * @param componentElt
      */
-    private void readUom(DataComponent dataComponent, DOMHelper dom, Element scalarElt)
+    private void readUom(DataComponent dataComponent, DOMHelper dom, Element scalarElt) throws CDMException
     {
         if (!dom.existElement(scalarElt, "uom"))
             return;
         
-        // uom code
         String ucumCode = dom.getAttributeValue(scalarElt, "uom/@code");
+        String href = dom.getAttributeValue(scalarElt, "uom/@href");
+        Element unitElt = dom.getElement(scalarElt, "uom/*");
+                
+        // uom code        
         if (ucumCode != null)
         {
             dataComponent.setProperty(DataComponent.UOM_CODE, ucumCode);
@@ -476,12 +475,43 @@ public class SweComponentReaderV1 implements DataComponentReader
         }
         
         // if no code, read href
-        else
+        else if (href != null)
         {
-            String href = dom.getAttributeValue(scalarElt, "uom/@href");
             if (ucumCode != null)
                 dataComponent.setProperty(DataComponent.UOM_URI, href);
         }
+        
+        // inline unit
+        else if (unitElt != null)
+        {
+            GMLUnitReader unitReader = new GMLUnitReader();
+            try
+            {
+                Unit unit = unitReader.readUnit(dom, unitElt);
+                if (unit != null)
+                    dataComponent.setProperty(DataComponent.UOM_OBJ, unit);
+            }
+            catch (GMLException e)
+            {
+                throw new CDMException("Invalid Inline Unit", e);
+            }
+        }
+    }
+    
+    
+    /**
+     * Reads codeSpace URI in a Category
+     * @param dataComponent
+     * @param dom
+     * @param scalarElt
+     * @throws CDMException
+     */
+    private void readCodeSpace(DataComponent dataComponent, DOMHelper dom, Element scalarElt) throws CDMException
+    {
+        // codeSpace URI
+        String codeSpaceUri = dom.getAttributeValue(scalarElt, "codeSpace/@href");
+        if (codeSpaceUri != null)
+            dataComponent.setProperty(DataComponent.DIC_URI, codeSpaceUri);
     }
     
     
@@ -491,7 +521,7 @@ public class SweComponentReaderV1 implements DataComponentReader
      * @param scalarElement
      * @throws CDMException
      */
-    private void readQuality(DOMHelper dom, Element scalarElt) throws CDMException
+    private void readQuality(DataComponent dataComponent, DOMHelper dom, Element scalarElt) throws CDMException
     {
         if (!dom.existElement(scalarElt, "quality"))
             return;
@@ -499,6 +529,8 @@ public class SweComponentReaderV1 implements DataComponentReader
         Element qualityElt = dom.getElement(scalarElt, "quality/*");
         DataComponent quality = readScalar(dom, qualityElt);
         quality.setName("quality");
+        
+        dataComponent.setProperty(DataComponent.QUALITY, quality);
     }
     
     
@@ -509,7 +541,7 @@ public class SweComponentReaderV1 implements DataComponentReader
      * @return
      * @throws CDMException
      */
-    private Constraints readConstraints(DOMHelper dom, Element scalarElement) throws CDMException
+    private Constraints readConstraints(DataComponent dataComponent, DOMHelper dom, Element scalarElement) throws CDMException
     {
         return null;
     }
