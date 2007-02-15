@@ -231,7 +231,8 @@ public class XMLDocument
                     if (prefix.equals("xmlns"))
                     {
                         xmlDoc.addNS(localName, attribs.getValue(i));
-                        fCurrentNode.getAttributes().removeNamedItem(attribs.getQName(i));
+                        //leave the node (filtering was implemented on serialization)
+                        //fCurrentNode.getAttributes().removeNamedItem(attribs.getQName(i));
                     }
                     else if(localName.equalsIgnoreCase("id"))
                         xmlDoc.addId(attribs.getValue(i), (Element)fCurrentNode);

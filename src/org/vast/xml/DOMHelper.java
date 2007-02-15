@@ -929,10 +929,17 @@ public class DOMHelper
             String uri = (String)nsEnum.nextElement();
             String prefix = parentDoc.getNSPrefix(uri);
             
+            // add namespace attributes only if missing
             if (prefix.equals(QName.DEFAULT_PREFIX))
-                setAttributeValue(elt, "xmlns", uri);
+            {
+                if (!elt.hasAttribute("xmlns"))
+                    elt.setAttribute("xmlns", uri);
+            }
             else
-                setAttributeValue(elt, "xmlns:" + prefix, uri);
+            {
+                if (!elt.hasAttribute("xmlns:" + prefix))
+                    elt.setAttribute("xmlns:" + prefix, uri);
+            }
         }
         
         // serialize using Xerces XMLSerializer
