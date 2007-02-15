@@ -136,7 +136,7 @@ public class BinaryDataParser extends AbstractDataParser
 			try
 			{
 				inputStream.close();
-                dataComponents.clearData();
+                //dataComponents.clearData();
 			}
 			catch (IOException e)
 			{

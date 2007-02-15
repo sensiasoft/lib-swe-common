@@ -209,6 +209,7 @@ public class SweComponentReaderV1 implements DataComponentReader
             DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
             DataStreamParser parser = DataParserFactory.createDataParser(encoding);
             parser.setDataComponents(dataArray);
+            parser.reset();
             InputStream is = getDataStream(dom, valuesElt);
             parser.parse(is);
         }

@@ -266,7 +266,13 @@ public class DataArray extends AbstractDataComponent
 	    		DataBlock data = sizeData.getData();
 	    		
 	    		if (data != null)
-	    			arraySize = data.getIntValue();
+                {
+                    arraySize = data.getIntValue();
+                    
+                    // continue only if sized has really changed
+                    if (arraySize == oldSize)
+                        return;
+                }
 	    	}
             
             // take care of variable size child array
@@ -280,6 +286,7 @@ public class DataArray extends AbstractDataComponent
             this.scalarCount = component.scalarCount * arraySize;
 	    	
             // stop here if parent also has variable size
+            // in this case parent will have to resize datablock anyway!!
             if (parent instanceof DataArray)
             {
                 if (((DataArray)parent).isVariableSize())

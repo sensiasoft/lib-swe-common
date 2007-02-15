@@ -36,6 +36,7 @@ public abstract class DataIterator
 	protected DataEncoding dataEncoding;
 	protected Stack<Record> componentStack;
 	protected Record currentComponent;
+    protected boolean newBlock = true;
 		
 	
 	public DataIterator()
@@ -53,14 +54,24 @@ public abstract class DataIterator
 	 */
 	protected void processNextElement() throws CDMException
 	{
-		// send begining of block events
-    	if (currentComponent.index == 0)
+        if (newBlock)
+        {
+            this.reset();
+            newBlock = false;
+        }
+        
+        // send begining of block events
+    	if (currentComponent.index == 0 && dataHandler != null)
     	{
     		if (componentStack.isEmpty())
 				dataHandler.startData(dataComponents);
 			else
 				dataHandler.startDataBlock(currentComponent.parent);
     	}
+        
+    	// update size of variable size arrays
+        if (currentComponent.parent instanceof DataArray)
+            ((DataArray)currentComponent.parent).updateSize();
         
     	// now get next child
     	AbstractDataComponent next = (AbstractDataComponent)currentComponent.parent.getComponent(currentComponent.index);
@@ -69,11 +80,11 @@ public abstract class DataIterator
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
-        	// update size of variable size arrays
-        	if (next instanceof DataArray)
-        		((DataArray)next).updateSize();
-        	
-        	componentStack.push(currentComponent);
+            // update size of variable size arrays
+            //if (next instanceof DataArray)
+            //    ((DataArray)next).updateSize();
+            
+            componentStack.push(currentComponent);
         	currentComponent = new Record(next);
             processNextElement();
         }
@@ -81,9 +92,13 @@ public abstract class DataIterator
         // otherwise parse element
         else
         {
-            dataHandler.beginDataAtom(next);
+            if (dataHandler != null)
+                dataHandler.beginDataAtom(next);
+            
             processAtom((DataValue)next);
-        	dataHandler.endDataAtom(next, next.getData());
+            
+            if (dataHandler != null)
+                dataHandler.endDataAtom(next, next.getData());
         }
         
         // if at the end of previous record
@@ -91,13 +106,17 @@ public abstract class DataIterator
     	{
         	if (!componentStack.isEmpty())
         	{
-        		dataHandler.endDataBlock(currentComponent.parent, currentComponent.parent.getData());
-        		currentComponent = componentStack.pop();
+                if (dataHandler != null)
+                    dataHandler.endDataBlock(currentComponent.parent, currentComponent.parent.getData());
+        		
+                currentComponent = componentStack.pop();
         	}
         	else
         	{
-        		dataHandler.endData(dataComponents, dataComponents.getData());
-				this.reset();
+                if (dataHandler != null)
+                    dataHandler.endData(dataComponents, dataComponents.getData());
+				
+                newBlock = true;
 				break;
         	}
     	}
@@ -109,7 +128,7 @@ public abstract class DataIterator
 	 */
 	public void reset()
 	{
-		componentStack.clear();		
+		componentStack.clear();
 		currentComponent = new Record(dataComponents);
         dataComponents.renewDataBlock();
 	}

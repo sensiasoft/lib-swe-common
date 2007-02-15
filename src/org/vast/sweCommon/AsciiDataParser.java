@@ -71,14 +71,14 @@ public class AsciiDataParser extends AbstractDataParser
 		}
 		catch (IOException e)
 		{
-			throw new CDMException("Error while reading ASCII tuple stream", e);
+			throw new CDMException("Error while reading ASCII stream", e);
 		}
 		finally
 		{
 			try
 			{
 				inputStream.close();
-                dataComponents.clearData();
+				// dataComponents.clearData();
 			}
 			catch (IOException e)
 			{
