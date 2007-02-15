@@ -56,7 +56,7 @@ public class OGCRegistry
     public final static String GML_NS = "http://www.opengis.net/gml";
     public final static String OM_NS = "http://www.opengis.net/om";
     public final static String SWE_NS = "http://www.opengis.net/swe";
-    public final static String SML_NS = "http://www.opengis.net/sensorML";    
+    public final static String SML_NS = "http://www.opengis.net/sensorML";
     public final static String SOS_NS = "http://www.opengis.net/sos";
     public final static String SAS_NS = "http://www.opengis.net/sas";
     public final static String SPS_NS = "http://www.opengis.net/sps";
