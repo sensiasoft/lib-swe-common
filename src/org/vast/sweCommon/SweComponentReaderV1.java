@@ -165,7 +165,7 @@ public class SweComponentReaderV1 implements DataComponentReader
         DataArray dataArray = null;
         
         // if elementCount is referencing another component
-        String countId = dom.getAttributeValue(arrayElt, "elementCount/@href");
+        String countId = dom.getAttributeValue(arrayElt, "elementCount/@ref");
         if (countId != null)
         {
             DataComponent sizeComponent = componentIds.get(countId);

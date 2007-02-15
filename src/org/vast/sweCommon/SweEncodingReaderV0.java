@@ -84,7 +84,7 @@ public class SweEncodingReaderV0 implements DataEncodingReader
     	
     	encoding.decimalSeparator = dom.getAttributeValue(asciiBlockElement, "decimalSeparator").charAt(0);
     	encoding.tokenSeparator = dom.getAttributeValue(asciiBlockElement, "tokenSeparator");
-    	encoding.tupleSeparator = dom.getAttributeValue(asciiBlockElement, "tupleSeparator");
+    	encoding.blockSeparator = dom.getAttributeValue(asciiBlockElement, "tupleSeparator");
     	
     	return encoding;
     }

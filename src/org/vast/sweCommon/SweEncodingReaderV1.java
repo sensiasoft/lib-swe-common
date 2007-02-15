@@ -63,7 +63,7 @@ public class SweEncodingReaderV1 implements DataEncodingReader
     {
     	DataEncoding encoding = null;
         
-        if (encodingElement.getLocalName().equals("AsciiBlock"))
+        if (encodingElement.getLocalName().equals("TextBlock"))
         {
         	encoding = readAsciiBlock(dom, encodingElement);
         }
@@ -84,7 +84,7 @@ public class SweEncodingReaderV1 implements DataEncodingReader
     	
     	encoding.decimalSeparator = dom.getAttributeValue(asciiBlockElement, "decimalSeparator").charAt(0);
     	encoding.tokenSeparator = dom.getAttributeValue(asciiBlockElement, "tokenSeparator");
-    	encoding.tupleSeparator = dom.getAttributeValue(asciiBlockElement, "tupleSeparator");
+    	encoding.blockSeparator = dom.getAttributeValue(asciiBlockElement, "blockSeparator");
     	
     	return encoding;
     }

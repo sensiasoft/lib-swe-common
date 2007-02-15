@@ -82,7 +82,7 @@ public class SweEncodingWriterV0 implements DataEncodingWriter
         Element dataEncElt = dom.createElement("swe:AsciiBlock");
     	
         dataEncElt.setAttribute("tokenSeparator", String.valueOf(asciiEncoding.tokenSeparator));
-        dataEncElt.setAttribute("tupleSeparator", String.valueOf(asciiEncoding.tupleSeparator));
+        dataEncElt.setAttribute("tupleSeparator", String.valueOf(asciiEncoding.blockSeparator));
         dataEncElt.setAttribute("decimalSeparator", String.valueOf(asciiEncoding.decimalSeparator));
     	
     	return dataEncElt;

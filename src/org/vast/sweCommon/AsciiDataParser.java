@@ -54,7 +54,7 @@ public class AsciiDataParser extends AbstractDataParser
 		{
 			Reader reader = new InputStreamReader(inputStream);
 			tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
-			tupleSep = ((AsciiEncoding)dataEncoding).tupleSeparator.toCharArray();
+			tupleSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
 			
 			do
 			{

@@ -26,7 +26,7 @@ package org.vast.cdm.common;
 
 public class AsciiEncoding implements DataEncoding
 {
-	public String tupleSeparator;
+	public String blockSeparator;
 	public String tokenSeparator;
 	public char decimalSeparator;
 	
@@ -39,9 +39,9 @@ public class AsciiEncoding implements DataEncoding
 	
 	public String toString()
 	{
-		return "Tuple Encoding:\n" +
+		return "Ascii Encoding:\n" +
 		       "  decimal separator = '" + decimalSeparator + "'\n" +
 		       "  token separator = '" + tokenSeparator + "'\n" +
-		       "  tuple separator = '" + tupleSeparator + "'\n";
+		       "  block separator = '" + blockSeparator + "'\n";
 	}
 }
