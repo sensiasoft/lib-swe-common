@@ -23,7 +23,6 @@
 
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.DataIterator;
 import org.vast.cdm.common.DataStreamWriter;
 
 

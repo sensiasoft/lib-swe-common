@@ -57,10 +57,10 @@ public class DataInputStreamBI extends DataInputStream implements DataInputExt
 		byte[] b = new byte[4];
 		this.read(b);
 		 
-        return (((long)(b[0] & 255) << 24) +
-                ((long)(b[1] & 255) << 16) +
-                ((long)(b[2] & 255) <<  8) +
-                ((long)(b[3] & 255) <<  0));
+        return (((long)(b[0] & 0xff) << 24) +
+                ((long)(b[1] & 0xff) << 16) +
+                ((long)(b[2] & 0xff) <<  8) +
+                ((long)(b[3] & 0xff)));
 	}
 	
 	

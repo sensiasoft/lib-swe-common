@@ -21,9 +21,16 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.common;
+package org.vast.sweCommon;
 
 import java.util.Stack;
+
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataHandler;
+import org.vast.cdm.common.ErrorHandler;
+import org.vast.cdm.common.RawDataHandler;
 import org.vast.data.*;
 
 
