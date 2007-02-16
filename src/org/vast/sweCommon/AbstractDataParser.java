@@ -26,6 +26,7 @@ package org.vast.sweCommon;
 import java.io.*;
 import java.net.URI;
 import org.vast.cdm.common.*;
+import org.vast.data.DataIterator;
 
 
 /**

@@ -49,7 +49,21 @@ public class ScalarIterator
     protected DataComponent nextComponent;
     protected DataComponent baseComponent;
 
+    protected class Record
+    {
+        public DataComponent parent;
+        public int index;
+        public int count;
 
+        public Record(DataComponent parent)
+        {
+            this.parent = parent;
+            this.count = parent.getComponentCount();
+            this.index = 0;
+        }
+    }
+    
+    
     public ScalarIterator(DataComponent baseContainer)
     {
     	this.baseComponent = baseContainer;
@@ -132,20 +146,5 @@ public class ScalarIterator
         }
         
         return next;
-    }
-}
-
-
-class Record
-{
-    public DataComponent parent;
-    public int index;
-    public int count;
-
-    public Record(DataComponent parent)
-    {
-        this.parent = parent;
-        this.count = parent.getComponentCount();
-        this.index = 0;
     }
 }

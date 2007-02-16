@@ -21,17 +21,15 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.sweCommon;
+package org.vast.data;
 
 import java.util.Stack;
-
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataHandler;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
-import org.vast.data.*;
 
 
 public abstract class DataIterator
@@ -45,7 +43,21 @@ public abstract class DataIterator
 	protected Record currentComponent;
     protected boolean newBlock = true;
 		
-	
+	protected class Record
+    {
+        public AbstractDataComponent parent;
+        public int index;
+        public int count;
+
+        public Record(AbstractDataComponent parent)
+        {
+            this.parent = parent;
+            this.count = parent.getComponentCount();
+            this.index = 0;
+        }
+    }
+    
+    
 	public DataIterator()
 	{
 		this.componentStack = new Stack<Record>();
@@ -202,19 +214,4 @@ public abstract class DataIterator
 	{
 		this.dataEncoding = dataEncoding;
 	}
-}
-
-
-class Record
-{
-    public AbstractDataComponent parent;
-    public int index;
-    public int count;
-
-    public Record(AbstractDataComponent parent)
-    {
-        this.parent = parent;
-        this.count = parent.getComponentCount();
-        this.index = 0;
-    }
 }
