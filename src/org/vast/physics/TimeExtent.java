@@ -40,9 +40,9 @@ public class TimeExtent
     protected double timeStep = 0;
     protected double leadTimeDelta = 0;
     protected double lagTimeDelta = 0;
-    protected boolean baseAtNow;  // if true baseTime is associated to machine clock
-    protected boolean endNow;  // if true stopTime is associated to machine clock
-    protected boolean beginNow;  // if true startTime is associated to machine clock
+    protected boolean baseAtNow = false;  // if true baseTime is associated to machine clock
+    protected boolean endNow = false;     // if true stopTime is associated to machine clock
+    protected boolean beginNow = false;   // if true startTime is associated to machine clock
 
 
     public TimeExtent()
