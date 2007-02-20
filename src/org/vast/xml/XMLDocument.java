@@ -222,18 +222,16 @@ public class XMLDocument
                 super.startElement(qname, attribs, aug);
                 
                 // pick up all id and xmlns attributes
-                int attrCount = attribs.getLength ();
+                int attrCount = attribs.getLength();
                 for (int i = 0; i < attrCount; i++)
                 {
                     String prefix = attribs.getPrefix(i);
                     String localName = attribs.getLocalName(i);
                     
                     if (prefix.equals("xmlns"))
-                    {
                         xmlDoc.addNS(localName, attribs.getValue(i));
-                        //leave the node (filtering was implemented on serialization)
-                        //fCurrentNode.getAttributes().removeNamedItem(attribs.getQName(i));
-                    }
+                    else if(localName.equals("xmlns"))
+                        xmlDoc.addNS(QName.DEFAULT_PREFIX, attribs.getValue(i));
                     else if(localName.equalsIgnoreCase("id"))
                         xmlDoc.addId(attribs.getValue(i), (Element)fCurrentNode);
                 }
@@ -253,12 +251,6 @@ public class XMLDocument
             // don't use defered nodes
             domParser.setFeature("http://apache.org/xml/features/dom/defer-node-expansion", false);
             
-            // get real namespace domains ?
-            //domParser.setFeature("http://xml.org/sax/features/namespaces", false);
-
-            // get elements default value ?
-            //domParser.setFeature("http://apache.org/xml/features/validation/schema/element-default", true);
-
             // force use of real URI when needed ?
             //domParser.setFeature("http://apache.org/xml/features/standard-uri-conformant", false);
 
