@@ -43,8 +43,8 @@ public class TimeExtent
     protected boolean baseAtNow = false;  // if true baseTime is associated to machine clock
     protected boolean endNow = false;     // if true stopTime is associated to machine clock
     protected boolean beginNow = false;   // if true startTime is associated to machine clock
-
-
+    
+    
     public TimeExtent()
     {        
     }
@@ -127,7 +127,10 @@ public class TimeExtent
      */
     public double getBaseTime()
     {
-        return baseTime;
+        if (baseAtNow)
+            return getNow();
+        else
+            return baseTime;
     }
 
 
@@ -173,13 +176,19 @@ public class TimeExtent
 
     public double getAdjustedLeadTime()
     {
-        return (getBaseTime() + timeBias + leadTimeDelta);
+        if (endNow)
+            return getNow();
+        else
+            return (getBaseTime() + timeBias + leadTimeDelta);
     }
 
 
     public double getAdjustedLagTime()
     {
-        return (getBaseTime() + timeBias - lagTimeDelta);
+        if (beginNow)
+            return getNow();
+        else
+            return (getBaseTime() + timeBias - lagTimeDelta);
     }
     
     
@@ -303,7 +312,7 @@ public class TimeExtent
      */
     public boolean contains(TimeExtent timeExtent)
     {
-        double thisLag = this.getAdjustedLagTime();        
+        double thisLag = this.getAdjustedLagTime();
         double thisLead = this.getAdjustedLeadTime();
         double otherLag = timeExtent.getAdjustedLagTime();
         double otherLead = timeExtent.getAdjustedLeadTime();
@@ -343,5 +352,21 @@ public class TimeExtent
             return true;
         
         return false;
+    }
+    
+    
+    /**
+     * Return latest value for now. This would return a new 'now' value
+     * only if previous call was made more than 1 second ago.
+     * @return
+     */
+    private double now = 0;
+    private double getNow()
+    {
+        double exactNow = System.currentTimeMillis()*1000;
+        if (exactNow - now > 1000)
+            now = exactNow;
+        
+        return now;
     }
 }
