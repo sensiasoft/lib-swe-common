@@ -192,29 +192,7 @@ public class BinaryDataParser extends AbstractDataParser
 			
 			// add this mapping to the Hashtable
 			componentEncodings.put((DataValue)data, encodingList[i]);
-			
-			// modify DataValue dataType
-			switch (encodingList[i].type)
-			{
-				case UBYTE:
-					((DataValue)data).setDataType(DataType.SHORT);
-					break;
-			
-				case USHORT:
-					((DataValue)data).setDataType(DataType.INT);
-					break;
-					
-				case UINT:
-					((DataValue)data).setDataType(DataType.LONG);
-					break;
-					
-				case ULONG:
-					((DataValue)data).setDataType(DataType.LONG);
-					break;
-					
-				default:
-					((DataValue)data).setDataType(encodingList[i].type);
-			}
+			((DataValue)data).setDataType(encodingList[i].type);
 		}
 	}
 	

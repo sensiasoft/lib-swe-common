@@ -245,13 +245,13 @@ public class DataBlockInt extends AbstractDataBlock
 
 	public void setFloatValue(int index, float value)
 	{
-		primitiveArray[startIndex + index] = (int)value;
+		primitiveArray[startIndex + index] = (int)Math.round(value);
 	}
 
 
 	public void setDoubleValue(int index, double value)
 	{
-		primitiveArray[startIndex + index] = (int)value;
+		primitiveArray[startIndex + index] = (int)Math.round(value);
 	}
 
 
@@ -293,13 +293,13 @@ public class DataBlockInt extends AbstractDataBlock
 
 	public void setFloatValue(float value)
 	{
-		primitiveArray[startIndex] = (int)value;
+		primitiveArray[startIndex] = (int)Math.round(value);
 	}
 
 
 	public void setDoubleValue(double value)
 	{
-		primitiveArray[startIndex] = (int)value;
+		primitiveArray[startIndex] = (int)Math.round(value);
 	}
 
 

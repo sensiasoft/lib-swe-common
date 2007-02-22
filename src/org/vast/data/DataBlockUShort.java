@@ -28,12 +28,13 @@ import org.vast.cdm.common.DataType;
 
 /**
  * <p><b>Title:</b><br/>
- * Long Data Block
+ * Unsigned Short Data Block
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Carries an array of long primitives.
- * All data is casted to other types when requested.
+ * Carries an array of short primitives.
+ * All data is casted to other types when requested and in a way
+ * that returns unsigned values even for values > 2^15
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -41,25 +42,25 @@ import org.vast.cdm.common.DataType;
  * @date Nov 23, 2005
  * @version 1.0
  */
-public class DataBlockLong extends AbstractDataBlock
+public class DataBlockUShort extends AbstractDataBlock
 {
-	protected long[] primitiveArray;
+	protected short[] primitiveArray;
 	
 	
-	public DataBlockLong()
+	public DataBlockUShort()
 	{
 	}
 	
 	
-	public DataBlockLong(int size)
+	public DataBlockUShort(int size)
 	{
 		resize(size);
 	}
 	
 	
-	public DataBlockLong copy()
+	public DataBlockUShort copy()
 	{
-		DataBlockLong newBlock = new DataBlockLong();
+		DataBlockUShort newBlock = new DataBlockUShort();
 		newBlock.primitiveArray = this.primitiveArray;
 		newBlock.startIndex = this.startIndex;
 		newBlock.atomCount = this.atomCount;
@@ -67,32 +68,32 @@ public class DataBlockLong extends AbstractDataBlock
 	}
     
     
-    public DataBlockLong renew()
+    public DataBlockUShort renew()
     {
-        DataBlockLong newBlock = new DataBlockLong();
-        newBlock.primitiveArray = new long[this.primitiveArray.length];
+        DataBlockUShort newBlock = new DataBlockUShort();
+        newBlock.primitiveArray = new short[this.primitiveArray.length];
         newBlock.startIndex = this.startIndex;
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }
     
     
-    public DataBlockLong clone()
+    public DataBlockUShort clone()
     {
-        DataBlockLong newBlock = new DataBlockLong();
+        DataBlockUShort newBlock = new DataBlockUShort();
         newBlock.primitiveArray = this.primitiveArray.clone();
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }
     
     
-    public long[] getUnderlyingObject()
+    public short[] getUnderlyingObject()
     {
         return primitiveArray;
     }
     
     
-    public void setUnderlyingObject(long[] primitiveArray)
+    public void setUnderlyingObject(short[] primitiveArray)
     {
         this.primitiveArray = primitiveArray;
     }
@@ -100,19 +101,19 @@ public class DataBlockLong extends AbstractDataBlock
 	
 	public DataType getDataType()
 	{
-		return DataType.LONG;
+		return DataType.USHORT;
 	}
 
 
 	public DataType getDataType(int index)
 	{
-		return DataType.LONG;
+		return DataType.USHORT;
 	}
 	
 	
 	public void resize(int size)
 	{
-		primitiveArray = new long[size];
+		primitiveArray = new short[size];
 		this.atomCount = size;
 	}
 
@@ -131,37 +132,37 @@ public class DataBlockLong extends AbstractDataBlock
 
 	public short getShortValue(int index)
 	{
-		return (short)primitiveArray[startIndex + index];
+		return primitiveArray[startIndex + index];
 	}
 
 
 	public int getIntValue(int index)
 	{
-		return (int)primitiveArray[startIndex + index];
+		return (int)(primitiveArray[startIndex + index] & 0xffff);
 	}
 
 
 	public long getLongValue(int index)
 	{
-		return primitiveArray[startIndex + index];
+		return (long)(primitiveArray[startIndex + index] & 0xffff);
 	}
 
 
 	public float getFloatValue(int index)
 	{
-		return (float)primitiveArray[startIndex + index];
+		return (float)(primitiveArray[startIndex + index] & 0xffff);
 	}
 
 
 	public double getDoubleValue(int index)
 	{
-		return (double)primitiveArray[startIndex + index];
+		return (double)(primitiveArray[startIndex + index] & 0xffff);
 	}
 
 
 	public String getStringValue(int index)
 	{
-		return Long.toString(primitiveArray[startIndex + index]);
+		return Integer.toString((primitiveArray[startIndex + index] & 0xffff));
 	}
 
 
@@ -179,132 +180,132 @@ public class DataBlockLong extends AbstractDataBlock
 
 	public short getShortValue()
 	{
-		return (short)primitiveArray[startIndex];
+		return primitiveArray[startIndex];
 	}
 
 
 	public int getIntValue()
 	{
-		return (int)primitiveArray[startIndex];
+		return (int)(primitiveArray[startIndex] & 0xffff);
 	}
 
 
 	public long getLongValue()
 	{
-		return primitiveArray[startIndex];
+		return (long)(primitiveArray[startIndex] & 0xffff);
 	}
 
 
 	public float getFloatValue()
 	{
-		return (float)primitiveArray[startIndex];
+		return (float)(primitiveArray[startIndex] & 0xffff);
 	}
 
 
 	public double getDoubleValue()
 	{
-		return (double)primitiveArray[startIndex];
+		return (double)(primitiveArray[startIndex] & 0xffff);
 	}
 
 
 	public String getStringValue()
 	{
-		return Long.toString(primitiveArray[startIndex]);
+		return Integer.toString((primitiveArray[startIndex] & 0xffff));
 	}
 
 
 	public void setBooleanValue(int index, boolean value)
 	{
-		primitiveArray[startIndex + index] = value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal;
+		primitiveArray[startIndex + index] = (short)(value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal);
 	}
 
 
 	public void setByteValue(int index, byte value)
 	{
-		primitiveArray[startIndex + index] = (long)value;
+		primitiveArray[startIndex + index] = (short)value;
 	}
 
 
 	public void setShortValue(int index, short value)
 	{
-		primitiveArray[startIndex + index] = (long)value;
+		primitiveArray[startIndex + index] = value;
 	}
 
 
 	public void setIntValue(int index, int value)
 	{
-		primitiveArray[startIndex + index] = (long)value;
+		primitiveArray[startIndex + index] = (short)value;
 	}
 
 
 	public void setLongValue(int index, long value)
 	{
-		primitiveArray[startIndex + index] = (long)value;
+		primitiveArray[startIndex + index] = (short)value;
 	}
 
 
 	public void setFloatValue(int index, float value)
 	{
-		primitiveArray[startIndex + index] = (long)Math.round(value);
+		primitiveArray[startIndex + index] = (short)Math.round(value);
 	}
 
 
 	public void setDoubleValue(int index, double value)
 	{
-		primitiveArray[startIndex + index] = (long)Math.round(value);
+		primitiveArray[startIndex + index] = (short)Math.round(value);
 	}
 
 
 	public void setStringValue(int index, String value)
 	{
-		primitiveArray[startIndex + index] = Long.parseLong(value);
+		primitiveArray[startIndex + index] = Short.parseShort(value);
 	}
 
 
 	public void setBooleanValue(boolean value)
 	{
-		primitiveArray[startIndex] = value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal;
+		primitiveArray[startIndex] = (short)(value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal);
 	}
 
 
 	public void setByteValue(byte value)
 	{
-		primitiveArray[startIndex] = (long)value;
+		primitiveArray[startIndex] = (short)value;
 	}
 
 
 	public void setShortValue(short value)
 	{
-		primitiveArray[startIndex] = (long)value;
+		primitiveArray[startIndex] = value;
 	}
 
 
 	public void setIntValue(int value)
 	{
-		primitiveArray[startIndex] = (long)value;
+		primitiveArray[startIndex] = (short)value;
 	}
 
 
 	public void setLongValue(long value)
 	{
-		primitiveArray[startIndex] = (long)value;
+		primitiveArray[startIndex] = (short)value;
 	}
 
 
 	public void setFloatValue(float value)
 	{
-		primitiveArray[startIndex] = (long)Math.round(value);
+		primitiveArray[startIndex] = (short)Math.round(value);
 	}
 
 
 	public void setDoubleValue(double value)
 	{
-		primitiveArray[startIndex] = (long)Math.round(value);
+		primitiveArray[startIndex] = (short)Math.round(value);
 	}
 
 
 	public void setStringValue(String value)
 	{
-		primitiveArray[startIndex] = Long.parseLong(value);
+		primitiveArray[startIndex] = Short.parseShort(value);
 	}
 }

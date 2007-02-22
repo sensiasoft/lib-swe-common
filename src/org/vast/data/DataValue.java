@@ -105,15 +105,25 @@ public class DataValue extends AbstractDataComponent
         	case BYTE:
         		return new DataBlockByte(1);
                 
+            case UBYTE:
+                return new DataBlockUByte(1);
+                
             case SHORT:
             	return new DataBlockShort(1);
-            
+                
+            case USHORT:
+                return new DataBlockUShort(1);
+                
             case INT:
             	return new DataBlockInt(1);
                 
-            case LONG:
-            	return new DataBlockLong(1);
+            case UINT:
+                return new DataBlockUInt(1);
                 
+            case LONG:
+            case ULONG:
+            	return new DataBlockLong(1);
+                                
             case FLOAT:
             	return new DataBlockFloat(1);
                 

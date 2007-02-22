@@ -245,13 +245,13 @@ public class DataBlockByte extends AbstractDataBlock
 
 	public void setFloatValue(int index, float value)
 	{
-		primitiveArray[startIndex + index] = (byte)value;
+		primitiveArray[startIndex + index] = (byte)Math.round(value);
 	}
 
 
 	public void setDoubleValue(int index, double value)
 	{
-		primitiveArray[startIndex + index] = (byte)value;
+		primitiveArray[startIndex + index] = (byte)Math.round(value);
 	}
 
 
@@ -293,13 +293,13 @@ public class DataBlockByte extends AbstractDataBlock
 
 	public void setFloatValue(float value)
 	{
-		primitiveArray[startIndex] = (byte)value;
+		primitiveArray[startIndex] = (byte)Math.round(value);
 	}
 
 
 	public void setDoubleValue(double value)
 	{
-		primitiveArray[startIndex] = (byte)value;
+		primitiveArray[startIndex] = (byte)Math.round(value);
 	}
 
 

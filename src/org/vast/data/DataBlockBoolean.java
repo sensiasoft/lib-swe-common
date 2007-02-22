@@ -247,13 +247,13 @@ public class DataBlockBoolean extends AbstractDataBlock
 
 	public void setFloatValue(int index, float value)
 	{
-		primitiveArray[startIndex + index] = (value == 0) ? false : true;
+		primitiveArray[startIndex + index] = (Float.isNaN(value) || value == 0) ? false : true;
 	}
 
 
 	public void setDoubleValue(int index, double value)
 	{
-		primitiveArray[startIndex + index] = (value == 0) ? false : true;
+		primitiveArray[startIndex + index] = (Double.isNaN(value) || value == 0) ? false : true;
 	}
 
 
@@ -295,13 +295,13 @@ public class DataBlockBoolean extends AbstractDataBlock
 
 	public void setFloatValue(float value)
 	{
-		primitiveArray[startIndex] = (value == 0) ? false : true;
+		primitiveArray[startIndex] = (Float.isNaN(value) || value == 0) ? false : true;
 	}
 
 
 	public void setDoubleValue(double value)
 	{
-		primitiveArray[startIndex] = (value == 0) ? false : true;
+		primitiveArray[startIndex] = (Double.isNaN(value) || value == 0) ? false : true;
 	}
 
 

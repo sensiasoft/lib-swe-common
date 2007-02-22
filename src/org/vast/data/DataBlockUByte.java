@@ -28,12 +28,13 @@ import org.vast.cdm.common.DataType;
 
 /**
  * <p><b>Title:</b><br/>
- * Long Data Block
+ * Unsigned Byte Data Block
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Carries an array of long primitives.
- * All data is casted to other types when requested.
+ * Carries an array of byte primitives.
+ * All data is casted to other types when requested and in a way
+ * that returns unsigned values even for values > 2^7
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -41,25 +42,25 @@ import org.vast.cdm.common.DataType;
  * @date Nov 23, 2005
  * @version 1.0
  */
-public class DataBlockLong extends AbstractDataBlock
+public class DataBlockUByte extends AbstractDataBlock
 {
-	protected long[] primitiveArray;
+	protected byte[] primitiveArray;
 	
 	
-	public DataBlockLong()
+	public DataBlockUByte()
 	{
 	}
 	
 	
-	public DataBlockLong(int size)
+	public DataBlockUByte(int size)
 	{
 		resize(size);
 	}
 	
 	
-	public DataBlockLong copy()
+	public DataBlockUByte copy()
 	{
-		DataBlockLong newBlock = new DataBlockLong();
+		DataBlockUByte newBlock = new DataBlockUByte();
 		newBlock.primitiveArray = this.primitiveArray;
 		newBlock.startIndex = this.startIndex;
 		newBlock.atomCount = this.atomCount;
@@ -67,56 +68,56 @@ public class DataBlockLong extends AbstractDataBlock
 	}
     
     
-    public DataBlockLong renew()
+    public DataBlockUByte renew()
     {
-        DataBlockLong newBlock = new DataBlockLong();
-        newBlock.primitiveArray = new long[this.primitiveArray.length];
+        DataBlockUByte newBlock = new DataBlockUByte();
+        newBlock.primitiveArray = new byte[this.primitiveArray.length];
         newBlock.startIndex = this.startIndex;
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }
+	
     
-    
-    public DataBlockLong clone()
+    public DataBlockUByte clone()
     {
-        DataBlockLong newBlock = new DataBlockLong();
+        DataBlockUByte newBlock = new DataBlockUByte();
         newBlock.primitiveArray = this.primitiveArray.clone();
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }
     
     
-    public long[] getUnderlyingObject()
+    public byte[] getUnderlyingObject()
     {
         return primitiveArray;
     }
     
     
-    public void setUnderlyingObject(long[] primitiveArray)
+    public void setUnderlyingObject(byte[] primitiveArray)
     {
         this.primitiveArray = primitiveArray;
     }
-	
+    
 	
 	public DataType getDataType()
 	{
-		return DataType.LONG;
+		return DataType.UBYTE;
 	}
 
 
 	public DataType getDataType(int index)
 	{
-		return DataType.LONG;
+		return DataType.UBYTE;
 	}
-	
-	
+
+
 	public void resize(int size)
 	{
-		primitiveArray = new long[size];
+		primitiveArray = new byte[size];
 		this.atomCount = size;
 	}
-
-
+	
+	
 	public boolean getBooleanValue(int index)
 	{
 		return (primitiveArray[startIndex + index] == 0) ? false : true;
@@ -125,43 +126,43 @@ public class DataBlockLong extends AbstractDataBlock
 
 	public byte getByteValue(int index)
 	{
-		return (byte)primitiveArray[startIndex + index];
+		return primitiveArray[startIndex + index];
 	}
 
 
 	public short getShortValue(int index)
 	{
-		return (short)primitiveArray[startIndex + index];
+		return (short)(primitiveArray[startIndex + index] & 0xff);
 	}
 
 
 	public int getIntValue(int index)
 	{
-		return (int)primitiveArray[startIndex + index];
+		return (int)(primitiveArray[startIndex + index] & 0xff);
 	}
 
 
 	public long getLongValue(int index)
 	{
-		return primitiveArray[startIndex + index];
+		return (long)(primitiveArray[startIndex + index] & 0xff);
 	}
 
 
 	public float getFloatValue(int index)
 	{
-		return (float)primitiveArray[startIndex + index];
+		return (float)(primitiveArray[startIndex + index] & 0xff);
 	}
 
 
 	public double getDoubleValue(int index)
 	{
-		return (double)primitiveArray[startIndex + index];
+		return (double)(primitiveArray[startIndex + index] & 0xff);
 	}
 
 
 	public String getStringValue(int index)
 	{
-		return Long.toString(primitiveArray[startIndex + index]);
+		return Integer.toString((primitiveArray[startIndex + index] & 0xff));
 	}
 
 
@@ -173,43 +174,43 @@ public class DataBlockLong extends AbstractDataBlock
 
 	public byte getByteValue()
 	{
-		return (byte)primitiveArray[startIndex];
+		return primitiveArray[startIndex];
 	}
 
 
 	public short getShortValue()
 	{
-		return (short)primitiveArray[startIndex];
+		return (short)(primitiveArray[startIndex] & 0xff);
 	}
 
 
 	public int getIntValue()
 	{
-		return (int)primitiveArray[startIndex];
+		return (int)(primitiveArray[startIndex] & 0xff);
 	}
 
 
 	public long getLongValue()
 	{
-		return primitiveArray[startIndex];
+		return (long)(primitiveArray[startIndex] & 0xff);
 	}
 
 
 	public float getFloatValue()
 	{
-		return (float)primitiveArray[startIndex];
+		return (float)(primitiveArray[startIndex] & 0xff);
 	}
 
 
 	public double getDoubleValue()
 	{
-		return (double)primitiveArray[startIndex];
+		return (double)(primitiveArray[startIndex] & 0xff);
 	}
 
 
 	public String getStringValue()
 	{
-		return Long.toString(primitiveArray[startIndex]);
+		return Integer.toString((primitiveArray[startIndex] & 0xff));
 	}
 
 
@@ -221,43 +222,43 @@ public class DataBlockLong extends AbstractDataBlock
 
 	public void setByteValue(int index, byte value)
 	{
-		primitiveArray[startIndex + index] = (long)value;
+		primitiveArray[startIndex + index] = value;
 	}
 
 
 	public void setShortValue(int index, short value)
 	{
-		primitiveArray[startIndex + index] = (long)value;
+		primitiveArray[startIndex + index] = (byte)value;
 	}
 
 
 	public void setIntValue(int index, int value)
 	{
-		primitiveArray[startIndex + index] = (long)value;
+		primitiveArray[startIndex + index] = (byte)value;
 	}
 
 
 	public void setLongValue(int index, long value)
 	{
-		primitiveArray[startIndex + index] = (long)value;
+		primitiveArray[startIndex + index] = (byte)value;
 	}
 
 
 	public void setFloatValue(int index, float value)
 	{
-		primitiveArray[startIndex + index] = (long)Math.round(value);
+		primitiveArray[startIndex + index] = (byte)Math.round(value);
 	}
 
 
 	public void setDoubleValue(int index, double value)
 	{
-		primitiveArray[startIndex + index] = (long)Math.round(value);
+		primitiveArray[startIndex + index] = (byte)Math.round(value);
 	}
 
 
 	public void setStringValue(int index, String value)
 	{
-		primitiveArray[startIndex + index] = Long.parseLong(value);
+		primitiveArray[startIndex + index] = Byte.parseByte(value);
 	}
 
 
@@ -269,42 +270,42 @@ public class DataBlockLong extends AbstractDataBlock
 
 	public void setByteValue(byte value)
 	{
-		primitiveArray[startIndex] = (long)value;
+		primitiveArray[startIndex] = value;
 	}
 
 
 	public void setShortValue(short value)
 	{
-		primitiveArray[startIndex] = (long)value;
+		primitiveArray[startIndex] = (byte)value;
 	}
 
 
 	public void setIntValue(int value)
 	{
-		primitiveArray[startIndex] = (long)value;
+		primitiveArray[startIndex] = (byte)value;
 	}
 
 
 	public void setLongValue(long value)
 	{
-		primitiveArray[startIndex] = (long)value;
+		primitiveArray[startIndex] = (byte)value;
 	}
 
 
 	public void setFloatValue(float value)
 	{
-		primitiveArray[startIndex] = (long)Math.round(value);
+		primitiveArray[startIndex] = (byte)Math.round(value);
 	}
 
 
 	public void setDoubleValue(double value)
 	{
-		primitiveArray[startIndex] = (long)Math.round(value);
+		primitiveArray[startIndex] = (byte)Math.round(value);
 	}
 
 
 	public void setStringValue(String value)
 	{
-		primitiveArray[startIndex] = Long.parseLong(value);
+		primitiveArray[startIndex] = Byte.parseByte(value);
 	}
 }
