@@ -52,52 +52,51 @@ public class SweComponentWriterV0 implements DataComponentWriter
 {
     public static String tokenSeparator = " ";
     protected boolean writeInlineData = false;
-    protected DOMHelper dom;
         
     
-    public SweComponentWriterV0(DOMHelper parentWriter)
-    {
-        dom = parentWriter;
-        dom.addUserPrefix("swe", "http://www.opengis.net/swe");
+    public SweComponentWriterV0()
+    {        
     }
     
     
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException
     {
+        dom.addUserPrefix("swe", "http://www.opengis.net/swe");
+        
         Element newElt = null;
         
         if (dataComponents instanceof DataGroup)
         {
-            newElt = writeDataGroup((DataGroup)dataComponents);
+            newElt = writeDataGroup(dom, (DataGroup)dataComponents);
         }
         else if (dataComponents instanceof DataArray)
         {
-            newElt = writeDataArray(dataComponents);
+            newElt = writeDataArray(dom, dataComponents);
         }
         else if (dataComponents instanceof DataList)
         {
-            newElt = writeDataArray(dataComponents);
+            newElt = writeDataArray(dom, dataComponents);
         }
         else if (dataComponents instanceof DataValue)
         {
-            newElt = writeDataValue((DataValue)dataComponents);
+            newElt = writeDataValue(dom, (DataValue)dataComponents);
         }
 
         return newElt;
     }
     
     
-    private Element writeComponentProperty(DataComponent dataComponents) throws CDMException
+    private Element writeComponentProperty(DOMHelper dom, DataComponent dataComponents) throws CDMException
     {
         Element propElt = dom.createElement("swe:component");
         writeName(propElt, dataComponents.getName());        
-        Element componentElt = writeComponent(null, dataComponents);
+        Element componentElt = writeComponent(dom, dataComponents);
         propElt.appendChild(componentElt);        
         return propElt;
     }
 
 
-    private Element writeDataGroup(DataGroup dataGroup) throws CDMException
+    private Element writeDataGroup(DOMHelper dom, DataGroup dataGroup) throws CDMException
     {
         Element dataGroupElt = dom.createElement("swe:DataGroup");
                 
@@ -105,7 +104,7 @@ public class SweComponentWriterV0 implements DataComponentWriter
         int groupSize = dataGroup.getComponentCount();        
         for (int i=0; i<groupSize; i++)
         {
-            Element propElt = writeComponentProperty(dataGroup.getComponent(i));
+            Element propElt = writeComponentProperty(dom, dataGroup.getComponent(i));
             dataGroupElt.appendChild(propElt);
         }
         
@@ -116,7 +115,7 @@ public class SweComponentWriterV0 implements DataComponentWriter
     }
 
 
-    private Element writeDataArray(DataComponent dataArray) throws CDMException
+    private Element writeDataArray(DOMHelper dom, DataComponent dataArray) throws CDMException
     {
         Element dataArrayElt = dom.createElement("swe:DataArray");
         
@@ -129,7 +128,7 @@ public class SweComponentWriterV0 implements DataComponentWriter
         writeInlineData = false;
         
         // write array component
-        Element propElt = writeComponentProperty(dataArray.getComponent(0));
+        Element propElt = writeComponentProperty(dom, dataArray.getComponent(0));
         dataArrayElt.appendChild(propElt);
         writeAttributes(dataArray, dataArrayElt);
         
@@ -139,7 +138,7 @@ public class SweComponentWriterV0 implements DataComponentWriter
         // write tuple values if present
         if (dataArray.getData() != null && writeInlineData)
         {
-            Element tupleValuesElt = writeArrayValues(dataArray);
+            Element tupleValuesElt = writeArrayValues(dom, dataArray);
             dataArrayElt.appendChild(tupleValuesElt);
         }
         
@@ -147,32 +146,30 @@ public class SweComponentWriterV0 implements DataComponentWriter
     }
 
 
-    private Element writeDataValue(DataValue dataValue) throws CDMException
+    private Element writeDataValue(DOMHelper dom, DataValue dataValue) throws CDMException
     {
         Object def = dataValue.getProperty("definition");
         String eltName = "swe:Parameter";
         DataBlock data = dataValue.getData();
         
         // create right element and write value
-        if (def != null && ((String)def).contains("time"))
+        String scalarType = (String)dataValue.getProperty(DataComponent.TYPE);
+        if (scalarType != null)
         {
-            eltName = "swe:Time";               
-        }
-        else if (dataValue.getDataType() == DataType.BOOLEAN)
-        {
-            eltName = "swe:Boolean";
-        }
-        else if (dataValue.getDataType() == DataType.DOUBLE || dataValue.getDataType() == DataType.FLOAT)
-        {
-            eltName = "swe:Quantity";
-        }
-        else if (dataValue.getDataType() == DataType.ASCII_STRING || dataValue.getDataType() == DataType.UTF_STRING)
-        {
-            eltName = "swe:Category";
+            eltName = "swe:" + scalarType;
         }
         else
         {
-            eltName = "swe:Count";
+            if (def != null && ((String)def).contains("time"))
+                eltName = "swe:Time";               
+            else if (dataValue.getDataType() == DataType.BOOLEAN)
+                eltName = "swe:Boolean";
+            else if (dataValue.getDataType() == DataType.DOUBLE || dataValue.getDataType() == DataType.FLOAT)
+                eltName = "swe:Quantity";
+            else if (dataValue.getDataType() == DataType.ASCII_STRING || dataValue.getDataType() == DataType.UTF_STRING)
+                eltName = "swe:Category";
+            else
+                eltName = "swe:Count";
         }
         
         // create element
@@ -201,36 +198,36 @@ public class SweComponentWriterV0 implements DataComponentWriter
         // definition URI
         Object defUri = dataComponent.getProperty(DataComponent.DEF_URI);
         if (defUri != null)
-            dataValueElt.setAttribute(DataComponent.DEF_URI, (String)defUri);
+            dataValueElt.setAttribute("definition", (String)defUri);
         
         // reference frame
-        Object refFrame = dataComponent.getProperty(DataComponent.REF);
+        Object refFrame = dataComponent.getProperty(DataComponent.REF_FRAME);
         if (refFrame != null)
-            dataValueElt.setAttribute(DataComponent.REF, (String)refFrame);
-        
+            dataValueElt.setAttribute("referenceFrame", (String)refFrame);
+                
         // local frame
         Object locFrame = dataComponent.getProperty(DataComponent.LOC);
         if (locFrame != null)
-            dataValueElt.setAttribute(DataComponent.LOC, (String)locFrame);
+            dataValueElt.setAttribute("localFrame", (String)locFrame);
                 
         // scale factor
         Object scale = dataComponent.getProperty(DataComponent.SCALE);
         if (scale != null)
-            dataValueElt.setAttribute(DataComponent.SCALE, (String)scale);
+            dataValueElt.setAttribute("scale", (String)scale);
         
         // uom attribute
         Object unit = dataComponent.getProperty(DataComponent.UOM_CODE);
         if (unit != null)
-            dataValueElt.setAttribute(DataComponent.UOM_CODE, (String)unit);
+            dataValueElt.setAttribute("uom", (String)unit);
         
         // axis code attribute
         Object axisCode = dataComponent.getProperty(DataComponent.AXIS);
         if (axisCode != null)
-            dataValueElt.setAttribute(DataComponent.AXIS, (String)axisCode);
+            dataValueElt.setAttribute("axisCode", (String)axisCode);
     }
     
     
-    private Element writeArrayValues(DataComponent arrayStructure) throws CDMException
+    private Element writeArrayValues(DOMHelper dom, DataComponent arrayStructure) throws CDMException
     {
         Element tupleValuesElement = dom.createElement("swe:tupleValues");       
         DataBlock data = arrayStructure.getData();

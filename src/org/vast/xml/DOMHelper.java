@@ -594,7 +594,7 @@ public class DOMHelper
     /**
      * Adds an element to the document at the given location relative
      * to the parent element. This will also add all the elements given
-     * in the path if they are not yet present or if marked with '+'.
+     * in the path if they are not yet present or if marked with a '+' prefix.
      * @param parentElement
      * @param nodePath
      * @return
@@ -629,6 +629,18 @@ public class DOMHelper
     {
         Element elt = addElement(parentElement, nodePath);
         Text text = getParentDocument(parentElement).getDocument().createTextNode(val);
+        elt.appendChild(text);
+    }
+    
+    
+    /**
+     * Default version of previous method to add value to an element directly
+     * @param elt
+     * @param val
+     */
+    public void setElementValue(Element elt, String val)
+    {
+        Text text = getParentDocument(elt).getDocument().createTextNode(val);
         elt.appendChild(text);
     }
 
@@ -685,9 +697,17 @@ public class DOMHelper
     }
     
     
+    /**
+     * Special method to set an id attribute value on selected element
+     * @param nodePath
+     * @param text
+     */
     public void setIdAttribute(String nodePath, String text)
     {
-        setAttributeValue(mainFragment.getBaseElement(), nodePath, text);
+        String eltPath = nodePath.substring(0, nodePath.lastIndexOf(PATH_SEPARATOR));
+        Element elt = getElement(eltPath);
+        setAttributeValue(nodePath, text);
+        getXmlDocument().addId(text, elt);
     }
     
     

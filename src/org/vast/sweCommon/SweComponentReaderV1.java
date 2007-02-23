@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
-import org.vast.cdm.semantics.DictionaryURN;
 import org.vast.data.*;
 import org.vast.xml.*;
 import org.vast.ogc.OGCRegistry;
@@ -264,6 +263,7 @@ public class SweComponentReaderV1 implements DataComponentReader
             throw new CDMException("Invalid component: " + eltName);
         
     	// read common stuffs
+        dataValue.setProperty(DataComponent.TYPE, eltName);
         readGmlProperties(dataValue, dom, scalarElt);
     	readCommonAttributes(dataValue, dom, scalarElt);
         readUom(dataValue, dom, scalarElt);
@@ -401,6 +401,11 @@ public class SweComponentReaderV1 implements DataComponentReader
         if (refFrame != null)
             dataComponent.setProperty(DataComponent.REF, refFrame);
         
+        // reference time
+        String refTime = dom.getAttributeValue(componentElt, "referenceTime");
+        if (refFrame != null)
+            dataComponent.setProperty(DataComponent., refFrame);
+        
         // local frame
         String locFrame = dom.getAttributeValue(componentElt, "localFrame");
         if (locFrame != null)
@@ -421,30 +426,7 @@ public class SweComponentReaderV1 implements DataComponentReader
     private String readComponentDefinition(DOMHelper dom, Element componentElement) throws CDMException
     {
         String defUri = dom.getAttributeValue(componentElement, "definition");
-        
-        if (defUri != null)
-            return defUri;
-        
-        // otherwise derive urn from element name
-        String parameterName = componentElement.getLocalName();
-        
-        // determine parameter type
-        if (parameterName.indexOf("Boolean") != -1)
-            return DictionaryURN.bool;
-        else if (parameterName.indexOf("Count") != -1)
-            return DictionaryURN.count;
-        else if (parameterName.indexOf("Time") != -1)
-            return DictionaryURN.time;
-        else if (parameterName.indexOf("Quantity") != -1)
-            return DictionaryURN.quantity;
-        else if (parameterName.indexOf("Category") != -1)
-            return DictionaryURN.category;
-        else if (parameterName.indexOf("DataGroup") != -1)
-            return DictionaryURN.group;
-        else if (parameterName.indexOf("DataArray") != -1)
-            return DictionaryURN.array;
-        else
-            return "none";
+        return defUri;
     }
     
     

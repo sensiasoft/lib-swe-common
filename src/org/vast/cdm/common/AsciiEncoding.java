@@ -28,9 +28,21 @@ public class AsciiEncoding implements DataEncoding
 {
 	public String blockSeparator;
 	public String tokenSeparator;
-	public char decimalSeparator;
+	public char decimalSeparator = '.';
 	
 	
+    public AsciiEncoding()
+    {        
+    }
+    
+    
+    public AsciiEncoding(String blockSeparator, String tokenSeparator)
+    {
+        this.blockSeparator = blockSeparator;
+        this.tokenSeparator = tokenSeparator;
+    }
+    
+    
 	public EncodingType getEncodingType()
 	{
 		return EncodingType.ASCII;

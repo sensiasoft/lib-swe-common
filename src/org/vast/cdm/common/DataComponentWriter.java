@@ -45,13 +45,14 @@ import org.w3c.dom.*;
  */
 public interface DataComponentWriter
 {
-	/**
-     * 
-     * TODO writeDataComponent method description
+	
+    /**
+     * Creates a DOM Element from a DataComponent object
      * @param dom
      * @param dataComponents
      * @return
      * @throws CDMException
 	 */
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException;
+    
 }

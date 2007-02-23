@@ -77,6 +77,13 @@ public class SweEncodingWriterV0 implements DataEncodingWriter
     }
     
     
+    /**
+     * Create DOM Element for an AsciiBlock encoding definition
+     * @param dom
+     * @param asciiEncoding
+     * @return
+     * @throws CDMException
+     */
     private Element writeAsciiBlock(DOMHelper dom, AsciiEncoding asciiEncoding) throws CDMException
     {
         Element dataEncElt = dom.createElement("swe:AsciiBlock");
@@ -89,6 +96,13 @@ public class SweEncodingWriterV0 implements DataEncodingWriter
     }
     
     
+    /**
+     * Create DOM Element for a BinaryBlock encoding definition
+     * @param dom
+     * @param binaryEncoding
+     * @return
+     * @throws CDMException
+     */
     private Element writeBinaryBlock(DOMHelper dom, BinaryEncoding binaryEncoding) throws CDMException
     {
     	Element binaryEncElt = dom.createElement("swe:BinaryBlock");
@@ -125,6 +139,13 @@ public class SweEncodingWriterV0 implements DataEncodingWriter
     }
     
 
+    /**
+     * Create DOM Element for each component binary encoding parameters
+     * @param dom
+     * @param binaryOptions
+     * @return
+     * @throws CDMException
+     */
     private Element writeBinaryValue(DOMHelper dom, BinaryOptions binaryOptions) throws CDMException
     {
         Element binaryEncElt = dom.createElement("swe:Component");

@@ -26,7 +26,6 @@ package org.vast.sweCommon;
 import java.util.Hashtable;
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
-import org.vast.cdm.semantics.DictionaryURN;
 import org.vast.data.*;
 import org.vast.xml.*;
 
@@ -206,7 +205,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         // Create Data component Object
     	if (eltName.equals("Quantity") || eltName.contains("Time"))
         {
-            paramValue = new DataValue(DataType.DOUBLE);
+            paramValue = new DataValue(DataType.DOUBLE);            
         }
         else if (eltName.equals("Count"))
         {
@@ -226,6 +225,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         }
         
     	// read attributes
+        paramValue.setProperty(DataComponent.TYPE, eltName);
     	readAttributes(dom, paramValue, parameterElement);
     	
         // Parse the value
@@ -325,7 +325,12 @@ public class SweComponentReaderV0 implements DataComponentReader
         // reference frame
         String refFrame = dom.getAttributeValue(parameterElement, "referenceFrame");
         if (refFrame != null)
-            dataComponent.setProperty(DataComponent.REF, refFrame);
+            dataComponent.setProperty(DataComponent.REF_FRAME, refFrame);
+        
+        // reference frame
+        String refTimeFrame = dom.getAttributeValue(parameterElement, "referenceTimeFrame");
+        if (refTimeFrame != null)
+            dataComponent.setProperty(DataComponent.REF_FRAME, refTimeFrame);
         
         // local frame
         String locFrame = dom.getAttributeValue(parameterElement, "localFrame");
@@ -357,30 +362,7 @@ public class SweComponentReaderV0 implements DataComponentReader
     private String readComponentDefinition(DOMHelper dom, Element parameterElement) throws CDMException
     {
         String defUri = dom.getAttributeValue(parameterElement, "definition");
-        
-        if (defUri != null)
-            return defUri;
-        
-        // otherwise derive urn from element name
-        String parameterName = parameterElement.getLocalName();
-        
-        // determine parameter type
-        if (parameterName.indexOf("Boolean") != -1)
-            return DictionaryURN.bool;
-        else if (parameterName.indexOf("Count") != -1)
-            return DictionaryURN.count;
-        else if (parameterName.indexOf("Time") != -1)
-            return DictionaryURN.time;
-        else if (parameterName.indexOf("Quantity") != -1)
-            return DictionaryURN.quantity;
-        else if (parameterName.indexOf("Category") != -1)
-            return DictionaryURN.category;
-        else if (parameterName.indexOf("DataGroup") != -1)
-            return DictionaryURN.group;
-        else if (parameterName.indexOf("DataArray") != -1)
-            return DictionaryURN.array;
-        else
-            return "none";
+        return defUri;
     }
     
     

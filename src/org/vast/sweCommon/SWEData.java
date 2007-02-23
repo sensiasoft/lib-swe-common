@@ -57,6 +57,12 @@ public class SWEData
     protected DataList dataBlocks;
 
 
+    public SWEData()
+    {
+        dataBlocks = new DataList();
+    }
+    
+    
     public DataComponent getDataComponents()
     {
         return dataComponents;
@@ -66,6 +72,7 @@ public class SWEData
     public void setDataComponents(DataComponent dataComponents)
     {
         this.dataComponents = dataComponents;
+        dataBlocks.addComponent(dataComponents);
     }
 
 
@@ -113,7 +120,7 @@ public class SWEData
     public DataStreamParser getDataParser()
     {
         DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
-        parser.setDataComponents(dataComponents);
+        parser.setDataComponents(getDataComponents());
         return parser;
     }
     
@@ -124,9 +131,7 @@ public class SWEData
      */
     public void parseResult() throws CDMException
     {
-        DataStreamParser parser = getDataParser();
-        dataBlocks = new DataList();
-        dataBlocks.addComponent(dataComponents);
+        DataStreamParser parser = getDataParser();        
         parser.setDataHandler(new DefaultHandler(this));
         
         InputStream resultStream = dataSource.getDataStream();
