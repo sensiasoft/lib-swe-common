@@ -23,32 +23,25 @@
 
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.DataEncoding;
-import org.vast.cdm.common.DataStreamParser;
+import java.io.InputStream;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataSource;
 
 
-public class DataParserFactory
+public class DataSourceURI implements DataSource
 {
-        
-    public static DataStreamParser createDataParser(DataEncoding encoding)
+    String streamUri;
+    
+    
+    public DataSourceURI(String streamUri)
     {
-        DataStreamParser parser = null;
-        
-        switch (encoding.getEncodingType())
-        {
-            case ASCII:
-                parser = new AsciiDataParser();
-                break;
-                
-            case BINARY:
-                parser = new BinaryDataParser();
-                break;
-                
-            case MIME_FORMAT:
-                return null;
-        }
-        
-        parser.setDataEncoding(encoding);
-        return parser;
+        this.streamUri = streamUri;
     }
+    
+    
+    public InputStream getDataStream() throws CDMException
+    {
+        return URIStreamHandler.openStream(streamUri);
+    }
+    
 }

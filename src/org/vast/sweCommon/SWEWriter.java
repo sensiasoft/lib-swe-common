@@ -66,23 +66,10 @@ public abstract class SWEWriter implements DataDescriptionWriter, OutputStreamPr
 	
 	public DataStreamWriter getDataWriter()
 	{
-		DataStreamWriter writer = null;
-		
-		switch (dataEncoding.getEncodingType())
-		{
-			case ASCII:
-				writer = new AsciiDataWriter();
-				break;
-				
-			case BINARY:
-				writer = new BinaryDataWriter();
-				break;				
-		}
-		
-		writer.setDataEncoding(this.dataEncoding);
-		writer.setDataComponents(this.dataComponents);
-		writer.reset();
-		return writer;
+        DataStreamWriter writer = SWEFactory.createDataWriter(dataEncoding);
+        writer.setDataComponents(this.dataComponents);
+        writer.reset();
+        return writer;
 	}
 	
 	

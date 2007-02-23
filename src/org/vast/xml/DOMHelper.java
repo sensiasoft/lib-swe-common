@@ -53,7 +53,7 @@ import java.util.*;
  */
 public class DOMHelper
 {
-    static protected final String PATH_SEPARATOR = "/";    
+    static protected final String PATH_SEPARATOR = "/";
     
     /** User prefix to domain map **/
     protected Hashtable<String, String> userPrefixTable;
@@ -512,7 +512,7 @@ public class DOMHelper
 
     /**
      * Get all child elements of the given node (don't return any text or comment nodes !)
-     * <br>This method will follow any xlink:href if specified.
+     * This method will follow any xlink:href if specified.
      * @param parentElement Node to retrieve the children from
      * @return NodeList of child elements or an Empty NodeList if no children elements are found
      */
@@ -523,7 +523,8 @@ public class DOMHelper
 
 
     /**
-     * Get the first child of the parentNode
+     * Get the first child of the parentNode.
+     * This method will follow any xlink:href if specified.
      * @param parentElement Node to retrieve the children from
      * @return NodeList of child elements or null if no children elements are found
      */
@@ -894,13 +895,14 @@ public class DOMHelper
     
     
     /**
-     * Helper method to serialize this DOM to a stream
+     * Helper method to serialize this DOM node to a stream using the provided serializer
      * @param node
      * @param out
-     * @param format use specified format or default format if null
+     * @param format
+     * @param serializer
      * @throws IOException
      */
-    public void serialize(Node node, OutputStream out, OutputFormat format) throws IOException
+    public void serialize(Node node, OutputStream out, OutputFormat format, XMLSerializer serializer) throws IOException
     {
         // select root element to serialize
         Element elt = null;
@@ -919,7 +921,7 @@ public class DOMHelper
             format.setIndenting(true);
             format.setIndent(3);
             format.setLineWidth(0);
-        }        
+        }
         
         // add namespaces xmlns attributes
         XMLDocument parentDoc = getParentDocument(elt);
@@ -942,12 +944,25 @@ public class DOMHelper
             }
         }
         
-        // serialize using Xerces XMLSerializer
-        XMLSerializer serializer = new XMLSerializer();
+        // setup serializer and launch serialization
         serializer.setOutputByteStream(out);
         serializer.setOutputFormat(format);
         serializer.setNamespaces(false);
         serializer.serialize(elt);
+    }
+    
+    
+    /**
+     * Helper method to serialize this DOM to a stream
+     * @param node
+     * @param out
+     * @param format use specified format or default format if null
+     * @throws IOException
+     */
+    public void serialize(Node node, OutputStream out, OutputFormat format) throws IOException
+    {
+        XMLSerializer serializer = new XMLSerializer();
+        serialize(node, out, format, serializer);
     }
     
     

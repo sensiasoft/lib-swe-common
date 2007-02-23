@@ -185,7 +185,7 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
      */
     private String getVersion(DOMHelper dom, Element sweElt)
     {
-        // get version from the last character of namespace URI
+        // get version from the last part of namespace URI
         //String sweUri = dom.getXmlDocument().getNSUri("swe");
         String sweUri = sweElt.getNamespaceURI();
         String version = sweUri.substring(sweUri.lastIndexOf('/') + 1);

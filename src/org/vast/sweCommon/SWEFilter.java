@@ -38,7 +38,7 @@ import java.util.Stack;
  * and start processing inline data as it comes.<br/>
  * 
  * The filter starts by passing data through while recording
- * the element hierarchy down to the element containing the data.
+ * the element hierarchy down to the element containing the data stream.
  * When this element is reached its content is not read and
  * the filter simulates a valid end of the xml tree by writing
  * closing tags for all elements previously recorded, then EOF. 

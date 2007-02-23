@@ -40,4 +40,7 @@
    <Writer type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentWriterV1"/>
    <Writer type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingWriterV1"/>
    <!-- -->
+   <Reader type="OM" subType="Observation" version="0.0" class="org.vast.ows.om.ObservationReaderV01"/>
+   <Writer type="OM" subType="Observation" version="0.0" class="org.vast.ows.om.ObservationWriterV01"/>
+   <!-- -->
 </ClassMap>

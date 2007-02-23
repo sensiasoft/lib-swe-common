@@ -62,7 +62,7 @@ public abstract class SWEReader implements DataDescriptionReader, InputStreamPro
     
 	public DataStreamParser getDataParser()
 	{
-		DataStreamParser parser = DataParserFactory.createDataParser(dataEncoding);
+		DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
 		parser.setDataComponents(this.dataComponents);
 		parser.reset();
 		return parser;

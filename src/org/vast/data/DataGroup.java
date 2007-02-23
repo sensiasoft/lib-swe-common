@@ -59,6 +59,13 @@ public class DataGroup extends AbstractDataComponent
     }
     
     
+    public DataGroup(int size, String name)
+    {
+        this(size);
+        this.setName(name);
+    }
+    
+    
     @Override
     public DataGroup copy()
     {
@@ -70,7 +77,7 @@ public class DataGroup extends AbstractDataComponent
     	for (int i=0; i<groupSize; i++)
     	{
     		AbstractDataComponent child = componentList.get(i);
-    		newGroup.addComponent(child.getName(), child.copy());
+    		newGroup.addComponent(child.copy());
     	}
     	
     	return newGroup;
@@ -107,6 +114,37 @@ public class DataGroup extends AbstractDataComponent
     }
     
     
+    /**
+     * Inserts the component at the specified index
+     * @param index
+     * @param component
+     */
+    public void insertComponent(int index, DataComponent component)
+    {
+        componentList.add(index, (AbstractDataComponent)component);
+        ((AbstractDataComponent)component).parent = this;
+        
+        // refresh index table
+        this.names.clear();
+        for (int i=0; i<componentList.size(); i++)
+        {
+            AbstractDataComponent next = componentList.get(i);
+            this.names.put(next.getName(), i);
+        }
+    }
+    
+    
+    public void insertComponent(String previousComponentName, DataComponent component)
+    {
+        int index = this.getComponentIndex(previousComponentName);
+        
+        if (index == -1)
+            throw new IllegalArgumentException("No component with name " + previousComponentName + " found");
+        
+        insertComponent(index, component);
+    }
+    
+    
     @Override
     public void addComponent(DataComponent component)
     {
@@ -122,7 +160,6 @@ public class DataGroup extends AbstractDataComponent
     @Override
     public AbstractDataComponent getComponent(int index)
     {
-        checkIndex(index);
         AbstractDataComponent component = (AbstractDataComponent)componentList.get(index);
         return component;
     }
@@ -131,7 +168,6 @@ public class DataGroup extends AbstractDataComponent
     @Override
     public void removeComponent(int index)
     {
-        checkIndex(index);
         componentList.remove(index);
     }
 
@@ -327,19 +363,6 @@ public class DataGroup extends AbstractDataComponent
         }
         
         this.dataBlock = newBlock;
-    }
-
-
-    /**
-     * Check that the integer index given is in range: 0 to size of list
-     * @param index int
-     * @throws DataException
-     */
-    protected void checkIndex(int index)
-    {
-        // error if index is out of range
-        if ((index >= componentList.size()) || (index < 0))
-            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
     }
 
 

@@ -54,7 +54,14 @@ public class DataList extends AbstractDataComponent
     public DataList()
     {
         this.dataBlock = new DataBlockList();
-    }  
+    }
+    
+    
+    public DataList(String name)
+    {
+        this();
+        this.setName(name);
+    }
     
     
     @Override

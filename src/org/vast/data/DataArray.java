@@ -63,11 +63,25 @@ public class DataArray extends AbstractDataComponent
     }
     
     
+    public DataArray(int arraySize, String name)
+    {
+        this(arraySize);
+        this.setName(name);
+    }
+    
+    
     public DataArray(DataValue sizeData)
     {
         this.sizeData = sizeData;
         this.arraySize = 1;
         this.variableSize = true;
+    }
+    
+    
+    public DataArray(DataValue sizeData, String name)
+    {
+        this(sizeData);
+        this.setName(name);
     }
 
 

@@ -48,26 +48,33 @@ public class DataValue extends AbstractDataComponent
     protected Unit uom;
     
     
-    public DataValue()
+    public DataValue(String name)
     {
     	this.scalarCount = 1;
     	this.dataType = DataType.OTHER;
+        this.setName(name);
     }
     
     
     public DataValue(DataType type)
     {
-    	this.scalarCount = 1;
-    	this.dataType = type;
-    	this.assignNewDataBlock();
+        this.scalarCount = 1;
+        this.dataType = type;
+        this.assignNewDataBlock();
+    }
+    
+    
+    public DataValue(String name, DataType type)
+    {
+        this(type);
+        this.setName(name);
     }
     
     
     @Override
     public DataValue copy()
     {
-    	DataValue newVal = new DataValue(dataType);
-    	newVal.name = this.name;
+    	DataValue newVal = new DataValue(name, dataType);
     	newVal.properties = this.properties;
     	return newVal;
     }
