@@ -25,6 +25,7 @@ package org.vast.sweCommon;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import org.w3c.dom.*;
@@ -36,6 +37,7 @@ import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLUnitReader;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
+import org.vast.util.DateTimeFormat;
 
 
 /**
@@ -399,12 +401,19 @@ public class SweComponentReaderV1 implements DataComponentReader
         // reference frame
         String refFrame = dom.getAttributeValue(componentElt, "referenceFrame");
         if (refFrame != null)
-            dataComponent.setProperty(DataComponent.REF, refFrame);
+            dataComponent.setProperty(DataComponent.REF_FRAME, refFrame);
         
         // reference time
-        String refTime = dom.getAttributeValue(componentElt, "referenceTime");
-        if (refFrame != null)
-            dataComponent.setProperty(DataComponent., refFrame);
+        try
+        {
+            String refTime = dom.getAttributeValue(componentElt, "referenceTime");
+            if (refTime != null)
+                dataComponent.setProperty(DataComponent.REF_TIME, DateTimeFormat.parseIso(refTime));
+        }
+        catch (ParseException e)
+        {
+            throw new CDMException("Invalid reference time", e);
+        }
         
         // local frame
         String locFrame = dom.getAttributeValue(componentElt, "localFrame");

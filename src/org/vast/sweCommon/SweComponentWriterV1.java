@@ -30,6 +30,7 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentWriter;
 import org.vast.cdm.common.DataType;
 import org.vast.data.*;
+import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 
 
@@ -201,9 +202,14 @@ public class SweComponentWriterV1 implements DataComponentWriter
             dataValueElt.setAttribute("definition", (String)defUri);
         
         // reference frame
-        Object refFrame = dataComponent.getProperty(DataComponent.REF_FRAME);
+        String refFrame = (String)dataComponent.getProperty(DataComponent.REF_FRAME);
         if (refFrame != null)
-            dataValueElt.setAttribute("referenceFrame", (String)refFrame);
+            dataValueElt.setAttribute("referenceFrame", refFrame);
+        
+        // reference time
+        double refTime = (Double)dataComponent.getProperty(DataComponent.REF_TIME);
+        if (refFrame != null)
+            dataValueElt.setAttribute("referenceTime", DateTimeFormat.formatIso(refTime, 0));
         
         // local frame
         Object locFrame = dataComponent.getProperty(DataComponent.LOC);

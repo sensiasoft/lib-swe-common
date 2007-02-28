@@ -27,12 +27,28 @@ import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataHandler;
 
-public class DefaultHandler implements DataHandler
+
+/**
+ * <p><b>Title:</b>
+ * Default Parser Handler
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Default handler used by SWE Data to read all values
+ * from the data stream to the list within the SWE Data.
+ * </p>
+ *
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin
+ * @date Feb 23, 2007
+ * @version 1.0
+ */
+public class DefaultParserHandler implements DataHandler
 {
     protected SWEData sweData;
     
     
-    public DefaultHandler(SWEData sweData)
+    public DefaultParserHandler(SWEData sweData)
     {
         this.sweData = sweData;
     }

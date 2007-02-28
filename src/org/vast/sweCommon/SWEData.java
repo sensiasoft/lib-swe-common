@@ -30,6 +30,7 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataSource;
 import org.vast.cdm.common.DataStreamParser;
+import org.vast.cdm.common.DataStreamWriter;
 import org.vast.data.DataList;
 
 
@@ -114,14 +115,27 @@ public class SWEData
     
     /**
      * Retrieves parser created for this SWE structure/encoding pair
-     * Allows the use of the parser on a different stream w/ same structure
+     * Allows the use of the parser on a separate input streams w/ same structure
      * @return
      */
     public DataStreamParser getDataParser()
     {
         DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
-        parser.setDataComponents(getDataComponents());
+        parser.setDataComponents(dataComponents);
         return parser;
+    }
+    
+    
+    /**
+     * Retrieves writer created for this structure/encoding pair
+     * Allows the use of the writer on separate output streams
+     * @return
+     */
+    public DataStreamWriter getDataWriter()
+    {
+        DataStreamWriter writer = SWEFactory.createDataWriter(dataEncoding);
+        writer.setDataComponents(dataComponents);
+        return writer;
     }
     
     
@@ -132,13 +146,29 @@ public class SWEData
     public void parseResult() throws CDMException
     {
         DataStreamParser parser = getDataParser();        
-        parser.setDataHandler(new DefaultHandler(this));
+        parser.setDataHandler(new DefaultParserHandler(this));
         
         InputStream resultStream = dataSource.getDataStream();
         parser.parse(resultStream);
         
         try { resultStream.close(); }
         catch (IOException e) { e.printStackTrace(); }
+    }
+    
+    
+    /**
+     * Writes data blocks to the data stream specified
+     * @param buffer
+     * @throws CDMException
+     */
+    public void writeResult(StringBuffer buffer) throws CDMException
+    {
+        buffer.append("blablabla");
+        
+        DataStreamWriter writer = getDataWriter();
+        writer.setDataHandler(new DefaultWriterHandler(this));
+        
+        
     }
     
 }
