@@ -23,17 +23,10 @@
 
 package org.vast.unit;
 
-import java.util.Hashtable;
-import org.vast.xml.DOMHelper;
-import org.vast.xml.DOMHelperException;
-import org.vast.process.ProcessException;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 
 /**
  * <p><b>Title:</b>
- * Unit Conversion Object
+ * Unit Conversion Routines
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -48,9 +41,9 @@ import org.w3c.dom.NodeList;
  */
 public class UnitConversion
 {
-    protected static Hashtable<String, Unit> urnToUnitMap = null;
-    protected static Hashtable<String, Unit> codeToUnitMap = null;
-        
+    private static UnitParserUCUM ucumParser = new UnitParserUCUM();
+    private static UnitParserURI uriParser = new UnitParserURI();
+    
     
     /**
      * Helper mehod to get the converter directly from the uom string
@@ -59,12 +52,22 @@ public class UnitConversion
      */
     public static UnitConverter createConverterToSI(String uom)
     {
-        return new ScaleUnitConverter(getFactorToSI(uom));
+        if (uom == null)
+            return new GenericUnitConverter(1.0);
+        
+        Unit unit = null;
+        
+        if (uom.startsWith("urn") || uom.startsWith("http"))
+            unit = uriParser.getUnit(uom);
+        else            
+            unit = ucumParser.getUnit(uom);
+        
+        return new GenericUnitConverter(unit, unit.getCompatibleSIUnit());
     }
     
     
     /**
-     * Main static method to create the right converter given
+     * Helper method to create the right converter given
      * the specified source and destination units.
      * @param sourceUnit
      * @param destUnit
@@ -73,134 +76,5 @@ public class UnitConversion
     public static UnitConverter getConverter(Unit sourceUnit, Unit destUnit)
     {
         return new GenericUnitConverter(sourceUnit, destUnit);
-    }
-    
-	
-	/**
-     * Gives the conversion factor from the given unit to SI
-     * @param String unit unit URI
-     * @return the conversion factor (double)
-     * @throws SMLReaderException
-     */
-    public static double getFactorToSI(String unit)
-    {
-        // if no unit use default unit
-        if (unit == null) return 1.0;
-
-        //////////////////////////////////////
-        // angle units - convert to radians //
-        //////////////////////////////////////
-        else if (unit.endsWith(":radian")) return 1.0;
-        else if (unit.equals("rad")) return 1.0;
-        
-        else if (unit.endsWith(":degree")) return Math.PI/180.0;
-        else if (unit.equals("deg")) return Math.PI/180.0;
-
-        ////////////////////////////////////////
-        // distance units - convert to meters //
-        ////////////////////////////////////////
-        else if (unit.contains(":meter")) return 1.0;
-        else if (unit.equals("m")) return 1.0;
-        
-        else if (unit.contains(":kilometer")) return 1e3;
-        else if (unit.equals("km")) return 1e3;
-        
-        else if (unit.contains(":centimeter")) return 1e-2;
-        else if (unit.equals("cm")) return 1e-2;
-        
-        else if (unit.contains(":millimeter")) return 1e-3;
-        else if (unit.equals("mm")) return 1e-3;
-        
-        else if (unit.contains(":micrometer")) return 1e-6;
-        else if (unit.contains(":micron")) return 1e-6;
-        else if (unit.equals("um")) return 1e-6;
-        
-        else if (unit.contains(":nanometer")) return 1e-9;
-        else if (unit.equals("nm")) return 1e-9;       
-        
-        else if (unit.contains(":feet")) return 0.3048;
-        else if (unit.contains(":foot")) return 0.3048;
-        else if (unit.equals("ft")) return 0.3048;
-        
-        else if (unit.contains(":inch")) return 0.0254;
-        else if (unit.equals("in")) return 0.0254;
-        
-        else if (unit.contains(":mile")) return 1609.344;
-
-        /////////////////////////////////////
-        // time units - convert to seconds //
-        /////////////////////////////////////
-        else if (unit.contains(":second")) return 1.0;
-        else if (unit.equals("s")) return 1.0;
-        
-        else if (unit.contains(":minute")) return 60;
-        else if (unit.equals("min")) return 60;
-        
-        else if (unit.contains(":hour")) return 3600;
-        else if (unit.equals("h")) return 3600;
-        
-        else if (unit.contains(":day")) return 3600*24;
-        else if (unit.contains(":year")) return 3600*24*365.25;
-        
-        else if (unit.contains(":millisecond")) return 1e-3;
-        else if (unit.equals("ms")) return 1e-3;
-        
-        else if (unit.contains(":microsecond")) return 1e-6;
-        else if (unit.equals("us")) return 1e-6;
-        
-        else if (unit.contains(":nanosecond")) return 1e-9;
-        else if (unit.equals("ns")) return 1e-9;
-        
-        // if unknown unit use 1.0
-        else return 1.0;
-    }
-    
-    
-    /**
-     * Loads the URI to Unit Class map using the provided XML file.
-     * Existing entries are replaced only if the replace argument is true.
-     * @param unitFileUrl
-     * @param replace
-     * @throws SMLException
-     */
-    public static synchronized void loadMaps(String unitFileUrl, boolean replace) throws ProcessException
-    {
-        try
-        {
-            // create unit hashtable entries
-            DOMHelper dom = new DOMHelper(unitFileUrl, false);
-            NodeList unitElts = dom.getElements("Unit");
-            
-            if (urnToUnitMap == null)
-                urnToUnitMap = new Hashtable<String,Unit>(unitElts.getLength());
-            
-            for (int i=0; i<unitElts.getLength(); i++)
-            {
-                Element unitElt = (Element)unitElts.item(i);
-                
-                // create the unit object
-                Unit unit = new Unit();
-                unit.setName(dom.getElementValue(unitElt, "name"));
-                unit.setPrintSymbol(dom.getElementValue(unitElt, "symbol"));
-                
-                // adds all uri as keys in the hashtable
-                NodeList uriElts = dom.getElements(unitElt, "uri");         
-                for (int j=0; j<uriElts.getLength(); j++)
-                {
-                    Element uriElt = (Element)uriElts.item(j);
-                    String uri = dom.getElementValue(uriElt, "");                    
-                    
-                    if (replace || (urnToUnitMap.get(uri) == null))
-                        urnToUnitMap.put(uri, unit);
-                }
-                
-                // also add the symbol entry in the hash table for faster lookup
-                urnToUnitMap.put(unit.getPrintSymbol(), unit);
-            }
-        }
-        catch (DOMHelperException e)
-        {
-            throw new ProcessException("Error while reading Unit Map File", e);
-        }
     }
 }

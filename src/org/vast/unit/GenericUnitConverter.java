@@ -30,9 +30,8 @@ package org.vast.unit;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Can convert one unit to another by using a single scale factor.
- * This is sufficient for most metric and non-metric units. This
- * won't work for temperatures (degF) and units on a log scale (dBV).
+ * Can convert anyone unit to another by using a single scale factor
+ * and custom functions.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -44,6 +43,19 @@ public class GenericUnitConverter extends AbstractUnitConverter
 {
     protected double conversionFactor = 1.0;
     protected boolean noFunctions = true;
+    
+    
+    /**
+     * Default constructor using given scalefactor
+     * @param conversionFactor
+     */
+    public GenericUnitConverter(double conversionFactor)
+    {
+        this.conversionFactor = conversionFactor;
+        if (conversionFactor != 1.0)
+            conversionNeeded = true;
+        conversionPossible = true;
+    }
     
     
     /**

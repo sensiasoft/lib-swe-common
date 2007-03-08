@@ -175,6 +175,20 @@ public class Unit
     }
     
     
+    public Unit getCompatibleSIUnit()
+    {
+        Unit siUnit = this.copy();
+        siUnit.scaleToSI = 1.0;
+        siUnit.code = siUnit.getUCUMCode();
+        siUnit.printSymbol = siUnit.code;
+        siUnit.expression = siUnit.code;
+        siUnit.name = siUnit.code;
+        siUnit.description = null;
+        siUnit.function = null;
+        return siUnit;
+    }
+    
+    
     public void multiply(double scale)
     {
         this.scaleToSI *= scale;
@@ -394,6 +408,26 @@ public class Unit
     public void setFunction(UnitFunction function)
     {
         this.function = function;
+    }
+    
+    
+    public String getUCUMCode()
+    {
+        StringBuffer buf = new StringBuffer();
+        
+        addUnitString(buf, radian, "rad");
+        addUnitString(buf, meter, "m");
+        addUnitString(buf, kilogram, "kg");
+        addUnitString(buf, second, "s");
+        addUnitString(buf, ampere, "A");
+        addUnitString(buf, kelvin, "K");
+        addUnitString(buf, mole, "mol");
+        addUnitString(buf, candela, "cd");
+        
+        if (scaleToSI != 1.0)
+            buf.insert(0, getScaleToSI() + "*");
+        
+        return buf.toString();
     }
     
     
