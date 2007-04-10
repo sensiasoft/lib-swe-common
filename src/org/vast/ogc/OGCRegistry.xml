@@ -43,4 +43,11 @@
    <Reader type="OM" subType="Observation" version="0.0" class="org.vast.ows.om.ObservationReaderV01"/>
    <Writer type="OM" subType="Observation" version="0.0" class="org.vast.ows.om.ObservationWriterV01"/>
    <!-- -->
+   <Reader type="SENSORML" subType="Metadata" version="0.0" class="org.vast.sensorML.MetadataReaderV0"/>
+   <Reader type="SENSORML" subType="Process" version="0.0" class="org.vast.sensorML.ProcessReaderV0"/>
+   <Reader type="SENSORML" subType="System" version="0.0" class="org.vast.sensorML.SystemReaderV0"/>
+   <Reader type="SENSORML" subType="Metadata" version="1.0" class="org.vast.sensorML.MetadataReaderV1"/>
+   <Reader type="SENSORML" subType="Process" version="1.0" class="org.vast.sensorML.ProcessReaderV1"/>
+   <Reader type="SENSORML" subType="System" version="1.0" class="org.vast.sensorML.SystemReaderV1"/>
+   <!-- -->
 </ClassMap>

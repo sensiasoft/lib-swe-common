@@ -43,7 +43,8 @@ import org.w3c.dom.Element;
  *
  * <p><b>Description:</b><br/>
  * Helper class providing a version agnostic access to SWE component
- * structure and encoding readers and writers.
+ * structure and encoding readers and writers. This class delegates
+ * to version specific readers/writers.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -53,10 +54,10 @@ import org.w3c.dom.Element;
  */
 public class SWECommonUtils implements DataComponentReader, DataComponentWriter, DataEncodingReader, DataEncodingWriter
 {
-    private String version;
+    private String version = "1.0";
     private boolean versionChanged;
     private DOMHelper previousDom;
-    private DataComponentReader componentReader = null;    
+    private DataComponentReader componentReader = null;
     private DataComponentWriter componentWriter = null;
     private DataEncodingReader encodingReader = null;
     private DataEncodingWriter encodingWriter = null;
@@ -106,6 +107,13 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     }
     
     
+    /**
+     * Reuses or creates the DataComponentReader corresponding to
+     * the version specified by the SWE namespace URI
+     * @param dom
+     * @param componentElt
+     * @return
+     */
     private DataComponentReader getDataComponentReader(DOMHelper dom, Element componentElt)
     {
         if (dom == previousDom && componentReader != null)
@@ -124,6 +132,13 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     }
     
     
+    /**
+     * Reuses or creates the DataEncodingReader corresponding to
+     * the version specified by the SWE namespace URI
+     * @param dom
+     * @param componentElt
+     * @return
+     */
     private DataEncodingReader getDataEncodingReader(DOMHelper dom, Element componentElt)
     {
         if (dom == previousDom && encodingReader != null)
@@ -142,6 +157,11 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     }
     
     
+    /**
+     * Reuses or creates the DataComponentWriter corresponding to
+     * the specified version (previously set by setOutputVersion)
+     * @return
+     */
     private DataComponentWriter getDataComponentWriter()
     {
         if (!versionChanged && componentWriter != null)
@@ -155,11 +175,17 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
                                                               DocumentType.DATACOMPONENT.name(),
                                                               this.version);
             componentWriter = writer;
+            versionChanged = false;
             return writer;
         }
     }
     
     
+    /**
+     * Reuses or creates the DataEncodingWriter corresponding to
+     * the specified version (previously set by setOutputVersion)
+     * @return
+     */
     private DataEncodingWriter getDataEncodingWriter()
     {
         if (!versionChanged && encodingWriter != null)
@@ -173,6 +199,7 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
                                                             DocumentType.DATACOMPONENT.name(),
                                                             this.version);
             encodingWriter = writer;
+            versionChanged = false;
             return writer;
         }
     }
@@ -183,7 +210,7 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
      * @param dom
      * @return
      */
-    private String getVersion(DOMHelper dom, Element sweElt)
+    public String getVersion(DOMHelper dom, Element sweElt)
     {
         // get version from the last part of namespace URI
         //String sweUri = dom.getXmlDocument().getNSUri("swe");
@@ -199,6 +226,10 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     }
     
     
+    /**
+     * Used to set the SWECommon version to use for XML output
+     * @param version
+     */
     public void setOutputVersion(String version)
     {
         this.version = version;

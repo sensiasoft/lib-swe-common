@@ -95,6 +95,10 @@ public class SweComponentReaderV1 implements DataComponentReader
         {
             container = readDataRecord(dom, componentElt);
         }
+        else if (eltName.endsWith("Vector")) // handles everything endin with Vector
+        {
+            container = readDataRecord(dom, componentElt);
+        }
         else if (eltName.endsWith("Range"))
         {
             container = readRange(dom, componentElt);
