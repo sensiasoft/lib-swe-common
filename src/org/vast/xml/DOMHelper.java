@@ -1042,7 +1042,7 @@ public class DOMHelper
 
 
     /**
-     * This function parse the XML file if necessary
+     * This function parse the XML file if necessary or reuse one already loaded if available
      * @param href link (URL#id) to the document
      * @param forceReload if true, force the document to reload
      * @return The XMLDocument object created
@@ -1062,21 +1062,9 @@ public class DOMHelper
         {
             // make sure we replace spaces by UTF-8 encoded char
             href = href.replace(" ", "%20");
-            
-            // case of relative path
-            if (href.startsWith("."))
-            {
-                URI baseUri = mainFragment.getXmlDocument().getUri();
-                uri = new URI(href);
-                uriResolver = new URIResolver(uri, baseUri);
-                uri = uriResolver.getResolvedUri();
-            }
-            else
-            {
-                uri = new URI(href);
-                uriResolver = new URIResolver(uri);
-                uri = uriResolver.getResolvedUri();
-            }
+            uri = new URI(href);
+            uriResolver = new URIResolver(uri);
+            uri = uriResolver.getResolvedUri();
         }
         catch (URISyntaxException e)
         {
@@ -1150,7 +1138,20 @@ public class DOMHelper
         }
         else
         {
-            xmlFragment = parseURI(idRef, false);
+            try
+            {
+                URI linkUri = new URI(idRef);                
+                if (!linkUri.isAbsolute())
+                {
+                    URI baseUri = currentDocument.getUri();
+                    linkUri = baseUri.resolve(linkUri);
+                }                
+                xmlFragment = parseURI(linkUri.toString(), false);
+            }
+            catch (URISyntaxException e)
+            {
+                throw new DOMHelperException("URI " + idRef + " is malformed");
+            }
         }
 
         return xmlFragment;
