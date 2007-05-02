@@ -23,7 +23,7 @@
 
 package org.vast.physics;
 
-import org.vast.math.*;;
+import org.vast.math.*;
 
 /**
  * <p><b>Title:</b><br/>
