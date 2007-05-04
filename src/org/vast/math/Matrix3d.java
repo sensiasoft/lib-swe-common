@@ -174,4 +174,42 @@ public class Matrix3d extends javax.vecmath.Matrix3d
         m02 = s * m12 + c * m;
         m12 = c * m12 - s * m;
     }
+    
+    /**
+     * Inverse the matrix 
+    
+    public void inverse2()
+    {
+        
+        double a11, a12, a13, a21, a22, a23, a31, a32, a33;
+        
+        a11 = m00;
+        a12 = m01;
+        a13 = m02;
+        a21 = m10;
+        a22 = m11;
+        a23 = m12;
+        a31 = m20;
+        a32 = m21;
+        a33 = m22;
+        
+        m00 = a22*a33-a32*a23;
+        m01 = a13*a32-a12*a33;
+        m02 = a12*a23-a22*a13;
+        m10 = a23*a31-a33*a21;
+        m11 = a11*a33-a31*a13;
+        m12 = a13*a21-a23*a11;
+        m20 = a21*a32-a31*a22;
+        m21 = a12*a31-a11*a32;
+        m22 = a11*a22-a21-a12;
+        m = m11;
+        m11 = s * m21 + c * m;
+        m21 = c * m21 - s * m;
+        
+        m = m12;
+        m12 = s * m22 + c * m;
+        m22 = c * m22 - s * m;
+    }
+    
+    **/
 }
