@@ -31,5 +31,6 @@ public interface TransformTemplate
 {
     public boolean isMatch(DOMTransform transform, Node srcNode, Node resultNode);
     
+    
     public void apply(DOMTransform transform, Node srcNode, Node resultNode);
 }

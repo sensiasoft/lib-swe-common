@@ -23,6 +23,7 @@
 
 package org.vast.xml.transform;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.vast.xml.DOMHelper;
@@ -35,20 +36,82 @@ public class DOMTransform
     protected List<TransformTemplate> templates;
     
     
-    public DOMHelper transform(DOMHelper srcDocument)
+    public DOMTransform()
     {
-        return null;
+        templates = new ArrayList<TransformTemplate>();
     }
     
     
-    public DOMHelper transform(DOMHelper src, DOMHelper dest)
+    public DOMHelper transform(DOMHelper sourceDoc)
     {
-        return null;
+        this.sourceDomHelper = sourceDoc;
+        this.resultDomHelper = new DOMHelper();
+        this.applyTemplates(sourceDoc.getBaseElement(), resultDomHelper.getBaseElement());
+        return resultDomHelper;
     }
     
     
-    public DOMHelper transform(DOMHelper src, DOMHelper dest, Node resultNode)
+    public DOMHelper transform(DOMHelper sourceDoc, DOMHelper resultDoc)
     {
-        return null;
+        this.sourceDomHelper = sourceDoc;
+        this.resultDomHelper = resultDoc;
+        this.applyTemplates(sourceDoc.getBaseElement(), resultDoc.getBaseElement());
+        return resultDomHelper;
+    }
+    
+    
+    public DOMHelper transform(DOMHelper sourceDoc, DOMHelper resultDoc, Node resultNode)
+    {
+        this.sourceDomHelper = sourceDoc;
+        this.resultDomHelper = resultDoc;
+        this.applyTemplates(sourceDoc.getBaseElement(), resultNode);
+        return resultDomHelper;
+    }
+    
+    
+    public void applyTemplates(Node srcNode, Node resultNode)
+    {
+        for (int i=0; i<templates.size(); i++)
+        {
+            TransformTemplate nextTemplate = templates.get(i);
+            if (nextTemplate.isMatch(this, srcNode, resultNode))
+                nextTemplate.apply(this, srcNode, resultNode);
+        }
+    }
+
+
+    public DOMHelper getResultDomHelper()
+    {
+        return resultDomHelper;
+    }
+
+
+    public void setResultDomHelper(DOMHelper resultDomHelper)
+    {
+        this.resultDomHelper = resultDomHelper;
+    }
+
+
+    public DOMHelper getSourceDomHelper()
+    {
+        return sourceDomHelper;
+    }
+
+
+    public void setSourceDomHelper(DOMHelper sourceDomHelper)
+    {
+        this.sourceDomHelper = sourceDomHelper;
+    }
+
+
+    public List<TransformTemplate> getTemplates()
+    {
+        return templates;
+    }
+
+
+    public void setTemplates(List<TransformTemplate> templates)
+    {
+        this.templates = templates;
     }
 }
