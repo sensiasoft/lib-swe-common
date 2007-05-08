@@ -175,41 +175,112 @@ public class Matrix3d extends javax.vecmath.Matrix3d
         m12 = c * m12 - s * m;
     }
     
+    
     /**
-     * Inverse the matrix 
-    
-    public void inverse2()
-    {
+     * Inverse the matrix
+     */ 
+    public void inverse() {
+      //  int n = a.length;
+        int n = 3;
+        double a[][] = new double[n][n];
+        a[0][0] = m00;
+        a[0][1] = m01;
+        a[0][2] = m02;
+        a[1][0] = m10;
+        a[1][1] = m11;
+        a[1][2] = m12;
+        a[2][0] = m20;
+        a[2][1] = m21;
+        a[2][2] = m22;
         
-        double a11, a12, a13, a21, a22, a23, a31, a32, a33;
-        
-        a11 = m00;
-        a12 = m01;
-        a13 = m02;
-        a21 = m10;
-        a22 = m11;
-        a23 = m12;
-        a31 = m20;
-        a32 = m21;
-        a33 = m22;
-        
-        m00 = a22*a33-a32*a23;
-        m01 = a13*a32-a12*a33;
-        m02 = a12*a23-a22*a13;
-        m10 = a23*a31-a33*a21;
-        m11 = a11*a33-a31*a13;
-        m12 = a13*a21-a23*a11;
-        m20 = a21*a32-a31*a22;
-        m21 = a12*a31-a11*a32;
-        m22 = a11*a22-a21-a12;
-        m = m11;
-        m11 = s * m21 + c * m;
-        m21 = c * m21 - s * m;
-        
-        m = m12;
-        m12 = s * m22 + c * m;
-        m22 = c * m22 - s * m;
-    }
-    
-    **/
+        double x[][] = new double[n][n];
+        double b[][] = new double[n][n];
+        int index[] = new int[n];
+        for (int i=0; i<n; ++i) b[i][i] = 1;
+
+     // Transform the matrix into an upper triangle
+        gaussian(a, index);
+
+     // Update the matrix b[i][j] with the ratios stored
+        for (int i=0; i<n-1; ++i)
+          for (int j=i+1; j<n; ++j)
+            for (int k=0; k<n; ++k)
+              b[index[j]][k]
+                -= a[index[j]][i]*b[index[i]][k];
+
+     // Perform backward substitutions
+        for (int i=0; i<n; ++i) {
+          x[n-1][i] = b[index[n-1]][i]/a[index[n-1]][n-1];
+          for (int j=n-2; j>=0; --j) {
+            x[j][i] = b[index[j]][i];
+            for (int k=j+1; k<n; ++k) {
+              x[j][i] -= a[index[j]][k]*x[k][i];
+            }
+            x[j][i] /= a[index[j]][j];
+          }
+        }
+      
+      m00 = x[0][0];
+      m01 = x[0][1];
+      m02 = x[0][2];
+      m10 = x[1][0];
+      m11 = x[1][1];
+      m12 = x[1][2];
+      m20 = x[2][0];
+      m21 = x[2][1];
+      m22 = x[2][2];
+      
+      }
+
+//     Method to carry out the partial-pivoting Gaussian
+//     elimination.  Here index[] stores pivoting order.
+
+      public static void gaussian(double a[][],
+        int index[]) {
+        int n = index.length;
+        double c[] = new double[n];
+
+     // Initialize the index
+        for (int i=0; i<n; ++i) index[i] = i;
+
+     // Find the rescaling factors, one from each row
+        for (int i=0; i<n; ++i) {
+          double c1 = 0;
+          for (int j=0; j<n; ++j) {
+            double c0 = Math.abs(a[i][j]);
+            if (c0 > c1) c1 = c0;
+          }
+          c[i] = c1;
+        }
+
+     // Search the pivoting element from each column
+        int k = 0;
+        for (int j=0; j<n-1; ++j) {
+          double pi1 = 0;
+          for (int i=j; i<n; ++i) {
+            double pi0 = Math.abs(a[index[i]][j]);
+            pi0 /= c[index[i]];
+            if (pi0 > pi1) {
+              pi1 = pi0;
+              k = i;
+            }
+          }
+
+       // Interchange rows according to the pivoting order
+          int itmp = index[j];
+          index[j] = index[k];
+          index[k] = itmp;
+          for (int i=j+1; i<n; ++i) {
+            double pj = a[index[i]][j]/a[index[j]][j];
+
+         // Record pivoting ratios below the diagonal
+            a[index[i]][j] = pj;
+
+         // Modify other elements accordingly
+            for (int l=j+1; l<n; ++l)
+              a[index[i]][l] -= pj*a[index[j]][l];
+          }
+        }
+      }
+      
 }
