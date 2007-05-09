@@ -27,7 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class DOMTransform
 {
@@ -42,11 +45,17 @@ public class DOMTransform
     }
     
     
+    public void init()
+    {        
+    }
+    
+    
     public DOMHelper transform(DOMHelper sourceDoc)
     {
         this.sourceDomHelper = sourceDoc;
         this.resultDomHelper = new DOMHelper();
-        this.applyTemplates(sourceDoc.getBaseElement(), resultDomHelper.getBaseElement());
+        this.init();
+        this.applyTemplates(sourceDoc.getBaseElement(), resultDomHelper.getDocument());
         return resultDomHelper;
     }
     
@@ -55,6 +64,7 @@ public class DOMTransform
     {
         this.sourceDomHelper = sourceDoc;
         this.resultDomHelper = resultDoc;
+        this.init();
         this.applyTemplates(sourceDoc.getBaseElement(), resultDoc.getBaseElement());
         return resultDomHelper;
     }
@@ -64,6 +74,7 @@ public class DOMTransform
     {
         this.sourceDomHelper = sourceDoc;
         this.resultDomHelper = resultDoc;
+        this.init();
         this.applyTemplates(sourceDoc.getBaseElement(), resultNode);
         return resultDomHelper;
     }
@@ -75,8 +86,71 @@ public class DOMTransform
         {
             TransformTemplate nextTemplate = templates.get(i);
             if (nextTemplate.isMatch(this, srcNode, resultNode))
+            {
                 nextTemplate.apply(this, srcNode, resultNode);
+                break;
+            }
         }
+    }
+    
+    
+    public void applyTemplatesToChildNodes(Node srcNode, Node resultNode)
+    {
+        // process child nodes
+        NodeList nodes = srcNode.getChildNodes();
+        if (nodes != null)
+            for (int i=0; i<nodes.getLength(); i++)
+                applyTemplates(nodes.item(i), resultNode);
+    }
+    
+    
+    public void applyTemplatesToAttributes(Node srcNode, Node resultNode)
+    {
+        // process attributes
+        NamedNodeMap attribs = srcNode.getAttributes();
+        if (attribs != null)
+            for (int i=0; i<attribs.getLength(); i++)
+                applyTemplates(attribs.item(i), resultNode);
+    }
+    
+    
+    public void applyTemplatesToChildElements(Node srcNode, Node resultNode)
+    {
+        // process child elements
+        NodeList elts = sourceDomHelper.getAllChildElements((Element)srcNode);
+        if (elts != null)
+            for (int i=0; i<elts.getLength(); i++)
+                applyTemplates(elts.item(i), resultNode);
+    }
+    
+    
+    protected boolean isElement(Node node)
+    {
+        return (node.getNodeType() == Node.ELEMENT_NODE); 
+    }
+    
+    
+    protected boolean isAttribute(Node node)
+    {
+        return (node.getNodeType() == Node.ATTRIBUTE_NODE); 
+    }
+    
+    
+    protected boolean isDocument(Node node)
+    {
+        return (node.getNodeType() == Node.DOCUMENT_NODE); 
+    }
+    
+    
+    protected boolean isComment(Node node)
+    {
+        return (node.getNodeType() == Node.COMMENT_NODE); 
+    }
+    
+    
+    protected boolean isProcessingInstruction(Node node)
+    {
+        return (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE); 
     }
 
 
