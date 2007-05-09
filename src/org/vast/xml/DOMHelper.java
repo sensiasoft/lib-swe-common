@@ -80,12 +80,12 @@ public class DOMHelper
     public DOMHelper()
     {
         validation = false;
-        mainFragment = new XMLFragment();
     	matchingNodes = new XMLNodeList();
     	loadedDocuments = new Hashtable<String, XMLDocument>();
     	userPrefixTable = new Hashtable<String, String>();
         currentPath = new ArrayList<String>();
         eltQName = new QName();
+        createDocument(null);
     }
 
 
@@ -147,8 +147,16 @@ public class DOMHelper
      */
     public void createDocument(String qname)
     {
-        QName qnameObj = getQName(null, qname);
-        XMLDocument xmlDoc = new XMLDocument(qnameObj);
+        XMLDocument xmlDoc;
+        
+        if (qname == null || qname.equals(""))
+            xmlDoc = new XMLDocument();
+        else
+        {
+            QName qnameObj = getQName(null, qname);
+            xmlDoc = new XMLDocument(qnameObj);
+        }
+        
         mainFragment = new XMLFragment(xmlDoc, xmlDoc.getDocumentElement());        
         loadedDocuments.put("NEW", xmlDoc);
     }
@@ -460,6 +468,36 @@ public class DOMHelper
     {
         return existAttribute(mainFragment.baseElement, nodePath);
     }
+    
+    
+    /**
+     * Checks if the given node has the given name
+     * This does the comparison using user prefixes
+     * @param node
+     * @param qname
+     * @return
+     */
+    public boolean hasQName(Node node, String qname)
+    {
+        eltQName.setFullName(qname);
+        String nsUri = userPrefixTable.get(eltQName.prefix);
+        String localName = eltQName.localName;
+        
+        if (node.getNamespaceURI() != null && nsUri != null)
+        {
+            if (node.getNamespaceURI().equals(nsUri) && node.getLocalName().equals(localName))
+                return true;
+            else
+                return false;
+        }
+        else
+        {
+            if (node.getLocalName().equals(localName))
+                return true;
+            else
+                return false;
+        }
+    }
 
 
     /**
@@ -599,9 +637,12 @@ public class DOMHelper
      * @param nodePath
      * @return
      */
-    public Element addElement(Element parentElement, String nodePath)
+    public Element addElement(Node parentNode, String nodePath)
     {
-        Node newNode = addNode(parentElement, nodePath, Node.ELEMENT_NODE);
+        if (parentNode == null)
+            parentNode = getDocument();
+        
+        Node newNode = addNode(parentNode, nodePath, Node.ELEMENT_NODE);
         return (Element)newNode;
     }
     

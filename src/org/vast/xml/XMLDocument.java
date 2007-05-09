@@ -75,6 +75,7 @@ public class XMLDocument
 		identifiers = new Hashtable<String, Element>();
         nsUriToPrefix = new Hashtable<String, String>();
         nsPrefixToUri = new Hashtable<String, String>();
+        domDocument = DOMImplementationImpl.getDOMImplementation().createDocument(null, null, null);
 	}
     
     
