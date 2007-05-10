@@ -121,7 +121,7 @@ public abstract class DataIterator
         }
         
         // if at the end of previous record
-        while(currentComponent.index >= currentComponent.count)
+        while(currentComponent != null && currentComponent.index >= currentComponent.count)
     	{
         	if (!componentStack.isEmpty())
         	{
@@ -136,6 +136,7 @@ public abstract class DataIterator
                     dataHandler.endData(dataComponents, dataComponents.getData());
 				
                 newBlock = true;
+                currentComponent = null;
 				break;
         	}
     	}
