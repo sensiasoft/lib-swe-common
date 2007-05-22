@@ -61,7 +61,10 @@ public class XMLFragment
 
 	public Element getBaseElement()
 	{
-		return baseElement;
+	    if (baseElement == null)
+            baseElement = xmlDocument.getDocumentElement();
+
+        return baseElement;
 	}
 
 
