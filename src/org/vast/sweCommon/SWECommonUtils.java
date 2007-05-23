@@ -30,7 +30,6 @@ import org.vast.cdm.common.DataComponentWriter;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataEncodingReader;
 import org.vast.cdm.common.DataEncodingWriter;
-import org.vast.ogc.DocumentType;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -54,6 +53,9 @@ import org.w3c.dom.Element;
  */
 public class SWECommonUtils implements DataComponentReader, DataComponentWriter, DataEncodingReader, DataEncodingWriter
 {
+    public final static String SWECOMMON = "SWECommon";
+    public final static String DATACOMPONENT = "DataComponent";
+    public final static String DATAENCODING = "DataEncoding";
     private String version = "1.0";
     private boolean versionChanged;
     private DOMHelper previousDom;
@@ -123,8 +125,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         else
         {
             DataComponentReader reader = (DataComponentReader)OGCRegistry.createReader(
-                                                              DocumentType.SWECOMMON.name(),
-                                                              DocumentType.DATACOMPONENT.name(),
+                                                              SWECOMMON,
+                                                              DATACOMPONENT,
                                                               getVersion(dom, componentElt));
             componentReader = reader;
             return reader;
@@ -148,8 +150,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         else
         {
             DataEncodingReader reader = (DataEncodingReader)OGCRegistry.createReader(
-                                                            DocumentType.SWECOMMON.name(),
-                                                            DocumentType.DATAENCODING.name(),
+                                                            SWECOMMON,
+                                                            DATAENCODING,
                                                             getVersion(dom, componentElt));
             encodingReader = reader;
             return reader;
@@ -171,8 +173,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         else
         {
             DataComponentWriter writer = (DataComponentWriter)OGCRegistry.createWriter(
-                                                              DocumentType.SWECOMMON.name(),
-                                                              DocumentType.DATACOMPONENT.name(),
+                                                              SWECOMMON,
+                                                              DATACOMPONENT,
                                                               this.version);
             componentWriter = writer;
             versionChanged = false;
@@ -195,8 +197,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         else
         {
             DataEncodingWriter writer = (DataEncodingWriter)OGCRegistry.createWriter(
-                                                            DocumentType.SWECOMMON.name(),
-                                                            DocumentType.DATACOMPONENT.name(),
+                                                            SWECOMMON,
+                                                            DATACOMPONENT,
                                                             this.version);
             encodingWriter = writer;
             versionChanged = false;
