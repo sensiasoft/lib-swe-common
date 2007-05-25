@@ -762,7 +762,7 @@ public class DOMHelper
         Element elt;
         QName qnameObj = getQName(parentDoc, qname);
         
-        if (qnameObj.getPrefix().equals(QName.DEFAULT_PREFIX))
+        if (qnameObj.getNsUri() == null)
             elt = parentDoc.getDocument().createElement(qnameObj.getLocalName());
         else
             elt = parentDoc.getDocument().createElementNS(qnameObj.getNsUri(), qnameObj.getFullName());
@@ -1300,6 +1300,8 @@ public class DOMHelper
         {
             if (eltQName.prefix != QName.DEFAULT_PREFIX)
                 throw new IllegalStateException("No namespace URI defined for user prefix " + eltQName.prefix);
+            
+            return eltQName;
         }
         
         eltQName.nsUri = nsUri;
