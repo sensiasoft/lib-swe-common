@@ -722,7 +722,11 @@ public class DOMHelper
         if (attPath != null)
             elt = addElement(startElement, attPath);
         
-        elt.setAttribute(attName, val);
+        QName qnameObj = getQName(getParentDocument(elt), attName);
+        if (qnameObj.getNsUri() == null)
+            elt.setAttribute(attName, val);
+        else
+            elt.setAttributeNS(qnameObj.getNsUri(), qnameObj.getFullName(), val);
     }
 
 
