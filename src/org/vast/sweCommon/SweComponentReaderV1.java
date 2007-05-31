@@ -455,8 +455,7 @@ public class SweComponentReaderV1 implements DataComponentReader
             return;
         
         String ucumCode = dom.getAttributeValue(scalarElt, "uom/@code");
-        String href = dom.getAttributeValue(scalarElt, "uom/@href");
-        Element unitElt = dom.getElement(scalarElt, "uom/*");
+        String href = dom.getAttributeValue(scalarElt, "uom/@href");           
                 
         // uom code        
         if (ucumCode != null)
@@ -473,13 +472,13 @@ public class SweComponentReaderV1 implements DataComponentReader
         // if no code, read href
         else if (href != null)
         {
-            if (ucumCode != null)
-                dataComponent.setProperty(DataComponent.UOM_URI, href);
+            dataComponent.setProperty(DataComponent.UOM_URI, href);
         }
         
         // inline unit
-        else if (unitElt != null)
+        else
         {
+            Element unitElt = dom.getElement(scalarElt, "uom/*");
             GMLUnitReader unitReader = new GMLUnitReader();
             try
             {
