@@ -132,7 +132,13 @@ public class DataBlockList extends AbstractDataBlock
 	
 	public void resize(int size)
 	{
-		blockList.clear();
+		AbstractDataBlock childBlock = get(0);
+        blockList.clear();        
+        if (childBlock != null)
+        {
+            for (int i=0; i<size; i++)
+                blockList.add(childBlock.copy());
+        }
 	}
 
     

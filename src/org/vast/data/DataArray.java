@@ -239,9 +239,9 @@ public class DataArray extends AbstractDataComponent
             else if (childBlock instanceof DataBlockMixed)
             {
                 DataBlockList blockList = new DataBlockList();
-                for (int i=0; i<arraySize; i++)
-                    blockList.add(childBlock.copy());
+                blockList.add(childBlock.copy());
                 newBlock = blockList;
+                newSize = arraySize;
             }
 	        
 	        // create bigger primitive block
