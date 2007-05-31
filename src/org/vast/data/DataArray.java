@@ -167,6 +167,11 @@ public class DataArray extends AbstractDataComponent
                 else
                     startIndex += index;
             }
+            else if (dataBlock instanceof DataBlockList)
+            {
+                startIndex = 0;
+                component.setData(((DataBlockList)dataBlock).get(index));
+            }
             else // primitive block
             {
                 startIndex += index * component.scalarCount;
@@ -209,7 +214,7 @@ public class DataArray extends AbstractDataComponent
     protected AbstractDataBlock createDataBlock()
     {
     	AbstractDataBlock childBlock = component.createDataBlock();
-    	AbstractDataBlock newBlock = childBlock.copy();
+    	AbstractDataBlock newBlock = null;
     	int newSize = 0;
         
     	if (arraySize > 0)
@@ -230,17 +235,20 @@ public class DataArray extends AbstractDataComponent
                 newBlock = parallelBlock;
             }
             
-            // create tuple block
+            // create list block
             else if (childBlock instanceof DataBlockMixed)
             {
-                // TODO arrays of DataBlockMixed -> How to keep track of things ??
+                DataBlockList blockList = new DataBlockList();
+                for (int i=0; i<arraySize; i++)
+                    blockList.add(childBlock.copy());
+                newBlock = blockList;
             }
 	        
 	        // create bigger primitive block
 	        else
 	        {
 	        	newBlock = childBlock.copy();
-                newSize = childBlock.atomCount * arraySize;   	
+                newSize = childBlock.atomCount * arraySize; 	
 	        }
     	}
         
