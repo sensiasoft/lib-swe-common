@@ -77,6 +77,12 @@ public class DataList extends AbstractDataComponent
     }
     
     
+    @Override
+    protected void updateAtomCount(int childOffsetCount)
+    {
+    }
+    
+    
     public void resetIterator()
     {
         blockIterator = ((DataBlockList)dataBlock).blockIterator();

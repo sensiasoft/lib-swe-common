@@ -81,6 +81,13 @@ public abstract class AbstractDataComponent implements DataComponent
     
     
     /**
+     * Update datablock atomCount (for resizable array support)
+     * @param startIndex
+     */
+    protected abstract void updateAtomCount(int childOffsetCount);
+
+    
+    /**
      * Return parent component
      * @return
      */

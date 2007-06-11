@@ -102,9 +102,13 @@ public class DataArrayIndexer extends DataIndexer
                 indexer.updateStartIndex(startIndex + currentIndex);
             }
         }
-        else
+        else // case of list of DataBlockMixed
         {
-            // TODO case of DataBlockMixed in an array
+            for (int i = 0; i < indexerList.length; i++)
+            {
+                DataIndexer indexer = indexerList[i];
+                indexer.updateStartIndex(0);
+            }
         }
     }
     
@@ -128,34 +132,28 @@ public class DataArrayIndexer extends DataIndexer
         AbstractDataBlock childBlock;
         this.data = data;
         
-        if (data instanceof DataBlockParallel)
+        if (data instanceof DataBlockMixed)
+        {
+            throw new IllegalStateException(DataArray.errorBlockMixed);
+        }
+        else if (data instanceof DataBlockParallel)
         {
             this.interleavedBlock = false;
             this.tupleBlock = true;
-            
-            if (hasChildArray)
+            for (int i = 0; i < indexerList.length; i++)
             {
-                indexerList[0].setData(data.copy());
-            }
-            else
-            {
-                for (int i = 0; i < indexerList.length; i++)
-                {
-                    //DataIndexer indexer = indexerList[i];
-                    //childBlock = ((DataBlockParallel)data).blockArray[indexer.componentIndex];
-                    indexerList[i].setData(data.copy());
-                }
+                DataIndexer indexer = indexerList[i];
+                indexer.setData(data.copy());
             }
         }
-        else if (data instanceof DataBlockMixed)
+        else if (data instanceof DataBlockList)
         {
             this.interleavedBlock = false;
             this.tupleBlock = false;
             for (int i = 0; i < indexerList.length; i++)
             {
                 DataIndexer indexer = indexerList[i];
-                childBlock = ((DataBlockMixed)data).blockArray[indexer.componentIndex];
-                indexer.setData(childBlock);
+                indexer.setData(data.copy());
             }
         }
         else // case of primitive array blocks
@@ -209,12 +207,14 @@ public class DataArrayIndexer extends DataIndexer
                 }
             }
         }
-        else
+        else // case of list of DataBlockMixed
         {
             for (int i = 0; i < indexerList.length; i++)
             {
                 DataIndexer indexer = indexerList[i];
-                // indexer.updateStartIndex(data.startIndex);
+                int nextIndex = data.startIndex + currentIndex;
+                indexer.updateStartIndex(0);
+                indexer.setData(((DataBlockList)data).get(nextIndex));
                 indexer.getData(indexList);
             }
         }
@@ -272,9 +272,21 @@ public class DataArrayIndexer extends DataIndexer
                 }
             }
         }
-        else
+        else // case of list of DataBlockMixed
         {
-            // TODO case of DataBlockMixed in an array
+            for (int i = 0; i < indexerList.length; i++)
+            {
+                DataIndexer indexer = indexerList[i];
+                if (indexer.hasNext)
+                {
+                    int nextIndex = data.startIndex + currentIndex;
+                    indexer.updateStartIndex(0);
+                    indexer.setData(((DataBlockList)data).get(nextIndex));
+                    indexer.next();
+                    if (indexer.hasNext)
+                        next = false;
+                }
+            }
         }
         
         // when all child indexers are done, increment index

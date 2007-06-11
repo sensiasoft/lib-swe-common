@@ -82,7 +82,7 @@ public class DataBlockList extends AbstractDataBlock
         // renew all blocks in the list
         Iterator<AbstractDataBlock> it = this.blockList.iterator();
         while (it.hasNext())
-            newBlock.blockList.add(it.next().renew());
+            newBlock.add(it.next().renew());
         
         return newBlock;
     }
@@ -99,7 +99,7 @@ public class DataBlockList extends AbstractDataBlock
         // fully copy (clone) all blocks in the list
         Iterator<AbstractDataBlock> it = this.blockList.iterator();
         while (it.hasNext())
-            newBlock.blockList.add(it.next().clone());
+            newBlock.add(it.next().clone());
             
         return newBlock;
     }

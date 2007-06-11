@@ -85,7 +85,7 @@ public class DataValue extends AbstractDataComponent
     {
         dataBlock.startIndex = startIndex;
     }
-    
+        
     
     @Override
     public void setData(DataBlock dataBlock)
@@ -211,5 +211,12 @@ public class DataValue extends AbstractDataComponent
     public void setDataType(DataType type)
     {
         this.dataType = type;
+    }
+    
+    
+    @Override
+    protected void updateAtomCount(int childOffsetCount)
+    {
+        // DO NOTHING
     }
 }

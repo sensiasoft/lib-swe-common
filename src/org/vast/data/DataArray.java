@@ -43,6 +43,7 @@ import org.vast.cdm.common.DataComponent;
  */
 public class DataArray extends AbstractDataComponent
 {
+    protected final static String errorBlockMixed = "Error: DataArrays should never contain a DataBlockMixed";
     protected AbstractDataComponent component = null;
     protected int arraySize = -1;
     protected boolean variableSize;
@@ -122,7 +123,7 @@ public class DataArray extends AbstractDataComponent
         
         if (dataBlock instanceof DataBlockMixed)
         {
-            // TODO updateStartIndex for array with DataBlockMixed
+            throw new IllegalStateException(errorBlockMixed);
         }
         else if (dataBlock instanceof DataBlockParallel)
         {
@@ -132,6 +133,19 @@ public class DataArray extends AbstractDataComponent
         {
             component.updateStartIndex(startIndex);
         }
+    }
+    
+    
+    @Override
+    protected void updateAtomCount(int childOffsetCount)
+    {
+        int atomCountOffset = childOffsetCount*arraySize;
+        
+        if (dataBlock != null)
+            dataBlock.atomCount += atomCountOffset;
+        
+        if (parent != null)
+            parent.updateAtomCount(atomCountOffset);
     }
     
     
@@ -158,7 +172,7 @@ public class DataArray extends AbstractDataComponent
             
             if (dataBlock instanceof DataBlockMixed)
             {
-                throw new IllegalStateException("Error: DataArrays should never contain a DataBlockMixed");
+                throw new IllegalStateException(errorBlockMixed);
             }            
             else if (dataBlock instanceof DataBlockParallel)
             {
@@ -304,9 +318,9 @@ public class DataArray extends AbstractDataComponent
                     ((DataArray)component).updateSize();
             }
             
-            // update scalar count
+            // update scalarCount according to new arraySize
             this.scalarCount = component.scalarCount * arraySize;
-	    	
+            
             // stop here if parent also has variable size
             // in this case parent will have to resize datablock anyway!!
             if (parent instanceof DataArray)
@@ -315,19 +329,16 @@ public class DataArray extends AbstractDataComponent
                     return;
             }
             
-            // resize underlying datablock
+            // resize datablock if non null
             if (dataBlock != null)
-			{
-				dataBlock.resize(scalarCount);
-				setData(dataBlock);
-			}
-	    	
-            // also update parent components??
-	    	if (parent != null)
-	    	{               
-                parent.dataBlock.atomCount += component.scalarCount * (arraySize - oldSize);
-	    		// TODO parent of parent should also be updated and so on...
-	    	}
+            {
+                dataBlock.resize(scalarCount);
+                setData(dataBlock);
+            }
+            
+            // propagate to parents atomCount as well
+            if (parent != null)
+                parent.updateAtomCount(component.scalarCount * (arraySize - oldSize));
     	}
     }
     
@@ -344,6 +355,7 @@ public class DataArray extends AbstractDataComponent
             int oldSize = arraySize;
             arraySize = newSize;
         
+            // if variable size, change value of sizeData too
             if (this.getSizeData() != null)
             {
                 DataBlock data = sizeData.getData();
@@ -354,16 +366,13 @@ public class DataArray extends AbstractDataComponent
             
             if (dataBlock != null)
             {
-                dataBlock.resize(component.scalarCount * arraySize);
-                scalarCount = dataBlock.atomCount;
+                this.scalarCount = component.scalarCount * arraySize;
+                dataBlock.resize(scalarCount);
                 setData(dataBlock);
             }
             
             if (parent != null)
-            {
-                parent.dataBlock.atomCount += component.scalarCount * (arraySize - oldSize);
-                // TODO parent of parent should also be updated and so on...
-            }
+                parent.updateAtomCount(component.scalarCount * (arraySize - oldSize));
         }
     }
     

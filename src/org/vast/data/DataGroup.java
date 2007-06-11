@@ -114,6 +114,17 @@ public class DataGroup extends AbstractDataComponent
     }
     
     
+    @Override
+    protected void updateAtomCount(int childOffsetCount)
+    {
+        if (dataBlock != null)
+            dataBlock.atomCount += childOffsetCount;
+        
+        if (parent != null)
+            parent.updateAtomCount(childOffsetCount);
+    }
+    
+    
     /**
      * Inserts the component at the specified index
      * @param index
