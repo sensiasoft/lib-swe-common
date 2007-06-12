@@ -56,38 +56,32 @@ public class DOMHelper
     static protected final String PATH_SEPARATOR = "/";
     
     /** User prefix to domain map **/
-    protected Hashtable<String, String> userPrefixTable;
+    protected Hashtable<String, String> userPrefixTable = new Hashtable<String, String>();
 
     /** Linked documents (URI object -> XMLDocument Object) */
-    protected Hashtable<String, XMLDocument> loadedDocuments;
+    protected Hashtable<String, XMLDocument> loadedDocuments = new Hashtable<String, XMLDocument>();
 
     /** Main Document object */
     protected XMLFragment mainFragment;
 
     /** List of nodes returned */
-    protected XMLNodeList matchingNodes;
+    protected XMLNodeList matchingNodes = new XMLNodeList();
 
     /** Current path inside the xml file being parsed.<br>
         Paths have to be given as element names separated by /<br>
         Namespaces are separated from the node name by ':'<br>
         Example:   "gml:feature/gml:polyline/epsg"   */
-    protected ArrayList<String> currentPath;
+    protected ArrayList<String> currentPath = new ArrayList<String>();
     protected String[] wantedPath;
-    protected QName eltQName;
+    protected QName eltQName = new QName();
     protected boolean validation = false;
     
 
     public DOMHelper()
     {
-        validation = false;
-    	matchingNodes = new XMLNodeList();
-    	loadedDocuments = new Hashtable<String, XMLDocument>();
-    	userPrefixTable = new Hashtable<String, String>();
-        currentPath = new ArrayList<String>();
-        eltQName = new QName();
         createDocument(null);
     }
-
+    
 
     /**
      * Loads an existing XML document from the given URL
@@ -97,7 +91,6 @@ public class DOMHelper
      */
     public DOMHelper(String url, boolean validation) throws DOMHelperException
     {
-        this();
         this.validation = validation;
         mainFragment = parseURI(url, true);
     }
@@ -111,7 +104,6 @@ public class DOMHelper
      */
     public DOMHelper(InputStream inputStream, boolean validation) throws DOMHelperException
     {
-        this();
         this.validation = validation;
         mainFragment = parseStream(inputStream, true);
     }
@@ -123,7 +115,6 @@ public class DOMHelper
      */
     public DOMHelper(Document domDocument)
     {
-        this();
         setDocument(domDocument);
     }
     
@@ -134,7 +125,6 @@ public class DOMHelper
      */
     public DOMHelper(String docQName)
     {
-        this();
         createDocument(docQName);
     }
     

@@ -61,27 +61,23 @@ public class XMLDocument
 	protected Document domDocument;
 
 	/** Hashtable linking each (local) ID (String) to an Element (w3c.Element) */
-	protected Hashtable<String, Element> identifiers;
+	protected Hashtable<String, Element> identifiers = new Hashtable<String, Element>();
 
 	/** Hashtable linking NS URI (String) to a NS prefix (String) */
-	protected Hashtable<String, String> nsUriToPrefix;
+	protected Hashtable<String, String> nsUriToPrefix = new Hashtable<String, String>();
     
     /** Hashtable linking NS Prefix (String) to a NS URI (String) */
-    protected Hashtable<String, String> nsPrefixToUri;
+    protected Hashtable<String, String> nsPrefixToUri = new Hashtable<String, String>();
     
 
 	public XMLDocument()
 	{
-		identifiers = new Hashtable<String, Element>();
-        nsUriToPrefix = new Hashtable<String, String>();
-        nsPrefixToUri = new Hashtable<String, String>();
         domDocument = DOMImplementationImpl.getDOMImplementation().createDocument(null, null, null);
 	}
     
     
     public XMLDocument(QName qname)
-    {
-        this();        
+    {    
         domDocument = DOMImplementationImpl.getDOMImplementation().createDocument(qname.nsUri, qname.getFullName(), null);
         addNS(qname.prefix, qname.nsUri);
     }
@@ -89,14 +85,12 @@ public class XMLDocument
 
 	public XMLDocument(Document doc)
 	{
-		this();		
 		domDocument = doc;
 	}
     
     
     public XMLDocument(InputStream inputStream, boolean validate) throws DOMHelperException
     {
-        this();
         domDocument = parseDOM(inputStream, validate);
     }
 
