@@ -36,7 +36,8 @@ public class AsciiDataParser extends AbstractDataParser
 	String nextToken;
 	int tupleSize;
 	char[] tokenSep, tupleSep;
-	
+    StringBuffer tokenBuf = new StringBuffer();
+    
 	
 	public AsciiDataParser()
 	{
@@ -97,7 +98,6 @@ public class AsciiDataParser extends AbstractDataParser
 	 */
 	private String nextToken(Reader inputReader) throws IOException
 	{
-		StringBuffer tokenBuf = new StringBuffer();
 		int tokenSepIndex = 0;
 		int tupleSepIndex = 0;
 		boolean endToken = false;
@@ -106,6 +106,7 @@ public class AsciiDataParser extends AbstractDataParser
 		
 		
 		// skip all invalid characters and go to beginning of token
+        tokenBuf.setLength(0);
 		do
 		{
 			nextChar = inputReader.read();
