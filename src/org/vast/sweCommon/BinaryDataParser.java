@@ -147,7 +147,7 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	
 	@Override
-	public void reset()
+	public void reset() throws CDMException
 	{
 		if (componentEncodings == null)
 			resolveComponentEncodings();
@@ -163,7 +163,7 @@ public class BinaryDataParser extends AbstractDataParser
 	 * specified in the binary encoding section.
 	 * @throws CDMException
 	 */
-	protected void resolveComponentEncodings()
+	protected void resolveComponentEncodings() throws CDMException
 	{
 		componentEncodings = new Hashtable<DataValue, BinaryOptions>();
 		BinaryOptions[] encodingList = ((BinaryEncoding)dataEncoding).componentEncodings;
@@ -185,8 +185,7 @@ public class BinaryDataParser extends AbstractDataParser
                 
                 if (data == null)
                 {
-                    System.err.println("Unknown component " + dataPath[j]);
-                    continue;
+                    throw new CDMException("Unknown component " + encodingList[i].componentName);
                 }
             }
 			

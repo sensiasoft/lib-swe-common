@@ -106,7 +106,7 @@ public class BinaryDataWriter extends DataWriter
 	
 	
 	@Override
-	public void reset()
+	public void reset() throws CDMException
 	{
 		if (componentEncodings == null)
 			resolveComponentEncodings();

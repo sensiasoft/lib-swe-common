@@ -86,7 +86,7 @@ public class AsciiDataWriter extends DataWriter
 	}
     
     
-    public void reset()
+    public void reset() throws CDMException
     {
         super.reset();
         newBlock = true;

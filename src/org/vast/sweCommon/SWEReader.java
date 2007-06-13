@@ -60,7 +60,7 @@ public abstract class SWEReader implements DataDescriptionReader, InputStreamPro
 	public abstract InputStream getDataStream() throws CDMException;
     
     
-	public DataStreamParser getDataParser()
+	public DataStreamParser getDataParser() throws CDMException
 	{
 		DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
 		parser.setDataComponents(this.dataComponents);

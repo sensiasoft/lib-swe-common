@@ -146,7 +146,7 @@ public abstract class DataIterator
 	/**
 	 * Reset the parser before parsing a new tuple
 	 */
-	public void reset()
+	public void reset() throws CDMException
 	{
 		componentStack.clear();
 		currentComponent = new Record(dataComponents);

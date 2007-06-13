@@ -75,7 +75,7 @@ public interface DataStreamWriter
 	public void write(OutputStream outputStream) throws CDMException;
     
     
-    public void reset();
+    public void reset() throws CDMException;
 
 
 	public void stop();
