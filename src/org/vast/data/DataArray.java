@@ -203,7 +203,19 @@ public class DataArray extends AbstractDataComponent
     public void setData(DataBlock dataBlock)
     {
     	this.dataBlock = (AbstractDataBlock)dataBlock;
-
+    	
+        // also update arraySize if variable
+        if (variableSize)
+        {
+            // assign variable size value to arraySize
+            if (this.getSizeData() != null)
+            {
+                DataBlock data = sizeData.getData();                
+                if (data != null)
+                    arraySize = data.getIntValue();
+            }
+        }
+        
 		// also assign dataBlock to child
     	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
 		childBlock.atomCount = component.scalarCount;
