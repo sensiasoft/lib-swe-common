@@ -363,7 +363,7 @@ public class TimeExtent
     private double now = 0;
     private double getNow()
     {
-        double exactNow = System.currentTimeMillis()*1000;
+        double exactNow = System.currentTimeMillis()/1000;
         if (exactNow - now > 1000)
             now = exactNow;
         
