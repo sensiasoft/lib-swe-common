@@ -647,6 +647,18 @@ public class DOMHelper
     {
         return addElement(mainFragment.getBaseElement(), nodePath);
     }
+    
+    
+    /**
+     * Sets the text content of a node (element or atribute)
+     * @param parentNode
+     * @param val
+     */
+    public void setNodeValue(Node parentNode, String val)
+    {
+        Text text = getParentDocument(parentNode).getDocument().createTextNode(val);
+        parentNode.appendChild(text);
+    }
 
 
     /**
@@ -1161,7 +1173,7 @@ public class DOMHelper
      * @return Element
      * @throws DOMHelperException
      */
-    protected XMLFragment getLinkedFragment(XMLDocument currentDocument, String idRef) throws DOMHelperException
+    public XMLFragment getLinkedFragment(XMLDocument currentDocument, String idRef) throws DOMHelperException
     {
         XMLFragment xmlFragment;
 

@@ -23,14 +23,20 @@
 
 package org.vast.xml.transform;
 
-import org.w3c.dom.Node;
 
-
-
-public interface TransformTemplate
+public class DOMTransformException extends Exception
 {
-    public boolean isMatch(DOMTransform transform, Node srcNode, Node resultNode) throws DOMTransformException;
+    static final long serialVersionUID = 0;
+	
     
+	public DOMTransformException(String message)
+    {
+        super(message);
+    }
+
     
-    public void apply(DOMTransform transform, Node srcNode, Node resultNode) throws DOMTransformException;
+    public DOMTransformException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
 }

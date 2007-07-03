@@ -123,6 +123,9 @@ public class QName
 
     public void setPrefix(String prefix)
     {
-        this.prefix = prefix;
+        if (prefix == null)
+            this.prefix = DEFAULT_PREFIX;
+        else
+            this.prefix = prefix;
     }
 }

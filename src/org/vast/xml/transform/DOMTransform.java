@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.vast.xml.DOMHelper;
+import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -34,8 +35,8 @@ import org.w3c.dom.NodeList;
 
 public class DOMTransform
 {
-    protected DOMHelper sourceDomHelper;
-    protected DOMHelper resultDomHelper;
+    protected DOMHelper srcDom;
+    protected DOMHelper resDom;
     protected List<TransformTemplate> templates;
     
     
@@ -50,37 +51,47 @@ public class DOMTransform
     }
     
     
-    public DOMHelper transform(DOMHelper sourceDoc)
+    public DOMHelper transform(DOMHelper sourceDoc) throws DOMTransformException
     {
-        this.sourceDomHelper = sourceDoc;
-        this.resultDomHelper = new DOMHelper();
+        this.srcDom = sourceDoc;
+        this.resDom = new DOMHelper();
         this.init();
-        this.applyTemplates(sourceDoc.getBaseElement(), resultDomHelper.getDocument());
-        return resultDomHelper;
+        this.applyTemplates(sourceDoc.getBaseElement(), resDom.getDocument());
+        return resDom;
     }
     
     
-    public DOMHelper transform(DOMHelper sourceDoc, DOMHelper resultDoc)
+    public DOMHelper transform(DOMHelper sourceDoc, DOMHelper resultDoc) throws DOMTransformException
     {
-        this.sourceDomHelper = sourceDoc;
-        this.resultDomHelper = resultDoc;
+        this.srcDom = sourceDoc;
+        this.resDom = resultDoc;
         this.init();
         this.applyTemplates(sourceDoc.getBaseElement(), resultDoc.getBaseElement());
-        return resultDomHelper;
+        return resDom;
     }
     
     
-    public DOMHelper transform(DOMHelper sourceDoc, DOMHelper resultDoc, Node resultNode)
+    public DOMHelper transform(DOMHelper sourceDoc, DOMHelper resultDoc, Node resultNode) throws DOMTransformException
     {
-        this.sourceDomHelper = sourceDoc;
-        this.resultDomHelper = resultDoc;
+        this.srcDom = sourceDoc;
+        this.resDom = resultDoc;
         this.init();
         this.applyTemplates(sourceDoc.getBaseElement(), resultNode);
-        return resultDomHelper;
+        return resDom;
     }
     
     
-    public void applyTemplates(Node srcNode, Node resultNode)
+    public DOMHelper transform(DOMHelper sourceDoc, Node sourceNode, DOMHelper resultDoc, Node resultNode) throws DOMTransformException
+    {
+        this.srcDom = sourceDoc;
+        this.resDom = resultDoc;
+        this.init();
+        this.applyTemplates(sourceNode, resultNode);
+        return resDom;
+    }
+    
+    
+    public void applyTemplates(Node srcNode, Node resultNode) throws DOMTransformException
     {
         for (int i=0; i<templates.size(); i++)
         {
@@ -94,7 +105,7 @@ public class DOMTransform
     }
     
     
-    public void applyTemplatesToChildNodes(Node srcNode, Node resultNode)
+    public void applyTemplatesToChildNodes(Node srcNode, Node resultNode) throws DOMTransformException
     {
         // process child nodes
         NodeList nodes = srcNode.getChildNodes();
@@ -104,7 +115,7 @@ public class DOMTransform
     }
     
     
-    public void applyTemplatesToAttributes(Node srcNode, Node resultNode)
+    public void applyTemplatesToAttributes(Node srcNode, Node resultNode) throws DOMTransformException
     {
         // process attributes
         NamedNodeMap attribs = srcNode.getAttributes();
@@ -114,67 +125,95 @@ public class DOMTransform
     }
     
     
-    public void applyTemplatesToChildElements(Node srcNode, Node resultNode)
+    public void applyTemplatesToChildElements(Node srcNode, Node resultNode) throws DOMTransformException
     {
         // process child elements
-        NodeList elts = sourceDomHelper.getAllChildElements((Element)srcNode);
+        NodeList elts = srcDom.getAllChildElements((Element)srcNode);
         if (elts != null)
             for (int i=0; i<elts.getLength(); i++)
                 applyTemplates(elts.item(i), resultNode);
     }
     
     
-    protected boolean isElement(Node node)
+    protected QName getResultQName(String name)
+    {
+        QName qname = new QName(name);
+        String nsUri = srcDom.getXmlDocument().getNSUri(qname.getPrefix());
+        String resPrefix = resDom.getXmlDocument().getNSPrefix(nsUri);
+        qname.setPrefix(resPrefix);
+        return qname;
+    }
+    
+    
+    public boolean isElement(Node node)
     {
         return (node.getNodeType() == Node.ELEMENT_NODE); 
     }
     
     
-    protected boolean isAttribute(Node node)
+    public boolean isElementQName(Node node, String qName)
+    {
+        if (node.getNodeType() == Node.ELEMENT_NODE && srcDom.hasQName(node, qName))
+            return true;
+        else
+            return false;            
+    }
+    
+    
+    public boolean isAttribute(Node node)
     {
         return (node.getNodeType() == Node.ATTRIBUTE_NODE); 
     }
     
     
-    protected boolean isDocument(Node node)
+    public boolean isAttributeQName(Node node, String qName)
+    {
+        if (node.getNodeType() == Node.ATTRIBUTE_NODE && srcDom.hasQName(node, qName))
+            return true;
+        else
+            return false;            
+    }    
+    
+    
+    public boolean isDocument(Node node)
     {
         return (node.getNodeType() == Node.DOCUMENT_NODE); 
     }
     
     
-    protected boolean isComment(Node node)
+    public boolean isComment(Node node)
     {
         return (node.getNodeType() == Node.COMMENT_NODE); 
     }
     
     
-    protected boolean isProcessingInstruction(Node node)
+    public boolean isProcessingInstruction(Node node)
     {
         return (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE); 
     }
 
 
-    public DOMHelper getResultDomHelper()
+    public DOMHelper getResultDom()
     {
-        return resultDomHelper;
+        return resDom;
     }
 
 
-    public void setResultDomHelper(DOMHelper resultDomHelper)
+    public void setResultDom(DOMHelper resDom)
     {
-        this.resultDomHelper = resultDomHelper;
+        this.resDom = resDom;
     }
 
 
-    public DOMHelper getSourceDomHelper()
+    public DOMHelper getSourcDom()
     {
-        return sourceDomHelper;
+        return srcDom;
     }
 
 
-    public void setSourceDomHelper(DOMHelper sourceDomHelper)
+    public void setSourcDom(DOMHelper srcDom)
     {
-        this.sourceDomHelper = sourceDomHelper;
+        this.srcDom = srcDom;
     }
 
 
