@@ -3,7 +3,7 @@
    <!-- -->
    <Reader type="SOS" subType="GetCapabilities" version="*" class="org.vast.ows.sos.SOSRequestReaderV031"/>
    <Reader type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.SOSRequestReaderV031"/>
-   <Reader type="SOS" subType="GetObservation" version="0.0.32" class="org.vast.ows.sos.SOSRequestReaderV031"/>
+   <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.SOSRequestReaderV031"/>
    <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.SOSRequestReaderV031"/>   
    <Reader type="SOS" subType="Capabilities" version="0.0.31" class="org.vast.ows.sos.SOSCapabilitiesReaderV031"/>
    <!-- -->
