@@ -232,7 +232,8 @@ public class DataArrayIndexer extends DataIndexer
         }
     }
     
-
+    
+    // TODO DataArrayIndexer now only has one indexer anyway so no need to loop !
     @Override
     public void next()
     {       
