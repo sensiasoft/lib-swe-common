@@ -43,16 +43,16 @@
    <Writer type="WCS" subType="DescribeCoverage" version="1.1.0" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
    <Writer type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
    <!-- -->
-   <Reader type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.WMSRequestReaderV10"/>
-   <Reader type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.WMSRequestReaderV11"/>
-   <Reader type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.WMSRequestReaderV11"/>
+   <Reader type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.GetMapReaderV10"/>
+   <Reader type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.GetMapReaderV11"/>
+   <Reader type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.GetMapReaderV11"/>
    <Reader type="WMS" subType="Capabilities" version="1.0" class="org.vast.ows.wms.WMSCapabilitiesReaderV10"/>
    <Reader type="WMS" subType="Capabilities" version="1.1" class="org.vast.ows.wms.WMSCapabilitiesReaderV11"/>
    <Reader type="WMS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wms.WMSCapabilitiesReaderV11"/>
    <!-- -->
-   <Writer type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.WMSRequestWriterV10"/>
-   <Writer type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.WMSRequestWriterV11"/>
-   <Writer type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.WMSRequestWriterV11"/>
+   <Writer type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.GetMapWriterV10"/>
+   <Writer type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.GetMapWriterV11"/>
+   <Writer type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.GetMapWriterV11"/>
    <!-- -->
    <Reader type="SWECommon" subType="DataComponent" version="0.0" class="org.vast.sweCommon.SweComponentReaderV0"/>
    <Reader type="SWECommon" subType="DataEncoding" version="0.0" class="org.vast.sweCommon.SweEncodingReaderV0"/>
