@@ -50,27 +50,49 @@ import org.w3c.dom.NodeList;
  */
 public class OGCRegistry
 {
-    public final static String XLINK_NS = "http://www.w3.org/1999/xlink";
-    public final static String OGC_NS = "http://www.opengis.net/ogc";
-    public final static String OWS_NS = "http://www.opengis.net/ows";
-    public final static String GML_NS = "http://www.opengis.net/gml";
-    public final static String OM_NS = "http://www.opengis.net/om";
-    public final static String SWE_NS = "http://www.opengis.net/swe";
-    public final static String SML_NS = "http://www.opengis.net/sensorML";
-    public final static String SOS_NS = "http://www.opengis.net/sos";
-    public final static String SAS_NS = "http://www.opengis.net/sas";
-    public final static String SPS_NS = "http://www.opengis.net/sps";
-    
     protected static Hashtable<String, Class> readerClasses;
     protected static Hashtable<String, Class> writerClasses;
+    protected static Hashtable<String, NamespaceBuilder> namespaceBuilders;
         
     
     static
     {
         readerClasses = new Hashtable<String, Class>();
         writerClasses = new Hashtable<String, Class>();
+        namespaceBuilders = new Hashtable<String, NamespaceBuilder>();
         String mapFileUrl = OGCRegistry.class.getResource("OGCRegistry.xml").toString();
         loadMaps(mapFileUrl, false);
+    }
+    
+    
+    /**
+     * Computes namespace URI for the specified OGC spec and version
+     * @param spec
+     * @param version
+     * @return complete namespace URI
+     */
+    public static String getNamespaceURI(String spec, String version)
+    {
+    	NamespaceBuilder nsBuilder = namespaceBuilders.get(spec);
+    	if (nsBuilder != null)
+    		return nsBuilder.getNsUri(version);
+    	else
+    		return null;
+    }
+    
+    
+    /**
+     * Computes namespace URI for the specified OGC spec
+     * @param spec
+     * @return complete namespace URI
+     */
+    public static String getNamespaceURI(String spec)
+    {
+    	NamespaceBuilder nsBuilder = namespaceBuilders.get(spec);
+    	if (nsBuilder != null)
+    		return nsBuilder.getNsUri(null);
+    	else
+    		return null;
     }
     
     
@@ -196,7 +218,10 @@ public class OGCRegistry
         type = normalizeTypeString(type);
         subType = normalizeSubtypeString(subType);
         version = normalizeVersionString(version);
-        StringBuffer key = new StringBuffer(type);
+        StringBuffer key = new StringBuffer();
+        
+        if (type != null)
+        	key.append(type);
         
         if (subType != null)
         {
@@ -239,10 +264,10 @@ public class OGCRegistry
         StringBuffer key;
         type = normalizeTypeString(type);
         subType = normalizeSubtypeString(subType);
-        version = normalizeVersionString(version);
+        version = normalizeVersionString(version);       
         
         // first try to retrieve exactly what's asked
-        key = new StringBuffer(type);        
+        key = new StringBuffer(type);
         if (subType != null)
         {
             key.append('_');
@@ -279,10 +304,31 @@ public class OGCRegistry
         if (ioClass != null)
             return ioClass;
         
+        // if not found, try to find one without type
+        key = new StringBuffer();    
+        if (subType != null)
+        {
+            key.append('_');
+            key.append(subType);
+        }
+        if (version != null)
+        {
+            key.append('_');
+            key.append(version);
+        }
+        ioClass = table.get(key.toString());
+        if (ioClass != null)
+            return ioClass;
+        
         // if not found, try to find one without version nor subType
         ioClass = table.get(type);
         if (ioClass != null)
-            return ioClass;        
+            return ioClass;
+        
+        // if not found, try to find one without version nor type
+        ioClass = table.get("_" + subType);
+        if (ioClass != null)
+            return ioClass;
         
         throw new IllegalStateException("No reader/writer found for " + type + "/" + subType + " v" + version);
     }
@@ -311,7 +357,7 @@ public class OGCRegistry
             throw new IllegalStateException("Error while instantiating new reader/writer", e);
         }
     }
-    
+        
     
     /**
      * Loads an xml file containing mappings from types of readers/writers to class
@@ -333,7 +379,7 @@ public class OGCRegistry
             }
             
             // add reader hashtable entries
-            NodeList readerElts = dom.getElements("Reader");            
+            NodeList readerElts = dom.getElements("Reader");
             for (int i=0; i<readerElts.getLength(); i++)
             {
                 Element readerElt = (Element)readerElts.item(i);
@@ -369,7 +415,19 @@ public class OGCRegistry
                 catch (IllegalStateException e)
                 {
                     ExceptionSystem.display(e);
-                }                
+                }
+            }
+            
+            // add namespace hashtable entries
+            NodeList namespaceElts = dom.getElements("Namespace");            
+            for (int i=0; i<namespaceElts.getLength(); i++)
+            {
+                Element nsElt = (Element)namespaceElts.item(i);
+                String type = dom.getAttributeValue(nsElt, "type");
+                String uri = dom.getAttributeValue(nsElt, "uri");
+                String appendAfter = dom.getAttributeValue(nsElt, "appendVersionAfter");
+                NamespaceBuilder nsBuilder = new NamespaceBuilder(uri, normalizeVersionString(appendAfter));
+                namespaceBuilders.put(type, nsBuilder);    
             }
         }
         catch (DOMHelperException e)
@@ -397,7 +455,7 @@ public class OGCRegistry
     }
     
     
-    private static String normalizeVersionString(String version)
+    public static String normalizeVersionString(String version)
     {
         if (version != null && version.length() > 0 && !version.equalsIgnoreCase("*"))
         {
@@ -432,5 +490,15 @@ public class OGCRegistry
     public static Hashtable<String, Class> getWriterClasses()
     {
         return writerClasses;
+    }
+    
+    
+    /**
+     * Provides direct access to the namespaceBuilders hashtable
+     * @return
+     */
+    public static Hashtable<String, NamespaceBuilder> getNamespaceBuilders()
+    {
+        return namespaceBuilders;
     }
 }

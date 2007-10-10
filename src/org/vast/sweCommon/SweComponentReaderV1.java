@@ -47,7 +47,7 @@ import org.vast.util.DateTimeFormat;
  *
  * <p><b>Description:</b><br/>
  * Reads SWE Components structures made of Scalar Parameters,
- * DataRecord, DataArray, etc. This is for version 1 of the standard.  
+ * DataRecord, DataArray, etc. This is for version 1 of the standard.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -57,8 +57,9 @@ import org.vast.util.DateTimeFormat;
  */
 public class SweComponentReaderV1 implements DataComponentReader
 {
-    public static String tupleSeparator = " ";
-    public static String tokenSeparator = ",";
+    protected final static String GML_NS = OGCRegistry.getNamespaceURI("GML", "3.1.1");
+	protected final static String tupleSeparator = " ";
+	protected final static String tokenSeparator = ",";
     protected Hashtable<String, AbstractDataComponent> componentIds;
     protected AsciiDataParser asciiParser;
     
@@ -138,7 +139,7 @@ public class SweComponentReaderV1 implements DataComponentReader
             Element childElt = (Element)componentList.item(i);
             
             // skip everything in GML namespace (gml:metadata, gml:description, gml:name)
-            if (childElt.getNamespaceURI().contains(OGCRegistry.GML_NS))
+            if (childElt.getNamespaceURI().contains(GML_NS))
                 continue;
             
             // add field components
@@ -361,7 +362,7 @@ public class SweComponentReaderV1 implements DataComponentReader
      */
     private void readGmlProperties(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws CDMException
     {
-        dom.addUserPrefix("gml", OGCRegistry.GML_NS);
+        dom.addUserPrefix("gml", GML_NS);
         
         // gml metadata?
         
@@ -385,7 +386,7 @@ public class SweComponentReaderV1 implements DataComponentReader
                 names.add(name);
             }
             dataComponent.setProperty(DataComponent.NAMES, names);
-        }       
+        }
     }
     
     

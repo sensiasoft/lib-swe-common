@@ -40,7 +40,7 @@ package org.vast.xml;
  */
 public class QName
 {
-    public final static String DEFAULT_PREFIX = ":NONE:";
+    public final static String DEFAULT_PREFIX = "_NIL_";
     protected String nsUri;
     protected String prefix;
     protected String localName;

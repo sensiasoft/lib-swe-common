@@ -1,24 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ClassMap>
+<Map>
    <!-- -->
-   <Reader type="SOS" subType="GetCapabilities" version="*" class="org.vast.ows.sos.SOSRequestReaderV031"/>
+   <Namespace type="OGC" uri="http://www.opengis.net/ogc"/>
+   <Namespace type="OWS" uri="http://www.opengis.net/ows" appendVersionFrom="1.1"/>
+   <Namespace type="GML" uri="http://www.opengis.net/gml" appendVersionFrom="3.2"/>
+   <Namespace type="XLINK" uri="http://www.w3.org/1999/xlink"/>
+   <Namespace type="SWE" uri="http://www.opengis.net/swe" appendVersionFrom="0.0"/>
+   <Namespace type="SOS" uri="http://www.opengis.net/sos" appendVersionFrom="0.0"/>
+   <Namespace type="OM" uri="http://www.opengis.net/om" appendVersionFrom="0.0"/>
+   <Namespace type="SML" uri="http://www.opengis.net/sensorML" appendVersionFrom="0.0"/>
+   <Namespace type="SAS" uri="http://www.opengis.net/sas" appendVersionFrom="0.0"/>
+   <Namespace type="WCS" uri="http://www.opengis.net/wcs" appendVersionFrom="1.1.0"/>
+   <Namespace type="SPS" uri="http://www.opengis.net/sps" appendVersionFrom="0.0"/>
+   <!-- -->
+   <Reader type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesReader"/>
+   <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>   
+   <!-- -->
    <Reader type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.SOSRequestReaderV031"/>
-   <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.SOSRequestReaderV031"/>
-   <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.SOSRequestReaderV031"/>   
+   <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationReaderV10"/>
+   <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.SOSRequestReaderV031"/>
+   <Reader type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorReaderV10"/>   
    <Reader type="SOS" subType="Capabilities" version="0.0.31" class="org.vast.ows.sos.SOSCapabilitiesReaderV031"/>
    <!-- -->
-   <Writer type="SOS" subType="GetCapabilities" version="*" class="org.vast.ows.sos.SOSRequestWriterV031"/>
    <Writer type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.SOSRequestWriterV031"/>
-   <Writer type="SOS" subType="GetObservation" version="0.0.32" class="org.vast.ows.sos.SOSRequestWriterV031"/>
-   <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.SOSRequestWriterV031"/>   
+   <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
+   <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.SOSRequestWriterV031"/>
+   <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>   
    <!-- -->
-   <Reader type="WCS" subType="GetCapabilities" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
    <Reader type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
+   <Reader type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageReaderV10"/>
+   <Reader type="WCS" subType="GetCoverage" version="1.1.0" class="org.vast.ows.wcs.GetCoverageReaderV11"/>
+   <Reader type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageReaderV11"/>
+   <Reader type="WCS" subType="DescribeCoverage" version="1.0" class="org.vast.ows.wcs.DescribeCoverageReaderV10"/>
+   <Reader type="WCS" subType="DescribeCoverage" version="1.1.0" class="org.vast.ows.wcs.DescribeCoverageReaderV11"/>
+   <Reader type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageReaderV11"/>
    <!-- -->
-   <Writer type="WCS" subType="GetCapabilities" version="0.7" class="org.vast.ows.wcs.WCSRequestWriterV07"/>
    <Writer type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestWriterV07"/>
+   <Writer type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageWriterV10"/>
+   <Writer type="WCS" subType="GetCoverage" version="1.1.0" class="org.vast.ows.wcs.GetCoverageWriterV11"/>
+   <Writer type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageWriterV11"/>
+   <Writer type="WCS" subType="DescribeCoverage" version="1.0" class="org.vast.ows.wcs.DescribeCoverageWriterV10"/>
+   <Writer type="WCS" subType="DescribeCoverage" version="1.1.0" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
+   <Writer type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
    <!-- -->
-   <Reader type="WMS" subType="GetCapabilities" version="*" class="org.vast.ows.wms.WMSRequestReaderV11"/>
    <Reader type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.WMSRequestReaderV10"/>
    <Reader type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.WMSRequestReaderV11"/>
    <Reader type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.WMSRequestReaderV11"/>
@@ -51,4 +75,4 @@
    <Reader type="SensorML" subType="Process" version="1.0" class="org.vast.sensorML.ProcessReaderV1"/>
    <Reader type="SensorML" subType="System" version="1.0" class="org.vast.sensorML.SystemReaderV1"/>
    <!-- -->
-</ClassMap>
+</Map>

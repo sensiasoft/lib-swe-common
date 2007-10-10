@@ -68,7 +68,7 @@ public class SweComponentWriterV1 implements DataComponentWriter
         
         if (dataComponents instanceof DataGroup)
         {
-            newElt = writeDataGroup(dom, (DataGroup)dataComponents);
+            newElt = writeDataRecord(dom, (DataGroup)dataComponents);
         }
         else if (dataComponents instanceof DataArray)
         {
@@ -97,12 +97,12 @@ public class SweComponentWriterV1 implements DataComponentWriter
     }
 
 
-    private Element writeDataGroup(DOMHelper dom, DataGroup dataGroup) throws CDMException
+    private Element writeDataRecord(DOMHelper dom, DataGroup dataGroup) throws CDMException
     {
-        Element dataGroupElt = dom.createElement("swe:DataGroup");
+        Element dataGroupElt = dom.createElement("swe:DataRecord");
                 
         // write each sub-component
-        int groupSize = dataGroup.getComponentCount();        
+        int groupSize = dataGroup.getComponentCount();
         for (int i=0; i<groupSize; i++)
         {
             Element propElt = writeComponentProperty(dom, dataGroup.getComponent(i));

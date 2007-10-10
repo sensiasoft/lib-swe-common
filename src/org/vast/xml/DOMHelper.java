@@ -211,6 +211,7 @@ public class DOMHelper
         mainFragment = new XMLFragment(xmlDocument, xmlDocument.getDocumentElement());
         xmlDocument.readIdentifiers(domDocument.getDocumentElement());
         xmlDocument.readNamespaces(domDocument.getDocumentElement());
+        loadedDocuments.put("NEW", xmlDocument);
     }
     
     
@@ -662,6 +663,22 @@ public class DOMHelper
 
 
     /**
+     * Remove all text node children from the parent
+     * @param parent
+     */
+    protected void removeAllText(Node parent)
+    {
+    	NodeList childNodes = parent.getChildNodes();
+        for (int i=0; i<childNodes.getLength(); i++)
+        {
+        	Node child = childNodes.item(i);
+        	if (child.getNodeType() == Node.TEXT_NODE)
+        		parent.removeChild(child);
+        }
+    }
+    
+    
+    /**
      * Adds all necessary elements in the path and sets the text value
      * of the leaf element to the given String.
      * @param parentElement
@@ -672,6 +689,7 @@ public class DOMHelper
     {
         Element elt = addElement(parentElement, nodePath);
         Text text = getParentDocument(parentElement).getDocument().createTextNode(val);
+        removeAllText(elt);
         elt.appendChild(text);
     }
     
@@ -684,6 +702,7 @@ public class DOMHelper
     public void setElementValue(Element elt, String val)
     {
         Text text = getParentDocument(elt).getDocument().createTextNode(val);
+        removeAllText(elt);
         elt.appendChild(text);
     }
 
