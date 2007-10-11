@@ -26,14 +26,14 @@ public class NamespaceBuilder
 {
 	protected String baseUri;
 	protected boolean appendVersion;
-	protected String appendVersionAfter;
+	protected String appendVersionFrom;
 	
 	
-	public NamespaceBuilder(String baseUri, String appendVersionAfter)
+	public NamespaceBuilder(String baseUri, String appendVersionFrom)
 	{
 		this.baseUri = baseUri;
-		this.appendVersionAfter = appendVersionAfter;
-		if (appendVersionAfter != null)
+		this.appendVersionFrom = appendVersionFrom;
+		if (appendVersionFrom != null)
 			appendVersion = true;
 	}
 	

@@ -92,7 +92,7 @@ public class OGCRegistry
     	if (nsBuilder != null)
     		return nsBuilder.getNsUri(null);
     	else
-    		return null;
+    		throw new IllegalStateException("Unsupported Specification: " + spec);
     }
     
     
@@ -425,8 +425,8 @@ public class OGCRegistry
                 Element nsElt = (Element)namespaceElts.item(i);
                 String type = dom.getAttributeValue(nsElt, "type");
                 String uri = dom.getAttributeValue(nsElt, "uri");
-                String appendAfter = dom.getAttributeValue(nsElt, "appendVersionAfter");
-                NamespaceBuilder nsBuilder = new NamespaceBuilder(uri, normalizeVersionString(appendAfter));
+                String appendFrom = dom.getAttributeValue(nsElt, "appendVersionFrom");
+                NamespaceBuilder nsBuilder = new NamespaceBuilder(uri, normalizeVersionString(appendFrom));
                 namespaceBuilders.put(type, nsBuilder);    
             }
         }
