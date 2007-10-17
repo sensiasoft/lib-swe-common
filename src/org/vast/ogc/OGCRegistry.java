@@ -378,6 +378,18 @@ public class OGCRegistry
                 writerClasses.clear();
             }
             
+            // add namespace hashtable entries
+            NodeList namespaceElts = dom.getElements("Namespace");            
+            for (int i=0; i<namespaceElts.getLength(); i++)
+            {
+                Element nsElt = (Element)namespaceElts.item(i);
+                String type = dom.getAttributeValue(nsElt, "type");
+                String uri = dom.getAttributeValue(nsElt, "uri");
+                String appendFrom = dom.getAttributeValue(nsElt, "appendVersionFrom");
+                NamespaceBuilder nsBuilder = new NamespaceBuilder(uri, normalizeVersionString(appendFrom));
+                namespaceBuilders.put(type, nsBuilder);    
+            }
+            
             // add reader hashtable entries
             NodeList readerElts = dom.getElements("Reader");
             for (int i=0; i<readerElts.getLength(); i++)
@@ -399,7 +411,7 @@ public class OGCRegistry
             }
             
             // add writer hashtable entries
-            NodeList writerElts = dom.getElements("Writer");            
+            NodeList writerElts = dom.getElements("Writer");
             for (int i=0; i<writerElts.getLength(); i++)
             {
                 Element writerElt = (Element)writerElts.item(i);
@@ -416,18 +428,6 @@ public class OGCRegistry
                 {
                     ExceptionSystem.display(e);
                 }
-            }
-            
-            // add namespace hashtable entries
-            NodeList namespaceElts = dom.getElements("Namespace");            
-            for (int i=0; i<namespaceElts.getLength(); i++)
-            {
-                Element nsElt = (Element)namespaceElts.item(i);
-                String type = dom.getAttributeValue(nsElt, "type");
-                String uri = dom.getAttributeValue(nsElt, "uri");
-                String appendFrom = dom.getAttributeValue(nsElt, "appendVersionFrom");
-                NamespaceBuilder nsBuilder = new NamespaceBuilder(uri, normalizeVersionString(appendFrom));
-                namespaceBuilders.put(type, nsBuilder);    
             }
         }
         catch (DOMHelperException e)

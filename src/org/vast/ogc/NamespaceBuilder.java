@@ -22,6 +22,7 @@
 
 package org.vast.ogc;
 
+
 public class NamespaceBuilder
 {
 	protected String baseUri;
