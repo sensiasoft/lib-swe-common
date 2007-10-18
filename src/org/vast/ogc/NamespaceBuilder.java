@@ -16,34 +16,49 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+ Alexandre Robin <alexandre.robin@spotimage.fr>
  
-******************************* END LICENSE BLOCK ***************************/
+ ******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.ogc;
 
 
+/**
+ * <p><b>Title:</b>
+ * Namespace Builder
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Default implementation of a namespace builder that
+ * provides namespace URI given an OGC Spec name and the version
+ * </p>
+ *
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin
+ * @date 18 oct. 07
+ * @version 1.0
+ */
 public class NamespaceBuilder
 {
-	protected String baseUri;
-	protected boolean appendVersion;
-	protected String appendVersionFrom;
-	
-	
-	public NamespaceBuilder(String baseUri, String appendVersionFrom)
-	{
-		this.baseUri = baseUri;
-		this.appendVersionFrom = appendVersionFrom;
-		if (appendVersionFrom != null)
-			appendVersion = true;
-	}
-	
-	
-	public String getNsUri(String version)
-	{
-		if (appendVersion && version != null)
-			return baseUri + "/" + version;
-		else
-			return baseUri;
-	}
+    protected String baseUri;
+    protected boolean appendVersion;
+    protected String appendVersionFrom; // TODO take that into account
+
+
+    public NamespaceBuilder(String baseUri, String appendVersionFrom)
+    {
+        this.baseUri = baseUri;
+        this.appendVersionFrom = appendVersionFrom;
+        if (appendVersionFrom != null)
+            appendVersion = true;
+    }
+
+
+    public String getNsUri(String version)
+    {
+        if (appendVersion && version != null)
+            return baseUri + "/" + version;
+        else
+            return baseUri;
+    }
 }

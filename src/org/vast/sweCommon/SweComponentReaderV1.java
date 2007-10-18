@@ -57,7 +57,7 @@ import org.vast.util.DateTimeFormat;
  */
 public class SweComponentReaderV1 implements DataComponentReader
 {
-	protected final static String GML_NS = OGCRegistry.getNamespaceURI("GML", "3.1.1");
+	protected final static String GML_NS = OGCRegistry.getNamespaceURI(OGCRegistry.GML);
 	protected final static String tupleSeparator = " ";
 	protected final static String tokenSeparator = ",";
     protected Hashtable<String, AbstractDataComponent> componentIds;

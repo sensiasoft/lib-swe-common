@@ -30,6 +30,7 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentWriter;
 import org.vast.cdm.common.DataType;
 import org.vast.data.*;
+import org.vast.ogc.OGCRegistry;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 
@@ -62,7 +63,7 @@ public class SweComponentWriterV1 implements DataComponentWriter
     
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException
     {
-        dom.addUserPrefix("swe", "http://www.opengis.net/swe/1.0");
+        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.0"));
         
         Element newElt = null;
         

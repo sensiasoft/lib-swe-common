@@ -25,6 +25,7 @@ package org.vast.sweCommon;
 
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
+import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 
 
@@ -53,7 +54,7 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
     
     private void enforceNS(DOMHelper dom)
     {
-        dom.addUserPrefix("swe", "http://www.opengis.net/swe");
+        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.0"));
     }
     
     
