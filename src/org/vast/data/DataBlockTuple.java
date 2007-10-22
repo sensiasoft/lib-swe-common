@@ -11,10 +11,7 @@
  
  The Original Code is the "SensorML DataProcessing Engine".
  
- The Initial Developer of the Original Code is the
- University of Alabama in Huntsville (UAH).
- Portions created by the Initial Developer are Copyright (C) 2006
- the Initial Developer. All Rights Reserved.
+ The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
     Alexandre Robin <robin@nsstc.uah.edu>
@@ -38,7 +35,7 @@ import org.vast.cdm.common.DataType;
  * DataGroups (slightly more performant than DataBlockTuple for this case)
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
  * @version 1.0
  */

@@ -1,5 +1,5 @@
 /***************************************************************
- (c) Copyright 2005, University of Alabama in Huntsville (UAH)
+ (c) Copyright 2007, University of Alabama in Huntsville (UAH)
  ALL RIGHTS RESERVED
 
  This software is the property of UAH.

@@ -14,9 +14,9 @@ import org.vast.cdm.common.DataBlock;
  * referenced in an Indexer Tree.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Apr 3, 2006
+ * @date Apr 3, 2007
  * @version 1.0
  */
 public class VarSizeMapper implements DataVisitor
