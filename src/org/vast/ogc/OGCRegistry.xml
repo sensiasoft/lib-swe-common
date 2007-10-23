@@ -19,15 +19,15 @@
    <Reader type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesReader"/>
    <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>   
    <!-- -->
-   <Reader type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.SOSRequestReaderV031"/>
+   <Reader type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationReaderV10"/>
    <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationReaderV10"/>
-   <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.SOSRequestReaderV031"/>
+   <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorReaderV10"/>
    <Reader type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorReaderV10"/>   
    <Reader type="SOS" subType="Capabilities" version="0.0.31" class="org.vast.ows.sos.SOSCapabilitiesReaderV031"/>
    <!-- -->
-   <Writer type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.SOSRequestWriterV031"/>
+   <Writer type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationWriterV10"/>
    <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
-   <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.SOSRequestWriterV031"/>
+   <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
    <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>   
    <!-- -->
    <Reader type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
