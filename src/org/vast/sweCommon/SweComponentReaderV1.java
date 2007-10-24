@@ -72,7 +72,9 @@ public class SweComponentReaderV1 implements DataComponentReader
     {
         Element dataElement = dom.getFirstChildElement(propertyElt);
         String name = readPropertyName(dom, propertyElt);
-        
+        if(("angleCounterData").equalsIgnoreCase(name)){
+        	System.err.println("Breakpt here!");
+        }
         AbstractDataComponent container = readComponent(dom, dataElement);
         container.setName(name);
         
