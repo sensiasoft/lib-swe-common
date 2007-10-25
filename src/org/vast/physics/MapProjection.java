@@ -38,12 +38,32 @@ import org.vast.math.*;
  */
 public class MapProjection
 {
-
+    public final static double MAX_SINLAT = 0.9999;
+    public final static double MAX_Y = Math.PI - 0.0001;
+    
+    
     public final static double [] LLAtoMerc(double lat, double lon, double alt)
     {
         double sinLat = Math.sin(lat);
+        
+        sinLat = Math.min(MAX_SINLAT, sinLat);
+        sinLat = Math.max(-MAX_SINLAT, sinLat);
+            
         double y = 0.5 * Math.log((1 + sinLat) / (1 - sinLat));
         return new double [] {lon, y, alt};
+    }
+    
+    
+    public final static double [] MerctoLLA(double x, double y, double alt)
+    {
+        double lat;
+        
+        if (Math.abs(y) < MAX_Y)
+            lat = Math.PI/2 - 2 * Math.atan(Math.exp(-y));
+        else
+            lat = Math.signum(y)*Math.PI/2;
+        
+        return new double [] {x, lat, alt};
     }
     
     
