@@ -32,6 +32,7 @@ package org.vast.physics;
  */
 public class TimeExtent
 {
+    public final static double NOW_ACCURACY = 1000;
     public final static double NOW = Double.MIN_VALUE;
     public final static double UNKNOWN = Double.MAX_VALUE;
     
@@ -128,7 +129,7 @@ public class TimeExtent
     public double getBaseTime()
     {
         if (baseAtNow)
-            return getNow();
+            return getNow() + timeBias;
         else
             return baseTime;
     }
@@ -177,7 +178,7 @@ public class TimeExtent
     public double getAdjustedLeadTime()
     {
         if (endNow)
-            return getNow();
+            return getNow() + timeBias;
         else
             return (getBaseTime() + timeBias + leadTimeDelta);
     }
@@ -186,7 +187,7 @@ public class TimeExtent
     public double getAdjustedLagTime()
     {
         if (beginNow)
-            return getNow();
+            return getNow() + timeBias;
         else
             return (getBaseTime() + timeBias - lagTimeDelta);
     }
@@ -272,6 +273,7 @@ public class TimeExtent
 
         for (int i = 0; i < steps; i++)
             times[i] = time - i * timeStep;
+        
         return times;
     }
 
@@ -279,7 +281,7 @@ public class TimeExtent
     public String toString()
     {
         String tString = new String("TimeExtent:");
-        tString += "\n  baseTime = " + baseTime;
+        tString += "\n  baseTime = " + (baseAtNow ? "now" : baseTime);
         tString += "\n  timeBias = " + timeBias;
         tString += "\n  timeStep = " + timeStep;
         tString += "\n  leadTimeDelta = " + leadTimeDelta;
@@ -351,7 +353,57 @@ public class TimeExtent
         if (otherLead > thisLag && otherLead < thisLead)
             return true;
         
+        if (otherLag <= thisLag && otherLead >= thisLead)
+            return true;
+        
         return false;
+    }
+    
+    
+    /**
+     * Check if time is null (i.e. baseTime is not set)
+     * @return
+     */
+    public boolean isNull()
+    {
+        return (baseTime == Double.NaN && !baseAtNow);
+    }
+    
+    
+    /**
+     * Resets all variables so that extent is null
+     */
+    public void nullify()
+    {
+        baseTime = Double.NaN;
+        timeBias = 0;
+        timeStep = 0;
+        leadTimeDelta = 0;
+        lagTimeDelta = 0;
+        baseAtNow = false;
+        endNow = false;
+        beginNow = false;
+    }
+    
+    
+    /**
+     * Resizes this extent so that it contains the given time value
+     * @param t time value (MUST be in same reference frame as the extent)
+     */
+    public void resizeToContain(double t)
+    {
+        if (isNull())
+        {
+            baseTime = t;
+            timeBias = 0;
+            return;
+        }    
+        
+        double adjBaseTime = getAdjustedTime();
+        if (t > getAdjustedLeadTime())
+            leadTimeDelta = t - adjBaseTime;
+        else if (t < getAdjustedLagTime())
+            lagTimeDelta = adjBaseTime - t; 
     }
     
     
@@ -364,7 +416,7 @@ public class TimeExtent
     private double getNow()
     {
         double exactNow = System.currentTimeMillis()/1000;
-        if (exactNow - now > 1000)
+        if (exactNow - now > NOW_ACCURACY)
             now = exactNow;
         
         return now;

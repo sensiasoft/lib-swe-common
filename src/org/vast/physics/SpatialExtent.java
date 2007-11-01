@@ -118,6 +118,13 @@ public class SpatialExtent
     }
     
     
+    /**
+     * Resize spatial extent so that it contains the given 3D point
+     * Point x,y,z coordinates must be in same Crs as SpatialExtent
+     * @param x
+     * @param y
+     * @param z
+     */
     public void resizeToContain(double x, double y, double z)
     {
         if (isNull())
@@ -128,13 +135,20 @@ public class SpatialExtent
             return;
         }        
         
-        if (minX > x) minX = x;
-        if (minY > y) minY = y;
-        if (minZ > z) minZ = z;
+        if (x < minX)
+            minX = x;
+        else if (x > maxX)
+            maxX = x;
         
-        if (maxX < x) maxX = x;
-        if (maxY < y) maxY = y;
-        if (maxZ < z) maxZ = z;
+        if (y < minY)
+            minY = y;
+        else if (y > maxY)
+            maxY = y;
+        
+        if (z < minZ)
+            minZ = z;
+        else if (z > maxZ)
+            maxZ = z;
     }
     
     
