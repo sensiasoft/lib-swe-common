@@ -20,6 +20,9 @@
 
 package org.vast.data;
 
+import org.vast.cdm.common.DataBlock;
+import org.vast.cdm.common.DataType;
+
 
 /**
  * <p><b>Title:</b><br/>
@@ -38,6 +41,50 @@ package org.vast.data;
 public class DataBlockFactory
 {
     
+	public static DataBlock createBlock(DataType dataType)
+	{
+		switch(dataType)
+		{
+			case BOOLEAN:
+				return new DataBlockBoolean();
+				
+			case BYTE:
+				return new DataBlockByte();
+				
+			case UBYTE:
+				return new DataBlockUByte();
+				
+			case SHORT:
+				return new DataBlockShort();
+				
+			case USHORT:
+				return new DataBlockUShort();
+				
+			case INT:
+				return new DataBlockInt();
+				
+			case UINT:
+				return new DataBlockUInt();
+				
+			case LONG:
+			case ULONG:
+				return new DataBlockLong();
+				
+			case FLOAT:
+				return new DataBlockFloat();
+				
+			case DOUBLE:
+				return new DataBlockDouble();
+				
+			case UTF_STRING:
+			case ASCII_STRING:
+				return new DataBlockString();
+				
+			default:
+				throw new IllegalArgumentException("Unsupported Data Type: " + dataType);
+		}
+	}
+	
 	public static DataBlockBoolean createBlock(boolean[] data)
     {
 		DataBlockBoolean block = new DataBlockBoolean();        

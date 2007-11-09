@@ -93,6 +93,12 @@ public class DataBlockFloat extends AbstractDataBlock
     {
         this.primitiveArray = primitiveArray;
     }
+    
+    
+    public void setUnderlyingObject(Object obj)
+    {
+    	this.primitiveArray = (float[])obj;
+    }
 	
 	
 	public DataType getDataType()

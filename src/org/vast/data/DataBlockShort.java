@@ -93,6 +93,12 @@ public class DataBlockShort extends AbstractDataBlock
     {
         this.primitiveArray = primitiveArray;
     }
+    
+    
+    public void setUnderlyingObject(Object obj)
+    {
+    	this.primitiveArray = (short[])obj;
+    }
 	
 	
 	public DataType getDataType()

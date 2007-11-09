@@ -94,6 +94,12 @@ public class DataBlockUInt extends AbstractDataBlock
     {
         this.primitiveArray = primitiveArray;
     }
+    
+    
+    public void setUnderlyingObject(Object obj)
+    {
+    	this.primitiveArray = (int[])obj;
+    }
 	
 	
 	public DataType getDataType()

@@ -158,4 +158,10 @@ public interface DataBlock extends Cloneable
     
     
     public DataBlock clone();
+    
+    
+    public Object getUnderlyingObject();
+    
+    
+    public void setUnderlyingObject(Object obj);
 }

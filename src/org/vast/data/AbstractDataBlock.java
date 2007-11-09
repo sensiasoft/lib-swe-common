@@ -58,6 +58,13 @@ public abstract class AbstractDataBlock implements DataBlock
      */
     public abstract Object getUnderlyingObject();
     
+    
+    /**
+     * Allows to set the underlying object directly
+     * @param obj
+     */
+    public abstract void setUnderlyingObject(Object obj);
+    
 	
     /**
      * Returns number of scalar values in this DataBlock

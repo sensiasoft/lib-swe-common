@@ -95,6 +95,12 @@ public class DataBlockBoolean extends AbstractDataBlock
     {
         this.primitiveArray = primitiveArray;
     }
+    
+    
+    public void setUnderlyingObject(Object obj)
+    {
+    	this.primitiveArray = (boolean[])obj;
+    }
 	
 	
 	public DataType getDataType()

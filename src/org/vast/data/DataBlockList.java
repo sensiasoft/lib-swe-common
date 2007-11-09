@@ -114,6 +114,12 @@ public class DataBlockList extends AbstractDataBlock
     }
     
     
+    public void setUnderlyingObject(Object obj)
+    {
+    	this.blockList = (LinkedList<AbstractDataBlock>)obj;
+    }
+    
+    
     public DataType getDataType()
 	{
 		return DataType.MIXED;

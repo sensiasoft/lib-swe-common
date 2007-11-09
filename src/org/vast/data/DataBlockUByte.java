@@ -95,6 +95,12 @@ public class DataBlockUByte extends AbstractDataBlock
         this.primitiveArray = primitiveArray;
     }
     
+    
+    public void setUnderlyingObject(Object obj)
+    {
+    	this.primitiveArray = (byte[])obj;
+    }
+    
 	
 	public DataType getDataType()
 	{

@@ -95,6 +95,12 @@ public class DataBlockUShort extends AbstractDataBlock
         this.primitiveArray = primitiveArray;
         this.atomCount = primitiveArray.length;
     }
+    
+    
+    public void setUnderlyingObject(Object obj)
+    {
+    	this.primitiveArray = (short[])obj;
+    }
 	
 	
 	public DataType getDataType()

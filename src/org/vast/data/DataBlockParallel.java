@@ -111,6 +111,12 @@ public class DataBlockParallel extends AbstractDataBlock
     {
         this.blockArray = blockArray;
     }
+    
+    
+    public void setUnderlyingObject(Object obj)
+    {
+    	this.blockArray = (AbstractDataBlock[])obj;
+    }
 	
 	
 	public DataType getDataType()

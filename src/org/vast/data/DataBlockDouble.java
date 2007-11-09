@@ -93,6 +93,12 @@ public class DataBlockDouble extends AbstractDataBlock
     {
         this.primitiveArray = primitiveArray;
     }
+    
+    
+    public void setUnderlyingObject(Object obj)
+    {
+    	this.primitiveArray = (double[])obj;
+    }
 	
 	
 	public DataType getDataType()
