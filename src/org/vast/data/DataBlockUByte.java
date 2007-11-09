@@ -219,43 +219,44 @@ public class DataBlockUByte extends AbstractDataBlock
 
 	public void setByteValue(int index, byte value)
 	{
-		primitiveArray[startIndex + index] = value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (byte)value;
 	}
 
 
 	public void setShortValue(int index, short value)
 	{
-		primitiveArray[startIndex + index] = (byte)value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (byte)value;
 	}
 
 
 	public void setIntValue(int index, int value)
 	{
-		primitiveArray[startIndex + index] = (byte)value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (byte)value;
 	}
 
 
 	public void setLongValue(int index, long value)
 	{
-		primitiveArray[startIndex + index] = (byte)value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (byte)value;
 	}
 
 
 	public void setFloatValue(int index, float value)
 	{
-		primitiveArray[startIndex + index] = (byte)Math.round(value);
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (byte)Math.round(value);
 	}
 
 
 	public void setDoubleValue(int index, double value)
 	{
-		primitiveArray[startIndex + index] = (byte)Math.round(value);
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (byte)Math.round(value);
 	}
 
 
 	public void setStringValue(int index, String value)
 	{
-		primitiveArray[startIndex + index] = Byte.parseByte(value);
+		byte val = Byte.parseByte(value);
+		primitiveArray[startIndex + index] = val < 0 ? 0 : val;
 	}
 
 
@@ -267,42 +268,43 @@ public class DataBlockUByte extends AbstractDataBlock
 
 	public void setByteValue(byte value)
 	{
-		primitiveArray[startIndex] = value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (byte)value;
 	}
 
 
 	public void setShortValue(short value)
 	{
-		primitiveArray[startIndex] = (byte)value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (byte)value;
 	}
 
 
 	public void setIntValue(int value)
 	{
-		primitiveArray[startIndex] = (byte)value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (byte)value;
 	}
 
 
 	public void setLongValue(long value)
 	{
-		primitiveArray[startIndex] = (byte)value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (byte)value;
 	}
 
 
 	public void setFloatValue(float value)
 	{
-		primitiveArray[startIndex] = (byte)Math.round(value);
+		primitiveArray[startIndex] = value < 0 ? 0 : (byte)Math.round(value);
 	}
 
 
 	public void setDoubleValue(double value)
 	{
-		primitiveArray[startIndex] = (byte)Math.round(value);
+		primitiveArray[startIndex] = value < 0 ? 0 : (byte)Math.round(value);
 	}
 
 
 	public void setStringValue(String value)
 	{
-		primitiveArray[startIndex] = Byte.parseByte(value);
+		byte val = Byte.parseByte(value);
+		primitiveArray[startIndex] = val < 0 ? 0 : val;
 	}
 }

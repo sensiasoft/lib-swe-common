@@ -37,9 +37,82 @@ package org.vast.data;
  */
 public class DataBlockFactory
 {
-    public static DataBlockByte createBlock(byte[] data)
+    
+	public static DataBlockBoolean createBlock(boolean[] data)
+    {
+		DataBlockBoolean block = new DataBlockBoolean();        
+        block.primitiveArray = data;
+        block.atomCount = data.length;
+        block.startIndex = 0;
+        return block;
+    }
+	
+	public static DataBlockByte createBlock(byte[] data)
     {
         DataBlockByte block = new DataBlockByte();        
+        block.primitiveArray = data;
+        block.atomCount = data.length;
+        block.startIndex = 0;
+        return block;
+    }
+    
+    public static DataBlockUByte createUnsignedBlock(byte[] data)
+    {
+        DataBlockUByte block = new DataBlockUByte();        
+        block.primitiveArray = data;
+        block.atomCount = data.length;
+        block.startIndex = 0;
+        return block;
+    }
+    
+    public static DataBlockShort createBlock(short[] data)
+    {
+    	DataBlockShort block = new DataBlockShort();        
+        block.primitiveArray = data;
+        block.atomCount = data.length;
+        block.startIndex = 0;
+        return block;
+    }
+    
+    public static DataBlockUShort createUnsignedBlock(short[] data)
+    {
+    	DataBlockUShort block = new DataBlockUShort();        
+        block.primitiveArray = data;
+        block.atomCount = data.length;
+        block.startIndex = 0;
+        return block;
+    }
+    
+    public static DataBlockInt createBlock(int[] data)
+    {
+    	DataBlockInt block = new DataBlockInt();        
+        block.primitiveArray = data;
+        block.atomCount = data.length;
+        block.startIndex = 0;
+        return block;
+    }
+    
+    public static DataBlockUInt createUnsignedBlock(int[] data)
+    {
+    	DataBlockUInt block = new DataBlockUInt();        
+        block.primitiveArray = data;
+        block.atomCount = data.length;
+        block.startIndex = 0;
+        return block;
+    }
+    
+    public static DataBlockLong createBlock(long[] data)
+    {
+    	DataBlockLong block = new DataBlockLong();        
+        block.primitiveArray = data;
+        block.atomCount = data.length;
+        block.startIndex = 0;
+        return block;
+    }
+    
+    public static DataBlockFloat createBlock(float[] data)
+    {
+    	DataBlockFloat block = new DataBlockFloat();        
         block.primitiveArray = data;
         block.atomCount = data.length;
         block.startIndex = 0;

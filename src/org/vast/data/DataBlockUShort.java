@@ -93,6 +93,7 @@ public class DataBlockUShort extends AbstractDataBlock
     public void setUnderlyingObject(short[] primitiveArray)
     {
         this.primitiveArray = primitiveArray;
+        this.atomCount = primitiveArray.length;
     }
 	
 	
@@ -219,43 +220,44 @@ public class DataBlockUShort extends AbstractDataBlock
 
 	public void setByteValue(int index, byte value)
 	{
-		primitiveArray[startIndex + index] = (short)value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (short)value;
 	}
 
 
 	public void setShortValue(int index, short value)
 	{
-		primitiveArray[startIndex + index] = value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (short)value;
 	}
 
 
 	public void setIntValue(int index, int value)
 	{
-		primitiveArray[startIndex + index] = (short)value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (short)value;
 	}
 
 
 	public void setLongValue(int index, long value)
 	{
-		primitiveArray[startIndex + index] = (short)value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (short)value;
 	}
 
 
 	public void setFloatValue(int index, float value)
 	{
-		primitiveArray[startIndex + index] = (short)Math.round(value);
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (short)Math.round(value);
 	}
 
 
 	public void setDoubleValue(int index, double value)
 	{
-		primitiveArray[startIndex + index] = (short)Math.round(value);
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (short)Math.round(value);
 	}
 
 
 	public void setStringValue(int index, String value)
 	{
-		primitiveArray[startIndex + index] = Short.parseShort(value);
+		short val = Short.parseShort(value);
+		primitiveArray[startIndex + index] = val < 0 ? 0 : val;
 	}
 
 
@@ -267,42 +269,43 @@ public class DataBlockUShort extends AbstractDataBlock
 
 	public void setByteValue(byte value)
 	{
-		primitiveArray[startIndex] = (short)value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (short)value;
 	}
 
 
 	public void setShortValue(short value)
 	{
-		primitiveArray[startIndex] = value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (short)value;
 	}
 
 
 	public void setIntValue(int value)
 	{
-		primitiveArray[startIndex] = (short)value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (short)value;
 	}
 
 
 	public void setLongValue(long value)
 	{
-		primitiveArray[startIndex] = (short)value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (short)value;
 	}
 
 
 	public void setFloatValue(float value)
 	{
-		primitiveArray[startIndex] = (short)Math.round(value);
+		primitiveArray[startIndex] = value < 0 ? 0 : (short)Math.round(value);
 	}
 
 
 	public void setDoubleValue(double value)
 	{
-		primitiveArray[startIndex] = (short)Math.round(value);
+		primitiveArray[startIndex] = value < 0 ? 0 : (short)Math.round(value);
 	}
 
 
 	public void setStringValue(String value)
 	{
-		primitiveArray[startIndex] = Short.parseShort(value);
+		short val = Short.parseShort(value);
+		primitiveArray[startIndex] = val < 0 ? 0 : val;
 	}
 }

@@ -219,44 +219,45 @@ public class DataBlockUInt extends AbstractDataBlock
 
 	public void setByteValue(int index, byte value)
 	{
-		primitiveArray[startIndex + index] = (int)value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (int)value;
 	}
 
 
 	public void setShortValue(int index, short value)
 	{
-		primitiveArray[startIndex + index] = (int)value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (int)value;
 	}
 
 
 	public void setIntValue(int index, int value)
 	{
-		primitiveArray[startIndex + index] = value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (int)value;
 	}
 
 
 	public void setLongValue(int index, long value)
 	{
-		primitiveArray[startIndex + index] = (int)value;
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (int)value;
 	}
 
 
 	public void setFloatValue(int index, float value)
 	{
 	    // force conversion to long first so that it is not truncated to 2.XXe9
-        primitiveArray[startIndex + index] = (int)Math.round((double)value);
+        primitiveArray[startIndex + index] = value < 0 ? 0 : (int)Math.round((double)value);
 	}
 
 
 	public void setDoubleValue(int index, double value)
 	{
-		primitiveArray[startIndex + index] = (int)Math.round(value);
+		primitiveArray[startIndex + index] = value < 0 ? 0 : (int)Math.round(value);
 	}
 
 
 	public void setStringValue(int index, String value)
 	{
-		primitiveArray[startIndex + index] = Integer.parseInt(value);
+		int val = Integer.parseInt(value);
+		primitiveArray[startIndex + index] = val < 0 ? 0 : val;
 	}
 
 
@@ -268,43 +269,44 @@ public class DataBlockUInt extends AbstractDataBlock
 
 	public void setByteValue(byte value)
 	{
-		primitiveArray[startIndex] = (int)value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (int)value;
 	}
 
 
 	public void setShortValue(short value)
 	{
-		primitiveArray[startIndex] = (int)value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (int)value;
 	}
 
 
 	public void setIntValue(int value)
 	{
-		primitiveArray[startIndex] = value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (int)value;
 	}
 
 
 	public void setLongValue(long value)
 	{
-		primitiveArray[startIndex] = (int)value;
+		primitiveArray[startIndex] = value < 0 ? 0 : (int)value;
 	}
 
 
 	public void setFloatValue(float value)
 	{
 	    // force conversion to long first so that it is not truncated to 2.XXe9
-        primitiveArray[startIndex] = (int)Math.round((double)value);
+        primitiveArray[startIndex] = value < 0 ? 0 : (int)Math.round((double)value);
 	}
 
 
 	public void setDoubleValue(double value)
 	{
-		primitiveArray[startIndex] = (int)Math.round(value);
+		primitiveArray[startIndex] = value < 0 ? 0 : (int)Math.round(value);
 	}
 
 
 	public void setStringValue(String value)
 	{
-		primitiveArray[startIndex] = Integer.parseInt(value);
+		int val = Integer.parseInt(value);
+		primitiveArray[startIndex] = val < 0 ? 0 : val;
 	}
 }
