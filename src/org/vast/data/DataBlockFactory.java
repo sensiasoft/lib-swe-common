@@ -11,7 +11,11 @@
  
  The Original Code is the "SensorML DataProcessing Engine".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+ Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
     Alexandre Robin <robin@nsstc.uah.edu>
@@ -40,138 +44,148 @@ import org.vast.cdm.common.DataType;
  */
 public class DataBlockFactory
 {
-    
+
 	public static DataBlock createBlock(DataType dataType)
 	{
-		switch(dataType)
+		switch (dataType)
 		{
 			case BOOLEAN:
 				return new DataBlockBoolean();
-				
+
 			case BYTE:
 				return new DataBlockByte();
-				
+
 			case UBYTE:
 				return new DataBlockUByte();
-				
+
 			case SHORT:
 				return new DataBlockShort();
-				
+
 			case USHORT:
 				return new DataBlockUShort();
-				
+
 			case INT:
 				return new DataBlockInt();
-				
+
 			case UINT:
 				return new DataBlockUInt();
-				
+
 			case LONG:
 			case ULONG:
 				return new DataBlockLong();
-				
+
 			case FLOAT:
 				return new DataBlockFloat();
-				
+
 			case DOUBLE:
 				return new DataBlockDouble();
-				
+
 			case UTF_STRING:
 			case ASCII_STRING:
 				return new DataBlockString();
-				
+
 			default:
 				throw new IllegalArgumentException("Unsupported Data Type: " + dataType);
 		}
 	}
-	
+
+
 	public static DataBlockBoolean createBlock(boolean[] data)
-    {
-		DataBlockBoolean block = new DataBlockBoolean();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
-	
+	{
+		DataBlockBoolean block = new DataBlockBoolean();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
+
+
 	public static DataBlockByte createBlock(byte[] data)
-    {
-        DataBlockByte block = new DataBlockByte();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
-    
-    public static DataBlockUByte createUnsignedBlock(byte[] data)
-    {
-        DataBlockUByte block = new DataBlockUByte();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
-    
-    public static DataBlockShort createBlock(short[] data)
-    {
-    	DataBlockShort block = new DataBlockShort();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
-    
-    public static DataBlockUShort createUnsignedBlock(short[] data)
-    {
-    	DataBlockUShort block = new DataBlockUShort();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
-    
-    public static DataBlockInt createBlock(int[] data)
-    {
-    	DataBlockInt block = new DataBlockInt();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
-    
-    public static DataBlockUInt createUnsignedBlock(int[] data)
-    {
-    	DataBlockUInt block = new DataBlockUInt();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
-    
-    public static DataBlockLong createBlock(long[] data)
-    {
-    	DataBlockLong block = new DataBlockLong();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
-    
-    public static DataBlockFloat createBlock(float[] data)
-    {
-    	DataBlockFloat block = new DataBlockFloat();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
-    
-    public static DataBlockDouble createBlock(double[] data)
-    {
-        DataBlockDouble block = new DataBlockDouble();        
-        block.primitiveArray = data;
-        block.atomCount = data.length;
-        block.startIndex = 0;
-        return block;
-    }
+	{
+		DataBlockByte block = new DataBlockByte();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
+
+
+	public static DataBlockUByte createUnsignedBlock(byte[] data)
+	{
+		DataBlockUByte block = new DataBlockUByte();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
+
+
+	public static DataBlockShort createBlock(short[] data)
+	{
+		DataBlockShort block = new DataBlockShort();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
+
+
+	public static DataBlockUShort createUnsignedBlock(short[] data)
+	{
+		DataBlockUShort block = new DataBlockUShort();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
+
+
+	public static DataBlockInt createBlock(int[] data)
+	{
+		DataBlockInt block = new DataBlockInt();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
+
+
+	public static DataBlockUInt createUnsignedBlock(int[] data)
+	{
+		DataBlockUInt block = new DataBlockUInt();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
+
+
+	public static DataBlockLong createBlock(long[] data)
+	{
+		DataBlockLong block = new DataBlockLong();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
+
+
+	public static DataBlockFloat createBlock(float[] data)
+	{
+		DataBlockFloat block = new DataBlockFloat();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
+
+
+	public static DataBlockDouble createBlock(double[] data)
+	{
+		DataBlockDouble block = new DataBlockDouble();
+		block.primitiveArray = data;
+		block.atomCount = data.length;
+		block.startIndex = 0;
+		return block;
+	}
 }
