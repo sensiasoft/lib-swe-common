@@ -216,9 +216,19 @@ public class Unit
     }
 
 
-    public String getPrintSymbol()
+    /**
+    * @return the print symbol of this Unit. If the print symbol is not set 
+    * (i.e. null or empty), then the expression will be returned (if that is
+    * not null and not empty).
+    */
+   public String getPrintSymbol()
     {
-        return printSymbol;
+        if( (printSymbol == null || printSymbol.trim().length()==0) && 
+            (expression != null && expression.trim().length()>0)) {
+           return expression;
+        } else {
+           return printSymbol;
+        }
     }
 
 
