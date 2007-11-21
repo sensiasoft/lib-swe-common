@@ -45,6 +45,7 @@
    <Writer type="WCS" subType="DescribeCoverage" version="1.0" class="org.vast.ows.wcs.DescribeCoverageWriterV10"/>
    <Writer type="WCS" subType="DescribeCoverage" version="1.1.0" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
    <Writer type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
+   <Writer type="WCS" subType="CoverageManifest" version="1.1.1" class="org.vast.ows.wcs.CoverageManifestWriterV11"/>
    <!-- -->
    <Reader type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.GetMapReaderV10"/>
    <Reader type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.GetMapReaderV11"/>
