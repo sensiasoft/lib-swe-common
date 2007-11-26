@@ -847,7 +847,7 @@ public class DOMHelper
             Element elt = createElement(currentDocument, qname);
             node.appendChild(elt);
             
-            // call this again now that we have the new node
+            // call ourselves recursively with the new node
             currentPath.add(elt.getNodeName());
             return writeNode(currentDocument, elt, nodeType);
         }
@@ -1269,23 +1269,6 @@ public class DOMHelper
         // check if a namespace prefix is present (i.e. if ':' is present)
         if (wantedName.indexOf(":") != -1)
         {
-//            // read the namespaceID from this part of wantedPath
-//            int separatorIndex = wantedName.indexOf(":");
-//            String nodeName = wantedName.substring(separatorIndex + 1);
-//            String userPrefix = wantedName.substring(0, separatorIndex);
-//
-//            // get the namespace domain corresponding to this user prefix
-//            String nsUri = userPrefixTable.get(userPrefix);            
-//            if (nsUri == null)
-//                throw new IllegalStateException("No namespace URI defined for user prefix " + userPrefix);
-//            
-//            // get the real namespace prefix from the current document
-//            String realPrefix = currentDocument.getNSPrefix(nsUri);
-//
-//            // construct the complete node name with the real prefix
-//            if ( (realPrefix != null) && (realPrefix.length() != 0))
-//                nodeName = realPrefix + ":" + nodeName;
-            
             String qname = getQName(currentDocument, wantedName).getFullName();
             if (!qname.equals(actualName))
                 return -1;

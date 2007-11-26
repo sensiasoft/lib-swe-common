@@ -37,6 +37,9 @@
    <Reader type="WCS" subType="DescribeCoverage" version="1.0" class="org.vast.ows.wcs.DescribeCoverageReaderV10"/>
    <Reader type="WCS" subType="DescribeCoverage" version="1.1.0" class="org.vast.ows.wcs.DescribeCoverageReaderV11"/>
    <Reader type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageReaderV11"/>
+   <Reader type="WCS" subType="CoverageManifest" version="1.1.0" class="org.vast.ows.wcs.CoverageManifestReaderV11"/>
+   <Reader type="WCS" subType="CoverageManifest" version="1.1.1" class="org.vast.ows.wcs.CoverageManifestReaderV11"/>
+   <Reader type="WCS" subType="Transaction" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionReaderV11"/>
    <!-- -->
    <Writer type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestWriterV07"/>
    <Writer type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageWriterV10"/>
@@ -45,7 +48,13 @@
    <Writer type="WCS" subType="DescribeCoverage" version="1.0" class="org.vast.ows.wcs.DescribeCoverageWriterV10"/>
    <Writer type="WCS" subType="DescribeCoverage" version="1.1.0" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
    <Writer type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
+   <Writer type="WCS" subType="CoverageManifest" version="1.1.0" class="org.vast.ows.wcs.CoverageManifestWriterV11"/>
    <Writer type="WCS" subType="CoverageManifest" version="1.1.1" class="org.vast.ows.wcs.CoverageManifestWriterV11"/>
+   <Writer type="WCS" subType="CoverageDescriptions" version="1.0" class="org.vast.ows.wcs.CoverageDescriptionsWriterV1"/>
+   <Writer type="WCS" subType="CoverageDescriptions" version="1.1.0" class="org.vast.ows.wcs.CoverageDescriptionsWriterV1"/>
+   <Writer type="WCS" subType="CoverageDescriptions" version="1.1.1" class="org.vast.ows.wcs.CoverageDescriptionsWriterV1"/>
+   <Writer type="WCS" subType="Transaction" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionWriterV11"/>
+   <Writer type="WCS" subType="TransactionAck" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionAckWriterV11"/>
    <!-- -->
    <Reader type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.GetMapReaderV10"/>
    <Reader type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.GetMapReaderV11"/>

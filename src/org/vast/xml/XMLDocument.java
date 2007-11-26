@@ -155,6 +155,16 @@ public class XMLDocument
     {
         return nsPrefixToUri.get(nsPrefix);
     }
+    
+    
+    /**
+     * Retrieves the namespace table
+     * @return
+     */
+    public Hashtable<String, String> getNSTable()
+    {
+    	return nsPrefixToUri;
+    }
 
 
 	/**
