@@ -47,6 +47,7 @@ public class ResponsibleParty extends Contact
     protected String postalCode;
     protected String country;
     protected String email;
+    protected String website;
     protected String hoursOfService;
     protected String contactInstructions;
 
@@ -123,7 +124,19 @@ public class ResponsibleParty extends Contact
     }
 
 
-    public String getFaxNumber()
+    public String getWebsite()
+	{
+		return website;
+	}
+
+
+	public void setWebsite(String website)
+	{
+		this.website = website;
+	}
+
+
+	public String getFaxNumber()
     {
         return faxNumber;
     }
