@@ -247,7 +247,7 @@ public class DOMHelper
     /**
      * Find all nodes matching the given path - ex: Sensor/identification
      * @param startNode DOM Node where to start the search
-     * @param nodePath Path of the node relative to startNode (case independant, separation char = /)
+     * @param nodePath Path of the node relative to startNode (case independent, separation char = /)
      * @param nodeTypeFilter type of node to look for (0 for any type)
      * @param maxCount maximum number of nodes to look for
      * @return the NodeList of Node objects found or an Empty NodeList if no matching nodes are found
@@ -274,7 +274,7 @@ public class DOMHelper
     /**
      * Find elements matching the given path - ex: Sensor.locatedUsing
      * @param startElement DOM Node where to start the search
-     * @param nodePath Path of the element relative to startNode (case independant, separation char = .)
+     * @param nodePath Path of the element relative to startNode (case independent, separation char = /)
      * @return the NodeList of Element objects found or an Empty NodeList if no matching elements are found
      */
     public NodeList getElements(Element startElement, String nodePath)
@@ -286,7 +286,7 @@ public class DOMHelper
     /**
      * Default version of the previous function with startNode = base node of
      * document (not always the root !!)
-     * @param nodePath Path of the element in the XML tree (case independant, separation char = .)
+     * @param nodePath Path of the element in the XML tree (case independent, separation char = /)
      * @return the NodeList of Element objects found or an Empty NodeList if no matching elements are found
      */
     public NodeList getElements(String nodePath)
@@ -298,7 +298,7 @@ public class DOMHelper
     /**
      * Find the first element matching the given path
      * @param startElement DOM Node where to start the search
-     * @param nodePath Path of the element relative to startNode (case independant, separation char = .)
+     * @param nodePath Path of the element relative to startNode (case independent, separation char = /)
      * @return the first Element object found or null if no matching element is found
      */
     public Element getElement(Element startElement, String nodePath)
@@ -314,7 +314,7 @@ public class DOMHelper
 
     /**
      * Default version of the previous function with startNode = base node of document (not always the root !!)
-     * @param nodePath Path of the element in the XML tree (case independant, separation char = .)
+     * @param nodePath Path of the element in the XML tree (case independent, separation char = "/")
      * @return the first Element object found or null if no matching nodes are found
      */
     public Element getElement(String nodePath)
@@ -326,7 +326,7 @@ public class DOMHelper
     /**
      * Get the value of an element from its path
      * @param startElement DOM Node where to start the search
-     * @param nodePath Path of the element in the XML tree (case independant, separation char = .)
+     * @param nodePath Path of the element in the XML tree (case independent, separation char = "/")
      * @return Node value as a String or null if no matching element is found
      */
     public String getElementValue(Element startElement, String nodePath)
@@ -355,7 +355,7 @@ public class DOMHelper
 
     /**
      * Default version of the previous function that gets the value of the first element found
-     * @param nodePath Path of the element in the XML tree (case independant, separation char = .)
+     * @param nodePath Path of the element in the XML tree (case independent, separation char = "/")
      * @return Node value as a String or null if no matching element is found
      */
     public String getElementValue(String nodePath)
@@ -380,7 +380,7 @@ public class DOMHelper
     /**
      * Read the attribute value
      * @param startElement DOM Node where to start the search
-     * @param nodePath Path of the element relative to startNode (case independant, separation char = .)
+     * @param nodePath Path of the element relative to startNode (case independent, separation char = "/")
      * @return the attribute value as a string or null if no matching attribute is found
      */
     public String getAttributeValue(Element startElement, String nodePath)
@@ -401,7 +401,7 @@ public class DOMHelper
 
     /**
      * Default version of the previous function with startNode = base node of document (not always the root !!)
-     * @param nodePath Path of the element in the XML tree (case independant, separation char = .)
+     * @param nodePath Path of the element in the XML tree (case independent, separation char = "/")
      * @return the attribute value as a String or null if no matching attribute is found
      */
     public String getAttributeValue(String nodePath)
@@ -413,7 +413,7 @@ public class DOMHelper
     /**
      * Determine if the element corresponding to the given path exists
      * @param startElement DOM Node where to start the search
-     * @param nodePath Path of the element in the DOM tree (case independant, separation char = .)
+     * @param nodePath Path of the element in the DOM tree (case independent, separation char = "/")
      * @return true if the element is present
      */
     public boolean existElement(Element startElement, String nodePath)
@@ -425,7 +425,7 @@ public class DOMHelper
 
     /**
      * Default version of the previous function with startNode = base node of document (not always the root !!)
-     * @param nodePath Path of the element in the XML tree (case independant, separation char = .)
+     * @param nodePath Path of the element in the XML tree (case independent, separation char = /)
      * @return true if the element is present
      */
     public boolean existElement(String nodePath)
@@ -437,7 +437,7 @@ public class DOMHelper
     /**
      * Determine if the attribute corresponding to the given path exists
      * @param startElement Node where to start the search
-     * @param nodePath Path of the attribute in the DOM tree (case independant, separation char = .)
+     * @param nodePath Path of the attribute in the DOM tree (case independent, separation char = /)
      * @return true if the attribute is present
      */
     public boolean existAttribute(Element startElement, String nodePath)
@@ -449,7 +449,7 @@ public class DOMHelper
 
     /**
      * Default version of the previous function with startNode = base node of document (not always the root !!)
-     * @param nodePath Path of the attribute in the DOM tree (case independant, separation char = .)
+     * @param nodePath Path of the attribute in the DOM tree (case independent, separation char = /)
      * @return true if the attribute is present
      */
     public boolean existAttribute(String nodePath)
