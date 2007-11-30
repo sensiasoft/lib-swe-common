@@ -17,7 +17,7 @@
    <Namespace type="SPS" uri="http://www.opengis.net/sps" appendVersionFrom="0.0"/>   
    <!-- -->
    <Reader type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesReader"/>
-   <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>   
+   <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>
    <!-- -->
    <Reader type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationReaderV10"/>
    <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationReaderV10"/>
