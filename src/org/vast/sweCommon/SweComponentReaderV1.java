@@ -536,7 +536,7 @@ public class SweComponentReaderV1 implements DataComponentReader
      * @return
      * @throws CDMException
      */
-    private Constraints readConstraints(DataComponent dataComponent, DOMHelper dom, Element scalarElement) throws CDMException
+    private SweConstraintList readConstraints(DataComponent dataComponent, DOMHelper dom, Element scalarElement) throws CDMException
     {
         return null;
     }
