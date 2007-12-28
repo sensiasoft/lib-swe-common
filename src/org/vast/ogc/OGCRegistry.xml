@@ -30,6 +30,10 @@
    <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
    <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>   
    <!-- -->
+   <Reader type="SPS" subType="DescribeGetFeasibility" version="1.1" class="org.vast.ows.sps.DescribeGetFeasibilityReaderV11"/>
+   <Reader type="SPS" subType="DescribeGetFeasibilityResponse" version="1.1" class="org.vast.ows.sps.DescribeGetFeasibilityResponseReaderV11"/>
+   <Writer type="SPS" subType="DescribeGetFeasibility" version="1.1" class="org.vast.ows.sps.DescribeGetFeasibilityWriterV11"/>
+   <!-- -->
    <Reader type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
    <Reader type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageReaderV10"/>
    <Reader type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageReaderV11"/>
