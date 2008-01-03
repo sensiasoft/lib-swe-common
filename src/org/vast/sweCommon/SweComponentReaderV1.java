@@ -32,6 +32,7 @@ import org.vast.xml.*;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ows.gml.GMLException;
 import org.vast.ows.gml.GMLUnitReader;
+import org.vast.sweCommon.IntervalConstraint;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
 import org.vast.util.DateTimeFormat;
@@ -296,13 +297,20 @@ public class SweComponentReaderV1 implements DataComponentReader
         String eltName = rangeElt.getLocalName();
         
         // Create Data component Object
-        if (eltName.startsWith("Quantity") || eltName.startsWith("Time"))
+        if (eltName.startsWith("Quantity"))
         {
             paramVal = new DataValue(DataType.DOUBLE);
+            paramVal.setProperty(DataComponent.TYPE, "Quantity");
         }
         else if (eltName.startsWith("Count"))
         {
             paramVal = new DataValue(DataType.INT);
+            paramVal.setProperty(DataComponent.TYPE, "Count");
+        }
+        else if (eltName.startsWith("Time"))
+        {
+            paramVal = new DataValue(DataType.DOUBLE);
+            paramVal.setProperty(DataComponent.TYPE, "Time");
         }
         else
             throw new CDMException("Only Quantity, Time and Count ranges are allowed");
@@ -536,9 +544,113 @@ public class SweComponentReaderV1 implements DataComponentReader
      * @return
      * @throws CDMException
      */
-    private SweConstraintList readConstraints(DataComponent dataComponent, DOMHelper dom, Element scalarElement) throws CDMException
+    private void readConstraints(DataComponent dataComponent, DOMHelper dom, Element scalarElement) throws CDMException
     {
-        return null;
+    	NodeList constraintElts = dom.getElements(scalarElement, "constraint");
+    	ConstraintList constraintList = new ConstraintList();
+    	
+    	for (int i=0; i<constraintElts.getLength(); i++)
+    	{
+    		SweConstraint constraint = null;
+    		Element constraintElt = (Element)constraintElts.item(i);
+    		
+    		if (dom.existElement(constraintElt, "AllowedValues/interval"))
+    			constraint = readIntervalConstraint(dom, constraintElt);
+    		else if (dom.existElement(constraintElt, "AllowedValues/valueList"))
+    			constraint = readNumberEnumConstraint(dom, constraintElt);
+    		else if (dom.existElement(constraintElt, "AllowedValues/min"))
+    			constraint = readMinMaxConstraint(dom, constraintElt);
+    		else if (dom.existElement(constraintElt, "AllowedValues/max"))
+    			constraint = readMinMaxConstraint(dom, constraintElt);
+    		else if (dom.existElement(constraintElt, "AllowedTokens/valueList"))
+    			constraint = readTokenEnumConstraint(dom, constraintElt);
+    		
+    		if (constraint != null)
+    			constraintList.add(constraint);
+    	}
+    	
+    	if (!constraintList.isEmpty())
+    		dataComponent.setProperty(DataComponent.CONSTRAINTS, constraintList);
     }
     
+    
+    /**
+     * Reads a numerical interval constraint
+     * @param dom
+     * @param constraintElement
+     * @return
+     */
+    private IntervalConstraint readIntervalConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    {
+    	String rangeText = dom.getElementValue(constraintElement, "AllowedValues/interval");
+    	
+		try
+		{
+			String[] rangeValues = rangeText.split(" ");
+			double min = Double.parseDouble(rangeValues[0]);
+			double max = Double.parseDouble(rangeValues[1]);
+			return new IntervalConstraint(min, max);
+		}
+		catch (Exception e)
+		{
+			throw new CDMException("Invalid Interval Constraint: " + rangeText);
+		}
+    }
+    
+    
+    private IntervalConstraint readMinMaxConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    {
+    	String minText = dom.getElementValue(constraintElement, "AllowedValues/min");
+    	String maxText = dom.getElementValue(constraintElement, "AllowedValues/max");
+    	
+		try
+		{
+			double min, max;
+			
+			if (minText != null)
+				min = Double.parseDouble(minText);
+			else
+				min = Double.NEGATIVE_INFINITY;
+			
+			if (maxText != null)
+				max = Double.parseDouble(maxText);
+			else
+				max = Double.POSITIVE_INFINITY;
+			
+			return new IntervalConstraint(min, max);
+		}
+		catch (Exception e)
+		{
+			throw new CDMException("Invalid Interval Constraint: min=" + minText + ", max=" + maxText);
+		}
+    }
+    
+    
+    private NumberEnumConstraint readNumberEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    {
+    	String values = dom.getElementValue(constraintElement, "AllowedValues/valueList");
+    	
+    	try
+		{
+			String[] valueList = values.split(" ");
+			double[] valueArray = new double[valueList.length];
+			
+			for (int i=0; i<valueArray.length; i++)
+				valueArray[i] = Double.parseDouble(valueList[i]);
+			
+			return new NumberEnumConstraint(valueArray);
+		}
+		catch (Exception e)
+		{
+			throw new CDMException("Invalid Number Enumeration constraint: " + values);
+		}
+    }
+    
+    
+    private TokenEnumConstraint readTokenEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    {
+    	String values = dom.getElementValue(constraintElement, "AllowedTokens/valueList");
+    	String[] valueList = values.split(" ");
+		return new TokenEnumConstraint(valueList);
+    }    
 }

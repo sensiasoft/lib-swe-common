@@ -37,71 +37,10 @@ import java.util.ArrayList;
  * @date Feb 7, 2007
  * @version 1.0
  */
-public class SweConstraintList<DataType> extends ArrayList<SweConstraint<DataType>> implements SweConstraint<DataType>
+public class ConstraintList<DataType> extends ArrayList<SweConstraint> implements SweConstraint<DataType>
 {
     private static final long serialVersionUID = 8873758049042174380L;
-
-    
-    public class IntervalConstraint implements SweConstraint<Double>
-    {
-        public double min;
-        public double max;
-        
-        public IntervalConstraint(double min, double max)
-        {
-        	this.min = min;
-        	this.max = max;
-        }
-        
-        public boolean validate(Double value)
-        {
-        	if (value >= min && value <= max)
-        		return true;
-        	else
-        		return false;
-        }
-    }
-    
-    
-    public class NumberEnumConstraint implements SweConstraint<Double>
-    {
-    	public double[] valueList;
-    	
-    	public NumberEnumConstraint(double[] valueList)
-        {
-        	this.valueList = valueList;
-        }
-    	
-    	public boolean validate(Double value)
-        {
-        	for (int i=0; i<valueList.length; i++)
-        		if (valueList[i] == value)
-        			return true;
-        	
-        	return false;
-        }
-    }
-    
-    
-    public class TokenEnumConstraint implements SweConstraint<String>
-    {
-    	public String[] valueList;
-    	
-    	public TokenEnumConstraint(String[] valueList)
-        {
-        	this.valueList = valueList;
-        }
-    	
-    	public boolean validate(String value)
-        {
-        	for (int i=0; i<valueList.length; i++)
-        		if (valueList[i].equals(value))
-        			return true;
-        	
-        	return false;
-        }
-    }
-    
+   
     
     public boolean validate(DataType value)
     {
