@@ -66,16 +66,28 @@ public abstract class SWEReader implements DataDescriptionReader, InputStreamPro
 	}
 	
 	
-	public DataEncoding getDataEncoding()
-	{
-		return this.dataEncoding;
-	}
-
-
 	public DataComponent getDataComponents()
 	{
 		return this.dataComponents;
 	}
+	
+	
+	public void setDataComponents(DataComponent dataComponents)
+	{
+		this.dataComponents = dataComponents;
+	}
+	
+	
+	public DataEncoding getDataEncoding()
+	{
+		return this.dataEncoding;
+	}
+	
+	
+	public void setDataEncoding(DataEncoding dataEncoding)
+	{
+		this.dataEncoding = dataEncoding;
+	}	
 	
 	
 	public void parse(String uri) throws CDMException
