@@ -42,7 +42,7 @@ public class MapProjection
     public final static double MAX_Y = Math.PI - 0.0001;
     
     
-    public final static double [] LLAtoMerc(double lat, double lon, double alt)
+    public final static double [] LLAtoMerc(double lon, double lat, double alt)
     {
         double sinLat = Math.sin(lat);
         
@@ -67,7 +67,7 @@ public class MapProjection
     }
     
     
-    public final static double [] LLAtoECF(double latitude, double longitude, double altitude, Datum datum)
+    public final static double [] LLAtoECF(double lon, double lat, double altitude, Datum datum)
     {
         if (datum == null)
             datum = new Datum();
@@ -75,12 +75,12 @@ public class MapProjection
         double a = datum.equatorRadius;
         double e2 = datum.e2;
 
-        double sinLat = Math.sin(latitude);
-        double cosLat = Math.cos(latitude);
+        double sinLat = Math.sin(lat);
+        double cosLat = Math.cos(lat);
         double N = a / Math.sqrt(1.0 - e2 * sinLat * sinLat);
 
-        double x = (N + altitude) * cosLat * Math.cos(longitude);
-        double y = (N + altitude) * cosLat * Math.sin(longitude);
+        double x = (N + altitude) * cosLat * Math.cos(lon);
+        double y = (N + altitude) * cosLat * Math.sin(lon);
         double z = (N * (1.0 - e2) + altitude) * sinLat;
 
         return new double [] {x, y, z};
@@ -109,6 +109,6 @@ public class MapProjection
         double N = a / Math.sqrt( 1 - e2 * sineLat * sineLat);
         double altitude = (p / Math.cos(geodeticLat)) -  N;
 
-        return new double [] {geodeticLat, longitude, altitude};
+        return new double [] {longitude, geodeticLat, altitude};
     }
 }
