@@ -109,6 +109,13 @@ public class MapProjection
         double N = a / Math.sqrt( 1 - e2 * sineLat * sineLat);
         double altitude = (p / Math.cos(geodeticLat)) -  N;
 
+        // maintain longitude btw -PI and PI
+        if (longitude > Math.PI)
+        	longitude -= 2*Math.PI;
+        
+        else if (longitude < -Math.PI)
+        	longitude += 2*Math.PI;
+        
         return new double [] {longitude, geodeticLat, altitude};
     }
 }
