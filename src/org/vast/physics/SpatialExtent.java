@@ -95,6 +95,24 @@ public class SpatialExtent
     }
     
     
+    public double getSizeX()
+    {
+        return maxX - minX;
+    }
+    
+    
+    public double getSizeY()
+    {
+        return maxY - minY;
+    }
+    
+    
+    public double getSizeZ()
+    {
+        return maxZ - minZ;
+    }
+    
+    
     public boolean isNull()
     {
         if (Double.isNaN(minX)) return true;
@@ -355,5 +373,11 @@ public class SpatialExtent
 	public void setMinZ(double minZ)
 	{
 		this.minZ = minZ;
+	}
+	
+	
+	public String toString()
+	{
+		return minX + "," + minY + " - " + maxX + "," + maxY;
 	}
 }
