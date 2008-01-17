@@ -140,7 +140,7 @@ public class OrbitPredictor
 			OrbitPredictor predictor = new OrbitPredictor("spot-4");
 			
 			double startTime = DateTimeFormat.parseIso("2008-01-17T13:11:13Z");
-			double stopTime = DateTimeFormat.parseIso("2008-01-18T13:11:00Z");
+			double stopTime = DateTimeFormat.parseIso("2008-01-17T15:11:00Z");
 			MechanicalState[] trajectory = predictor.getECFTrajectory(startTime, stopTime, 60);
 			
 			BufferedWriter writer = new BufferedWriter(new FileWriter("d:\\temp\\spot4.swe"));

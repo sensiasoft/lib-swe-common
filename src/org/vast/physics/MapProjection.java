@@ -37,7 +37,9 @@ package org.vast.physics;
  */
 public class MapProjection
 {
-    public final static double MAX_SINLAT = 0.9999;
+	protected final static double RTD = 180. / Math.PI;
+    protected final static double DTR = Math.PI / 180.;
+	public final static double MAX_SINLAT = 0.9999;
     public final static double MAX_Y = Math.PI - 0.0001;
     
     
@@ -174,18 +176,16 @@ public class MapProjection
         double d__1, d__2, d__3;
 
         /* Local variables */
-        double tsec, tday, gmst, t, omega, tfrac, pi, tu, dat, rtd;
+        double tsec, tday, gmst, t, omega, tfrac, tu, dat;
 
         /*     INPUT IS TIME "secondsSince1970" IN SECONDS AND "TDAY" */
         /*     WHICH IS WHOLE DAYS FROM 1970 JAN 1 0H */
         /*     THE OUTPUT IS GREENWICH HOUR ANGLE IN DEGREES */
         /*     XOMEGA IS ROTATION RATE IN DEGREES/SEC */
-        pi = 3.141592653589793238;
-        rtd = 180. / pi;
 
         /*     FOR COMPATABILITY */
         tday = (double) ((int) (julianTime / 86400.));
-        tsec = julianTime - tday;
+        tsec = julianTime - tday*86400;
 
         /*     THE NUMBER OF DAYS FROM THE J2000 EPOCH */
         /*     TO 1970 JAN 1 0H UT1 IS -10957.5 */
@@ -210,14 +210,14 @@ public class MapProjection
         /*     COMPUTE THE GMST AND GHA */
         //  da is earth nutation - currently unused
         double da = 0.0;
-        gmst = gmst + omega * tfrac + da * rtd * 86400. / 360.;
+        gmst = gmst + omega * tfrac + da * RTD * 86400. / 360.;
         gmst = gmst % 86400;
         if (gmst < 0.)
             gmst += 86400.;
         gmst = gmst / 86400. * 360.;
 
         //  returns gha in radians
-        gmst = gmst * Math.PI / 180.0;
+        gmst = gmst * DTR;
         
         return gmst;
     }
