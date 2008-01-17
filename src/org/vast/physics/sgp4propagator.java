@@ -47,12 +47,13 @@ import org.vast.math.*;
  * @since 2/17/98
  * @version 1.0
  */
-public class sgp4propagator
+public class SGP4Propagator
 {
     //private Datum datum;
     private double ae, re;
 
-    public sgp4propagator()
+    
+    public SGP4Propagator()
     {
         // set default Datum
         setDatum(new Datum());
@@ -97,7 +98,7 @@ public class sgp4propagator
         double omegao = tle.getArgumentOfPerigee();
         double eo = tle.getEccentricity();
         double xincl = tle.getInclination();
-        double xno = tle.getRevsPerDay();
+        double xno = tle.getMeanMotion();
         double bstar = tle.getBStar();
 
         //     BROUWER THEORY
@@ -403,6 +404,7 @@ public class sgp4propagator
         eciVelocity.scale(timeFactor);
 
         MechanicalState state = new MechanicalState();
+        state.julianTime = time;
         state.linearPosition = eciPosition;
         state.linearVelocity = eciVelocity;
 

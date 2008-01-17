@@ -31,28 +31,22 @@ package org.vast.physics;
  * </p>
  *
  * <p>Copyright (c) 2005</p>
- * @author Mike Botts
+ * @author Mike Botts, Alexandre Robin
  * @since 10/14/98
  * @version 1.0
  */
 public class TLEInfo
 {
-    // Members
-    private String satName; // satellite name
-    private int satID; // satellite ID
-    private double tleTime; // tle Time (julian)
-    private double xmo; // Mean Anomaly
-    private double xnodeo; // right ascension
-    private double eo; // eccentricity
-    private double omegao; // argument of the perigee
-    private double xincl; // inclination
-    private double xno; // revolutions per day
-    private double bstar; // bstar
-    private double previousTleTime; // time of previous tle (julianTime)
-    private double nextTleTime; // time of next tle (julianTime)
-    private int lineNumberInFile = 0; // if available, location in tle file
-    private boolean lastEntry = false; // flag = true if tle is last listing in file
-    private boolean firstEntry = false; // flag = true if tle is first listing in file
+    protected int satID; // satellite ID
+    protected String satName; // satellite name    
+    protected double tleTime; // tle Time (julian)
+    protected double meanAnomaly; // Mean Anomaly
+    protected double rightAscension; // right ascension
+    protected double eccentricity; // eccentricity
+    protected double argOfPerigee; // argument of the perigee
+    protected double inclination; // inclination
+    protected double meanMotion; // revolutions per day
+    protected double bstar; // bstar
 
 
     public String getSatelliteName()
@@ -75,73 +69,43 @@ public class TLEInfo
 
     public double getMeanAnomaly()
     {
-        return xmo;
+        return meanAnomaly;
     }
 
 
     public double getRightAscension()
     {
-        return xnodeo; // right ascension
+        return rightAscension; // right ascension
     }
 
 
     public double getEccentricity()
     {
-        return eo;
+        return eccentricity;
     }
 
 
     public double getArgumentOfPerigee()
     {
-        return omegao; // argument of the perigee
+        return argOfPerigee; // argument of the perigee
     }
 
 
     public double getInclination()
     {
-        return xincl; // inclination
+        return inclination; // inclination
     }
 
 
-    public double getRevsPerDay()
+    public double getMeanMotion()
     {
-        return xno; // revolutions per day
+        return meanMotion; // revolutions per day
     }
 
 
     public double getBStar()
     {
         return bstar; // bstar
-    }
-
-
-    public double getPreviousTleTime()
-    {
-        return previousTleTime;
-    }
-
-
-    public double getNextTleTime()
-    {
-        return nextTleTime;
-    }
-
-
-    public int getLineNumberInFile()
-    {
-        return lineNumberInFile;
-    }
-
-
-    public boolean isLastEntry()
-    {
-        return lastEntry;
-    }
-
-
-    public boolean isFirstEntry()
-    {
-        return firstEntry;
     }
 
 
@@ -165,72 +129,42 @@ public class TLEInfo
 
     public void setMeanAnomaly(double value)
     {
-        this.xmo = value;
+        this.meanAnomaly = value;
     }
 
 
     public void setRightAscension(double value)
     {
-        this.xnodeo = value; // right ascension
+        this.rightAscension = value; // right ascension
     }
 
 
     public void setEccentricity(double value)
     {
-        this.eo = value;
+        this.eccentricity = value;
     }
 
 
     public void setArgumentOfPerigee(double value)
     {
-        this.omegao = value; // argument of the perigee
+        this.argOfPerigee = value; // argument of the perigee
     }
 
 
     public void setInclination(double value)
     {
-        this.xincl = value; // inclination
+        this.inclination = value; // inclination
     }
 
 
-    public void setRevsPerDay(double value)
+    public void setMeanMotion(double value)
     {
-        this.xno = value; // revolutions per day
+        this.meanMotion = value; // revolutions per day
     }
 
 
     public void setBStar(double value)
     {
         this.bstar = value; // bstar
-    }
-
-
-    public void setPreviousTleTime(double julianTime)
-    {
-        this.previousTleTime = julianTime;
-    }
-
-
-    public void setNextTleTime(double julianTime)
-    {
-        this.nextTleTime = julianTime;
-    }
-
-
-    public void setLineNumberInFile(int line)
-    {
-        this.lineNumberInFile = line;
-    }
-
-
-    public void setLastEntryFlag(boolean flag)
-    {
-        lastEntry = flag;
-    }
-
-
-    public void setFirstEntryFlag(boolean flag)
-    {
-        firstEntry = flag;
     }
 }

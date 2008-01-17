@@ -118,4 +118,108 @@ public class MapProjection
         
         return new double [] {longitude, geodeticLat, altitude};
     }
+    
+    
+    public final static double [] ECFtoECI(double julianTime, double x, double y, double z, boolean isVelocity)
+    {
+    	double GHA = computeGHA(julianTime);
+
+        //Rotate around Z
+        double c = Math.cos(-GHA);
+        double s = Math.sin(-GHA);
+        double xo = c * x + s * y;
+        double yo = -s * x + c * y;
+        
+        // if velocity, account for angular velocity of the earth
+        if (isVelocity)
+        {
+	        // compute velocity cross earthOmega [0,0,0,7.292e-5]	        
+	        double dXo = yo * 7.2921158553e-5; // - Z * 0.0;
+	        double dYo = - xo * 7.2921158553e-5; // + Z * 0.0; 
+	        xo += dXo;
+	        yo += dYo;
+        }        
+
+        return new double[] {xo, yo, z};
+    }
+    
+    
+    public final static double [] ECItoECF(double julianTime, double x, double y, double z, boolean isVelocity)
+    {
+    	double GHA = computeGHA(julianTime);
+
+        //Rotate around Z
+        double c = Math.cos(GHA);
+        double s = Math.sin(GHA);
+        double xo = c * x + s * y;
+        double yo = -s * x + c * y;
+                
+        // if velocity, account for angular velocity of the earth
+        if (isVelocity)
+        {
+	        // compute velocity cross earthOmega [0,0,0,7.292e-5]	        
+	        double dXo = yo * 7.2921158553e-5; // - Z * 0.0;
+	        double dYo = - xo * 7.2921158553e-5; // + Z * 0.0; 
+	        xo -= dXo;
+	        yo -= dYo;
+        }
+
+        return new double[] {xo, yo, z};
+    }
+    
+    
+    public final static double computeGHA(double julianTime)
+    {
+    	//Compute Greenwhich Hour Angle (GHA)
+        /* System generated locals */
+        double d__1, d__2, d__3;
+
+        /* Local variables */
+        double tsec, tday, gmst, t, omega, tfrac, pi, tu, dat, rtd;
+
+        /*     INPUT IS TIME "secondsSince1970" IN SECONDS AND "TDAY" */
+        /*     WHICH IS WHOLE DAYS FROM 1970 JAN 1 0H */
+        /*     THE OUTPUT IS GREENWICH HOUR ANGLE IN DEGREES */
+        /*     XOMEGA IS ROTATION RATE IN DEGREES/SEC */
+        pi = 3.141592653589793238;
+        rtd = 180. / pi;
+
+        /*     FOR COMPATABILITY */
+        tday = (double) ((int) (julianTime / 86400.));
+        tsec = julianTime - tday;
+
+        /*     THE NUMBER OF DAYS FROM THE J2000 EPOCH */
+        /*     TO 1970 JAN 1 0H UT1 IS -10957.5 */
+        t = tday - (float) 10957.5;
+        tfrac = tsec / 86400.;
+        dat = t;
+        tu = dat / 36525.;
+
+        /* Computing 2nd power */
+        d__1 = tu;
+
+        /* Computing 3rd power */
+        d__2 = tu;
+        d__3 = d__2;
+        gmst = tu * 8640184.812866 + 24110.54841 + d__1 * d__1 * .093104 - d__3 * (d__2 * d__2) * 6.2e-6;
+
+        /*     COMPUTE THE EARTH'S ROTATION RATE */
+        /* Computing 2nd power */
+        d__1 = tu;
+        omega = tu * 5.098097e-6 + 86636.55536790872 - d__1 * d__1 * 5.09e-10;
+
+        /*     COMPUTE THE GMST AND GHA */
+        //  da is earth nutation - currently unused
+        double da = 0.0;
+        gmst = gmst + omega * tfrac + da * rtd * 86400. / 360.;
+        gmst = gmst % 86400;
+        if (gmst < 0.)
+            gmst += 86400.;
+        gmst = gmst / 86400. * 360.;
+
+        //  returns gha in radians
+        gmst = gmst * Math.PI / 180.0;
+        
+        return gmst;
+    }
 }
