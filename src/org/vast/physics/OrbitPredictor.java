@@ -1,7 +1,8 @@
 package org.vast.physics;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.text.ParseException;
 import org.vast.util.DateTimeFormat;
 
 
@@ -42,8 +43,8 @@ public class OrbitPredictor
 		try
 		{
 			TLEInfo tle = tleParser.readClosestTLE(time);
-			System.out.println(DateTimeFormat.formatIso(tle.tleTime, 0));
-			MechanicalState state = propagator.getECIOrbitalState(time, tle);
+			System.out.println(DateTimeFormat.formatIso(tle.getTleTime(), 0));
+			MechanicalState state = propagator.getECIOrbitalState(time, tle);			
 			return state;
 		}
 		catch (IOException e)
@@ -118,7 +119,7 @@ public class OrbitPredictor
 	 */
 	public MechanicalState[] getECFTrajectory(double startTime, double stopTime, double step)
 	{
-		int numPoints = (int) ((stopTime - startTime) / step);
+		int numPoints = (int) ((stopTime - startTime) / step) + 1;
 		MechanicalState[] trajectory = new MechanicalState[numPoints];
 		
 		double time = startTime;
@@ -139,10 +140,13 @@ public class OrbitPredictor
 		{
 			OrbitPredictor predictor = new OrbitPredictor("spot-4");
 			
-			double startTime = DateTimeFormat.parseIso("2008-01-20T13:00:00Z");
-			double stopTime = DateTimeFormat.parseIso("2008-01-21T13:00:00Z");
+			double startTime = DateTimeFormat.parseIso("2008-01-17T13:11:13Z");
+			double stopTime = DateTimeFormat.parseIso("2008-01-17T13:31:00Z");
+			MechanicalState[] trajectory = predictor.getECFTrajectory(startTime, stopTime, 10);
 			
-			MechanicalState[] trajectory = predictor.getECFTrajectory(startTime, stopTime, 60);
+			BufferedWriter writer = new BufferedWriter(new FileWriter("d:\\temp\\spot4.swe"));
+			writer.write(Integer.toString(trajectory.length) + ",");
+			
 			for (int p = 0; p < trajectory.length; p++)
 			{
 				System.out.println("Time: " + DateTimeFormat.formatIso(trajectory[p].julianTime, 0));
@@ -158,9 +162,22 @@ public class OrbitPredictor
 				           trajectory[p].linearVelocity.z);
 				
 				System.out.println();
+				
+				writer.write(Double.toString(trajectory[p].linearPosition.x) + ",");
+				writer.write(Double.toString(trajectory[p].linearPosition.y) + ",");
+				writer.write(Double.toString(trajectory[p].linearPosition.z) + ",\n");
+				
+				// on pourrait aussi calculer l'attitude théorique
+				// avec la classe org.vast.physics.NadirPointing
+				
+				// on peut aussi convertir to lat/lon
+				// double[] llaPoint = MapProjection.ECFtoLLA(x, y, z, null);
 			}
+			
+			writer.flush();
+			writer.close();
 		}
-		catch (ParseException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 			System.exit(1);

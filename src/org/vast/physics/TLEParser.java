@@ -44,8 +44,8 @@ import java.util.List;
  */
 public class TLEParser
 {   
-    protected String tlePath;
-    protected BufferedReader tleReader;
+	private double DTR =  Math.PI / 180.0;
+	protected BufferedReader tleReader;
     protected int lineNumber = 0;
     protected String currentLine1, previousLine1, nextLine1;
     protected String currentLine2, previousLine2, nextLine2;
@@ -56,8 +56,7 @@ public class TLEParser
     public TLEParser(String tlePath)
     {
     	reset();
-        this.tlePath = tlePath;
-
+        
         try
         {
             tleReader = new BufferedReader(new FileReader(tlePath));
@@ -239,11 +238,11 @@ public class TLEParser
         
         // inclination
         text = lineBuffer2.substring(8,16).trim();
-        tle.inclination = Double.parseDouble(text);
+        tle.inclination = Double.parseDouble(text) * DTR;
         
         // right ascension
         text = lineBuffer2.substring(17,25).trim();
-        tle.rightAscension = Double.parseDouble(text);
+        tle.rightAscension = Double.parseDouble(text) * DTR;
         
         // eccentricity
         text = "0." + lineBuffer2.substring(26,33).trim();
@@ -251,15 +250,15 @@ public class TLEParser
         
         // arg of perigee
         text = lineBuffer2.substring(34,42).trim();
-        tle.argOfPerigee = Double.parseDouble(text);
+        tle.argOfPerigee = Double.parseDouble(text) * DTR;
         
         // mean anomaly
         text = lineBuffer2.substring(43,51).trim();
-        tle.meanAnomaly = Double.parseDouble(text);
+        tle.meanAnomaly = Double.parseDouble(text) * DTR;
         
         // mean motion
         text = lineBuffer2.substring(52,63).trim();
-        tle.meanMotion = Double.parseDouble(text);
+        tle.meanMotion = Double.parseDouble(text) * 2*Math.PI / 86400; // convert to rad/s
         
         return tle;
     }

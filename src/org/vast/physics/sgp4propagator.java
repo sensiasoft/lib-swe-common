@@ -98,7 +98,7 @@ public class SGP4Propagator
         double omegao = tle.getArgumentOfPerigee();
         double eo = tle.getEccentricity();
         double xincl = tle.getInclination();
-        double xno = tle.getMeanMotion();
+        double xno = tle.getMeanMotion() * 60.0; // need rad/min ??
         double bstar = tle.getBStar();
 
         //     BROUWER THEORY
@@ -147,9 +147,8 @@ public class SGP4Propagator
 
         //     RESET EO TO NONZERO VALUE
         if (eo == 0.)
-        {
             eo = 1e-10;
-        }
+
         //     RECOVER ORIGINAL MEAN MOTION (XNODP) AND SEMIMAJOR AXIS (AODP)
         //     FROM INPUT ELEMENTS
         d__1 = xke / xno;
@@ -320,9 +319,7 @@ public class SGP4Propagator
         //     SOLVE KEPLERS EQUATION
         d__1 = xlt - xnode;
 
-        capu = d__1 / (2*Math.PI);
-        capu = capu - (int)capu;//fmod2p.getfmod2p(d__1);
-
+        capu = getfmod2p(d__1);
         temp2 = capu;
 
         xxxx = 0.0;
@@ -361,7 +358,7 @@ public class SGP4Propagator
         cosu = temp2 * (cosepw - axn + ayn * esine * temp3);
         sinu = temp2 * (sinepw - ayn - axn * esine * temp3);
 
-        u = Math.atan2(sinu, cosu);
+        u = Math.atan2(sinu, cosu);//Actan.getactan(sinu, cosu);
         sin2u = sinu * 2. * cosu;
         cos2u = cosu * 2. * cosu - 1.;
         temp = 1. / pl;
@@ -408,6 +405,29 @@ public class SGP4Propagator
         state.linearPosition = eciPosition;
         state.linearVelocity = eciVelocity;
 
-        return (state);
+        return state;
+    }
+    
+    
+    private double getfmod2p(double x)
+    {
+	    // System generated locals 
+	    double ret_val=0.0;
+	
+	    // CONSTANTS 
+	    double pi = 3.141592653589793238;
+	    //double dtr = pi / 180.;
+	    //double pi2 = pi / 2;
+	    double tpi = pi * 2;
+	    //double thpi = pi * 1.5;
+	
+	    ret_val = x;
+	    int i = (int) (ret_val / tpi);
+	    ret_val -= i * tpi;
+	    if (ret_val < 0.) {
+	        ret_val += tpi;
+	    	}
+	
+	    return ret_val;
     }
 }

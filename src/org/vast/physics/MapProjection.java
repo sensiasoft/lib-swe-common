@@ -20,7 +20,6 @@
 
 package org.vast.physics;
 
-import org.vast.math.*;
 
 /**
  * <p><b>Title:</b><br/>
@@ -95,7 +94,7 @@ public class MapProjection
         // Method from Peter Dana
         double a = datum.equatorRadius;
         double b = datum.polarRadius;
-        double longitude = actan.getactan(y,x);
+        double longitude = Math.atan2(y, x);
         double ePrimeSquared = (a*a - b*b)/(b*b);
         double p = Math.sqrt(x*x + y*y);
         double theta = Math.atan((z*a)/(p*b));

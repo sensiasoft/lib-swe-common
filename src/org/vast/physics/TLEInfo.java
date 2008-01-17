@@ -37,16 +37,16 @@ package org.vast.physics;
  */
 public class TLEInfo
 {
-    protected int satID; // satellite ID
-    protected String satName; // satellite name    
-    protected double tleTime; // tle Time (julian)
-    protected double meanAnomaly; // Mean Anomaly
-    protected double rightAscension; // right ascension
-    protected double eccentricity; // eccentricity
-    protected double argOfPerigee; // argument of the perigee
-    protected double inclination; // inclination
-    protected double meanMotion; // revolutions per day
-    protected double bstar; // bstar
+    protected int satID;
+    protected String satName;   
+    protected double tleTime; // julian time = seconds after 01/01/1970
+    protected double meanAnomaly; // rad
+    protected double rightAscension; // rad
+    protected double eccentricity; // no unit
+    protected double argOfPerigee; // rad
+    protected double inclination; // rad
+    protected double meanMotion; // rad/s
+    protected double bstar;
 
 
     public String getSatelliteName()
