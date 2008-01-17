@@ -44,7 +44,11 @@ import java.util.List;
  */
 public class TLEParser
 {   
-	private double DTR =  Math.PI / 180.0;
+	private static double SECONDS_PER_DAY = 86400.0;   
+    private static double SECONDS_PER_YEAR = 31536000.0;      // no leapseconds
+    private static double SECONDS_PER_LEAPYEAR = 31622400.0;  // leapseconds
+	private static double DTR =  Math.PI / 180.0;
+	
 	protected BufferedReader tleReader;
     protected int lineNumber = 0;
     protected String currentLine1, previousLine1, nextLine1;
@@ -258,7 +262,7 @@ public class TLEParser
         
         // mean motion
         text = lineBuffer2.substring(52,63).trim();
-        tle.meanMotion = Double.parseDouble(text) * 2*Math.PI / 86400; // convert to rad/s
+        tle.meanMotion = Double.parseDouble(text) * 2*Math.PI / SECONDS_PER_DAY; // convert to rad/s
         
         return tle;
     }
@@ -280,9 +284,18 @@ public class TLEParser
         // convert to julian time
         double julianTime = (doyFrac - 1.0) * 3600 * 24;
         for (int i = 1970; i < year; i++)
-            julianTime += ((i % 4) == 0) ? 31622400.0 : 31536000.0;
+            julianTime += (isLeapYear(i)) ? SECONDS_PER_LEAPYEAR : SECONDS_PER_YEAR;
 
         return julianTime;
+    }
+    
+    
+    protected boolean isLeapYear(int year)
+    {
+        if((year%4)==0 && ( (year%100)!=0 || (year%400)==0 ))
+            return true;
+        else
+            return false;
     }
     
     

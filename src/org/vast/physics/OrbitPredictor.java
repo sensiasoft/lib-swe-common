@@ -42,8 +42,7 @@ public class OrbitPredictor
 	{
 		try
 		{
-			TLEInfo tle = tleParser.readClosestTLE(time);
-			System.out.println(DateTimeFormat.formatIso(tle.getTleTime(), 0));
+			TLEInfo tle = tleParser.readClosestTLE(time);			
 			MechanicalState state = propagator.getECIOrbitalState(time, tle);			
 			return state;
 		}
@@ -141,8 +140,8 @@ public class OrbitPredictor
 			OrbitPredictor predictor = new OrbitPredictor("spot-4");
 			
 			double startTime = DateTimeFormat.parseIso("2008-01-17T13:11:13Z");
-			double stopTime = DateTimeFormat.parseIso("2008-01-17T13:31:00Z");
-			MechanicalState[] trajectory = predictor.getECFTrajectory(startTime, stopTime, 10);
+			double stopTime = DateTimeFormat.parseIso("2008-01-18T13:11:00Z");
+			MechanicalState[] trajectory = predictor.getECFTrajectory(startTime, stopTime, 60);
 			
 			BufferedWriter writer = new BufferedWriter(new FileWriter("d:\\temp\\spot4.swe"));
 			writer.write(Integer.toString(trajectory.length) + ",");
