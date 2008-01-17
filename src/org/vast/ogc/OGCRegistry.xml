@@ -14,7 +14,8 @@
    <Namespace type="OM" uri="http://www.opengis.net/om" appendVersionFrom="0.0"/>
    <Namespace type="SOS" uri="http://www.opengis.net/sos" appendVersionFrom="0.0"/>
    <Namespace type="SAS" uri="http://www.opengis.net/sas" appendVersionFrom="0.0"/>   
-   <Namespace type="SPS" uri="http://www.opengis.net/sps" appendVersionFrom="0.0"/>   
+   <Namespace type="SPS" uri="http://www.opengis.net/sps" appendVersionFrom="0.0"/>
+   <Namespace type="WNS" uri="http://www.opengis.net/wns" appendVersionFrom="0.0"/>   
    <!-- -->
    <Reader type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesReader"/>
    <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>
@@ -59,6 +60,18 @@
    <Writer type="WCS" subType="CoverageDescriptions" version="1.1.1" class="org.vast.ows.wcs.CoverageDescriptionsWriterV11"/>
    <Writer type="WCS" subType="Transaction" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionWriterV11"/>
    <Writer type="WCS" subType="TransactionAck" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionAckWriterV11"/>
+   <!-- -->
+   <Reader type="WNS" subType="Capabilities" version="1.0" class="org.vast.ows.wns.WNSCapabilitiesReaderV10"/>
+   <Reader type="WNS" subType="Register" version="1.0" class="org.vast.ows.wns.RegisterReaderV10"/>
+   <Reader type="WNS" subType="Unregister" version="1.0" class="org.vast.ows.wns.UnregisterReaderV10"/>
+   <Reader type="WNS" subType="RegisterResponse" version="1.0" class="org.vast.ows.wns.RegisterResponseReaderV10"/>
+   <Reader type="WNS" subType="UnregisterResponse" version="1.0" class="org.vast.ows.wns.UnregisterResponseReaderV10"/>
+   <!-- -->
+   <Writer type="WNS" subType="Capabilities" version="1.0" class="org.vast.ows.wns.WNSCapabilitiesWriterV10"/>
+   <Writer type="WNS" subType="Register" version="1.0" class="org.vast.ows.wns.RegisterWriterV10"/>
+   <Writer type="WNS" subType="Unregister" version="1.0" class="org.vast.ows.wns.UnregisterWriterV10"/>
+   <Writer type="WNS" subType="RegisterResponse" version="1.0" class="org.vast.ows.wns.RegisterResponseWriterV10"/>
+   <Writer type="WNS" subType="UnregisterResponse" version="1.0" class="org.vast.ows.wns.UnregisterResponseWriterV10"/>
    <!-- -->
    <Reader type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.GetMapReaderV10"/>
    <Reader type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.GetMapReaderV11"/>
