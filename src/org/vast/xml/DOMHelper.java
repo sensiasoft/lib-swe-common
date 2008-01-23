@@ -1241,8 +1241,7 @@ public class DOMHelper
 
         return nextDoc;
     }
-
-
+    
     /**
      * Check if the paths are matching<br>
      * <br>Returns -1 if the beginning of wantedPath doesn't match actualPath<br>
