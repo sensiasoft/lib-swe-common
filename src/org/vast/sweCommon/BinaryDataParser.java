@@ -93,7 +93,7 @@ public class BinaryDataParser extends AbstractDataParser
 					
 					processNextElement();
 				}
-				while(!stopParsing);
+				while(!stopParsing && !endOfArray);
 			}
 			
 			// if a raw handler is registered, just extract byte arrays

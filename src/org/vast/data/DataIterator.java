@@ -34,12 +34,16 @@ public abstract class DataIterator
 	protected DataHandler dataHandler;
 	protected RawDataHandler rawHandler;
 	protected ErrorHandler errorHandler;
+    protected DataArray parentArray;
+    protected int parentArrayIndex;
 	protected AbstractDataComponent dataComponents;
 	protected DataEncoding dataEncoding;
 	protected Stack<Record> componentStack;
 	protected Record currentComponent;
     protected boolean newBlock = true;
-		
+	protected boolean endOfArray = false;
+    
+    
 	protected class Record
     {
         public AbstractDataComponent parent;
@@ -134,6 +138,10 @@ public abstract class DataIterator
 				
                 newBlock = true;
                 currentComponent = null;
+                
+                if (parentArray != null && parentArrayIndex == parentArray.getComponentCount())
+                    endOfArray = true;
+                
 				break;
         	}
     	}
@@ -145,9 +153,16 @@ public abstract class DataIterator
 	 */
 	public void reset() throws CDMException
 	{
-		componentStack.clear();
-		currentComponent = new Record(dataComponents);
-        dataComponents.renewDataBlock();
+		if (parentArray != null)
+        {
+            dataComponents = parentArray.getComponent(parentArrayIndex);
+            parentArrayIndex++;
+        }
+        else
+            dataComponents.renewDataBlock();
+        
+        componentStack.clear();
+        currentComponent = new Record(dataComponents);
 	}
 	
 	
@@ -212,4 +227,12 @@ public abstract class DataIterator
 	{
 		this.dataEncoding = dataEncoding;
 	}
+    
+    
+    public void setParentArray(DataArray parentArray)
+    {
+        this.parentArray = parentArray;
+        parentArray.renewDataBlock();
+        parentArrayIndex = 0;
+    }
 }

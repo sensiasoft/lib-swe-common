@@ -65,7 +65,7 @@ public class AsciiDataParser extends AbstractDataParser
 				
 				processNextElement();
 			}
-			while(!stopParsing);
+			while(!stopParsing && !endOfArray);
 		}
 		catch (IOException e)
 		{

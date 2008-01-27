@@ -23,6 +23,8 @@ package org.vast.cdm.common;
 import java.io.InputStream;
 import java.net.URI;
 
+import org.vast.data.DataArray;
+
 
 /**
  * <p><b>Title:</b><br/>
@@ -71,6 +73,9 @@ public interface DataStreamParser
 
 
 	public void setDataEncoding(DataEncoding encoding);
+    
+    
+    public void setParentArray(DataArray parentArray);
 	
 	
 	public void parse(String uri) throws CDMException;

@@ -214,13 +214,12 @@ public class SweComponentReaderV1 implements DataComponentReader
             SweEncodingReaderV1 encodingReader = new SweEncodingReaderV1();
             DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
             DataStreamParser parser = SWEFactory.createDataParser(encoding);
-            parser.setDataComponents(dataArray);
-            parser.reset();
+            parser.setParentArray(dataArray);
             InputStream is = getDataStream(dom, valuesElt);
             parser.parse(is);
         }
         
-        return dataArray;        
+        return dataArray;
     }
     
     
