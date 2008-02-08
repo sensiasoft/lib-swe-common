@@ -125,4 +125,11 @@ public class QName
         else
             this.prefix = prefix;
     }
+    
+    
+    @Override
+    public int hashCode()
+    {
+    	return nsUri.hashCode() + localName.hashCode();
+    }
 }

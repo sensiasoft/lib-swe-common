@@ -899,7 +899,7 @@ public class DOMHelper
                     for (int i = 0; i < attribs.getLength(); i++)
                     {
                         String attName = attribs.item(i).getLocalName();
-                        if (attName == "href")
+                        if (attName.equals("href"))
                             href = attribs.item(i).getNodeValue();
                     }
                 }

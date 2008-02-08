@@ -20,10 +20,31 @@
 
 package org.vast.cdm.common;
 
-public interface DataEncoding
-{
-	public enum EncodingType {ASCII, BINARY, XML, MIME_FORMAT};
 
+public class XmlEncoding implements DataEncoding
+{
+	public boolean useNames; // whether or not to use component names as xml element names
 	
-	public EncodingType getEncodingType();
+	
+    public XmlEncoding()
+    {        
+    }
+    
+    
+    public XmlEncoding(boolean useNames)
+    {
+        this.useNames = useNames;
+    }
+    
+    
+	public EncodingType getEncodingType()
+	{
+		return EncodingType.XML;
+	}
+	
+	
+	public String toString()
+	{
+		return "XML Encoding: " + (useNames ? "Uniform Naming" : "Explicit Naming");
+	}
 }

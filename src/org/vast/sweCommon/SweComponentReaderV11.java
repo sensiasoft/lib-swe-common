@@ -14,7 +14,7 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -40,32 +40,37 @@ import org.vast.util.DateTimeFormat;
 
 /**
  * <p><b>Title:</b><br/>
- * Swe Component Reader V1
+ * Swe Component Reader V11
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Reads SWE Components structures made of Scalar Parameters,
- * DataRecord, DataArray, etc. This is for version 1 of the standard.
+ * DataRecord, DataArray, and hard typed dervied structures.
+ * This is for version 1.1 of the SWE Common specification.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @date Dec 19, 2006
+ * <p>Copyright (c) 2008</p>
+ * @author Alexandre Robin (Spot Image)
+ * @date Feb 1, 2008
  * @version 1.0
  */
-public class SweComponentReaderV1 implements DataComponentReader
+public class SweComponentReaderV11 implements DataComponentReader
 {
+	public static Hashtable<QName, SweCustomReader> customReaders;
 	protected final static String GML_NS = OGCRegistry.getNamespaceURI(OGCRegistry.GML);
-	protected final static String tupleSeparator = " ";
-	protected final static String tokenSeparator = ",";
-    protected Hashtable<String, AbstractDataComponent> componentIds;
+	protected final static String SWE_NS = OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.1");
+	protected final static String RECORD_TYPE = "Record";
+	protected final static String ARRAY_TYPE = "Array";
+	protected final static String FIELD_TYPE = "field";
+	protected Hashtable<String, AbstractDataComponent> componentIds;
     protected AsciiDataParser asciiParser;
     
     
-    public SweComponentReaderV1()
+    public SweComponentReaderV11()
     {
         componentIds = new Hashtable<String, AbstractDataComponent>();
         asciiParser = new AsciiDataParser();
+        customReaders = new Hashtable<QName, SweCustomReader>();
     }
 
 
@@ -85,26 +90,40 @@ public class SweComponentReaderV1 implements DataComponentReader
         AbstractDataComponent container = null;
         String eltName = componentElt.getLocalName();
         
-        if (dom.existElement(componentElt, "elementCount"))
+        String sweType = "";
+        if (dom.existAttribute(componentElt, "@is"))
+        	sweType = dom.getAttributeValue(componentElt, "@is");
+        
+        // set type
+        QName objectType = new QName(componentElt.getNamespaceURI(), eltName);
+        container.setProperty(DataComponent.TYPE, objectType);
+        
+        // try to call a custom reader for this particular object type
+        SweCustomReader customReader = customReaders.get(objectType);
+        if (customReader != null)
         {
-            container = readDataArray(dom, componentElt);
+        	container = customReader.readComponent(dom, componentElt);
         }
-        else if (eltName.endsWith("DataRecord")) // also handles SimpleDataRecord
-        {
-            container = readDataRecord(dom, componentElt);
+        else // no custom reader found
+	    {
+	        // call the right default method depending on type
+	        if (eltName.endsWith("DataRecord") || sweType.equalsIgnoreCase(RECORD_TYPE))
+	        {
+	            container = readDataRecord(dom, componentElt);
+	        }
+	        else if (eltName.endsWith("DataArray") || sweType.equalsIgnoreCase(ARRAY_TYPE))
+	        {
+	            container = readDataArray(dom, componentElt);
+	        }
+	        else if (eltName.endsWith("Range"))
+	        {
+	            container = readRange(dom, componentElt);
+	        }
+	        else // default to scalar
+	        {
+	            container = readScalar(dom, componentElt);
+	        }
         }
-        else if (eltName.endsWith("Vector")) // handles everything endin with Vector
-        {
-            container = readDataRecord(dom, componentElt);
-        }
-        else if (eltName.endsWith("Range"))
-        {
-            container = readRange(dom, componentElt);
-        }
-        else 
-        {
-            container = readScalar(dom, componentElt);
-        } 
         
         // add id to hashtable if present
         String id = dom.getAttributeValue(componentElt, "id");
@@ -211,12 +230,13 @@ public class SweComponentReaderV1 implements DataComponentReader
             SweEncodingReaderV1 encodingReader = new SweEncodingReaderV1();
             DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
             DataStreamParser parser = SWEFactory.createDataParser(encoding);
-            parser.setParentArray(dataArray);
+            parser.setDataComponents(dataArray);
+            parser.reset();
             InputStream is = getDataStream(dom, valuesElt);
             parser.parse(is);
         }
         
-        return dataArray;
+        return dataArray;        
     }
     
     
@@ -265,8 +285,7 @@ public class SweComponentReaderV1 implements DataComponentReader
         else
             throw new CDMException("Invalid component: " + eltName);
         
-    	// read common stuffs
-        dataValue.setProperty(DataComponent.TYPE, eltName);
+    	// read common stuffs        
         readGmlProperties(dataValue, dom, scalarElt);
     	readCommonAttributes(dataValue, dom, scalarElt);
         readUom(dataValue, dom, scalarElt);
