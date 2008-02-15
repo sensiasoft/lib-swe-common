@@ -1243,6 +1243,15 @@ public class DOMHelper
     }
     
     /**
+     * Adds a node to the end of the children list<br>
+     * @param parent Node Parent node receiving the new child
+     * @param child String Child node to be added
+     */
+   public Node appendChild(Node parent, String child){
+	   	return parent.appendChild(createElement(child));
+    }
+    
+    /**
      * Check if the paths are matching<br>
      * <br>Returns -1 if the beginning of wantedPath doesn't match actualPath<br>
      * <br>Otherwise returns the number levels still needed to reach the wantedPath
