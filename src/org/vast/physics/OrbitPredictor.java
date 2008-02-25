@@ -26,9 +26,9 @@ public class OrbitPredictor
 	protected SGP4Propagator propagator;
 	
 	
-	public OrbitPredictor(String satName)
+	public OrbitPredictor(String tleFile)
 	{
-		tleParser = new TLEParser("d:\\temp\\" + satName + ".txt");
+		tleParser = new TLEParser(tleFile);
 		propagator = new SGP4Propagator();
 	}
 	
