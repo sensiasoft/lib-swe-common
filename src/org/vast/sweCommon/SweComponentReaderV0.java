@@ -160,7 +160,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         	if (sizeComponent == null)
         		throw new CDMException("Invalid array size");
         	else
-        		dataArray = new DataArray((DataValue)sizeComponent);
+        		dataArray = new DataArray((DataValue)sizeComponent, true);
         }
                         
         // loop through all children
@@ -222,7 +222,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         }
         
     	// read attributes
-        paramValue.setProperty(DataComponent.TYPE, eltName);
+        paramValue.setProperty(SweConstants.COMP_QNAME, eltName);
     	readAttributes(dom, paramValue, parameterElement);
     	
         // Parse the value
@@ -264,7 +264,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         
         // read attributes
         readAttributes(dom, paramVal, rangeElement);
-        rangeValues.setProperty(DataComponent.DEF_URI, "urn:ogc:def:data:range");
+        rangeValues.setProperty(SweConstants.DEF_URI, "urn:ogc:def:data:range");
         
         // add params to DataGroup
         rangeValues.addComponent("min", paramVal);
@@ -317,37 +317,37 @@ public class SweComponentReaderV0 implements DataComponentReader
         // definition URI
         String defUri = readComponentDefinition(dom, parameterElement);
         if (defUri != null)
-            dataComponent.setProperty(DataComponent.DEF_URI, defUri);
+            dataComponent.setProperty(SweConstants.DEF_URI, defUri);
         
         // reference frame
         String refFrame = dom.getAttributeValue(parameterElement, "referenceFrame");
         if (refFrame != null)
-            dataComponent.setProperty(DataComponent.REF_FRAME, refFrame);
+            dataComponent.setProperty(SweConstants.REF_FRAME, refFrame);
         
         // reference frame
         String refTimeFrame = dom.getAttributeValue(parameterElement, "referenceTimeFrame");
         if (refTimeFrame != null)
-            dataComponent.setProperty(DataComponent.REF_FRAME, refTimeFrame);
+            dataComponent.setProperty(SweConstants.REF_FRAME, refTimeFrame);
         
         // local frame
         String locFrame = dom.getAttributeValue(parameterElement, "localFrame");
         if (locFrame != null)
-            dataComponent.setProperty(DataComponent.LOC, locFrame);
+            dataComponent.setProperty(SweConstants.LOCAL_FRAME, locFrame);
         
         // scale factor
         String scale = dom.getAttributeValue(parameterElement, "scale");        
         if (scale != null)
-        	dataComponent.setProperty(DataComponent.SCALE, new Double(Double.parseDouble(scale)));
+        	dataComponent.setProperty("scale", new Double(Double.parseDouble(scale)));
         
         // read unit attribute
         String unit = dom.getAttributeValue(parameterElement, "uom");
         if (unit != null)
-        	dataComponent.setProperty(DataComponent.UOM_CODE, unit);
+        	dataComponent.setProperty(SweConstants.UOM_CODE, unit);
         
         // read axis code attribute
         String axisCode = dom.getAttributeValue(parameterElement, "axisCode");
         if (axisCode != null)
-        	dataComponent.setProperty(DataComponent.AXIS, axisCode);
+        	dataComponent.setProperty(SweConstants.AXIS_CODE, axisCode);
     }
     
     

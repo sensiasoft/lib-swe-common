@@ -19,70 +19,32 @@
  Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alexandre.robin@spotimage.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.sweCommon;
 
 import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataConstraint;
+import org.vast.cdm.common.DataComponent;
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 /**
  * <p><b>Title:</b><br/>
- * TokenEnumConstraint
+ * SweCustomWriter
  * </p>
  *
  * <p><b>Description:</b><br/>
- * 
+ * Implement this interface to create a writer customized for the needs 
+ * of a hard typed object (i.e. geometries...)
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 3 janv. 08
+ * @date 3 mars 08
  * @version 1.0
  */
-public class TokenEnumConstraint implements DataConstraint
+public interface SweCustomWriter
 {
-	protected String[] valueList;
-	
-	
-	public TokenEnumConstraint(String[] valueList)
-    {
-    	this.valueList = valueList;
-    }
-	
-	
-	public void validate(DataBlock data) throws CDMException
-    {
-    	String value = data.getStringValue();
-    	
-    	for (int i=0; i<valueList.length; i++)
-    		if (valueList[i].equals(value))
-    			return;
-    	
-    	StringBuffer numberList = new StringBuffer();
-    	numberList.append('{');
-    	for (int i=0; i<valueList.length; i++)
-    	{
-    		numberList.append(valueList[i]);
-    		if (i < valueList.length-1)
-    			numberList.append(", ");
-    	}
-    	numberList.append('}');
-    	
-    	throw new CDMException("Value must be one of " + numberList);
-    }
-
-
-	public String[] getValueList()
-	{
-		return valueList;
-	}
-
-
-	public void setValueList(String[] valueList)
-	{
-		this.valueList = valueList;
-	}
+	public Element writeComponent(DOMHelper dom, DataComponent dataComponent) throws CDMException;
 }

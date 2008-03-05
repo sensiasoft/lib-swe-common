@@ -18,50 +18,43 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.util;
+package org.vast.sweCommon;
 
-import java.util.Date;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataSink;
+import org.w3c.dom.Element;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Date Time
+ * DataSinkXML
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Extension of java Date to provide julian time output as a double.
+ * This DataSink allows to serialize data into an XML DOM tree
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @date Nov 29, 2005
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date Feb, 29 2008
  * @version 1.0
  */
-public class DateTime extends Date
+public class DataSinkXML implements DataSink
 {
-	private static final long serialVersionUID = -237455813885095232L;
+	protected ByteArrayOutputStream textData;
+    
+    
+    public DataSinkXML(Element elt)
+    {
+        
+    }
 
 
-	public DateTime()
+	public OutputStream getDataStream() throws CDMException
 	{
-		super();
+		return this.textData;
 	}
-	
-	
-	public DateTime(long time)
-	{
-		super(time);
-	}
-	
-	
-	public DateTime(double julianTime)
-	{
-		super((long)julianTime*1000);
-	}
-	
-	
-	public double getJulianTime()
-	{
-		return ((double)this.getTime()) / 1000.0;
-	}
+    
 }

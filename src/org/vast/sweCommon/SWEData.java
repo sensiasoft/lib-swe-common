@@ -20,11 +20,12 @@
 
 package org.vast.sweCommon;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataSink;
 import org.vast.cdm.common.DataSource;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
@@ -137,19 +138,41 @@ public class SWEData
     
     
     /**
-     * Parses the data source stream and stores data blocks in a DataList 
+     * Parses data from the internally stored data source stream
+     * and stores data blocks in a DataList 
      * @throws CDMException
      */
-    public void parseResult() throws CDMException
+    public void parseData() throws CDMException
     {
-        DataStreamParser parser = getDataParser();        
+    	assert(this.dataSource != null);
+    	parseData(this.dataSource);
+    }
+    
+    
+    /**
+     * Parses data from the given data source stream and stores
+     * data blocks in the DataList
+     * @param dataSource
+     * @throws CDMException
+     */
+    public void parseData(DataSource dataSource) throws CDMException
+    {
+        DataStreamParser parser = getDataParser();
         parser.setDataHandler(new DefaultParserHandler(this));
         
-        InputStream resultStream = dataSource.getDataStream();
-        parser.parse(resultStream);
-        
-        try { resultStream.close(); }
-        catch (IOException e) { e.printStackTrace(); }
+        InputStream dataStream = dataSource.getDataStream();
+        parser.parse(dataStream);
+    }
+    
+    
+    /**
+     * Validates all data against to constraints specified in
+     * the data components definition
+     * @throws CDMException
+     */
+    public void validateData() throws CDMException
+    {
+    	dataBlocks.validateData();
     }
     
     
@@ -158,14 +181,13 @@ public class SWEData
      * @param buffer
      * @throws CDMException
      */
-    public void writeResult(StringBuffer buffer) throws CDMException
+    public void writeData(DataSink dataSink) throws CDMException
     {
-        buffer.append("blablabla");
-        
         DataStreamWriter writer = getDataWriter();
         writer.setDataHandler(new DefaultWriterHandler(this));
         
-        
+        OutputStream dataStream = dataSink.getDataStream();
+        writer.write(dataStream);
     }
     
 }

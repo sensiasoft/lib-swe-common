@@ -18,50 +18,36 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.util;
+package org.vast.data;
 
-import java.util.Date;
+import java.util.ArrayList;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataBlock;
+import org.vast.cdm.common.DataConstraint;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Date Time
+ * <p><b>Title:</b>
+ * SweConstraintList
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Extension of java Date to provide julian time output as a double.
+ * List of constraints for a given field in SWE Common v1.0
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 29, 2005
+ * @date Feb 7, 2007
  * @version 1.0
  */
-public class DateTime extends Date
+public class ConstraintList extends ArrayList<DataConstraint> implements DataConstraint
 {
-	private static final long serialVersionUID = -237455813885095232L;
-
-
-	public DateTime()
-	{
-		super();
-	}
-	
-	
-	public DateTime(long time)
-	{
-		super(time);
-	}
-	
-	
-	public DateTime(double julianTime)
-	{
-		super((long)julianTime*1000);
-	}
-	
-	
-	public double getJulianTime()
-	{
-		return ((double)this.getTime()) / 1000.0;
-	}
+    private static final long serialVersionUID = 8873758049042174380L;
+   
+    
+    public void validate(DataBlock data) throws CDMException
+    {
+    	for (int i=0; i<size(); i++)
+    		get(i).validate(data);
+    }
 }

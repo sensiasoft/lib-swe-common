@@ -62,7 +62,7 @@ public class DefaultWriterHandler implements DataHandler
             blockNum++;
         }
         else
-            info.setData(null);
+            info.clearData();
     }
     
     

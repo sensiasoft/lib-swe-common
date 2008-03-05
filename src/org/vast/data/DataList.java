@@ -21,8 +21,10 @@
 package org.vast.data;
 
 import java.util.ListIterator;
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
+import org.vast.sweCommon.SweConstants;
 
 
 /**
@@ -136,6 +138,53 @@ public class DataList extends AbstractDataComponent
     {
         this.dataBlock = null;
         component.clearData();
+    }
+    
+    
+    @Override
+    public void validateData() throws CDMException
+    {
+    	// do only if constraints are specified on descendants
+    	if (hasConstraints(this))
+    	{
+    		for (int i = 0; i < getComponentCount(); i++)
+    			getComponent(i).validateData();
+    	}
+    }
+    
+    
+    /**
+     * Recursively checks if constraints are specified in descendants
+     * @param component
+     * @return
+     */
+    private boolean hasConstraints(DataComponent component)
+    {
+    	
+    	if (component instanceof DataArray)
+    	{
+    		return hasConstraints(((DataArray)component).component);
+    	}
+    	else if (component instanceof DataList)
+    	{
+    		return hasConstraints(((DataList)component).component);
+    	}
+    	else if (component instanceof DataValue)
+    	{
+    		return (component.getProperty(SweConstants.CONSTRAINTS) != null);
+    	}
+    	else if (component instanceof DataGroup || component instanceof DataChoice)
+    	{
+    		for (int i = 0; i < component.getComponentCount(); i++)
+    		{
+    			if (hasConstraints(component.getComponent(i)))
+    				return true;
+    		}
+    		
+    		return false;
+    	}
+    	else
+    		return false;
     }
     
     

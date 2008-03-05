@@ -18,27 +18,57 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.common;
+package org.vast.sweCommon;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataSource;
+import org.vast.ogc.OGCRegistry;
+import org.w3c.dom.Element;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Data Stream Provider
+ * DataSourceXML
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provide a direct access to the input stream from which to
- * read the CDM data according to the previously obtained description.
+ * This DataSource allows to extract data from an XML DOM tree and
+ * simulate an inputstream so that a low level parser can parse the
+ * content using the common DataStreamParser interface.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @since Aug 12, 2005
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date Feb, 28 2008
  * @version 1.0
  */
-public interface InputStreamProvider
+public class DataSourceXML implements DataSource
 {
-	public InputStream getDataStream() throws CDMException;
+	protected Element dataElt;
+	    
+    
+    public DataSourceXML(Element dataElt)
+    {
+    	this.dataElt = dataElt;
+    }
+    
+    
+    public InputStream getDataStream() throws CDMException
+    {
+    	String xlinkUri = OGCRegistry.getNamespaceURI(OGCRegistry.XLINK);
+    	String href = dataElt.getAttributeNS(xlinkUri, "href");
+        
+    	if (href != null)
+        {
+            return URIStreamHandler.openStream(href);
+        }
+        else
+        {
+            String values = dataElt.getTextContent();
+            return(new ByteArrayInputStream(values.getBytes()));
+        }
+    }
+    
 }

@@ -89,7 +89,7 @@ public class OGCRegistry
         if (nsBuilder != null)
             return nsBuilder.getNsUri(version);
         else
-            return null;
+        	throw new IllegalStateException("Unsupported Specification: " + spec);
     }
 
 
@@ -100,11 +100,7 @@ public class OGCRegistry
      */
     public static String getNamespaceURI(String spec)
     {
-        NamespaceBuilder nsBuilder = namespaceBuilders.get(spec);
-        if (nsBuilder != null)
-            return nsBuilder.getNsUri(null);
-        else
-            throw new IllegalStateException("Unsupported Specification: " + spec);
+        return getNamespaceURI(spec, null);
     }
 
 

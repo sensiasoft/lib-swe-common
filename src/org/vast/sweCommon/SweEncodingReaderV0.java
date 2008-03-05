@@ -27,7 +27,7 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * Swe Encoding Reader V0
+ * SWE Encoding Reader v0.0
  * </p>
  *
  * <p><b>Description:</b><br/>

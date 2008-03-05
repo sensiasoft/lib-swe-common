@@ -27,7 +27,7 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * Swe Encoding Reader V11
+ * SWE Encoding Reader v1.1
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -72,6 +72,10 @@ public class SweEncodingReaderV11 implements DataEncodingReader
         {
         	encoding = readBinaryBlock(dom, encodingElement);
         }
+        else if (encodingElement.getLocalName().equals("StandardFormat"))
+        {
+        	encoding = readStandardFormat(dom, encodingElement);
+        }
         else
         	throw new CDMException("Encoding not supported");
 
@@ -79,23 +83,23 @@ public class SweEncodingReaderV11 implements DataEncodingReader
     }
     
     
-    private AsciiEncoding readTextBlock(DOMHelper dom, Element asciiBlockElement) throws CDMException
+    private AsciiEncoding readTextBlock(DOMHelper dom, Element asciiBlockElt) throws CDMException
     {
     	AsciiEncoding encoding = new AsciiEncoding();
     	
-    	encoding.decimalSeparator = dom.getAttributeValue(asciiBlockElement, "decimalSeparator").charAt(0);
-    	encoding.tokenSeparator = dom.getAttributeValue(asciiBlockElement, "tokenSeparator");
-    	encoding.blockSeparator = dom.getAttributeValue(asciiBlockElement, "blockSeparator");
+    	encoding.decimalSeparator = dom.getAttributeValue(asciiBlockElt, "decimalSeparator").charAt(0);
+    	encoding.tokenSeparator = dom.getAttributeValue(asciiBlockElt, "tokenSeparator");
+    	encoding.blockSeparator = dom.getAttributeValue(asciiBlockElt, "blockSeparator");
     	
     	return encoding;
     }
     
     
-    private XmlEncoding readXmlBlock(DOMHelper dom, Element xmlBlockElement) throws CDMException
+    private XmlEncoding readXmlBlock(DOMHelper dom, Element xmlBlockElt) throws CDMException
     {
     	XmlEncoding encoding = new XmlEncoding();
     	
-    	String useNameText = dom.getAttributeValue(xmlBlockElement, "useNames");
+    	String useNameText = dom.getAttributeValue(xmlBlockElt, "useNames");
     	if (useNameText == null)
     		encoding.useNames = true; // default to true if none specified
     	else
@@ -105,17 +109,28 @@ public class SweEncodingReaderV11 implements DataEncodingReader
     }
     
     
-    private BinaryEncoding readBinaryBlock(DOMHelper dom, Element binaryBlockElement) throws CDMException
+    private StandardFormatEncoding readStandardFormat(DOMHelper dom, Element formatElt) throws CDMException
+    {
+    	String mimeType = dom.getAttributeValue(formatElt, "mimeType");
+    	if (mimeType == null)
+    		throw new CDMException("The MIME type must be specified");
+    	
+    	StandardFormatEncoding encoding = new StandardFormatEncoding(mimeType);    	
+    	return encoding;
+    }
+    
+    
+    private BinaryEncoding readBinaryBlock(DOMHelper dom, Element binaryBlockElt) throws CDMException
     {
     	BinaryEncoding encoding = new BinaryEncoding();
     	
     	// parse byte length
-    	String byteLength = dom.getAttributeValue(binaryBlockElement, "byteLength");
+    	String byteLength = dom.getAttributeValue(binaryBlockElt, "byteLength");
     	if (byteLength != null)
     		encoding.byteLength = Long.parseLong(byteLength);
     	
     	// parse byte encoding
-    	String byteEncoding = dom.getAttributeValue(binaryBlockElement, "byteEncoding");
+    	String byteEncoding = dom.getAttributeValue(binaryBlockElt, "byteEncoding");
     	if (byteEncoding.equalsIgnoreCase("base64"))
         {
     		encoding.byteEncoding = BinaryEncoding.ByteEncoding.BASE64;
@@ -126,7 +141,7 @@ public class SweEncodingReaderV11 implements DataEncodingReader
         }
     	
     	// parse byte order
-    	String byteOrder = dom.getAttributeValue(binaryBlockElement, "byteOrder");
+    	String byteOrder = dom.getAttributeValue(binaryBlockElt, "byteOrder");
     	if (byteOrder.equalsIgnoreCase("bigEndian"))
         {
     		encoding.byteOrder = BinaryEncoding.ByteOrder.BIG_ENDIAN;
@@ -137,7 +152,7 @@ public class SweEncodingReaderV11 implements DataEncodingReader
         }
     	
     	// parse component encodings
-    	NodeList components = dom.getElements(binaryBlockElement, "member/Component");
+    	NodeList components = dom.getElements(binaryBlockElt, "member/Component");
     	int listSize = components.getLength();
     	BinaryOptions[] componentEncodings = new BinaryOptions[listSize];
     	for (int i=0; i<components.getLength(); i++)
@@ -146,6 +161,8 @@ public class SweEncodingReaderV11 implements DataEncodingReader
     		componentEncodings[i] = readBinaryValue(dom, componentElt);
     	}
     	encoding.componentEncodings = componentEncodings;
+    	
+    	// TODO parse binary sub blocks encoding
     	
     	return encoding;
     }

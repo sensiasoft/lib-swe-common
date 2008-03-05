@@ -22,7 +22,5 @@ package org.vast.cdm.common;
 
 public interface DataSource extends InputStreamProvider
 {
-    
- 
         
 }

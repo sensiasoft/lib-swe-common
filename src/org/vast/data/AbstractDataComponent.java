@@ -21,6 +21,7 @@
 package org.vast.data;
 
 import java.util.*;
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 
@@ -227,6 +228,12 @@ public abstract class AbstractDataComponent implements DataComponent
      * Clears dataBlock from this container
      */
     public abstract void clearData();
+    
+    
+    /**
+     * Validates dataBlock against constraints if any
+     */
+    public abstract void validateData() throws CDMException;
 	
 	
 	/**

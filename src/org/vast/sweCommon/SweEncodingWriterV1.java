@@ -28,7 +28,7 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * Encoding Writer
+ * SWE Encoding Writer v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -68,6 +68,10 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
         {
             dataEncElt = writeBinaryBlock(dom, (BinaryEncoding)dataEncoding);
         }
+        else if (dataEncoding instanceof StandardFormatEncoding)
+        {
+            dataEncElt = writeStandardFormat(dom, (StandardFormatEncoding)dataEncoding);
+        }
         else
             throw new CDMException("Encoding not supported");
         
@@ -83,6 +87,14 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
         dataEncElt.setAttribute("tupleSeparator", String.valueOf(asciiEncoding.blockSeparator));
         dataEncElt.setAttribute("decimalSeparator", String.valueOf(asciiEncoding.decimalSeparator));
     	
+    	return dataEncElt;
+    }
+    
+    
+    private Element writeStandardFormat(DOMHelper dom, StandardFormatEncoding formatEncoding) throws CDMException
+    {
+        Element dataEncElt = dom.createElement("swe:StandardFormat");    	
+        dataEncElt.setAttribute("mimeType", formatEncoding.getMimeType());        
     	return dataEncElt;
     }
     

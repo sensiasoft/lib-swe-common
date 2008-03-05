@@ -24,6 +24,10 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.sweCommon;
 
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataBlock;
+import org.vast.cdm.common.DataConstraint;
+
 /**
  * <p><b>Title:</b><br/>
  * NumberEnumConstraint
@@ -38,9 +42,9 @@ package org.vast.sweCommon;
  * @date 3 janv. 08
  * @version 1.0
  */
-public class NumberEnumConstraint implements SweConstraint<Double>
+public class NumberEnumConstraint implements DataConstraint
 {
-	public double[] valueList;
+	protected double[] valueList;
 	
 	
 	public NumberEnumConstraint(double[] valueList)
@@ -49,12 +53,36 @@ public class NumberEnumConstraint implements SweConstraint<Double>
     }
 	
 	
-	public boolean validate(Double value)
+	public void validate(DataBlock data) throws CDMException
     {
+    	double value = data.getDoubleValue();
+    	
     	for (int i=0; i<valueList.length; i++)
     		if (valueList[i] == value)
-    			return true;
+    			return;
     	
-    	return false;
+    	StringBuffer numberList = new StringBuffer();
+    	numberList.append('{');
+    	for (int i=0; i<valueList.length; i++)
+    	{
+    		numberList.append(Double.toString(valueList[i]));
+    		if (i < valueList.length-1)
+    			numberList.append(", ");
+    	}
+    	numberList.append('}');
+    	
+    	throw new CDMException("Value must be one of " + numberList);
     }
+
+
+	public double[] getValueList()
+	{
+		return valueList;
+	}
+
+
+	public void setValueList(double[] valueList)
+	{
+		this.valueList = valueList;
+	}
 }

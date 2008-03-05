@@ -20,8 +20,10 @@
 
 package org.vast.data;
 
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
+import org.vast.sweCommon.SweConstants;
 
 
 /**
@@ -40,7 +42,8 @@ import org.vast.cdm.common.DataComponent;
  */
 public class DataArray extends AbstractDataComponent
 {
-    protected final static String errorBlockMixed = "Error: DataArrays should never contain a DataBlockMixed";
+    public final static String ARRAY_SIZE_FIELD = "ArraySize";
+	protected final static String errorBlockMixed = "Error: DataArrays should never contain a DataBlockMixed";
     protected AbstractDataComponent component = null;
     protected int arraySize = -1;
     protected boolean variableSize;
@@ -61,25 +64,15 @@ public class DataArray extends AbstractDataComponent
     }
     
     
-    public DataArray(int arraySize, String name)
-    {
-        this(arraySize);
-        this.setName(name);
-    }
-    
-    
-    public DataArray(DataValue sizeData)
+    public DataArray(DataValue sizeData, boolean variableSize)
     {
         this.sizeData = sizeData;
-        this.arraySize = 1;
-        this.variableSize = true;
-    }
-    
-    
-    public DataArray(DataValue sizeData, String name)
-    {
-        this(sizeData);
-        this.setName(name);
+        this.variableSize = variableSize;
+        
+        if (variableSize)
+        	this.arraySize = 1;
+        else
+        	this.arraySize = sizeData.getData().getIntValue();
     }
 
 
@@ -207,7 +200,7 @@ public class DataArray extends AbstractDataComponent
             // assign variable size value to arraySize
             if (this.getSizeData() != null)
             {
-                DataBlock data = sizeData.getData();                
+                DataBlock data = sizeData.getData();
                 if (data != null)
                     arraySize = data.getIntValue();
             }
@@ -225,6 +218,53 @@ public class DataArray extends AbstractDataComponent
     {
         this.dataBlock = null;
         component.clearData();
+    }
+    
+    
+    @Override
+    public void validateData() throws CDMException
+    {
+    	// do only if constraints are specified on descendants
+    	if (hasConstraints(this))
+    	{
+    		for (int i = 0; i < getComponentCount(); i++)
+    			getComponent(i).validateData();
+    	}
+    }
+    
+    
+    /**
+     * Recursively checks if constraints are specified in descendants
+     * @param component
+     * @return
+     */
+    private boolean hasConstraints(DataComponent component)
+    {
+    	
+    	if (component instanceof DataArray)
+    	{
+    		return hasConstraints(((DataArray)component).component);
+    	}
+    	else if (component instanceof DataList)
+    	{
+    		return hasConstraints(((DataList)component).component);
+    	}
+    	else if (component instanceof DataValue)
+    	{
+    		return (component.getProperty(SweConstants.CONSTRAINTS) != null);
+    	}
+    	else if (component instanceof DataGroup || component instanceof DataChoice)
+    	{
+    		for (int i = 0; i < component.getComponentCount(); i++)
+    		{
+    			if (hasConstraints(component.getComponent(i)))
+    				return true;
+    		}
+    		
+    		return false;
+    	}
+    	else
+    		return false;
     }
     
     
@@ -387,7 +427,7 @@ public class DataArray extends AbstractDataComponent
     
     
     /**
-     * Set the size of this FIXED SIZE array to a new value
+     * Set the size of this array to a new FIXED value
      * @param newSize
      */
     public void setSize(int newSize)
@@ -396,7 +436,6 @@ public class DataArray extends AbstractDataComponent
         {
         	this.arraySize = newSize;
             this.variableSize = false;
-            this.sizeData = null;
         }
     }
     
@@ -414,7 +453,7 @@ public class DataArray extends AbstractDataComponent
     	{
     		if (this.getSizeData() != null)
             {   
-                DataBlock data = sizeData.getData();   		
+                DataBlock data = sizeData.getData();
         		if (data != null)
         			return data.getIntValue();
             }
@@ -459,11 +498,12 @@ public class DataArray extends AbstractDataComponent
         if (sizeData != null)
             return sizeData;
         
-        // try to find sizeData in the parent hierarchy
+        // if DataArray was cloned, try to find sizeData from parent hierarchy
         AbstractDataComponent dataComponent = this;
         for (int i=0; i<stepsToSizeData; i++)
             dataComponent = dataComponent.parent;
-        sizeData = (DataValue)dataComponent.getComponent(sizeDataName);        
+        sizeData = (DataValue)dataComponent.getComponent(sizeDataName);
+        
         return sizeData;
     }
 

@@ -18,50 +18,28 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.util;
+package org.vast.sweCommon;
 
-import java.util.Date;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataSource;
 
 
-/**
- * <p><b>Title:</b><br/>
- * Date Time
- * </p>
- *
- * <p><b>Description:</b><br/>
- * Extension of java Date to provide julian time output as a double.
- * </p>
- *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @date Nov 29, 2005
- * @version 1.0
- */
-public class DateTime extends Date
+public class DataSourceString implements DataSource
 {
-	private static final long serialVersionUID = -237455813885095232L;
-
-
-	public DateTime()
-	{
-		super();
-	}
-	
-	
-	public DateTime(long time)
-	{
-		super(time);
-	}
-	
-	
-	public DateTime(double julianTime)
-	{
-		super((long)julianTime*1000);
-	}
-	
-	
-	public double getJulianTime()
-	{
-		return ((double)this.getTime()) / 1000.0;
-	}
+	protected ByteArrayInputStream textData;
+    
+    
+    public DataSourceString(String textData)
+    {
+        this.textData = new ByteArrayInputStream(textData.getBytes());
+    }
+    
+    
+    public InputStream getDataStream() throws CDMException
+    {
+        return this.textData;
+    }
+    
 }

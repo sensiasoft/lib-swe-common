@@ -22,9 +22,11 @@
     Alexandre Robin <robin@nsstc.uah.edu>
  
 ******************************* END LICENSE BLOCK ***************************/
-package org.vast.sweCommon;
+package org.vast.cdm.common;
 
-public interface SweConstraint<DataType>
+
+
+public interface DataConstraint
 {
-	public boolean validate(DataType value);
+	public void validate(DataBlock data) throws CDMException;
 }

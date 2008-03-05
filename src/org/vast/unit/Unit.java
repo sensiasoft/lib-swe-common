@@ -176,12 +176,11 @@ public class Unit
     {
         Unit siUnit = this.copy();
         siUnit.scaleToSI = 1.0;
-        siUnit.code = siUnit.getUCUMCode();
-        siUnit.printSymbol = siUnit.code;
-        siUnit.expression = siUnit.code;
-        siUnit.name = siUnit.code;
+        siUnit.expression = getUCUMExpression();
+        siUnit.code = null;
+        siUnit.name = null;
         siUnit.description = null;
-        siUnit.function = null;
+        siUnit.function = null;        
         return siUnit;
     }
     
@@ -216,19 +215,39 @@ public class Unit
     }
 
 
-    /**
-    * @return the print symbol of this Unit. If the print symbol is not set 
-    * (i.e. null or empty), then the expression will be returned (if that is
-    * not null and not empty).
-    */
-   public String getPrintSymbol()
-    {
-        if( (printSymbol == null || printSymbol.trim().length()==0) && 
-            (expression != null && expression.trim().length()>0)) {
-           return expression;
-        } else {
-           return printSymbol;
-        }
+	/**
+	* @return the print symbol of this Unit. If the print symbol is not set 
+	* (i.e. null or empty), then the expression will be returned (if that is
+	* not null and not empty).
+	*/
+	public String getPrintSymbol()
+	{
+        // use printSymbol if set
+		if (printSymbol != null)
+			return printSymbol;
+		
+		// try to use code
+		if (code != null)
+		{
+			// handle special case of weird unit codes
+			if (code.equals("KiBy"))
+				printSymbol = "KB";
+			
+			else if (code.equals("MiBy"))
+				printSymbol = "MB";
+			
+			else if (code.equals("GiBy"))
+				printSymbol = "GB";
+		
+			else if (code.equals("Cel"))
+				printSymbol = "°C";
+		}
+        
+		// try to use expression
+		else if (expression != null)
+			printSymbol = getExpression();
+        
+        return printSymbol;
     }
 
 
@@ -240,7 +259,10 @@ public class Unit
     
     public String getExpression()
     {
-        return expression;
+        if (expression == null)
+        	expression = getUCUMExpression();
+        
+    	return expression;
     }
 
 
@@ -418,7 +440,7 @@ public class Unit
     }
     
     
-    public String getUCUMCode()
+    public String getUCUMExpression()
     {
         StringBuffer buf = new StringBuffer();
         

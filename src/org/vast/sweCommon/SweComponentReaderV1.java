@@ -174,7 +174,7 @@ public class SweComponentReaderV1 implements DataComponentReader
             DataComponent sizeComponent = componentIds.get(countId);
             if (sizeComponent == null)
                 throw new CDMException("Invalid elementCount: The elementCount property must reference an existing Count component");
-            dataArray = new DataArray((DataValue)sizeComponent);
+            dataArray = new DataArray((DataValue)sizeComponent, true);
         }
         
         // else if elementCount is given inline
@@ -266,7 +266,7 @@ public class SweComponentReaderV1 implements DataComponentReader
             throw new CDMException("Invalid component: " + eltName);
         
     	// read common stuffs
-        dataValue.setProperty(DataComponent.TYPE, eltName);
+        dataValue.setProperty(SweConstants.COMP_QNAME, eltName);
         readGmlProperties(dataValue, dom, scalarElt);
     	readCommonAttributes(dataValue, dom, scalarElt);
         readUom(dataValue, dom, scalarElt);
@@ -296,24 +296,24 @@ public class SweComponentReaderV1 implements DataComponentReader
         if (eltName.startsWith("Quantity"))
         {
             paramVal = new DataValue(DataType.DOUBLE);
-            paramVal.setProperty(DataComponent.TYPE, "Quantity");
+            paramVal.setProperty(SweConstants.COMP_QNAME, "Quantity");
         }
         else if (eltName.startsWith("Count"))
         {
             paramVal = new DataValue(DataType.INT);
-            paramVal.setProperty(DataComponent.TYPE, "Count");
+            paramVal.setProperty(SweConstants.COMP_QNAME, "Count");
         }
         else if (eltName.startsWith("Time"))
         {
             paramVal = new DataValue(DataType.DOUBLE);
-            paramVal.setProperty(DataComponent.TYPE, "Time");
+            paramVal.setProperty(SweConstants.COMP_QNAME, "Time");
         }
         else
             throw new CDMException("Only Quantity, Time and Count ranges are allowed");
         
         // read attributes
         readCommonAttributes(paramVal, dom, rangeElt);
-        rangeValues.setProperty(DataComponent.DEF_URI, "urn:ogc:def:data:OGC:range");
+        rangeValues.setProperty(SweConstants.DEF_URI, "urn:ogc:def:data:OGC:range");
         
         // add params to DataGroup
         rangeValues.addComponent("min", paramVal);
@@ -372,7 +372,7 @@ public class SweComponentReaderV1 implements DataComponentReader
         // gml description
         String description = dom.getElementValue(componentElt, "gml:description");
         if (description != null)
-            dataComponent.setProperty(DataComponent.DESC, description);
+            dataComponent.setProperty(SweConstants.DESC, description);
         
         // gml names
         NodeList nameList = dom.getElements(componentElt, "gml:name");
@@ -388,7 +388,7 @@ public class SweComponentReaderV1 implements DataComponentReader
                 QName name = new QName(codeSpace, value);
                 names.add(name);
             }
-            dataComponent.setProperty(DataComponent.NAMES, names);
+            dataComponent.setProperty(SweConstants.NAMES, names);
         }
     }
     
@@ -404,19 +404,19 @@ public class SweComponentReaderV1 implements DataComponentReader
         // definition URI
         String defUri = readComponentDefinition(dom, componentElt);
         if (defUri != null)
-            dataComponent.setProperty(DataComponent.DEF_URI, defUri);
+            dataComponent.setProperty(SweConstants.DEF_URI, defUri);
         
         // reference frame
         String refFrame = dom.getAttributeValue(componentElt, "referenceFrame");
         if (refFrame != null)
-            dataComponent.setProperty(DataComponent.REF_FRAME, refFrame);
+            dataComponent.setProperty(SweConstants.REF_FRAME, refFrame);
         
         // reference time
         try
         {
             String refTime = dom.getAttributeValue(componentElt, "referenceTime");
             if (refTime != null)
-                dataComponent.setProperty(DataComponent.REF_TIME, DateTimeFormat.parseIso(refTime));
+                dataComponent.setProperty(SweConstants.REF_TIME, DateTimeFormat.parseIso(refTime));
         }
         catch (ParseException e)
         {
@@ -426,12 +426,12 @@ public class SweComponentReaderV1 implements DataComponentReader
         // local frame
         String locFrame = dom.getAttributeValue(componentElt, "localFrame");
         if (locFrame != null)
-            dataComponent.setProperty(DataComponent.LOC, locFrame);
+            dataComponent.setProperty(SweConstants.LOCAL_FRAME, locFrame);
         
         // read axis code attribute
         String axisCode = dom.getAttributeValue(componentElt, "axisID");
         if (axisCode != null)
-        	dataComponent.setProperty(DataComponent.AXIS, axisCode);
+        	dataComponent.setProperty(SweConstants.AXIS_CODE, axisCode);
     }
     
     
@@ -464,19 +464,19 @@ public class SweComponentReaderV1 implements DataComponentReader
         // uom code        
         if (ucumCode != null)
         {
-            dataComponent.setProperty(DataComponent.UOM_CODE, ucumCode);
+            dataComponent.setProperty(SweConstants.UOM_CODE, ucumCode);
             
             // also create unit object
             UnitParserUCUM ucumParser = new UnitParserUCUM();
             Unit unit = ucumParser.getUnit(ucumCode);
             if (unit != null)
-                dataComponent.setProperty(DataComponent.UOM_OBJ, unit);
+                dataComponent.setProperty(SweConstants.UOM_OBJ, unit);
         }
         
         // if no code, read href
         else if (href != null)
         {
-            dataComponent.setProperty(DataComponent.UOM_URI, href);
+            dataComponent.setProperty(SweConstants.UOM_URI, href);
         }
         
         // inline unit
@@ -488,7 +488,7 @@ public class SweComponentReaderV1 implements DataComponentReader
             {
                 Unit unit = unitReader.readUnit(dom, unitElt);
                 if (unit != null)
-                    dataComponent.setProperty(DataComponent.UOM_OBJ, unit);
+                    dataComponent.setProperty(SweConstants.UOM_OBJ, unit);
             }
             catch (GMLException e)
             {
@@ -510,7 +510,7 @@ public class SweComponentReaderV1 implements DataComponentReader
         // codeSpace URI
         String codeSpaceUri = dom.getAttributeValue(scalarElt, "codeSpace/@href");
         if (codeSpaceUri != null)
-            dataComponent.setProperty(DataComponent.DIC_URI, codeSpaceUri);
+            dataComponent.setProperty(SweConstants.DIC_URI, codeSpaceUri);
     }
     
     
@@ -529,7 +529,7 @@ public class SweComponentReaderV1 implements DataComponentReader
         DataComponent quality = readScalar(dom, qualityElt);
         quality.setName("quality");
         
-        dataComponent.setProperty(DataComponent.QUALITY, quality);
+        dataComponent.setProperty(SweConstants.QUALITY, quality);
     }
     
     
@@ -547,7 +547,7 @@ public class SweComponentReaderV1 implements DataComponentReader
     	
     	for (int i=0; i<constraintElts.getLength(); i++)
     	{
-    		SweConstraint constraint = null;
+    		DataConstraint constraint = null;
     		Element constraintElt = (Element)constraintElts.item(i);
     		
     		if (dom.existElement(constraintElt, "AllowedValues/interval"))
@@ -566,7 +566,7 @@ public class SweComponentReaderV1 implements DataComponentReader
     	}
     	
     	if (!constraintList.isEmpty())
-    		dataComponent.setProperty(DataComponent.CONSTRAINTS, constraintList);
+    		dataComponent.setProperty(SweConstants.CONSTRAINTS, constraintList);
     }
     
     

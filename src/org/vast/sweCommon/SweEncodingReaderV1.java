@@ -27,7 +27,7 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * Swe Encoding Reader V1
+ * SWE Encoding Reader v1.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -68,6 +68,10 @@ public class SweEncodingReaderV1 implements DataEncodingReader
         {
         	encoding = readBinaryBlock(dom, encodingElement);
         }
+        else if (encodingElement.getLocalName().equals("StandardFormat"))
+        {
+        	encoding = readStandardFormat(dom, encodingElement);
+        }
         else
         	throw new CDMException("Encoding not supported");
 
@@ -83,6 +87,17 @@ public class SweEncodingReaderV1 implements DataEncodingReader
     	encoding.tokenSeparator = dom.getAttributeValue(asciiBlockElement, "tokenSeparator");
     	encoding.blockSeparator = dom.getAttributeValue(asciiBlockElement, "blockSeparator");
     	
+    	return encoding;
+    }
+    
+    
+    private StandardFormatEncoding readStandardFormat(DOMHelper dom, Element formatElt) throws CDMException
+    {
+    	String mimeType = dom.getAttributeValue(formatElt, "mimeType");
+    	if (mimeType == null)
+    		throw new CDMException("The MIME type must be specified");
+    	
+    	StandardFormatEncoding encoding = new StandardFormatEncoding(mimeType);    	
     	return encoding;
     }
     

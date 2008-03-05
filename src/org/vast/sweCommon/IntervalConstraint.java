@@ -24,6 +24,10 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.sweCommon;
 
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataBlock;
+import org.vast.cdm.common.DataConstraint;
+
 /**
  * <p><b>Title:</b><br/>
  * IntervalConstraint
@@ -38,10 +42,11 @@ package org.vast.sweCommon;
  * @date 3 janv. 08
  * @version 1.0
  */
-public class IntervalConstraint implements SweConstraint<Double>
+public class IntervalConstraint implements DataConstraint
 {
-    public double min;
-    public double max;
+    protected double min;
+    protected double max;
+    
     
     public IntervalConstraint(double min, double max)
     {
@@ -49,11 +54,39 @@ public class IntervalConstraint implements SweConstraint<Double>
     	this.max = max;
     }
     
-    public boolean validate(Double value)
+    
+    public void validate(DataBlock data) throws CDMException
     {
-    	if (value >= min && value <= max)
-    		return true;
-    	else
-    		return false;
+    	double value = data.getDoubleValue();
+    	
+    	if (value < min)
+    		throw new CDMException("Value must be higher or equal to " + min);
+    	
+    	if (value > max)
+    		throw new CDMException("Value must be lower or equal to " + max);
     }
+
+
+	public double getMin()
+	{
+		return min;
+	}
+
+
+	public void setMin(double min)
+	{
+		this.min = min;
+	}
+
+
+	public double getMax()
+	{
+		return max;
+	}
+
+
+	public void setMax(double max)
+	{
+		this.max = max;
+	}
 }

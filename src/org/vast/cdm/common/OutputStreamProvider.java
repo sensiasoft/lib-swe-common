@@ -29,8 +29,9 @@ import java.io.OutputStream;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Provide a direct access to the data stream corresponding to
- * the CDM obtained description.
+ * Provide a direct access to an output stream for writing CDM data.
+ * It can typically be an out of band stream, a URI stream, a string
+ * buffer or an XML element.
  * </p>
  *
  * <p>Copyright (c) 2007</p>

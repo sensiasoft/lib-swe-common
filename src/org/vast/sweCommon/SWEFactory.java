@@ -42,7 +42,12 @@ public class SWEFactory
                 parser = new BinaryDataParser();
                 break;
                 
+            case XML:
+                parser = new XmlDataParser();
+                break;
+                
             case MIME_FORMAT:
+            	// TODO develop framework to plugin mime format parsers
                 return null;
         }
         
@@ -65,7 +70,12 @@ public class SWEFactory
                 writer = new BinaryDataWriter();
                 break;
                 
+            case XML:
+            	writer = new XmlDataWriter();
+                break;
+                
             case MIME_FORMAT:
+            	// TODO develop framework to plug mime format writers
                 return null;
         }
         

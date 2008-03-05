@@ -681,13 +681,15 @@ public class DOMHelper
      * @param parentElement
      * @param nodePath
      * @param val
+     * @return the element to which the text node was appended
      */
-    public void setElementValue(Element parentElement, String nodePath, String val)
+    public Element setElementValue(Element parentElement, String nodePath, String val)
     {
         Element elt = addElement(parentElement, nodePath);
         Text text = getParentDocument(parentElement).getDocument().createTextNode(val);
         removeAllText(elt);
         elt.appendChild(text);
+        return elt;
     }
     
     
@@ -700,7 +702,7 @@ public class DOMHelper
     {
         Text text = getParentDocument(elt).getDocument().createTextNode(val);
         removeAllText(elt);
-        elt.appendChild(text);
+        elt.appendChild(text);        
     }
 
 
@@ -709,10 +711,11 @@ public class DOMHelper
      * as the parent element.
      * @param nodePath
      * @param text
+     * @return the element to which the text node was appended
      */
-    public void setElementValue(String nodePath, String text)
+    public Element setElementValue(String nodePath, String text)
     {
-        setElementValue(mainFragment.getBaseElement(), nodePath, text);
+        return setElementValue(mainFragment.getBaseElement(), nodePath, text);
     }
 
 
@@ -1322,9 +1325,9 @@ public class DOMHelper
         // if there is already an existing prefix for this NS use it
         if (parentDoc != null)
         {
-            String newPrefix = parentDoc.getNSPrefix(nsUri);
-            if (newPrefix != null)
-                eltQName.prefix = newPrefix;
+            String existingPrefix = parentDoc.getNSPrefix(nsUri);
+            if (existingPrefix != null)
+                eltQName.prefix = existingPrefix;
             else
                 parentDoc.addNS(eltQName.prefix, eltQName.nsUri);
         }

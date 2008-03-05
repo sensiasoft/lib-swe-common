@@ -18,50 +18,42 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.util;
+package org.vast.sweCommon;
 
-import java.util.Date;
+import java.io.*;
+import org.vast.data.*;
+import org.vast.cdm.common.*;
 
 
 /**
  * <p><b>Title:</b><br/>
- * Date Time
+ * XML Data Writer
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Extension of java Date to provide julian time output as a double.
+ * Writes CDM XML data stream using the given data components
+ * structure and encoding information.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
- * @date Nov 29, 2005
+ * @date Feb 29, 2008
  * @version 1.0
  */
-public class DateTime extends Date
+public class XmlDataWriter extends DataWriter
 {
-	private static final long serialVersionUID = -237455813885095232L;
+	
 
+	public void write(OutputStream outputStream) throws CDMException
+	{
+		
+	}
+	
+	
+	@Override
+	protected void processAtom(DataValue scalarInfo) throws CDMException
+	{
 
-	public DateTime()
-	{
-		super();
 	}
-	
-	
-	public DateTime(long time)
-	{
-		super(time);
-	}
-	
-	
-	public DateTime(double julianTime)
-	{
-		super((long)julianTime*1000);
-	}
-	
-	
-	public double getJulianTime()
-	{
-		return ((double)this.getTime()) / 1000.0;
-	}
+
 }

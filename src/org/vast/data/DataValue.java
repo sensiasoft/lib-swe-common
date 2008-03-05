@@ -20,9 +20,11 @@
 
 package org.vast.data;
 
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataType;
+import org.vast.sweCommon.SweConstants;
 import org.vast.unit.Unit;
 
 
@@ -95,6 +97,25 @@ public class DataValue extends AbstractDataComponent
     public void clearData()
     {
         this.dataBlock = null;
+    }
+    
+    
+    @Override
+    public void validateData() throws CDMException
+    {
+    	ConstraintList constraints = (ConstraintList)properties.get(SweConstants.CONSTRAINTS);
+    	if (constraints != null)
+    	{
+    		try
+			{
+				constraints.validate(this.dataBlock);
+			}
+			catch (CDMException e)
+			{
+				throw new CDMException("Value for component '" + name + 
+						               "' is not valid: " + e.getMessage());
+			}
+    	}
     }
     
     

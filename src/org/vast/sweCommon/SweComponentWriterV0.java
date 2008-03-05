@@ -33,7 +33,7 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * Data Component Writer
+ * SWE Data Component Writer v0.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -151,7 +151,7 @@ public class SweComponentWriterV0 implements DataComponentWriter
         DataBlock data = dataValue.getData();
         
         // create right element and write value
-        String scalarType = (String)dataValue.getProperty(DataComponent.TYPE);
+        String scalarType = (String)dataValue.getProperty(SweConstants.COMP_QNAME);
         if (scalarType != null)
         {
             eltName = "swe:" + scalarType;
@@ -194,32 +194,27 @@ public class SweComponentWriterV0 implements DataComponentWriter
     private void writeAttributes(DataComponent dataComponent, Element dataValueElt) throws CDMException
     {
         // definition URI
-        Object defUri = dataComponent.getProperty(DataComponent.DEF_URI);
+        Object defUri = dataComponent.getProperty(SweConstants.DEF_URI);
         if (defUri != null)
             dataValueElt.setAttribute("definition", (String)defUri);
         
         // reference frame
-        Object refFrame = dataComponent.getProperty(DataComponent.REF_FRAME);
+        Object refFrame = dataComponent.getProperty(SweConstants.REF_FRAME);
         if (refFrame != null)
             dataValueElt.setAttribute("referenceFrame", (String)refFrame);
                 
         // local frame
-        Object locFrame = dataComponent.getProperty(DataComponent.LOC);
+        Object locFrame = dataComponent.getProperty(SweConstants.LOCAL_FRAME);
         if (locFrame != null)
             dataValueElt.setAttribute("localFrame", (String)locFrame);
-                
-        // scale factor
-        Object scale = dataComponent.getProperty(DataComponent.SCALE);
-        if (scale != null)
-            dataValueElt.setAttribute("scale", (String)scale);
         
         // uom attribute
-        Object unit = dataComponent.getProperty(DataComponent.UOM_CODE);
+        Object unit = dataComponent.getProperty(SweConstants.UOM_CODE);
         if (unit != null)
             dataValueElt.setAttribute("uom", (String)unit);
         
         // axis code attribute
-        Object axisCode = dataComponent.getProperty(DataComponent.AXIS);
+        Object axisCode = dataComponent.getProperty(SweConstants.AXIS_CODE);
         if (axisCode != null)
             dataValueElt.setAttribute("axisCode", (String)axisCode);
     }

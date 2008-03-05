@@ -54,10 +54,10 @@ public class QName
     }
     
     
-    public QName(String nsUri, String localName)
+    public QName(String nsUri, String qname)
     {
         setNsUri(nsUri);
-        setLocalName(localName);
+        setFullName(qname);
     }
     
     
@@ -74,8 +74,6 @@ public class QName
             prefix = DEFAULT_PREFIX;
             localName = qname;
         }
-        
-        nsUri = null;
     }
     
     
@@ -131,5 +129,18 @@ public class QName
     public int hashCode()
     {
     	return nsUri.hashCode() + localName.hashCode();
+    }
+    
+    
+    @Override
+    public boolean equals(Object other)
+    {
+    	if (other instanceof QName)
+    	{
+	    	QName qname = (QName)other;
+	    	return nsUri.equals(qname.nsUri) && localName.equals(qname.localName);
+    	}
+    	else
+    		return false;
     }
 }

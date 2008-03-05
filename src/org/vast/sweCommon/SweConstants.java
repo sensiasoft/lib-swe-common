@@ -1,0 +1,62 @@
+/***************************** BEGIN LICENSE BLOCK ***************************
+
+ The contents of this file are subject to the Mozilla Public License Version
+ 1.1 (the "License"); you may not use this file except in compliance with
+ the License. You may obtain a copy of the License at
+ http://www.mozilla.org/MPL/MPL-1.1.html
+ 
+ Software distributed under the License is distributed on an "AS IS" basis,
+ WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ for the specific language governing rights and limitations under the License.
+ 
+ The Original Code is the "OGC Service Framework".
+ 
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+ 
+ Contributor(s): 
+    Alexandre Robin <alexandre.robin@spotimage.fr>
+ 
+******************************* END LICENSE BLOCK ***************************/
+package org.vast.sweCommon;
+
+/**
+ * <p><b>Title:</b><br/>
+ * SweConstants
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * 
+ * </p>
+ *
+ * <p>Copyright (c) 2007</p>
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @date 5 mars 08
+ * @version 1.0
+ */
+public class SweConstants
+{
+	/* property names used to hold soft-typed information in DataComponents */ 
+	public final static String COMP_QNAME = "obj_qname"; // Hard Typed Component QName
+	public final static String FIELD_QNAME = "field_qname"; // Hard Typed Field QName
+	public final static String ID = "id"; // String
+	public final static String META = "meta"; // Object
+	public final static String DESC = "desc"; // String
+	public final static String UPDATABLE = "updatable"; // Boolean
+	public final static String NAMES = "names"; // List<QName>
+	public final static String REF_FRAME = "ref_frame"; // String
+	public final static String REF_TIME = "ref_time"; // Double
+	public final static String LOCAL_FRAME = "loc_frame"; // String
+	public final static String AXIS_CODE = "axis_code"; // String
+	public final static String DEF_URI = "def_uri"; // String
+	public final static String DEF_OBJ = "def_obj";
+	public final static String UOM_CODE = "uom_code"; // String
+	public final static String UOM_URI = "uom_uri"; // String
+	public final static String UOM_OBJ = "uom_obj"; // Unit
+	public final static String DIC_URI = "dic_uri"; // String
+	public final static String DIC_OBJ = "dic_obj";
+	public final static String QUALITY = "quality"; // DataComponent
+	public final static String CONSTRAINTS = "constraint"; // ConstraintList
+
+}

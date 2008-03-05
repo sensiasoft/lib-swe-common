@@ -29,35 +29,36 @@ import org.vast.cdm.common.DataType;
 
 /**
  * <p><b>Title:</b><br/>
- * DataGroup Component
+ * DataChoice Component
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Heterogeneous list of DataComponents (DataGroup)
+ * Exclusive list of DataComponents (DataChoice)
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
  * @version 1.0
  */
-public class DataGroup extends AbstractDataComponent
+public class DataChoice extends AbstractDataComponent
 {
-    protected List<AbstractDataComponent> componentList;
+	protected List<AbstractDataComponent> itemList;
+	protected int selectedItem = -1;
+    
 
-
-    public DataGroup()
+    public DataChoice()
     {
-    	this.componentList = new ArrayList<AbstractDataComponent>();
+    	this.itemList = new ArrayList<AbstractDataComponent>();
     }
     
     
-    public DataGroup(int size)
+    public DataChoice(int size)
     {
-        this.componentList = new ArrayList<AbstractDataComponent>(size);
+        this.itemList = new ArrayList<AbstractDataComponent>(size);
     }
     
     
-    public DataGroup(int size, String name)
+    public DataChoice(int size, String name)
     {
         this(size);
         this.setName(name);
@@ -65,20 +66,20 @@ public class DataGroup extends AbstractDataComponent
     
     
     @Override
-    public DataGroup copy()
+    public DataChoice copy()
     {
-    	int groupSize = componentList.size();    	
-    	DataGroup newGroup = new DataGroup(groupSize);
-    	newGroup.name = this.name;
-    	newGroup.properties = this.properties;    	
+    	int groupSize = itemList.size();    	
+    	DataChoice newChoice = new DataChoice(groupSize);
+    	newChoice.name = this.name;
+    	newChoice.properties = this.properties;    	
     	
     	for (int i=0; i<groupSize; i++)
     	{
-    		AbstractDataComponent child = componentList.get(i);
-    		newGroup.addComponent(child.copy());
+    		AbstractDataComponent child = itemList.get(i);
+    		newChoice.addComponent(child.copy());
     	}
     	
-    	return newGroup;
+    	return newChoice;
     }
     
     
@@ -93,18 +94,18 @@ public class DataGroup extends AbstractDataComponent
         }
         else if (dataBlock instanceof DataBlockParallel)
         {
-            for (int i = 0; i < componentList.size(); i++)
+            for (int i = 0; i < itemList.size(); i++)
             {
-                AbstractDataComponent childComponent = componentList.get(i);
+                AbstractDataComponent childComponent = itemList.get(i);
                 childComponent.updateStartIndex(startIndex);
             }
         }
         else // case of primitive array
         {
             int scalarTotal = 0;
-            for (int i = 0; i < componentList.size(); i++)
+            for (int i = 0; i < itemList.size(); i++)
             {
-                AbstractDataComponent childComponent = componentList.get(i);
+                AbstractDataComponent childComponent = itemList.get(i);
                 childComponent.updateStartIndex(startIndex + scalarTotal);
                 scalarTotal += childComponent.scalarCount;
             }
@@ -130,14 +131,14 @@ public class DataGroup extends AbstractDataComponent
      */
     public void insertComponent(int index, DataComponent component)
     {
-        componentList.add(index, (AbstractDataComponent)component);
+        itemList.add(index, (AbstractDataComponent)component);
         ((AbstractDataComponent)component).parent = this;
         
         // refresh index table
         this.names.clear();
-        for (int i=0; i<componentList.size(); i++)
+        for (int i=0; i<itemList.size(); i++)
         {
-            AbstractDataComponent next = componentList.get(i);
+            AbstractDataComponent next = itemList.get(i);
             this.names.put(next.getName(), i);
         }
     }
@@ -161,7 +162,7 @@ public class DataGroup extends AbstractDataComponent
         if (componentName != null)
             this.names.put(componentName, this.getComponentCount());
         
-        componentList.add((AbstractDataComponent)component);
+        itemList.add((AbstractDataComponent)component);
         ((AbstractDataComponent)component).parent = this;
     }
 
@@ -169,7 +170,7 @@ public class DataGroup extends AbstractDataComponent
     @Override
     public AbstractDataComponent getComponent(int index)
     {
-        AbstractDataComponent component = (AbstractDataComponent)componentList.get(index);
+        AbstractDataComponent component = (AbstractDataComponent)itemList.get(index);
         return component;
     }
 
@@ -177,14 +178,14 @@ public class DataGroup extends AbstractDataComponent
     @Override
     public void removeComponent(int index)
     {
-        componentList.remove(index);
+        itemList.remove(index);
     }
 
 
     @Override
     public void removeAllComponents()
     {
-        componentList.clear();
+        itemList.clear();
         this.dataBlock = null;
     }
     
@@ -197,26 +198,26 @@ public class DataGroup extends AbstractDataComponent
 		// also assign dataBlock to children
     	if (dataBlock instanceof DataBlockParallel)
     	{
-    		for (int i = 0; i < componentList.size(); i++)
+    		for (int i = 0; i < itemList.size(); i++)
     		{
     			AbstractDataBlock childBlock = ((DataBlockParallel)dataBlock).blockArray[i];
-    			componentList.get(i).setData(childBlock);
+    			itemList.get(i).setData(childBlock);
     		}
     	}
         else if (dataBlock instanceof DataBlockMixed)
         {
-            for (int i = 0; i < componentList.size(); i++)
+            for (int i = 0; i < itemList.size(); i++)
             {
                 AbstractDataBlock childBlock = ((DataBlockMixed)dataBlock).blockArray[i];
-                componentList.get(i).setData(childBlock);
+                itemList.get(i).setData(childBlock);
             }
         }
         else if (dataBlock instanceof DataBlockTuple)
         {
             int currentIndex = 0;
-            for (int i = 0; i < componentList.size(); i++)
+            for (int i = 0; i < itemList.size(); i++)
             {
-                AbstractDataComponent nextComponent = componentList.get(i);
+                AbstractDataComponent nextComponent = itemList.get(i);
                 AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
                 childBlock.atomCount = nextComponent.scalarCount;
                 childBlock.startIndex += currentIndex;
@@ -227,9 +228,9 @@ public class DataGroup extends AbstractDataComponent
     	else // case of big primitive array
     	{
     		int currentIndex = 0;
-    		for (int i = 0; i < componentList.size(); i++)
+    		for (int i = 0; i < itemList.size(); i++)
     		{
-    			AbstractDataComponent nextComponent = componentList.get(i);
+    			AbstractDataComponent nextComponent = itemList.get(i);
     			AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
     			childBlock.atomCount = nextComponent.scalarCount;
     			childBlock.startIndex += currentIndex;
@@ -244,9 +245,9 @@ public class DataGroup extends AbstractDataComponent
     public void clearData()
     {
         this.dataBlock = null;
-        for (int i = 0; i < componentList.size(); i++)
+        for (int i = 0; i < itemList.size(); i++)
         {
-            AbstractDataComponent nextComponent = componentList.get(i);
+            AbstractDataComponent nextComponent = itemList.get(i);
             nextComponent.clearData();
         }
     }
@@ -255,8 +256,7 @@ public class DataGroup extends AbstractDataComponent
     @Override
     public void validateData() throws CDMException
     {
-    	for (int i = 0; i < componentList.size(); i++)
-    		componentList.get(i).validateData();
+    	itemList.get(selectedItem).validateData();
     }
     
     
@@ -279,12 +279,12 @@ public class DataGroup extends AbstractDataComponent
         int totalSize = 0;        
         
     	// create a mixed block with all children block
-    	int childNumber = componentList.size();
+    	int childNumber = itemList.size();
     	mixedBlock = new DataBlockMixed(childNumber);        
         
         for (int i=0; i<childNumber; i++)
         {
-        	nextComponent = componentList.get(i);
+        	nextComponent = itemList.get(i);
             nextBlock = nextComponent.createDataBlock();
         	currentType = nextBlock.getDataType();
         	totalSize += nextBlock.atomCount;       	
@@ -365,15 +365,15 @@ public class DataGroup extends AbstractDataComponent
     
     public void combineDataBlocks()
     {
-        int groupSize = componentList.size();
+        int groupSize = itemList.size();
         DataBlockMixed newBlock = new DataBlockMixed(groupSize);
         
         for (int i=0; i<groupSize; i++)
         {
-            AbstractDataComponent childComponent = componentList.get(i);
+            AbstractDataComponent childComponent = itemList.get(i);
             
-            if (childComponent instanceof DataGroup && childComponent.dataBlock == null)
-                ((DataGroup)childComponent).combineDataBlocks();
+            if (childComponent instanceof DataChoice && childComponent.dataBlock == null)
+                ((DataChoice)childComponent).combineDataBlocks();
 
             newBlock.blockArray[i] = childComponent.dataBlock;
             newBlock.atomCount += childComponent.dataBlock.atomCount;
@@ -386,16 +386,16 @@ public class DataGroup extends AbstractDataComponent
     @Override
     public int getComponentCount()
     {
-        return componentList.size();
+        return itemList.size();
     }
 
 
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append("DataGroup: " + name + "\n");
+        text.append("DataChoice: " + name + "\n");
 
-        for (int i=0; i<componentList.size(); i++)
+        for (int i=0; i<itemList.size(); i++)
         {
         	text.append(indent + "  ");
         	text.append(getComponent(i).toString(indent + "  "));

@@ -18,50 +18,45 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.util;
-
-import java.util.Date;
+package org.vast.cdm.common;
 
 
-/**
- * <p><b>Title:</b><br/>
- * Date Time
- * </p>
- *
- * <p><b>Description:</b><br/>
- * Extension of java Date to provide julian time output as a double.
- * </p>
- *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
- * @date Nov 29, 2005
- * @version 1.0
- */
-public class DateTime extends Date
+public class StandardFormatEncoding implements DataEncoding
 {
-	private static final long serialVersionUID = -237455813885095232L;
+	public String mimeType;
+    
+    
+	public StandardFormatEncoding()
+    {
+    }
+	
+	
+    public StandardFormatEncoding(String mimeType)
+    {
+        this.mimeType = mimeType;
+    }
+    
+    
+	public String getMimeType()
+	{
+		return mimeType;
+	}
 
 
-	public DateTime()
+	public void setMimeType(String mimeType)
 	{
-		super();
+		this.mimeType = mimeType;
+	}
+
+
+	public EncodingType getEncodingType()
+	{
+		return EncodingType.MIME_FORMAT;
 	}
 	
 	
-	public DateTime(long time)
+	public String toString()
 	{
-		super(time);
-	}
-	
-	
-	public DateTime(double julianTime)
-	{
-		super((long)julianTime*1000);
-	}
-	
-	
-	public double getJulianTime()
-	{
-		return ((double)this.getTime()) / 1000.0;
+		return "Standard Format Encoding: " + mimeType;
 	}
 }
