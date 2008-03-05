@@ -186,7 +186,7 @@ public class SweComponentWriterV11 implements DataComponentWriter
         	
         	//TODO if (fieldQName != null)
         	dom.addUserPrefix(fieldQName.getPrefix(), fieldQName.getNsUri());
-        	fieldElt = dom.addElement(dataGroupElt, fieldQName.getFullName());
+        	fieldElt = dom.addElement(dataGroupElt, "+" + fieldQName.getFullName());
         	dom.setAttributeValue(fieldElt, "@is", "field");
         	
         	// add name attribute if different from QName
