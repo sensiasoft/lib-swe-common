@@ -57,7 +57,10 @@ public class NamespaceBuilder
         if (appendVersion && version != null)
         {
         	// keep only two first digits of version number!
-        	version = version.substring(0, version.lastIndexOf('.'));
+        	int endIndex = version.indexOf('.');
+        	endIndex = version.indexOf('.', endIndex+1);
+        	if (endIndex > 0)
+        		version = version.substring(0, version.indexOf('.'));
         	return baseUri + "/" + version;
         }
         else
