@@ -39,11 +39,11 @@ import org.vast.data.*;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public class AsciiDataWriter extends DataWriter
+public class AsciiDataWriter extends AbstractDataWriter
 {
 	String nextToken;
 	int tupleSize;
-	char[] tokenSep, tupleSep;
+	char[] tokenSep, blockSep;
     boolean firstToken, newBlock;
     Writer outputWriter;
     
@@ -62,6 +62,7 @@ public class AsciiDataWriter extends DataWriter
 		{
             outputWriter = new OutputStreamWriter(outputStream);
 			tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
+			blockSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
 			firstToken = true;
             newBlock = false;
             
@@ -99,7 +100,7 @@ public class AsciiDataWriter extends DataWriter
             {
                 if (newBlock)
                 {
-                    outputWriter.write(tupleSep);
+                    outputWriter.write(blockSep);
                     newBlock = false;
                 }
                 else
@@ -109,11 +110,25 @@ public class AsciiDataWriter extends DataWriter
                 firstToken = false;
             
             String val = scalarInfo.getData().getStringValue();
+            //System.out.println(scalarInfo.getName() + ": " + val);
             outputWriter.write(val);
         }
         catch (IOException e)
         {
             throw new CDMException("Error while writing ASCII tuple stream", e);
         }
+	}
+
+
+	public void flush() throws CDMException
+	{
+		try
+		{
+			outputWriter.flush();
+		}
+		catch (IOException e)
+		{
+			throw new CDMException(e);
+		}		
 	}
 }

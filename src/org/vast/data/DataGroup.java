@@ -192,6 +192,8 @@ public class DataGroup extends AbstractDataComponent
     @Override
     public void setData(DataBlock dataBlock)
     {
+    	assert(dataBlock != null);
+    	
     	this.dataBlock = (AbstractDataBlock)dataBlock;
 
 		// also assign dataBlock to children

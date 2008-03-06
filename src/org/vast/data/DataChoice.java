@@ -41,6 +41,7 @@ import org.vast.cdm.common.DataComponent;
  */
 public class DataChoice extends AbstractDataComponent
 {
+	protected static int UNSELECTED = -1;
 	protected static String UNSELECTED_ERROR = "No item was selected in DataChoice ";
 	protected List<AbstractDataComponent> itemList;
 	protected int selected = -1;
@@ -72,7 +73,7 @@ public class DataChoice extends AbstractDataComponent
     	DataChoice newChoice = new DataChoice(groupSize);
     	newChoice.selected = this.selected;
     	newChoice.name = this.name;
-    	newChoice.properties = this.properties;    	
+    	newChoice.properties = this.properties;
     	
     	for (int i=0; i<groupSize; i++)
     	{
@@ -176,7 +177,10 @@ public class DataChoice extends AbstractDataComponent
     	this.dataBlock = mixedBlock;
 
 		// first value = index of selected component
-    	int index = mixedBlock.blockArray[0].getIntValue();
+    	int index = mixedBlock.blockArray[0].getIntValue();    	
+    	if (index == UNSELECTED)
+    		return;
+    	
     	checkIndex(index);
     	this.selected = index;
     	
@@ -218,14 +222,20 @@ public class DataChoice extends AbstractDataComponent
         for (int i=0; i<childNumber; i++)
         {
         	AbstractDataComponent nextComponent = itemList.get(i);
-            nextComponent.createDataBlock();
+            nextComponent.assignNewDataBlock();
         }
         
         // if one item is selected, set data
     	if (selected >= 0)
     	{
-    		newBlock.blockArray[0].setIntValue(selected); 
+    		newBlock.blockArray[0].setIntValue(selected);
     		newBlock.blockArray[1] = (AbstractDataBlock)itemList.get(selected).getData();
+    		newBlock.atomCount = newBlock.blockArray[1].atomCount + 1;
+    	}
+    	else
+    	{
+    		newBlock.blockArray[0].setIntValue(UNSELECTED);
+    		newBlock.atomCount = 1;
     	}
     	    	
         return newBlock;
@@ -265,7 +275,7 @@ public class DataChoice extends AbstractDataComponent
     	
     	return getComponent(selected);
     }
-
+    
 
 	public void setSelected(int index)
 	{
@@ -274,9 +284,22 @@ public class DataChoice extends AbstractDataComponent
 		
 		if (this.dataBlock != null)
 		{
-			((DataBlockMixed)dataBlock).blockArray[0].setIntValue(index);		
+			((DataBlockMixed)dataBlock).blockArray[0].setIntValue(index);
 			AbstractDataBlock childData = (AbstractDataBlock)itemList.get(selected).getData();
 			((DataBlockMixed)dataBlock).blockArray[1] = childData;
+			dataBlock.atomCount = childData.atomCount + 1;
+		}
+	}
+	
+	
+	public void unselect()
+	{
+		this.selected = UNSELECTED;
+		if (this.dataBlock != null)
+		{
+			((DataBlockMixed)dataBlock).blockArray[0].setIntValue(UNSELECTED);
+			((DataBlockMixed)dataBlock).blockArray[1] = null;
+			dataBlock.atomCount = 1;
 		}
 	}
 	

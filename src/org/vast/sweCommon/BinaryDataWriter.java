@@ -42,7 +42,7 @@ import org.vast.cdm.common.*;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public class BinaryDataWriter extends DataWriter
+public class BinaryDataWriter extends AbstractDataWriter
 {
 	SWEOutputStream dataOutput;
 	Hashtable<DataValue, BinaryOptions> componentEncodings;
@@ -273,5 +273,18 @@ public class BinaryDataWriter extends DataWriter
 		{
 			throw new CDMException("Error while writing binary stream", e);
 		}
+	}
+	
+	
+	public void flush() throws CDMException
+	{
+		try
+		{
+			dataOutput.flush();
+		}
+		catch (IOException e)
+		{
+			throw new CDMException(e);
+		}		
 	}
 }

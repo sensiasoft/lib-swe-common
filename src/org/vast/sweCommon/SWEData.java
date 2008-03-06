@@ -48,7 +48,7 @@ import org.vast.data.DataList;
  * @date Feb 21, 2007
  * @version 1.0
  */
-public class SWEData
+public class SweData
 {
     protected DataComponent dataComponents;
     protected DataEncoding dataEncoding;
@@ -56,7 +56,7 @@ public class SWEData
     protected DataList dataBlocks;
 
 
-    public SWEData()
+    public SweData()
     {
         dataBlocks = new DataList();
     }
@@ -166,7 +166,7 @@ public class SWEData
     
     
     /**
-     * Validates all data against to constraints specified in
+     * Validates all data against constraints specified in
      * the data components definition
      * @throws CDMException
      */
@@ -184,10 +184,12 @@ public class SWEData
     public void writeData(DataSink dataSink) throws CDMException
     {
         DataStreamWriter writer = getDataWriter();
-        writer.setDataHandler(new DefaultWriterHandler(this));
+        writer.setDataHandler(new DefaultWriterHandler(this, writer));
         
         OutputStream dataStream = dataSink.getDataStream();
         writer.write(dataStream);
+        writer.flush();
+        dataSink.flush();
     }
     
 }

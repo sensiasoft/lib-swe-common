@@ -61,21 +61,13 @@ public class SweEncodingWriterV11 implements DataEncodingWriter
         enforceNS(dom);
         
         if (dataEncoding instanceof AsciiEncoding)
-        {
             dataEncElt = writeAsciiBlock(dom, (AsciiEncoding)dataEncoding);
-        }
         else if (dataEncoding instanceof BinaryEncoding)
-        {
             dataEncElt = writeBinaryBlock(dom, (BinaryEncoding)dataEncoding);
-        }
         else if (dataEncoding instanceof XmlEncoding)
-        {
             dataEncElt = writeXmlBlock(dom, (XmlEncoding)dataEncoding);
-        }
         else if (dataEncoding instanceof StandardFormatEncoding)
-        {
             dataEncElt = writeStandardFormat(dom, (StandardFormatEncoding)dataEncoding);
-        }
         else
             throw new CDMException("Encoding not supported");
         
@@ -85,10 +77,10 @@ public class SweEncodingWriterV11 implements DataEncodingWriter
     
     private Element writeAsciiBlock(DOMHelper dom, AsciiEncoding asciiEncoding) throws CDMException
     {
-        Element dataEncElt = dom.createElement("swe:AsciiBlock");
+        Element dataEncElt = dom.createElement("swe:TextBlock");
     	
         dataEncElt.setAttribute("tokenSeparator", String.valueOf(asciiEncoding.tokenSeparator));
-        dataEncElt.setAttribute("tupleSeparator", String.valueOf(asciiEncoding.blockSeparator));
+        dataEncElt.setAttribute("blockSeparator", String.valueOf(asciiEncoding.blockSeparator));
         dataEncElt.setAttribute("decimalSeparator", String.valueOf(asciiEncoding.decimalSeparator));
     	
     	return dataEncElt;
@@ -117,23 +109,15 @@ public class SweEncodingWriterV11 implements DataEncodingWriter
         
         // write byteEncoding attribute
         if (binaryEncoding.byteEncoding == BinaryEncoding.ByteEncoding.BASE64)
-        {
             binaryEncElt.setAttribute("byteEncoding", "base64");
-        }
         else if (binaryEncoding.byteEncoding == BinaryEncoding.ByteEncoding.RAW)
-        {
             binaryEncElt.setAttribute("byteEncoding", "raw");
-        }
-    	    	    	
+            	    	
     	// write byteOrder attribute
         if (binaryEncoding.byteOrder == BinaryEncoding.ByteOrder.BIG_ENDIAN)
-        {
             binaryEncElt.setAttribute("byteOrder", "bigEndian");
-        }
         else if (binaryEncoding.byteOrder == BinaryEncoding.ByteOrder.LITTLE_ENDIAN)
-        {
             binaryEncElt.setAttribute("byteOrder", "littleEndian");
-        }
         
         // write components encoding
         for (int i=0; i<binaryEncoding.componentEncodings.length; i++)

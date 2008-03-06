@@ -47,6 +47,7 @@ public abstract class AbstractDataParser extends DataIterator implements DataStr
 	
 	public AbstractDataParser()
 	{
+		super(true);
 	}
 	
 	

@@ -60,7 +60,7 @@ public class DataSourceXML implements DataSource
     	String xlinkUri = OGCRegistry.getNamespaceURI(OGCRegistry.XLINK);
     	String href = dataElt.getAttributeNS(xlinkUri, "href");
         
-    	if (href != null)
+    	if (href != null && href.trim().length() > 0)
         {
             return URIStreamHandler.openStream(href);
         }

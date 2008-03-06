@@ -22,5 +22,5 @@ package org.vast.cdm.common;
 
 public interface DataSink extends OutputStreamProvider
 {
-        
+	public void flush();
 }

@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataSink;
 import org.w3c.dom.Element;
+import org.w3c.dom.Text;
 
 
 /**
@@ -44,17 +45,27 @@ import org.w3c.dom.Element;
 public class DataSinkXML implements DataSink
 {
 	protected ByteArrayOutputStream textData;
+    protected Element xmlElt;
     
     
     public DataSinkXML(Element elt)
     {
-        
+        this.xmlElt = elt;
     }
 
 
 	public OutputStream getDataStream() throws CDMException
 	{
+		this.textData = new ByteArrayOutputStream(1024);
 		return this.textData;
+	}
+	
+	
+	public void flush()
+	{
+		String text = textData.toString();
+		Text textNode = xmlElt.getOwnerDocument().createTextNode(text);
+		xmlElt.appendChild(textNode);
 	}
     
 }

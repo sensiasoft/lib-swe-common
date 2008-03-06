@@ -23,6 +23,7 @@ package org.vast.sweCommon;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataHandler;
+import org.vast.cdm.common.DataStreamWriter;
 
 
 /**
@@ -42,14 +43,16 @@ import org.vast.cdm.common.DataHandler;
  */
 public class DefaultWriterHandler implements DataHandler
 {
-    protected SWEData sweData;
+    protected SweData sweData;
+    protected DataStreamWriter writer;
     protected int blockCount = 0;
     protected int blockNum = 0;
     
     
-    public DefaultWriterHandler(SWEData sweData)
+    public DefaultWriterHandler(SweData sweData, DataStreamWriter writer)
     {
         this.sweData = sweData;
+        this.writer = writer;
         this.blockCount = sweData.getDataBlocks().getComponentCount();
     }
     
@@ -60,14 +63,14 @@ public class DefaultWriterHandler implements DataHandler
         {
             info.setData(sweData.getDataBlocks().getComponent(blockNum).getData());
             blockNum++;
-        }
-        else
-            info.clearData();
+        }            
     }
     
     
     public void endData(DataComponent info, DataBlock data)
     {
+    	if (blockNum >= blockCount)
+    		writer.stop();
     }
     
     

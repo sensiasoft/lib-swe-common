@@ -76,4 +76,7 @@ public interface DataStreamWriter
 
 
 	public void stop();
+	
+	
+	public void flush() throws CDMException;
 }

@@ -38,13 +38,14 @@ import org.vast.data.DataIterator;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public abstract class DataWriter extends DataIterator implements DataStreamWriter
+public abstract class AbstractDataWriter extends DataIterator implements DataStreamWriter
 {
 	protected boolean stopWriting = false;
 		
 	
-	public DataWriter()
+	public AbstractDataWriter()
 	{
+		super(false);
 	}
 	
 	

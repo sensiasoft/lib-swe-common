@@ -34,6 +34,11 @@ import org.vast.sweCommon.SweConstants;
  * In the case of a variable size array, size is actually given
  * by another component: sizeData which should be a DataValue
  * carrying an Integer value.
+ * There are two cases of variable size component:
+ *  - The component is explicitely listed in the component tree
+ *    (in this case, the component has a parent) 
+ *  - The component is implicitely given before the array data
+ *    (in this case, the component has no parent)
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -89,17 +94,27 @@ public class DataArray extends AbstractDataComponent
         // also keep track of sizeData component
         if (this.variableSize && this.getSizeData() != null)
         {
-            // find where sizeData component is
-            int step = 0;
-            AbstractDataComponent dataComponent = this;
-            while (dataComponent.getComponent(sizeData.name) != sizeData)
+        	// case of size data within DataArray
+        	if (sizeData.parent == null)
+            	newArray.setSizeData(sizeData.copy());
+        	
+        	// case of size data as a separate component
+            else
             {
-                dataComponent = dataComponent.parent;
-                step++;
+	        	// find where sizeData component is (name + steps to parent)
+            	// cannot just copy cause we don't know what the new component
+            	// will be until we reconstruct the whole component tree!
+	            int step = 0;
+	            AbstractDataComponent dataComponent = this;
+	            while (dataComponent.getComponent(sizeData.name) != sizeData)
+	            {
+	                dataComponent = dataComponent.parent;
+	                step++;
+	            }
+	            
+	            newArray.sizeDataName = sizeData.name;
+	            newArray.stepsToSizeData = step;
             }
-            
-            newArray.sizeDataName = sizeData.name;
-            newArray.stepsToSizeData = step;
         }
         
     	return newArray;

@@ -25,6 +25,7 @@ import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataHandler;
+import org.vast.cdm.common.DataType;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
 
@@ -36,21 +37,24 @@ public abstract class DataIterator
 	protected ErrorHandler errorHandler;
     protected DataArray parentArray;
     protected int parentArrayIndex;
-	protected AbstractDataComponent dataComponents;
+	protected DataComponent dataComponents;
 	protected DataEncoding dataEncoding;
 	protected Stack<Record> componentStack;
 	protected Record currentComponent;
     protected boolean newBlock = true;
 	protected boolean endOfArray = false;
-    
+	protected boolean parsing = true;
+	protected DataValue selectedValue = new DataValue(":choice:", DataType.INT); // for holding choice selection index
+	protected DataValue sizeValue = new DataValue("size", DataType.INT); // for holding implicit array size
+	
     
 	protected class Record
     {
-        public AbstractDataComponent parent;
+        public DataComponent parent;
         public int index;
         public int count;
 
-        public Record(AbstractDataComponent parent)
+        public Record(DataComponent parent)
         {
             this.parent = parent;
             this.count = parent.getComponentCount();
@@ -59,8 +63,9 @@ public abstract class DataIterator
     }
     
     
-	public DataIterator()
+	public DataIterator(boolean parsing)
 	{
+		this.parsing = parsing;
 		this.componentStack = new Stack<Record>();
 	}
 	
@@ -90,26 +95,69 @@ public abstract class DataIterator
     	}
         
     	// update size of variable size arrays
-        if (currentComponent.parent instanceof DataArray)
+        if (parsing && currentComponent.parent instanceof DataArray)
             ((DataArray)currentComponent.parent).updateSize();
         
-    	// now get next child
-    	AbstractDataComponent next = (AbstractDataComponent)currentComponent.parent.getComponent(currentComponent.index);
-        currentComponent.index++;
-        
+        // now get next child
+        DataComponent next = currentComponent.parent.getComponent(currentComponent.index);
+    	currentComponent.index++;
+                
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
-            // update size of variable size arrays
+            // update size of variable size arrays - now done a few lines earlier
             //if (next instanceof DataArray)
             //    ((DataArray)next).updateSize();
+        	
+        	// case of implicit array size value
+        	if (next instanceof DataArray && ((DataArray)next).isVariableSize())
+        	{
+        		if (((DataArray)next).getSizeData().getParent() == null)
+        		{
+        			// set implicit array size (when parsing)
+        			if (parsing)
+            		{
+        				processAtom(sizeValue);
+                		int newSize = sizeValue.getData().getIntValue();
+                		((DataArray)next).getSizeData().getData().setIntValue(newSize);
+            		}
+            		
+            		// get array size (when writing)
+            		else
+            		{
+            			sizeValue.getData().setIntValue(((DataArray)next).getComponentCount());
+            			processAtom(sizeValue);
+            		}
+        		}
+        	}
+        	
+        	// case of choice
+        	else if (next instanceof DataChoice)
+        	{
+        		// set implicit choice index (when parsing)
+        		if (parsing)
+        		{
+        			processAtom(selectedValue);
+        			((DataChoice)next).setSelected(selectedValue.getData().getIntValue());
+        		}
+        		
+        		// get choice index (when writing)
+        		else
+        		{
+        			selectedValue.getData().setIntValue(((DataChoice)next).getSelected());
+        			processAtom(selectedValue);
+        		}	
+        		
+        		// parse selected item data
+        		next = ((DataChoice)next).getSelectedComponent();
+        	}
             
             componentStack.push(currentComponent);
         	currentComponent = new Record(next);
             processNextElement();
         }
         
-        // otherwise parse element
+        // otherwise parse one atom element
         else
         {
             if (dataHandler != null)

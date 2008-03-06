@@ -40,7 +40,7 @@ import org.vast.cdm.common.*;
  * @date Feb 29, 2008
  * @version 1.0
  */
-public class XmlDataWriter extends DataWriter
+public class XmlDataWriter extends AbstractDataWriter
 {
 	
 
@@ -54,6 +54,12 @@ public class XmlDataWriter extends DataWriter
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
 
+	}
+	
+	
+	public void flush() throws CDMException
+	{
+	
 	}
 
 }

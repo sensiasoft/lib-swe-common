@@ -42,10 +42,10 @@ import org.vast.cdm.common.DataHandler;
  */
 public class DefaultParserHandler implements DataHandler
 {
-    protected SWEData sweData;
+    protected SweData sweData;
     
     
-    public DefaultParserHandler(SWEData sweData)
+    public DefaultParserHandler(SweData sweData)
     {
         this.sweData = sweData;
     }
