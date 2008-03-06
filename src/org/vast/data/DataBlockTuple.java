@@ -32,7 +32,8 @@ import org.vast.cdm.common.DataType;
  * Uses the composite pattern to carry a fixed size array
  * of mixed types DataBlocks. If dynamic size is needed, use DataBlockList.
  * Children datablocks will be read in parallel. Designed specifically for
- * DataGroups (slightly more performant than DataBlockTuple for this case)
+ * DataGroups. (slightly more performant than DataBlockParallel for the
+ * case of a group of scalars of different data types)
  * </p>
  *
  * <p>Copyright (c) 2007</p>

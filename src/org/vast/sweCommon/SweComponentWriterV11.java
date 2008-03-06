@@ -80,8 +80,8 @@ public class SweComponentWriterV11 implements DataComponentWriter
         	
         	if (hardTyped)
             {
-	        	if (compQName.getLocalName().endsWith("Range"))
-	            	newElt = writeDataRange(dom, (DataGroup)dataComponent);
+	        	if (compQName.getNsUri().equals(SWE_NS) && compQName.getLocalName().endsWith("Range"))
+	            	newElt = writeDataRange(dom, (DataGroup)dataComponent, compQName);
 	            else
 	            	newElt = writeDerivedRecord(dom, (DataGroup)dataComponent, compQName);
             }
@@ -146,7 +146,13 @@ public class SweComponentWriterV11 implements DataComponentWriter
         {
         	DataComponent component = dataGroup.getComponent(i);
         	Element fieldElt = dom.addElement(dataGroupElt, "+swe:field");
-    		fieldElt.setAttribute("name", component.getName());        	
+        	fieldElt.setAttribute("name", component.getName());
+    		
+        	// write optional flag
+        	Boolean optional = (Boolean)component.getProperty(SweConstants.OPTIONAL);
+        	if (optional != null)
+        		fieldElt.setAttribute("optional", (optional ? "true" : "false"));
+    		
             Element componentElt = writeComponent(dom, component);
             fieldElt.appendChild(componentElt);
         }
@@ -193,6 +199,11 @@ public class SweComponentWriterV11 implements DataComponentWriter
         	String fieldName = component.getName();
         	if (!fieldName.equals(fieldQName.getLocalName()))
         		fieldElt.setAttribute("name", fieldName);
+        	
+        	// write optional flag
+        	Boolean optional = (Boolean)component.getProperty(SweConstants.OPTIONAL);
+        	if (optional != null)
+        		fieldElt.setAttribute("optional", (optional ? "true" : "false"));
         	
             Element componentElt = writeComponent(dom, component);
             fieldElt.appendChild(componentElt);
@@ -353,7 +364,12 @@ public class SweComponentWriterV11 implements DataComponentWriter
         // write array component
         Element propElt = dom.addElement(arrayElt, "swe:elementType");
         DataComponent component = dataArray.getComponent(0);
-    	propElt.setAttribute("name", component.getName());
+        
+        // add name attribute if different from 'elementType'
+    	String fieldName = component.getName();
+    	if (!fieldName.equals("elementType"))
+    		propElt.setAttribute("name", fieldName);
+    	
     	Element componentElt = writeComponent(dom, component);
     	propElt.appendChild(componentElt);
     	
@@ -389,9 +405,10 @@ public class SweComponentWriterV11 implements DataComponentWriter
         Element dataValueElt = dom.createElement(eltName);
         
         // write all properties
-        writeGmlProperties(dom, dataValue, dataValueElt);
-    	writeCommonAttributes(dom, dataValue, dataValueElt);
+        writeCommonAttributes(dom, dataValue, dataValueElt);
+        writeGmlProperties(dom, dataValue, dataValueElt);    	
     	writeUom(dom, dataValue, dataValueElt);
+    	writeCodeSpace(dom, dataValue, dataValueElt);
     	writeConstraints(dom, dataValue, dataValueElt);
     	writeQuality(dom, dataValue, dataValueElt);
     	
@@ -404,25 +421,25 @@ public class SweComponentWriterV11 implements DataComponentWriter
     
     
     /**
-     * Writes a range which is special DataGroups
+     * Writes a range which is special DataGroup
      * @param dom
      * @param dataGroup
      * @return
      * @throws CDMException
      */
-    private Element writeDataRange(DOMHelper dom, DataGroup dataGroup) throws CDMException
+    private Element writeDataRange(DOMHelper dom, DataGroup dataGroup, QName rangeQName) throws CDMException
     {
     	DataValue min = (DataValue)dataGroup.getComponent(0);
     	DataValue max = (DataValue)dataGroup.getComponent(1);
     	
     	// create right range element
-        String eltName = getElementName(min);
-        Element rangeElt = dom.createElement(eltName);
+        Element rangeElt = dom.createElement(rangeQName.getFullName());
         
-        // write GML names and description
-        writeCommonAttributes(dom, dataGroup, rangeElt);
-        writeGmlProperties(dom, dataGroup, rangeElt);
+        // write all properties
+        writeCommonAttributes(dom, min, rangeElt);
+        writeGmlProperties(dom, min, rangeElt);
         writeUom(dom, min, rangeElt);
+        writeCodeSpace(dom, min, rangeElt);
     	writeConstraints(dom, min, rangeElt);
     	writeQuality(dom, min, rangeElt);
         
@@ -441,27 +458,25 @@ public class SweComponentWriterV11 implements DataComponentWriter
      */
     private String getElementName(DataValue dataValue)
     {
-    	QName scalarType = (QName)dataValue.getProperty(SweConstants.COMP_QNAME);
-    	Object def = dataValue.getProperty("definition");
-    	String eltName = "swe:Parameter";
+    	QName valueQName = (QName)dataValue.getProperty(SweConstants.COMP_QNAME);
+    	    	
+    	// return QName if specified
+        if (valueQName != null)
+	        return valueQName.getFullName();
+        
+        Object def = dataValue.getProperty("definition");
+    	String eltName;
     	
-        if (scalarType != null)
-        {
-            eltName = "swe:" + scalarType.getLocalName();
-        }
+        if (def != null && ((String)def).contains("time"))
+            eltName = "swe:Time";
+        else if (dataValue.getDataType() == DataType.BOOLEAN)
+            eltName = "swe:Boolean";
+        else if (dataValue.getDataType() == DataType.DOUBLE || dataValue.getDataType() == DataType.FLOAT)
+            eltName = "swe:Quantity";
+        else if (dataValue.getDataType() == DataType.ASCII_STRING || dataValue.getDataType() == DataType.UTF_STRING)
+            eltName = "swe:Category";
         else
-        {
-            if (def != null && ((String)def).contains("time"))
-                eltName = "swe:Time";
-            else if (dataValue.getDataType() == DataType.BOOLEAN)
-                eltName = "swe:Boolean";
-            else if (dataValue.getDataType() == DataType.DOUBLE || dataValue.getDataType() == DataType.FLOAT)
-                eltName = "swe:Quantity";
-            else if (dataValue.getDataType() == DataType.ASCII_STRING || dataValue.getDataType() == DataType.UTF_STRING)
-                eltName = "swe:Category";
-            else
-                eltName = "swe:Count";
-        }
+            eltName = "swe:Count";
         
         return eltName;
     }
@@ -503,37 +518,42 @@ public class SweComponentWriterV11 implements DataComponentWriter
     }
     
     
-    private void writeCommonAttributes(DOMHelper dom, DataComponent dataComponent, Element dataValueElt) throws CDMException
+    private void writeCommonAttributes(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws CDMException
     {
         // definition URI
         Object defUri = dataComponent.getProperty(SweConstants.DEF_URI);
         if (defUri != null)
-            dataValueElt.setAttribute("definition", (String)defUri);
+            dataComponentElt.setAttribute("definition", (String)defUri);
         
         // updatable
         Boolean updatable = (Boolean)dataComponent.getProperty(SweConstants.UPDATABLE);
         if (updatable != null)
-            dataValueElt.setAttribute("updatable", updatable.toString());
+            dataComponentElt.setAttribute("updatable", updatable.toString());
+        
+        // crs
+        String crs = (String)dataComponent.getProperty(SweConstants.CRS);
+        if (crs != null)
+            dataComponentElt.setAttribute("crs", crs);
         
         // reference frame
         String refFrame = (String)dataComponent.getProperty(SweConstants.REF_FRAME);
         if (refFrame != null)
-            dataValueElt.setAttribute("referenceFrame", refFrame);
+            dataComponentElt.setAttribute("referenceFrame", refFrame);
         
         // reference time
         Double refTime = (Double)dataComponent.getProperty(SweConstants.REF_TIME);
         if (refTime != null)
-            dataValueElt.setAttribute("referenceTime", DateTimeFormat.formatIso(refTime, 0));
+            dataComponentElt.setAttribute("referenceTime", DateTimeFormat.formatIso(refTime, 0));
         
         // local frame
         Object locFrame = dataComponent.getProperty(SweConstants.LOCAL_FRAME);
         if (locFrame != null)
-            dataValueElt.setAttribute("localFrame", (String)locFrame);
+            dataComponentElt.setAttribute("localFrame", (String)locFrame);
         
         // axis code attribute
         Object axisCode = dataComponent.getProperty(SweConstants.AXIS_CODE);
         if (axisCode != null)
-            dataValueElt.setAttribute("axisID", (String)axisCode);
+            dataComponentElt.setAttribute("axisID", (String)axisCode);
     }
     
     
@@ -571,6 +591,15 @@ public class SweComponentWriterV11 implements DataComponentWriter
         	dom.setAttributeValue(dataValueElt, "swe:uom/@xlink:href", uomUri);
         else if (uomObj != null)
         	dom.setAttributeValue(dataValueElt, "swe:uom/@code", uomObj.getExpression());
+    }
+    
+    
+    private void writeCodeSpace(DOMHelper dom, DataValue dataValue, Element categoryElt) throws CDMException
+    {
+        String codeSpace = (String)dataValue.getProperty(SweConstants.DIC_URI);
+    	
+        if (codeSpace != null)
+        	dom.setAttributeValue(categoryElt, "swe:codeSpace/@xlink:href", codeSpace);
     }
     
     

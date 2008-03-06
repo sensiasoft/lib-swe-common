@@ -24,7 +24,6 @@ import java.util.*;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataType;
 
 
 /**
@@ -33,7 +32,7 @@ import org.vast.cdm.common.DataType;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Exclusive list of DataComponents (DataChoice)
+ * Exclusive list of DataComponents (Choice)
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -42,8 +41,9 @@ import org.vast.cdm.common.DataType;
  */
 public class DataChoice extends AbstractDataComponent
 {
+	protected static String UNSELECTED_ERROR = "No item was selected in DataChoice ";
 	protected List<AbstractDataComponent> itemList;
-	protected int selectedItem = -1;
+	protected int selected = -1;
     
 
     public DataChoice()
@@ -68,8 +68,9 @@ public class DataChoice extends AbstractDataComponent
     @Override
     public DataChoice copy()
     {
-    	int groupSize = itemList.size();    	
+    	int groupSize = itemList.size();
     	DataChoice newChoice = new DataChoice(groupSize);
+    	newChoice.selected = this.selected;
     	newChoice.name = this.name;
     	newChoice.properties = this.properties;    	
     	
@@ -86,41 +87,18 @@ public class DataChoice extends AbstractDataComponent
     @Override
     protected void updateStartIndex(int startIndex)
     {
-        dataBlock.startIndex = startIndex;
-        
-        if (dataBlock instanceof DataBlockMixed)
-        {
-            // TODO updateStartIndex for group with DataBlockMixed
-        }
-        else if (dataBlock instanceof DataBlockParallel)
-        {
-            for (int i = 0; i < itemList.size(); i++)
-            {
-                AbstractDataComponent childComponent = itemList.get(i);
-                childComponent.updateStartIndex(startIndex);
-            }
-        }
-        else // case of primitive array
-        {
-            int scalarTotal = 0;
-            for (int i = 0; i < itemList.size(); i++)
-            {
-                AbstractDataComponent childComponent = itemList.get(i);
-                childComponent.updateStartIndex(startIndex + scalarTotal);
-                scalarTotal += childComponent.scalarCount;
-            }
-        }
+        // TODO don't think there is anything to do here
     }
     
     
     @Override
-    protected void updateAtomCount(int childOffsetCount)
+    protected void updateAtomCount(int childAtomCountDiff)
     {
         if (dataBlock != null)
-            dataBlock.atomCount += childOffsetCount;
+            dataBlock.atomCount += childAtomCountDiff;
         
         if (parent != null)
-            parent.updateAtomCount(childOffsetCount);
+            parent.updateAtomCount(childAtomCountDiff);
     }
     
     
@@ -193,51 +171,17 @@ public class DataChoice extends AbstractDataComponent
     @Override
     public void setData(DataBlock dataBlock)
     {
-    	this.dataBlock = (AbstractDataBlock)dataBlock;
+    	// must always be a datablock mixed!
+    	DataBlockMixed mixedBlock = (DataBlockMixed)dataBlock;
+    	this.dataBlock = mixedBlock;
 
-		// also assign dataBlock to children
-    	if (dataBlock instanceof DataBlockParallel)
-    	{
-    		for (int i = 0; i < itemList.size(); i++)
-    		{
-    			AbstractDataBlock childBlock = ((DataBlockParallel)dataBlock).blockArray[i];
-    			itemList.get(i).setData(childBlock);
-    		}
-    	}
-        else if (dataBlock instanceof DataBlockMixed)
-        {
-            for (int i = 0; i < itemList.size(); i++)
-            {
-                AbstractDataBlock childBlock = ((DataBlockMixed)dataBlock).blockArray[i];
-                itemList.get(i).setData(childBlock);
-            }
-        }
-        else if (dataBlock instanceof DataBlockTuple)
-        {
-            int currentIndex = 0;
-            for (int i = 0; i < itemList.size(); i++)
-            {
-                AbstractDataComponent nextComponent = itemList.get(i);
-                AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
-                childBlock.atomCount = nextComponent.scalarCount;
-                childBlock.startIndex += currentIndex;
-                currentIndex += childBlock.atomCount;
-                nextComponent.setData(childBlock);
-            }
-        }
-    	else // case of big primitive array
-    	{
-    		int currentIndex = 0;
-    		for (int i = 0; i < itemList.size(); i++)
-    		{
-    			AbstractDataComponent nextComponent = itemList.get(i);
-    			AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
-    			childBlock.atomCount = nextComponent.scalarCount;
-    			childBlock.startIndex += currentIndex;
-    			currentIndex += childBlock.atomCount;
-    			nextComponent.setData(childBlock);
-    		}
-    	}
+		// first value = index of selected component
+    	int index = mixedBlock.blockArray[0].getIntValue();
+    	checkIndex(index);
+    	this.selected = index;
+    	
+    	// also assign block to selected child
+    	itemList.get(index).setData(mixedBlock.blockArray[1]);
     }
     
     
@@ -256,130 +200,48 @@ public class DataChoice extends AbstractDataComponent
     @Override
     public void validateData() throws CDMException
     {
-    	itemList.get(selectedItem).validateData();
+    	if (selected < 0)
+    		throw new CDMException(UNSELECTED_ERROR + name);
+    	
+    	itemList.get(selected).validateData();
     }
     
     
-    /**
-     * Create object adapted to carry data for this container
-     * TODO could save the calculated structure and do a shallow copy for the nexts...
-     * Saved copy would be discarded every time the structure changes
-     */
     @Override
-    protected AbstractDataBlock createDataBlock() 
+    protected AbstractDataBlock createDataBlock()
     {
-    	DataType currentType = DataType.OTHER;
-        DataType previousType = DataType.OTHER;
-        AbstractDataBlock newBlock = null;
-        AbstractDataBlock nextBlock = null;
-        DataBlockMixed mixedBlock;
-        AbstractDataComponent nextComponent;
-        boolean sameType = true;
-        boolean allScalars = true;
-        int totalSize = 0;        
-        
-    	// create a mixed block with all children block
+    	DataBlockMixed newBlock = new DataBlockMixed(2);
+    	newBlock.blockArray[0] = new DataBlockInt(1);
+
+    	// create data blocks for all children
     	int childNumber = itemList.size();
-    	mixedBlock = new DataBlockMixed(childNumber);        
-        
         for (int i=0; i<childNumber; i++)
         {
-        	nextComponent = itemList.get(i);
-            nextBlock = nextComponent.createDataBlock();
-        	currentType = nextBlock.getDataType();
-        	totalSize += nextBlock.atomCount;       	
-        	mixedBlock.blockArray[i] = nextBlock;
-        	
-        	/*if ((currentType == DataType.MIXED) || (i != 0 && currentType != previousType))
-        		sameType = false;
-        	
-        	else if ((nextComponent instanceof DataArray) && ((DataArray)nextComponent).variableSize)
-        		sameType = false;*/
-            
-            if (nextComponent instanceof DataArray || nextBlock instanceof DataBlockMixed)
-            {
-                allScalars = false;
-            }
-            else
-            {
-                if (i != 0 && (currentType != previousType))
-                    sameType = false;
-            }
-        	
-        	previousType = currentType;
+        	AbstractDataComponent nextComponent = itemList.get(i);
+            nextComponent.createDataBlock();
         }
         
-        // if everything was of same type, create a big shared primitive block
-        if (allScalars && sameType)
-        {
-        	newBlock = nextBlock.copy();
-        	newBlock.resize(totalSize);
-        }
-        
-        // otherwise if only scalars, use DataBlockTuple or PrimitiveBlock
-        else if (allScalars)
-        {
-            DataBlockTuple tupleBlock = new DataBlockTuple(totalSize);
-            
-            int currentIndex = 0;
-            for (int i=0; i<childNumber; i++)
-            {
-                AbstractDataBlock childBlock = mixedBlock.blockArray[i];
-                
-                if (childBlock instanceof DataBlockTuple)
-                {
-                    for (int j=0; j<childBlock.atomCount; j++)
-                    {
-                        tupleBlock.blockArray[currentIndex] = ((DataBlockTuple)childBlock).blockArray[j];
-                        currentIndex++;
-                    }
-                }
-                else
-                {
-                    for (int j=0; j<childBlock.atomCount; j++)
-                    {
-                        AbstractDataBlock block = childBlock.copy();
-                        block.resize(1);
-                        tupleBlock.blockArray[currentIndex] = block;
-                        currentIndex++;
-                    }
-                }
-            }
-            
-            tupleBlock.atomCount = totalSize;
-            newBlock = tupleBlock;
-        }
-        
-        // otherwise use the mixed block
-        else
-        {
-        	newBlock = mixedBlock;
-        	newBlock.atomCount = totalSize;
-        }
-        
-        newBlock.startIndex = 0;
-        scalarCount = totalSize;
+        // if one item is selected, set data
+    	if (selected >= 0)
+    	{
+    		newBlock.blockArray[0].setIntValue(selected); 
+    		newBlock.blockArray[1] = (AbstractDataBlock)itemList.get(selected).getData();
+    	}
+    	    	
         return newBlock;
     }
     
     
-    public void combineDataBlocks()
+    /**
+     * Check that the integer index given is in range: 0 to item list size
+     * @param index int
+     * @throws DataException
+     */
+    protected void checkIndex(int index)
     {
-        int groupSize = itemList.size();
-        DataBlockMixed newBlock = new DataBlockMixed(groupSize);
-        
-        for (int i=0; i<groupSize; i++)
-        {
-            AbstractDataComponent childComponent = itemList.get(i);
-            
-            if (childComponent instanceof DataChoice && childComponent.dataBlock == null)
-                ((DataChoice)childComponent).combineDataBlocks();
-
-            newBlock.blockArray[i] = childComponent.dataBlock;
-            newBlock.atomCount += childComponent.dataBlock.atomCount;
-        }
-        
-        this.dataBlock = newBlock;
+        // error if index is out of range
+        if ((index >= itemList.size()) || (index < 0))
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
     }
 
 
@@ -388,6 +250,46 @@ public class DataChoice extends AbstractDataComponent
     {
         return itemList.size();
     }
+    
+    
+    public int getSelected()
+	{
+		return selected;
+	}
+    
+    
+    public DataComponent getSelectedComponent()
+    {
+    	if (selected < 0)
+    		return null;
+    	
+    	return getComponent(selected);
+    }
+
+
+	public void setSelected(int index)
+	{
+		checkIndex(index);
+		this.selected = index;
+		
+		if (this.dataBlock != null)
+		{
+			((DataBlockMixed)dataBlock).blockArray[0].setIntValue(index);		
+			AbstractDataBlock childData = (AbstractDataBlock)itemList.get(selected).getData();
+			((DataBlockMixed)dataBlock).blockArray[1] = childData;
+		}
+	}
+	
+	
+	public void setSelectedComponent(String name)
+	{
+		int index = getComponentIndex(name);
+		if (index < 0)
+			throw new IllegalStateException("Invalid component: " + name);
+		
+		setSelected(index);
+	}
+	
 
 
     public String toString(String indent)

@@ -127,15 +127,15 @@ public class DataArray extends AbstractDataComponent
     
     
     @Override
-    protected void updateAtomCount(int childOffsetCount)
+    protected void updateAtomCount(int childAtomCountDiff)
     {
-        int atomCountOffset = childOffsetCount*arraySize;
+    	childAtomCountDiff = childAtomCountDiff*arraySize;
         
         if (dataBlock != null)
-            dataBlock.atomCount += atomCountOffset;
+            dataBlock.atomCount += childAtomCountDiff;
         
         if (parent != null)
-            parent.updateAtomCount(atomCountOffset);
+            parent.updateAtomCount(childAtomCountDiff);
     }
     
     
@@ -282,14 +282,14 @@ public class DataArray extends AbstractDataComponent
         
     	if (arraySize > 0)
     	{
-	    	// create bigger parallel block
+	    	// if child is parallel block, create bigger parallel block
 	        if (childBlock instanceof DataBlockParallel)
 	        {
 	        	newBlock = childBlock.copy();
                 newSize = childBlock.atomCount * arraySize;
 	        }
             
-            // create parallel block
+            // if child is tuple block, create parallel block
             else if (childBlock instanceof DataBlockTuple)
             {
                 DataBlockParallel parallelBlock = new DataBlockParallel();
@@ -298,7 +298,7 @@ public class DataArray extends AbstractDataComponent
                 newBlock = parallelBlock;
             }
             
-            // create list block
+            // if child is mixed block, create list block
             else if (childBlock instanceof DataBlockMixed)
             {
                 DataBlockList blockList = new DataBlockList();
@@ -307,7 +307,7 @@ public class DataArray extends AbstractDataComponent
                 newSize = arraySize;
             }
 	        
-	        // create bigger primitive block
+	        // if child is already a primitive block, create bigger primitive block
 	        else
 	        {
 	        	newBlock = childBlock.copy();

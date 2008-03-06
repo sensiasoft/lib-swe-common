@@ -158,10 +158,15 @@ public class SweComponentReaderV11 implements DataComponentReader
         for (int i = 0; i < fieldCount; i++)
         {
             Element fieldElt = (Element)fieldList.item(i);
-            
+
             // add field components
             DataComponent dataComponent = readComponentProperty(dom, fieldElt);
             dataGroup.addComponent(readPropertyName(dom, fieldElt), dataComponent);
+
+            // optional flag
+            Boolean optional = getBooleanAttribute(dom, fieldElt, "optional");
+            if (optional != null)
+            	dataComponent.setProperty(SweConstants.OPTIONAL, optional);
         }
     	
         // error if no field present
@@ -210,6 +215,11 @@ public class SweComponentReaderV11 implements DataComponentReader
                 // save field QName
             	QName fieldQName = new QName(childElt.getNamespaceURI(), childElt.getTagName());
             	dataComponent.setProperty(SweConstants.FIELD_QNAME, fieldQName);
+            	
+            	// optional flag
+                Boolean optional = getBooleanAttribute(dom, childElt, "optional");
+                if (optional != null)
+                	dataComponent.setProperty(SweConstants.OPTIONAL, optional);
             }
         }
 
@@ -411,6 +421,10 @@ public class SweComponentReaderV11 implements DataComponentReader
         else
             throw new CDMException("Invalid component: " + eltName);
         
+    	// save param QName
+    	QName componentQName = new QName(scalarElt.getNamespaceURI(), scalarElt.getTagName());
+    	dataValue.setProperty(SweConstants.COMP_QNAME, componentQName);
+    	
     	// read common stuffs        
         readGmlProperties(dataValue, dom, scalarElt);
     	readCommonAttributes(dataValue, dom, scalarElt);
@@ -460,7 +474,11 @@ public class SweComponentReaderV11 implements DataComponentReader
         
         // read attributes
         readCommonAttributes(paramVal, dom, rangeElt);
-        range.setProperty(SweConstants.DEF_URI, "urn:ogc:def:data:OGC:range");
+        readGmlProperties(paramVal, dom, rangeElt);
+        readUom(paramVal, dom, rangeElt);
+        readCodeSpace(paramVal, dom, rangeElt);
+        readQuality(paramVal, dom, rangeElt);
+        readConstraints(paramVal, dom, rangeElt);
         
         // add params to DataGroup
         range.addComponent("min", paramVal);
@@ -559,12 +577,14 @@ public class SweComponentReaderV11 implements DataComponentReader
             dataComponent.setProperty(SweConstants.DEF_URI, defUri);
         
         // updatable flag
-        String updatableText = dom.getAttributeValue(componentElt, "updatable");
-        if (updatableText != null)
-        {
-        	boolean updatable = updatableText.equalsIgnoreCase("true") || updatableText.equals("1");
+        Boolean updatable = getBooleanAttribute(dom, componentElt, "updatable");
+        if (updatable != null)
         	dataComponent.setProperty(SweConstants.UPDATABLE, updatable);
-        }
+        
+        // crs
+        String crs = dom.getAttributeValue(componentElt, "crs");
+        if (crs != null)
+            dataComponent.setProperty(SweConstants.CRS, crs);
         
         // reference frame
         String refFrame = dom.getAttributeValue(componentElt, "referenceFrame");
@@ -592,6 +612,18 @@ public class SweComponentReaderV11 implements DataComponentReader
         String axisCode = dom.getAttributeValue(componentElt, "axisID");
         if (axisCode != null)
         	dataComponent.setProperty(SweConstants.AXIS_CODE, axisCode);
+    }
+    
+    
+    private Boolean getBooleanAttribute(DOMHelper dom, Element parentElt, String attName)
+    {
+    	String boolText = dom.getAttributeValue(parentElt, attName);
+    	
+    	if (boolText == null)
+    		return null;
+    	
+    	boolean flag = boolText.equalsIgnoreCase("true") || boolText.equals("1");
+    	return flag;
     }
     
     

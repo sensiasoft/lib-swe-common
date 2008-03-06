@@ -43,11 +43,11 @@ public class SweConstants
 	public final static String ID = "id"; // String
 	public final static String META = "meta"; // Object
 	public final static String DESC = "desc"; // String
-	public final static String UPDATABLE = "updatable"; // Boolean
 	public final static String NAMES = "names"; // List<QName>
 	public final static String REF_FRAME = "ref_frame"; // String
 	public final static String REF_TIME = "ref_time"; // Double
 	public final static String LOCAL_FRAME = "loc_frame"; // String
+	public final static String CRS = "crs"; // String
 	public final static String AXIS_CODE = "axis_code"; // String
 	public final static String DEF_URI = "def_uri"; // String
 	public final static String DEF_OBJ = "def_obj";
@@ -58,5 +58,6 @@ public class SweConstants
 	public final static String DIC_OBJ = "dic_obj";
 	public final static String QUALITY = "quality"; // DataComponent
 	public final static String CONSTRAINTS = "constraint"; // ConstraintList
-
+	public final static String UPDATABLE = "updatable"; // Boolean
+	public final static String OPTIONAL = "optional"; // Boolean
 }

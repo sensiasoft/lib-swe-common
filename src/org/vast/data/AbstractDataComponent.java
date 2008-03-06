@@ -73,6 +73,8 @@ public abstract class AbstractDataComponent implements DataComponent
     
     /**
      * Update datablock start index (for array support)
+     * Needed when data is selected by DataArray getComponent(int)
+     * and the DataArray is using a parallel or primitive DataBlock
      * @param startIndex
      */
     protected abstract void updateStartIndex(int startIndex);
@@ -80,6 +82,8 @@ public abstract class AbstractDataComponent implements DataComponent
     
     /**
      * Update datablock atomCount (for resizable array support)
+     * Needed to update atom count info in all parents of a
+     * DataArray that has been resized!
      * @param startIndex
      */
     protected abstract void updateAtomCount(int childOffsetCount);

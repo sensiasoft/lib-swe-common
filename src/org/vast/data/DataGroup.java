@@ -113,13 +113,13 @@ public class DataGroup extends AbstractDataComponent
     
     
     @Override
-    protected void updateAtomCount(int childOffsetCount)
+    protected void updateAtomCount(int childAtomCountDiff)
     {
         if (dataBlock != null)
-            dataBlock.atomCount += childOffsetCount;
+            dataBlock.atomCount += childAtomCountDiff;
         
         if (parent != null)
-            parent.updateAtomCount(childOffsetCount);
+            parent.updateAtomCount(childAtomCountDiff);
     }
     
     
@@ -363,6 +363,11 @@ public class DataGroup extends AbstractDataComponent
     }
     
     
+    /**
+     * Specific to DataGroup and used by ProcessChain
+     * Allows to combine child blocks into one mixed block
+     * when blocks are coming from different independant sources
+     */
     public void combineDataBlocks()
     {
         int groupSize = componentList.size();
