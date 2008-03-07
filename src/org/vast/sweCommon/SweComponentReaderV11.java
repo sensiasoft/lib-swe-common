@@ -459,18 +459,23 @@ public class SweComponentReaderV11 implements DataComponentReader
         String eltName = rangeElt.getLocalName();
         
         // save range QName
-    	QName componentQName = new QName(rangeElt.getNamespaceURI(), rangeElt.getTagName());
-    	range.setProperty(SweConstants.COMP_QNAME, componentQName);
+    	QName compQName = new QName(rangeElt.getNamespaceURI(), rangeElt.getTagName());
+    	range.setProperty(SweConstants.COMP_QNAME, compQName);
         
         // Create Data component Object
         if (eltName.startsWith("Quantity"))
-            paramVal = new DataValue(DataType.DOUBLE);
+        	paramVal = new DataValue(DataType.DOUBLE);         
         else if (eltName.startsWith("Count"))
             paramVal = new DataValue(DataType.INT);
         else if (eltName.startsWith("Time"))
             paramVal = new DataValue(DataType.DOUBLE);
         else
             throw new CDMException("Only Quantity, Time and Count ranges are allowed");
+        
+        // generate fake QName for min/max components
+        String localName = eltName.substring(0, eltName.indexOf("Range"));
+        QName newQName = new QName(rangeElt.getNamespaceURI(), localName);
+        paramVal.setProperty(SweConstants.COMP_QNAME, newQName);
         
         // read attributes
         readCommonAttributes(paramVal, dom, rangeElt);
