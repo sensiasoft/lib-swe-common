@@ -43,13 +43,13 @@ import org.vast.cdm.common.DataStreamWriter;
  */
 public class DefaultWriterHandler implements DataHandler
 {
-    protected SweData sweData;
+    protected SWEData sweData;
     protected DataStreamWriter writer;
     protected int blockCount = 0;
     protected int blockNum = 0;
     
     
-    public DefaultWriterHandler(SweData sweData, DataStreamWriter writer)
+    public DefaultWriterHandler(SWEData sweData, DataStreamWriter writer)
     {
         this.sweData = sweData;
         this.writer = writer;

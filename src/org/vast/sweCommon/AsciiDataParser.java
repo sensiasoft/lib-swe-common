@@ -164,7 +164,7 @@ public class AsciiDataParser extends AbstractDataParser
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
 		char decimalSep = ((AsciiEncoding)dataEncoding).decimalSeparator;
-		parseToken(scalarInfo, this.nextToken, decimalSep);
+		parseToken(scalarInfo, this.nextToken, decimalSep);		
 	}
     
     
@@ -182,7 +182,7 @@ public class AsciiDataParser extends AbstractDataParser
         // get data block and its data type
         DataBlock data = scalarInfo.getData();
         DataType dataType = data.getDataType();
-        
+                
         // replace decimal separator by a '.'
         if (decimalSep != 0)
             token.replace(decimalSep, '.');
