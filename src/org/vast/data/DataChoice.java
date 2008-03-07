@@ -284,10 +284,15 @@ public class DataChoice extends AbstractDataComponent
 		
 		if (this.dataBlock != null)
 		{
+			int prevAtomCount = dataBlock.atomCount;
+				
 			((DataBlockMixed)dataBlock).blockArray[0].setIntValue(index);
 			AbstractDataBlock childData = (AbstractDataBlock)itemList.get(selected).getData();
 			((DataBlockMixed)dataBlock).blockArray[1] = childData;
 			dataBlock.atomCount = childData.atomCount + 1;
+			
+			if (parent != null)
+				parent.updateAtomCount(dataBlock.atomCount - prevAtomCount);
 		}
 	}
 	

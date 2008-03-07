@@ -215,7 +215,7 @@ public class DataGroup extends AbstractDataComponent
         }
         else if (dataBlock instanceof DataBlockTuple)
         {
-            int currentIndex = 0;
+        	int currentIndex = 0;
             for (int i = 0; i < componentList.size(); i++)
             {
                 AbstractDataComponent nextComponent = componentList.get(i);

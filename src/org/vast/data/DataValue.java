@@ -89,7 +89,13 @@ public class DataValue extends AbstractDataComponent
     @Override
     public void setData(DataBlock dataBlock)
     {
-    	this.dataBlock = (AbstractDataBlock)dataBlock;
+    	if (dataBlock instanceof DataBlockTuple)
+    	{
+    		int blockIndex = ((DataBlockTuple)dataBlock).startIndex;
+    		this.dataBlock = ((DataBlockTuple)dataBlock).blockArray[blockIndex];
+    	}
+    	else
+    		this.dataBlock = (AbstractDataBlock)dataBlock;
     }
     
     
