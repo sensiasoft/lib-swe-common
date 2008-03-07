@@ -107,7 +107,7 @@ public class AsciiDataWriter extends AbstractDataWriter
                     outputWriter.write(tokenSep);
             }
             else
-                firstToken = false;
+            	firstToken = newBlock = false;
             
             String val = scalarInfo.getData().getStringValue();
             //System.out.println(scalarInfo.getName() + ": " + val);
