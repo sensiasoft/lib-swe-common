@@ -50,6 +50,33 @@ public class BinaryDataParser extends AbstractDataParser
 	public BinaryDataParser()
 	{
 	}
+	
+	
+	public void setInput(InputStream inputStream) throws CDMException
+	{
+		InputStream dataIn = null;
+		
+		// use Base64 converter, and TODO swap bytes if necessary
+		switch (((BinaryEncoding)dataEncoding).byteEncoding)
+		{
+			case BASE64:
+				dataIn = new Base64Decoder(inputStream);
+				break;
+				
+			case RAW:
+				dataIn = inputStream;
+				break;
+				
+			default:
+				throw new CDMException("Unsupported byte encoding");
+		}
+		
+		// create data input stream
+		if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.BIG_ENDIAN)
+		    dataInput = new DataInputStreamBI(new BufferedInputStream(dataIn));
+        else if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.LITTLE_ENDIAN)
+            dataInput = new DataInputStreamLI(new BufferedInputStream(dataIn));
+	}
 
 	
 	/**
@@ -57,34 +84,15 @@ public class BinaryDataParser extends AbstractDataParser
 	 */
 	public void parse(InputStream inputStream) throws CDMException
 	{
-		InputStream dataIn = null;
 		stopParsing = false;
 		
 		try
 		{
-			// use Base64 converter, and TODO swap bytes if necessary
-			switch (((BinaryEncoding)dataEncoding).byteEncoding)
-			{
-				case BASE64:
-					dataIn = new Base64Decoder(inputStream);
-					break;
-					
-				case RAW:
-					dataIn = inputStream;
-					break;
-					
-				default:
-					throw new CDMException("Unsupported byte encoding");
-			}
+			setInput(inputStream);				
 			
 			// if a dataHandler is registered, parse each individual element
 			if (dataHandler != null)
 			{
-				if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.BIG_ENDIAN)
-				    dataInput = new DataInputStreamBI(new BufferedInputStream(dataIn));
-                else if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.LITTLE_ENDIAN)
-                    dataInput = new DataInputStreamLI(new BufferedInputStream(dataIn));
-				
 				do
 				{
 					// stop if end of stream
@@ -107,7 +115,7 @@ public class BinaryDataParser extends AbstractDataParser
 				
 				do
 				{
-					byteRead = dataIn.read(buffer, size-byteLeft, byteLeft);
+					byteRead = ((InputStream)dataInput).read(buffer, size-byteLeft, byteLeft);
 					byteLeft -= byteRead;
 					
 					if (byteRead == -1)
@@ -206,7 +214,7 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	/**
 	 * Checks if more data is available from the stream
-	 * @return true if more data needs to be parsed, fasle otherwise
+	 * @return true if more data needs to be parsed, false otherwise
 	 */
 	protected boolean moreData()
 	{

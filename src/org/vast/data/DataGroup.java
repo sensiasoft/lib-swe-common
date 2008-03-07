@@ -282,7 +282,7 @@ public class DataGroup extends AbstractDataComponent
         
     	// create a mixed block with all children block
     	int childNumber = componentList.size();
-    	mixedBlock = new DataBlockMixed(childNumber);        
+    	mixedBlock = new DataBlockMixed(childNumber);
         
         for (int i=0; i<childNumber; i++)
         {

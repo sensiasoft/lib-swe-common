@@ -36,9 +36,9 @@ import org.vast.sweCommon.SweConstants;
  * carrying an Integer value.
  * There are two cases of variable size component:
  *  - The component is explicitely listed in the component tree
- *    (in this case, the component has a parent) 
+ *    (in this case, the count component has a parent) 
  *  - The component is implicitely given before the array data
- *    (in this case, the component has no parent)
+ *    (in this case, the count component has no parent)
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -74,10 +74,11 @@ public class DataArray extends AbstractDataComponent
         this.sizeData = sizeData;
         this.variableSize = variableSize;
         
+        // intialize size to 1 if variable size
         if (variableSize)
-        	this.arraySize = 1;
-        else
-        	this.arraySize = sizeData.getData().getIntValue();
+        	sizeData.getData().setIntValue(1);
+        
+        this.arraySize = sizeData.getData().getIntValue();
     }
 
 
@@ -86,7 +87,7 @@ public class DataArray extends AbstractDataComponent
     {
     	DataArray newArray = new DataArray();
     	newArray.name = this.name;
-    	newArray.properties = this.properties;    	
+    	newArray.properties = this.properties;
     	newArray.arraySize = this.arraySize;
     	newArray.variableSize = this.variableSize;
         newArray.addComponent(this.component.copy());
@@ -96,7 +97,7 @@ public class DataArray extends AbstractDataComponent
         {
         	// case of size data within DataArray
         	if (sizeData.parent == null)
-            	newArray.setSizeData(sizeData.copy());
+        		newArray.setSizeData((DataValue)sizeData.clone());
         	
         	// case of size data as a separate component
             else
@@ -328,11 +329,11 @@ public class DataArray extends AbstractDataComponent
 	        	newBlock = childBlock.copy();
                 newSize = childBlock.atomCount * arraySize; 	
 	        }
+	        
+	        newBlock.resize(newSize);
+	        scalarCount = newBlock.atomCount;
     	}
         
-        newBlock.resize(newSize);
-        
-        scalarCount = newBlock.atomCount;
         return newBlock;
     }
 

@@ -78,4 +78,13 @@ public abstract class AbstractDataParser extends DataIterator implements DataStr
 		InputStream in = URIStreamHandler.openStream(uri);
 		this.parse(in);
 	}
+	
+	
+	/**
+	 * Parse next atom from stream
+	 */
+	public void parseNextElement() throws CDMException
+	{
+		this.processNextElement();
+	}
 }

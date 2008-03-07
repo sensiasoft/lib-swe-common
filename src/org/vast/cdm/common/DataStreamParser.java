@@ -87,6 +87,12 @@ public interface DataStreamParser
 	public void parse(InputStream inputStream) throws CDMException;
 	
 	
+	public void setInput(InputStream inputStream) throws CDMException; 
+	
+	
+	public void parseNextElement() throws CDMException;
+	
+	
 	public void reset() throws CDMException;
 	
 	

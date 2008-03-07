@@ -30,14 +30,22 @@ import org.vast.util.DateTimeFormat;
 
 public class AsciiDataParser extends AbstractDataParser
 {
-	String nextToken;
-	int tupleSize;
-	char[] tokenSep, tupleSep;
-    StringBuffer tokenBuf = new StringBuffer();
+	protected int tupleSize;
+	protected char[] tokenSep, tupleSep;
+	protected StringBuffer tokenBuf = new StringBuffer();
+	protected Reader reader;
     
 	
 	public AsciiDataParser()
 	{
+	}
+	
+	
+	public void setInput(InputStream inputStream) throws CDMException
+	{
+		reader = new BufferedReader(new InputStreamReader(inputStream));
+		tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
+		tupleSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
 	}
 	
 	
@@ -50,26 +58,17 @@ public class AsciiDataParser extends AbstractDataParser
         
         try
 		{
-			Reader reader = new InputStreamReader(inputStream);
-			tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
-			tupleSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
+        	setInput(inputStream);
 			
 			do
 			{
-				// get next token
-				this.nextToken = this.nextToken(reader);
-				
 				// stop if end of stream
-				if (this.nextToken == null)
+				if (!moreData())
 					break;
 				
 				processNextElement();
 			}
 			while(!stopParsing && !endOfArray);
-		}
-		catch (IOException e)
-		{
-			throw new CDMException("Error while reading ASCII stream", e);
 		}
 		finally
 		{
@@ -93,7 +92,7 @@ public class AsciiDataParser extends AbstractDataParser
 	 * @return next token as a String
 	 * @throws IOException
 	 */
-	private String nextToken(Reader inputReader) throws IOException
+	private String readToken() throws IOException
 	{
 		int tokenSepIndex = 0;
 		int tupleSepIndex = 0;
@@ -106,7 +105,7 @@ public class AsciiDataParser extends AbstractDataParser
         tokenBuf.setLength(0);
 		do
 		{
-			nextChar = inputReader.read();
+			nextChar = reader.read();
 			
             // to support single char separators below ASCII code 32 
             if (nextChar == (int)tokenSep[0] || nextChar == (int)tupleSep[0])
@@ -147,7 +146,7 @@ public class AsciiDataParser extends AbstractDataParser
 				break;
 			}
 			
-			nextChar = inputReader.read();
+			nextChar = reader.read();
 		}
 		
 		// remove separator characters from buffer
@@ -164,7 +163,44 @@ public class AsciiDataParser extends AbstractDataParser
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
 		char decimalSep = ((AsciiEncoding)dataEncoding).decimalSeparator;
-		parseToken(scalarInfo, this.nextToken, decimalSep);		
+
+		try
+		{
+			String token = readToken();
+			parseToken(scalarInfo, token, decimalSep);
+		}
+		catch (IOException e)
+		{
+			throw new CDMException("Invalid ASCII stream");
+		}			
+	}
+    
+    
+    /**
+	 * Checks if more data is available from the stream
+	 * @return true if more data needs to be parsed, false otherwise
+	 */
+	protected boolean moreData()
+	{
+		try
+		{
+			reader.mark(100);
+			String token = readToken();
+			if (token == null)
+			{
+				return false;
+			}
+			else
+			{
+				reader.reset();
+				return true;
+			}				
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
     
     
@@ -182,7 +218,8 @@ public class AsciiDataParser extends AbstractDataParser
         // get data block and its data type
         DataBlock data = scalarInfo.getData();
         DataType dataType = data.getDataType();
-                
+        //System.out.println(scalarInfo.getName() + ": " + token);
+        
         // replace decimal separator by a '.'
         if (decimalSep != 0)
             token.replace(decimalSep, '.');
@@ -261,13 +298,12 @@ public class AsciiDataParser extends AbstractDataParser
                     break;
             }
         }
-        catch (NumberFormatException e)
+        catch (Exception e)
         {
-            throw new CDMException("Invalid data " + token + " for component " + scalarInfo, e);
-        }
-        catch (ParseException e)
-        {
-            throw new CDMException("Invalid data " + token + " for component " + scalarInfo, e);
+            if ((e instanceof NumberFormatException) || (e instanceof ParseException))
+            	throw new CDMException("Invalid data '" + token + "' for component '" + scalarInfo.getName() + "'", e);
+            else
+            	e.printStackTrace();
         }
         
         return data;

@@ -118,8 +118,9 @@ public class DataValue extends AbstractDataComponent
 			}
 			catch (CDMException e)
 			{
-				throw new CDMException("Value for component '" + name + 
-						               "' is not valid: " + e.getMessage());
+				throw new CDMException("Value '" + dataBlock.getStringValue() +
+									   "' is not valid for component '" +
+									   name + "': " + e.getMessage());
 			}
     	}
     }

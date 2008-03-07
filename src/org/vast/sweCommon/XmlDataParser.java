@@ -42,6 +42,13 @@ import org.vast.data.DataValue;
 public class XmlDataParser extends AbstractDataParser
 {
 
+	public void setInput(InputStream inputStream) throws CDMException
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	public void parse(InputStream inputStream) throws CDMException
 	{
 		// TODO Auto-generated method stub

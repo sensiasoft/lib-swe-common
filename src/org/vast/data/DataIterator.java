@@ -105,7 +105,7 @@ public abstract class DataIterator
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
-            // update size of variable size arrays - now done a few lines earlier
+            // update size of variable size arrays - already done before!!
             //if (next instanceof DataArray)
             //    ((DataArray)next).updateSize();
         	
@@ -119,6 +119,7 @@ public abstract class DataIterator
             		{
         				processAtom(sizeValue);
                 		int newSize = sizeValue.getData().getIntValue();
+                		//((DataArray)next).updateSize(newSize); already done before!!
                 		((DataArray)next).getSizeData().getData().setIntValue(newSize);
             		}
             		
@@ -146,7 +147,7 @@ public abstract class DataIterator
         		{
         			selectedValue.getData().setIntValue(((DataChoice)next).getSelected());
         			processAtom(selectedValue);
-        		}	
+        		}
         		
         		// parse selected item data
         		next = ((DataChoice)next).getSelectedComponent();
