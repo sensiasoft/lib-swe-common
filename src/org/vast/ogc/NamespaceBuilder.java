@@ -60,7 +60,7 @@ public class NamespaceBuilder
         	int endIndex = version.indexOf('.');
         	endIndex = version.indexOf('.', endIndex+1);
         	if (endIndex > 0)
-        		version = version.substring(0, version.indexOf('.'));
+        		version = version.substring(0, endIndex);
         	return baseUri + "/" + version;
         }
         else
