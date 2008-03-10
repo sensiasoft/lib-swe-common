@@ -137,7 +137,7 @@ public class DataList extends AbstractDataComponent
     @Override
     public void clearData()
     {
-        this.dataBlock = null;
+    	this.dataBlock = new DataBlockList();
         component.clearData();
     }
     
