@@ -486,8 +486,8 @@ public class SweComponentReaderV11 implements DataComponentReader
         readConstraints(paramVal, dom, rangeElt);
         
         // add params to DataGroup
-        range.addComponent("min", paramVal);
-        range.addComponent("max", paramVal.copy());
+        range.addComponent(SweConstants.MIN_VALUE, paramVal);
+        range.addComponent(SweConstants.MAX_VALUE, paramVal.copy());
         
         // Parse the two values
         String valueText = dom.getElementValue(rangeElt, "value");
