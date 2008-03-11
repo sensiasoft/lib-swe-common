@@ -2,20 +2,23 @@
 <Map>
    <!-- -->
    <Namespace type="OGC" version="1.0" uri="http://www.opengis.net/ogc"/>
-   <Namespace type="OWS" version="1.0" uri="http://www.opengis.net/ows"/>
+   <Namespace type="OWS" version="*" uri="http://www.opengis.net/ows"/>
    <Namespace type="OWS" version="1.1" uri="http://www.opengis.net/ows/1.1"/>
    <Namespace type="GML" version="*" uri="http://www.opengis.net/gml"/>
+   <Namespace type="GML" version="3.2.1" uri="http://www.opengis.net/gml/3.2"/>
    <Namespace type="XLINK" version="*" uri="http://www.w3.org/1999/xlink"/>
    <Namespace type="SLD" version="*" uri="http://www.opengis.net/sld"/>
-   <Namespace type="WMS" version="1.0" uri="http://www.opengis.net/wms"/>
+   <Namespace type="WMS" version="*" uri="http://www.opengis.net/wms"/>
    <Namespace type="WCS" version="*" uri="http://www.opengis.net/wcs"/>
    <Namespace type="WCS" version="1.1.1" uri="http://www.opengis.net/wcs/1.1.1"/>
    <Namespace type="CSW" version="1.0" uri="http://www.opengis.net/cat/csw"/>
+   <Namespace type="SWE" version="0.0" uri="http://www.opengis.net/swe/0"/>
    <Namespace type="SWE" version="1.0" uri="http://www.opengis.net/swe/1.0"/>
-   <Namespace type="SWE" version="1.0.1" uri="http://www.opengis.net/swe/1.0"/>
+   <Namespace type="SWE" version="1.0.1" uri="http://www.opengis.net/swe/1.0.1"/>
    <Namespace type="SWE" version="1.1" uri="http://www.opengis.net/swe/1.1"/>
+   <Namespace type="SML" version="0.0" uri="http://www.opengis.net/sensorML/0"/>
    <Namespace type="SML" version="1.0" uri="http://www.opengis.net/sensorML/1.0"/>
-   <Namespace type="SML" version="1.0.1" uri="http://www.opengis.net/sensorML/1.0"/>
+   <Namespace type="SML" version="1.0.1" uri="http://www.opengis.net/sensorML/1.0.1"/>
    <Namespace type="SML" version="1.1" uri="http://www.opengis.net/sensorML/1.1"/>
    <Namespace type="OM" version="1.0" uri="http://www.opengis.net/om/1.0"/>
    <Namespace type="SOS" version="1.0" uri="http://www.opengis.net/sos/1.0"/>
