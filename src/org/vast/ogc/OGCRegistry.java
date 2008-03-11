@@ -65,13 +65,13 @@ public class OGCRegistry
     
     protected static Hashtable<String, Class> readerClasses;
     protected static Hashtable<String, Class> writerClasses;
-    protected static Hashtable<String, NamespaceBuilder> namespaceBuilders;
+    protected static Hashtable<String, String> namespaces;
 
     static
     {
         readerClasses = new Hashtable<String, Class>();
         writerClasses = new Hashtable<String, Class>();
-        namespaceBuilders = new Hashtable<String, NamespaceBuilder>();
+        namespaces = new Hashtable<String, String>();
         String mapFileUrl = OGCRegistry.class.getResource("OGCRegistry.xml").toString();
         loadMaps(mapFileUrl, false);
     }
@@ -85,11 +85,17 @@ public class OGCRegistry
      */
     public static String getNamespaceURI(String spec, String version)
     {
-        NamespaceBuilder nsBuilder = namespaceBuilders.get(spec);
-        if (nsBuilder != null)
-            return nsBuilder.getNsUri(version);
+        String nsUri = null;
+        
+    	if (version != null)
+            nsUri = namespaces.get(spec + "_" + normalizeVersionString(version));
         else
-        	throw new IllegalStateException("Unsupported Specification: " + spec);
+        	nsUri = namespaces.get(spec);
+                	
+        if (nsUri == null)
+        	throw new IllegalStateException("Unsupported Specification: " + spec + " v" + version);
+    	
+    	return nsUri;
     }
 
 
@@ -392,10 +398,14 @@ public class OGCRegistry
             {
                 Element nsElt = (Element) namespaceElts.item(i);
                 String type = dom.getAttributeValue(nsElt, "type");
+                String version = dom.getAttributeValue(nsElt, "version");
+                version = normalizeVersionString(version);
                 String uri = dom.getAttributeValue(nsElt, "uri");
-                String appendFrom = dom.getAttributeValue(nsElt, "appendVersionFrom");
-                NamespaceBuilder nsBuilder = new NamespaceBuilder(uri, normalizeVersionString(appendFrom));
-                namespaceBuilders.put(type, nsBuilder);
+                
+                if (version != null)
+                	namespaces.put(type + "_" + version, uri);
+                else
+                	namespaces.put(type, uri);
             }
 
             // add reader hashtable entries
@@ -505,8 +515,8 @@ public class OGCRegistry
      * Provides direct access to the namespaceBuilders hashtable
      * @return
      */
-    public static Hashtable<String, NamespaceBuilder> getNamespaceBuilders()
+    public static Hashtable<String, String> getNamespaces()
     {
-        return namespaceBuilders;
+        return namespaces;
     }
 }

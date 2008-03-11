@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Map>
    <!-- -->
-   <Namespace type="OGC" uri="http://www.opengis.net/ogc"/>
-   <Namespace type="OWS" uri="http://www.opengis.net/ows" appendVersionFrom="1.1"/>
-   <Namespace type="GML" uri="http://www.opengis.net/gml" appendVersionFrom="3.2"/>
-   <Namespace type="XLINK" uri="http://www.w3.org/1999/xlink"/>
-   <Namespace type="SLD" uri="http://www.opengis.net/sld" appendVersionFrom="2.0"/>
-   <Namespace type="WMS" uri="http://www.opengis.net/wms" appendVersionFrom="1.4"/>
-   <Namespace type="WCS" uri="http://www.opengis.net/wcs" appendVersionFrom="1.1.0"/>
-   <Namespace type="CSW" uri="http://www.opengis.net/cat/csw" appendVersionFrom="2.0"/>   
-   <Namespace type="SWE" uri="http://www.opengis.net/swe" appendVersionFrom="0.0"/>
-   <Namespace type="SML" uri="http://www.opengis.net/sensorML" appendVersionFrom="0.0"/>
-   <Namespace type="OM" uri="http://www.opengis.net/om" appendVersionFrom="0.0"/>
-   <Namespace type="SOS" uri="http://www.opengis.net/sos" appendVersionFrom="0.0"/>
-   <Namespace type="SAS" uri="http://www.opengis.net/sas" appendVersionFrom="0.0"/>   
-   <Namespace type="SPS" uri="http://www.opengis.net/sps" appendVersionFrom="0.0"/>
-   <Namespace type="WNS" uri="http://www.opengis.net/wns" appendVersionFrom="0.0"/>   
+   <Namespace type="OGC" version="1.0" uri="http://www.opengis.net/ogc"/>
+   <Namespace type="OWS" version="1.0" uri="http://www.opengis.net/ows"/>
+   <Namespace type="OWS" version="1.1" uri="http://www.opengis.net/ows/1.1"/>
+   <Namespace type="GML" version="*" uri="http://www.opengis.net/gml"/>
+   <Namespace type="XLINK" version="*" uri="http://www.w3.org/1999/xlink"/>
+   <Namespace type="SLD" version="*" uri="http://www.opengis.net/sld"/>
+   <Namespace type="WMS" version="1.0" uri="http://www.opengis.net/wms"/>
+   <Namespace type="WCS" version="*" uri="http://www.opengis.net/wcs"/>
+   <Namespace type="WCS" version="1.1.1" uri="http://www.opengis.net/wcs/1.1.1"/>
+   <Namespace type="CSW" version="1.0" uri="http://www.opengis.net/cat/csw"/>
+   <Namespace type="SWE" version="1.0" uri="http://www.opengis.net/swe/1.0"/>
+   <Namespace type="SWE" version="1.0.1" uri="http://www.opengis.net/swe/1.0"/>
+   <Namespace type="SWE" version="1.1" uri="http://www.opengis.net/swe/1.1"/>
+   <Namespace type="SML" version="1.0" uri="http://www.opengis.net/sensorML/1.0"/>
+   <Namespace type="SML" version="1.0.1" uri="http://www.opengis.net/sensorML/1.0"/>
+   <Namespace type="SML" version="1.1" uri="http://www.opengis.net/sensorML/1.1"/>
+   <Namespace type="OM" version="1.0" uri="http://www.opengis.net/om/1.0"/>
+   <Namespace type="SOS" version="1.0" uri="http://www.opengis.net/sos/1.0"/>
+   <Namespace type="SAS" version="1.0" uri="http://www.opengis.net/sas/1.0"/>  
+   <Namespace type="SPS" version="1.1" uri="http://www.opengis.net/sps/1.1"/>
+   <Namespace type="WNS" version="*" uri="http://www.opengis.net/wns"/>
+   <Namespace type="WNS" version="1.0" uri="http://www.opengis.net/wns/1.0"/>
    <!-- -->
    <Reader type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesReader"/>
    <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>
