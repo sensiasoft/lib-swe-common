@@ -31,7 +31,7 @@ import org.vast.util.DateTimeFormat;
 public class AsciiDataParser extends AbstractDataParser
 {
 	protected int tupleSize;
-	protected char[] tokenSep, tupleSep;
+	protected char[] tokenSep, blockSep;
 	protected StringBuffer tokenBuf = new StringBuffer();
 	protected Reader reader;
     
@@ -45,7 +45,7 @@ public class AsciiDataParser extends AbstractDataParser
 	{
 		reader = new BufferedReader(new InputStreamReader(inputStream));
 		tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
-		tupleSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
+		blockSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
 	}
 	
 	
@@ -95,9 +95,9 @@ public class AsciiDataParser extends AbstractDataParser
 	private String readToken() throws IOException
 	{
 		int tokenSepIndex = 0;
-		int tupleSepIndex = 0;
+		int blockSepIndex = 0;
 		boolean endToken = false;
-		boolean endTuple = false;
+		boolean endBlock = false;
 		int nextChar;
 		
 		
@@ -108,8 +108,8 @@ public class AsciiDataParser extends AbstractDataParser
 			nextChar = reader.read();
 			
             // to support single char separators below ASCII code 32 
-            if (nextChar == (int)tokenSep[0] || nextChar == (int)tupleSep[0])
-                break;
+            //if (nextChar == (int)tokenSep[0] || nextChar == (int)blockSep[0])
+            //    break;
             
 			if (nextChar == -1)
 				return null;
@@ -117,7 +117,7 @@ public class AsciiDataParser extends AbstractDataParser
 		while (nextChar < 32);
 
 		
-		// add characters until we find separator or end of token
+		// add characters until we find token or block separator
 		while (nextChar != -1)
 		{
 			tokenBuf.append((char)nextChar);
@@ -134,26 +134,26 @@ public class AsciiDataParser extends AbstractDataParser
 				break;
 			}
 			
-			// check for tuple separator
-			tupleSepIndex = 1;
-			while ((tupleSepIndex <= tupleSep.length) &&
-					(tupleSep[tupleSep.length - tupleSepIndex] == tokenBuf.charAt(tokenBuf.length() - tupleSepIndex)))
-				tupleSepIndex++;
+			// check for block separator
+			blockSepIndex = 1;
+			while ((blockSepIndex <= blockSep.length) &&
+					(blockSep[blockSep.length - blockSepIndex] == tokenBuf.charAt(tokenBuf.length() - blockSepIndex)))
+				blockSepIndex++;
 			
-			if (tupleSepIndex > tupleSep.length)
+			if (blockSepIndex > blockSep.length)
 			{
-				endTuple = true;
+				endBlock = true;
 				break;
 			}
 			
-			nextChar = reader.read();
+			nextChar = reader.read();			
 		}
 		
 		// remove separator characters from buffer
 		if (endToken)
 			tokenBuf.setLength(tokenBuf.length() - tokenSepIndex + 1);
-		else if (endTuple)
-			tokenBuf.setLength(tokenBuf.length() - tupleSepIndex + 1);
+		else if (endBlock)
+			tokenBuf.setLength(tokenBuf.length() - blockSepIndex + 1);
 		
 		return tokenBuf.toString();
 	}
@@ -184,7 +184,7 @@ public class AsciiDataParser extends AbstractDataParser
 	{
 		try
 		{
-			reader.mark(100);
+			reader.mark(256);
 			String token = readToken();
 			if (token == null)
 			{
