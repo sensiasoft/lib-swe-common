@@ -329,7 +329,7 @@ public class SweComponentWriterV11 implements DataComponentWriter
         // write elementCount
         int arraySize = dataArray.getComponentCount();
         Element eltCountElt = dom.addElement(arrayElt, "swe:elementCount");
-        DataValue sizeData = dataArray.getSizeData();
+        DataValue sizeData = dataArray.getSizeComponent();
         
         // case of variable size
         if (dataArray.isVariableSize())
