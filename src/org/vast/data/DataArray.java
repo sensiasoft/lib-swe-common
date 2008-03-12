@@ -219,7 +219,6 @@ public class DataArray extends AbstractDataComponent
     	// update size component if variable size
         if (variableSize && implicitSize)
         {
-        	System.out.println(component);
         	int newSize = dataBlock.getAtomCount() / component.scalarCount;
         	changeSize(newSize);
         }
