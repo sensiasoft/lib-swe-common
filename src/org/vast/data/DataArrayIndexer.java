@@ -39,13 +39,15 @@ public class DataArrayIndexer extends DataIndexer
 {
     protected int currentIndex;
     protected int arraySize;
-    protected int atomCount;
+    protected int childScalarCount; // count of child
     protected int indexOffset = 0;
     protected boolean interleavedBlock;
     protected boolean tupleBlock;
     protected boolean hasChildArray;
     protected DataIndexer varSizeIndexer;
-        
+    protected DataVisitor varSizeVisitor; // for implicit array size
+    protected DataBlockInt arraySizeBlock = new DataBlockInt(1);
+    
     
     private DataArrayIndexer()
     {        
@@ -63,6 +65,7 @@ public class DataArrayIndexer extends DataIndexer
     {
         DataArrayIndexer newIndexer = new DataArrayIndexer();
         newIndexer.componentIndex = this.componentIndex;
+        newIndexer.childScalarCount = this.childScalarCount;
         newIndexer.scalarCount = this.scalarCount;
         newIndexer.arraySize = this.arraySize;
         newIndexer.interleavedBlock = this.interleavedBlock;
@@ -88,7 +91,7 @@ public class DataArrayIndexer extends DataIndexer
             for (int i = 0; i < indexerList.length; i++)
             {
                 DataIndexer indexer = indexerList[i];
-                indexer.updateStartIndex(startIndex + currentIndex*atomCount + indexer.componentIndex);
+                indexer.updateStartIndex(startIndex + currentIndex*childScalarCount + indexer.componentIndex);
             }
         }
         else if (tupleBlock)
@@ -114,9 +117,9 @@ public class DataArrayIndexer extends DataIndexer
     public void updateScalarCount()
     {
         if (hasChildArray)
-            atomCount = indexerList[0].scalarCount;
+            childScalarCount = indexerList[0].scalarCount;
         
-        scalarCount = atomCount * arraySize;        
+        scalarCount = childScalarCount * arraySize;
         
         if (parentIndexer != null)
             parentIndexer.updateScalarCount();
@@ -129,7 +132,7 @@ public class DataArrayIndexer extends DataIndexer
         AbstractDataBlock childBlock;
         this.data = data;
         
-        // implicit variable size included in datablock (mixed)
+        // datablock mixed not allowed
         if (data instanceof DataBlockMixed)
         {
             throw new IllegalStateException(DataArray.errorBlockMixed);
@@ -165,6 +168,13 @@ public class DataArrayIndexer extends DataIndexer
                 indexer.setData(childBlock);
             }
         }
+        
+        // if implicit variable size, update size
+        if (varSizeVisitor != null)
+        {
+        	arraySize = data.atomCount / childScalarCount;
+        	updateScalarCount();
+        }
     }
 
 
@@ -180,7 +190,7 @@ public class DataArrayIndexer extends DataIndexer
             for (int i = 0; i < indexerList.length; i++)
             {
                 DataIndexer indexer = indexerList[i];
-                int nextIndex = data.startIndex + currentIndex * atomCount + indexer.componentIndex;
+                int nextIndex = data.startIndex + currentIndex * childScalarCount + indexer.componentIndex;
                 indexer.updateStartIndex(nextIndex);
                 indexer.getData(indexList);
             }
@@ -238,7 +248,8 @@ public class DataArrayIndexer extends DataIndexer
         boolean next = true;
         
         // apply visitors here
-        this.applyVisitors();
+        if (currentIndex == 0)
+        	this.applyVisitors();
         
         // try to get next element from each child indexer
         if (interleavedBlock)
@@ -248,7 +259,7 @@ public class DataArrayIndexer extends DataIndexer
                 DataIndexer indexer = indexerList[i];
                 if (indexer.hasNext)
                 {
-                    int nextIndex = data.startIndex + currentIndex * atomCount + indexer.componentIndex;
+                    int nextIndex = data.startIndex + currentIndex * childScalarCount + indexer.componentIndex;
                     indexer.updateStartIndex(nextIndex);
                     indexer.next();
                     if (indexer.hasNext)
@@ -319,6 +330,18 @@ public class DataArrayIndexer extends DataIndexer
         super.reset();
         this.currentIndex = 0;
     }
+    
+    
+    @Override
+	protected void applyVisitors()
+	{
+		super.applyVisitors();
+		if (varSizeVisitor != null)
+		{
+			arraySizeBlock.setIntValue(arraySize);
+        	varSizeVisitor.mapData(arraySizeBlock);
+		}
+	}
 
 
     public int getIndexOffset()
@@ -333,15 +356,15 @@ public class DataArrayIndexer extends DataIndexer
     }
 
 
-    public int getAtomCount()
+    public int getChildScalarCount()
     {
-        return atomCount;
+        return childScalarCount;
     }
 
 
-    public void setAtomCount(int atomCount)
+    public void setChildScalarCount(int atomCount)
     {
-        this.atomCount = atomCount;
+        this.childScalarCount = atomCount;
     }
 
 
@@ -373,4 +396,16 @@ public class DataArrayIndexer extends DataIndexer
     {
         this.varSizeIndexer = varSizeIndexer;
     }
+
+
+	public DataVisitor getVarSizeVisitor()
+	{
+		return varSizeVisitor;
+	}
+
+
+	public void setVarSizeVisitor(DataVisitor varSizeVisitor)
+	{
+		this.varSizeVisitor = varSizeVisitor;
+	}
 }

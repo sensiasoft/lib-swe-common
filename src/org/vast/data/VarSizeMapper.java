@@ -32,7 +32,7 @@ public class VarSizeMapper implements DataVisitor
 
     public void mapData(DataBlock data)
     {
-        arrayIndexer.arraySize = data.getIntValue();
+        arrayIndexer.setArraySize(data.getIntValue());
         arrayIndexer.updateScalarCount();
     }    
 }
