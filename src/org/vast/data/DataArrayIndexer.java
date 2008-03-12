@@ -129,6 +129,7 @@ public class DataArrayIndexer extends DataIndexer
         AbstractDataBlock childBlock;
         this.data = data;
         
+        // implicit variable size included in datablock (mixed)
         if (data instanceof DataBlockMixed)
         {
             throw new IllegalStateException(DataArray.errorBlockMixed);
