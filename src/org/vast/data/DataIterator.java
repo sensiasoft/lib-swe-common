@@ -94,10 +94,6 @@ public abstract class DataIterator
 				dataHandler.startDataBlock(currentComponent.parent);
     	}
         
-    	// update size of variable size arrays
-        if (parsing && currentComponent.parent instanceof DataArray)
-            ((DataArray)currentComponent.parent).updateSize();
-        
         // now get next child
         DataComponent next = currentComponent.parent.getComponent(currentComponent.index);
     	currentComponent.index++;
@@ -105,22 +101,17 @@ public abstract class DataIterator
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
-            // update size of variable size arrays - already done before!!
-            //if (next instanceof DataArray)
-            //    ((DataArray)next).updateSize();
-        	
-        	// case of implicit array size value
+            // case of implicit array size value
         	if (next instanceof DataArray && ((DataArray)next).isVariableSize())
         	{
-        		if (((DataArray)next).getSizeData().getParent() == null)
+        		if (((DataArray)next).getSizeComponent().getParent() == null)
         		{
         			// set implicit array size (when parsing)
         			if (parsing)
             		{
         				processAtom(sizeValue);
                 		int newSize = sizeValue.getData().getIntValue();
-                		//((DataArray)next).updateSize(newSize); already done before!!
-                		((DataArray)next).getSizeData().getData().setIntValue(newSize);
+                		((DataArray)next).updateSize(newSize);
             		}
             		
             		// get array size (when writing)
@@ -129,7 +120,9 @@ public abstract class DataIterator
             			sizeValue.getData().setIntValue(((DataArray)next).getComponentCount());
             			processAtom(sizeValue);
             		}
-        		}
+        		}        		
+        		else if (parsing)
+        			((DataArray)next).updateSize();
         	}
         	
         	// case of choice
