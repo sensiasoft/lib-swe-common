@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Map>
    <!-- -->
-   <Namespace type="OGC" version="1.0" uri="http://www.opengis.net/ogc"/>
+   <Namespace type="OGC" version="*" uri="http://www.opengis.net/ogc"/>
    <Namespace type="OWS" version="*" uri="http://www.opengis.net/ows"/>
    <Namespace type="OWS" version="1.1" uri="http://www.opengis.net/ows/1.1"/>
    <Namespace type="GML" version="*" uri="http://www.opengis.net/gml"/>
