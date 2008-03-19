@@ -51,6 +51,8 @@
    <Reader type="SPS" subType="GetStatusResponse" version="1.1" class="org.vast.ows.sps.GetStatusResponseReaderV11"/>
    <Reader type="SPS" subType="Submit" version="1.1" class="org.vast.ows.sps.SubmitRequestReaderV11"/>
    <Reader type="SPS" subType="SubmitResponse" version="1.1" class="org.vast.ows.sps.SubmitResponseReaderV11"/>
+   <Reader type="SPS" subType="DescribeResultAccess" version="1.1" class="org.vast.ows.sps.DescribeResultAccessRequestReaderV11"/>
+   <Reader type="SPS" subType="DescribeResultAccessResponse" version="1.1" class="org.vast.ows.sps.DescribeResultAccessResponseReaderV11"/>
    <!-- -->
    <Writer type="SPS" subType="DescribeTasking" version="1.1" class="org.vast.ows.sps.DescribeTaskingRequestWriterV11"/>
    <Writer type="SPS" subType="DescribeTaskingResponse" version="1.1" class="org.vast.ows.sps.DescribeTaskingResponseWriterV11"/>
@@ -61,6 +63,8 @@
    <Writer type="SPS" subType="GetStatusResponse" version="1.1" class="org.vast.ows.sps.GetStatusResponseWriterV11"/>
    <Writer type="SPS" subType="Submit" version="1.1" class="org.vast.ows.sps.SubmitRequestWriterV11"/>
    <Writer type="SPS" subType="SubmitResponse" version="1.1" class="org.vast.ows.sps.SubmitResponseWriterV11"/>
+   <Writer type="SPS" subType="DescribeResultAccess" version="1.1" class="org.vast.ows.sps.DescribeResultAccessRequestWriterV11"/>
+   <Writer type="SPS" subType="DescribeResultAccessResponse" version="1.1" class="org.vast.ows.sps.DescribeResultAccessResponseWriterV11"/>
    <!-- -->
    <Reader type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
    <Reader type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageReaderV10"/>
