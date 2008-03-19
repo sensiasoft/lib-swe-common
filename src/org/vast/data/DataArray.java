@@ -98,6 +98,7 @@ public class DataArray extends AbstractDataComponent
     	newArray.properties = this.properties;
     	newArray.variableSize = this.variableSize;
     	newArray.implicitSize = this.implicitSize;
+    	newArray.currentSize = this.currentSize;
         newArray.addComponent(this.component.copy());
         
         // case of size data as a separate component
