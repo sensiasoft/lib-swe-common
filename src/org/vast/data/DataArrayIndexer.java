@@ -245,7 +245,7 @@ public class DataArrayIndexer extends DataIndexer
     @Override
     public void next()
     {       
-        boolean next = true;
+        boolean childDone = true;
         
         // apply visitors here
         if (currentIndex == 0)
@@ -263,7 +263,7 @@ public class DataArrayIndexer extends DataIndexer
                     indexer.updateStartIndex(nextIndex);
                     indexer.next();
                     if (indexer.hasNext)
-                        next = false;
+                        childDone = false;
                 }
             }
         }
@@ -278,7 +278,7 @@ public class DataArrayIndexer extends DataIndexer
                     indexer.updateStartIndex(nextIndex);
                     indexer.next();
                     if (indexer.hasNext)
-                        next = false;
+                        childDone = false;
                 }
             }
         }
@@ -294,13 +294,13 @@ public class DataArrayIndexer extends DataIndexer
                     indexer.setData(((DataBlockList)data).get(nextIndex));
                     indexer.next();
                     if (indexer.hasNext)
-                        next = false;
+                        childDone = false;
                 }
             }
         }
         
         // when all child indexers are done, increment index
-        if (next)
+        if (childDone)
         {
             currentIndex++;
             
