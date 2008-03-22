@@ -67,9 +67,8 @@ public class DataArray extends AbstractDataComponent
     public DataArray(int arraySize)
     {
         this.sizeComponent = new DataValue("ArraySize", DataType.INT);
-        this.sizeComponent.getData().setIntValue(arraySize);
+        updateSizeComponent(arraySize);
         this.variableSize = false;
-        this.currentSize = arraySize;
     }
     
     
@@ -84,9 +83,9 @@ public class DataArray extends AbstractDataComponent
         
         // initialize size to 1 if variable size
         if (variableSize)
-        	sizeComponent.getData().setIntValue(1);
-        
-        this.currentSize = sizeComponent.getData().getIntValue();
+        	updateSizeComponent(1);
+        else
+            currentSize = sizeComponent.getData().getIntValue();
     }
 
 
@@ -221,7 +220,7 @@ public class DataArray extends AbstractDataComponent
         if (variableSize && implicitSize)
         {
         	int newSize = dataBlock.getAtomCount() / component.scalarCount;
-        	changeSize(newSize);
+        	updateSizeComponent(newSize);
         }
         
 		// also assign dataBlock to child
@@ -236,6 +235,8 @@ public class DataArray extends AbstractDataComponent
     {
         this.dataBlock = null;
         component.clearData();
+        if (variableSize)
+        	updateSizeComponent(1);
     }
     
     
@@ -388,6 +389,9 @@ public class DataArray extends AbstractDataComponent
             
             // update scalarCount according to new arraySize
             this.scalarCount = component.scalarCount * newSize;
+            
+            // save size so that we can detect if size changes later
+            // this avoids resizing arrays for nothing if size does not change!
             this.currentSize = newSize;
             
             // stop here if parent also has variable size
@@ -408,10 +412,6 @@ public class DataArray extends AbstractDataComponent
             // propagate to parents atomCount as well
             if (parent != null)
                 parent.updateAtomCount(component.scalarCount * (newSize - oldSize));
-            
-            // save size so that we can detect if size changes later
-            // this avoids resizing arrays for nothing if size does not change!
-            this.currentSize = newSize;
     	}
     }
     
@@ -423,13 +423,13 @@ public class DataArray extends AbstractDataComponent
      */
     public void updateSize(int newSize)
     {
-    	if (newSize == currentSize)
+    	if (newSize == this.currentSize)
             return;
     	
     	if (newSize > 0)
         {
-    		changeSize(newSize);
-    		int oldSize = this.currentSize;
+    		int oldSize = this.currentSize; // don't use getComponentCount() because sizeData may have changed already
+    		updateSizeComponent(newSize);
     		
             // resize underlying datablock
         	if (dataBlock != null)
@@ -446,10 +446,6 @@ public class DataArray extends AbstractDataComponent
         	// update parent atom count
             if (parent != null)
                 parent.updateAtomCount(component.scalarCount * (newSize - oldSize));
-            
-            // save size so that we can detect if size changes later
-            // this avoids resizing arrays for nothing if size does not change!
-            this.currentSize = newSize;
         }
     }
     
@@ -469,6 +465,7 @@ public class DataArray extends AbstractDataComponent
         	DataBlock dataBlock = sizeComponent.getData();
         	dataBlock.setIntValue(newSize);
         	this.variableSize = false;
+        	this.currentSize = newSize;
         	
         	// stop here if size is same as before!
         	if (newSize == oldSize)
@@ -488,11 +485,7 @@ public class DataArray extends AbstractDataComponent
             
         	// update parent atom count
             if (parent != null)
-                parent.updateAtomCount(component.scalarCount * (newSize - oldSize));
-        	
-            // save size so that we can detect if size changes later
-            // this avoids resizing arrays for nothing if size does not change!
-            this.currentSize = newSize;
+                parent.updateAtomCount(component.scalarCount * (newSize - oldSize));           
         }
     }
     
@@ -501,12 +494,16 @@ public class DataArray extends AbstractDataComponent
      * Simply update value in size data component w/o resizing datablock
      * @param newSize
      */
-    protected void changeSize(int newSize)
+    protected void updateSizeComponent(int newSize)
     {
     	// update value of size data
     	DataBlock data = sizeComponent.getData();
         if (data != null)
             data.setIntValue(newSize);
+        
+        // save size so that we can detect if size changes later
+        // this avoids resizing arrays for nothing if size does not change!
+        this.currentSize = newSize;
     }
     
     

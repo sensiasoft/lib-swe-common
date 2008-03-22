@@ -188,4 +188,19 @@ public class DataBlockFactory
 		block.startIndex = 0;
 		return block;
 	}
+	
+	
+	public static DataBlockMixed createMixedBlock(AbstractDataBlock... dataBlocks)
+	{
+		DataBlockMixed block = new DataBlockMixed(dataBlocks.length);
+		block.startIndex = 0;
+		
+		for (int b=0; b<dataBlocks.length; b++)
+		{
+			block.blockArray[b] = dataBlocks[b];
+			block.atomCount += dataBlocks[b].atomCount;
+		}	
+		
+		return block;
+	}
 }
