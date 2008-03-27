@@ -66,7 +66,7 @@ public class DataArray extends AbstractDataComponent
     
     public DataArray(int arraySize)
     {
-        this.sizeComponent = new DataValue("ArraySize", DataType.INT);
+        this.sizeComponent = new DataValue(ARRAY_SIZE_FIELD, DataType.INT);
         updateSizeComponent(arraySize);
         this.variableSize = false;
     }
