@@ -79,9 +79,16 @@ public class SpatialExtent
     
     public double getDiagonalDistance()
     {
-        double dx2 = (maxX - minX) * (maxX - minX);
-        double dy2 = (maxY - minY) * (maxY - minY);
-        double dz2 = (maxZ - minZ) * (maxZ - minZ);
+    	double dx = (maxX - minX);
+        double dy = (maxY - minY);
+        double dz = (maxZ - minZ);
+    	double dx2 = dx * dx;
+        double dy2 = dy * dy;
+                
+        if (Double.isNaN(dz))
+        	return Math.sqrt(dx2 + dy2);
+        
+        double dz2 = dz * dz;
         return Math.sqrt(dx2 + dy2 + dz2);
     }
     
@@ -91,7 +98,11 @@ public class SpatialExtent
         double dx = (maxX - minX);
         double dy = (maxY - minY);
         double dz = (maxZ - minZ);
-        return Math.max(Math.max(dx, dy), dz);
+        
+        if (Double.isNaN(dz))
+        	return Math.max(dx, dy);
+        else
+        	return Math.max(Math.max(dx, dy), dz);
     }
     
     
