@@ -73,8 +73,7 @@ public abstract class AbstractDataBlock implements DataBlock
 	{
 		return atomCount;
 	}
-	
-	
+
 	public String toString()
 	{
 		return new String(getDataType() + "[" + getAtomCount() + "]");
