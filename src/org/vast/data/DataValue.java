@@ -62,7 +62,6 @@ public class DataValue extends AbstractDataComponent
         this.assignNewDataBlock();
     }
     
-    
     public DataValue(String name, DataType type)
     {
         this(type);
