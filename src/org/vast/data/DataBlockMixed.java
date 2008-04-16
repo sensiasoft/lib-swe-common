@@ -56,6 +56,11 @@ public class DataBlockMixed extends AbstractDataBlock
 		blockArray = new AbstractDataBlock[numBlocks];
 	}
 	
+	public DataBlockMixed(int numBlocks, int atomCount)
+	{
+		blockArray = new AbstractDataBlock[numBlocks];
+		this.atomCount = atomCount;
+	}
 	
 	public DataBlockMixed copy()
 	{
@@ -320,7 +325,12 @@ public class DataBlockMixed extends AbstractDataBlock
 		return blockArray[blockIndex].getStringValue(localIndex);
 	}
 
-
+	public void setBlock(int blockIndex, AbstractDataBlock Block)
+	{
+		blockArray[blockIndex] = Block;
+	}
+	
+	
 	public void setBooleanValue(int index, boolean value)
 	{
 		selectBlock(index);
