@@ -21,6 +21,7 @@
    <Namespace type="SML" version="1.0.1" uri="http://www.opengis.net/sensorML/1.0.1"/>
    <Namespace type="SML" version="1.1" uri="http://www.opengis.net/sensorML/1.1"/>
    <Namespace type="OM" version="1.0" uri="http://www.opengis.net/om/1.0"/>
+   <Namespace type="SOS" version="*" uri="http://www.opengis.net/sos"/>
    <Namespace type="SOS" version="1.0" uri="http://www.opengis.net/sos/1.0"/>
    <Namespace type="SAS" version="1.0" uri="http://www.opengis.net/sas/1.0"/>  
    <Namespace type="SPS" version="1.1" uri="http://www.opengis.net/sps/1.1"/>

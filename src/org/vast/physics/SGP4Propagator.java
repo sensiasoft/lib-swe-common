@@ -34,16 +34,11 @@ import org.vast.math.*;
  * Original code by Tony Cook and Pete Conway including conversion
  *  of sgp4propagator method from FORTRAN to java.
  *
- *  Greatly modified by Mike Botts (10/22/97) to remove dependence
- *  on dataNodes, to utilize ECF class, to check validity of
+ *  Greatly modified by Mike Botts (10/22/97) to check validity of
  *  current TLE before going off to the tleProvider again, to support
  *  more general tleProvider interface so that TLEs can come from a
  *  variety of source types (e.g. tle listings, url, gui, etc.),
- *  support for Datum assignment; also, now only outputs in ECF frame
- *
- *  Class stripped down by Mike Botts (12/18/98) to leave only the meat
- *  of the sgp4Propagator code;  Other functionality moved to "frontend"
- *  class TwoLineElementPropagator.java which now provides complete GeoVelocity
+ *  support for Datum assignment; also, now only outputs in ECI frame
  * </p>
  *
  * <p>Copyright (c) 2005</p>
