@@ -462,8 +462,8 @@ public class DataArray extends AbstractDataComponent
     		
     		// reset size data to fixed value
         	this.sizeComponent = new DataValue("ArraySize", DataType.INT);
-        	DataBlock dataBlock = sizeComponent.getData();
-        	dataBlock.setIntValue(newSize);
+        	DataBlock sizeBlock = sizeComponent.getData();
+        	sizeBlock.setIntValue(newSize);
         	this.variableSize = false;
         	this.currentSize = newSize;
         	
