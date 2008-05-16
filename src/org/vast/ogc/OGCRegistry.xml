@@ -28,6 +28,7 @@
    <Namespace type="SPS" version="1.1" uri="http://www.opengis.net/sps/1.1"/>
    <Namespace type="WNS" version="*" uri="http://www.opengis.net/wns"/>
    <Namespace type="WNS" version="1.0" uri="http://www.opengis.net/wns/1.0"/>
+   <Namespace type="IC" uri="urn:us:gov:ic:ism:v2"/>
    <!-- -->
    <Reader type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesReader"/>
    <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>
