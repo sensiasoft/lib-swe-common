@@ -61,6 +61,7 @@ public class OGCRegistry
     public final static String SOS = "SOS";
     public final static String SAS = "SAS";    
     public final static String SPS = "SPS";
+    public final static String IC = "IC";
     public final static String WNS = "WNS";
     
     protected static Hashtable<String, Class> readerClasses;
