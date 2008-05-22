@@ -23,7 +23,6 @@ package org.vast.sweCommon;
 import java.io.*;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataDescriptionWriter;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.cdm.common.OutputStreamProvider;
@@ -51,7 +50,7 @@ import org.vast.cdm.common.OutputStreamProvider;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public abstract class SWEWriter implements DataDescriptionWriter, OutputStreamProvider
+public abstract class SWEWriter implements OutputStreamProvider
 {
 	protected DataEncoding dataEncoding;
 	protected DataComponent dataComponents;

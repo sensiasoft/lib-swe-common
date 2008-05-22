@@ -21,13 +21,12 @@
 package org.vast.sweCommon;
 
 import java.io.*;
-import java.net.*;
 import org.vast.cdm.common.*;
 
 
 /**
  * <p><b>Title:</b><br/>
- * CDM Reader
+ * SWE Reader
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -37,44 +36,38 @@ import org.vast.cdm.common.*;
  * The class has getters to get this info after it has been
  * parsed. Concrete derived classes are actually responsible
  * for finding the XML content for each of these sections and
- * using the corresponding readers to parse it out. This class
+ * using the corresponding parsers to parse it out. This class
  * also has a helper method that constructs the DataParser
  * suited for a given encoding.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
+ * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
  * @date Aug 16, 2005
  * @version 1.0
  */
-public abstract class SWEReader implements DataDescriptionReader, InputStreamProvider
+public abstract class SWEReader implements InputStreamProvider
 {
 	protected DataEncoding dataEncoding;
 	protected DataComponent dataComponents;
-		
+	protected DataStreamParser dataParser;
+	protected DataHandler dataHandler;
+	protected String valuesUri;
+	
 
-	public abstract void parse(InputStream inputStream) throws CDMException;
+	public abstract void parse(InputStream inputStream, DataHandler handler) throws CDMException;
 	public abstract InputStream getDataStream() throws CDMException;
     
     
-	public DataStreamParser getDataParser() throws CDMException
-	{
-		DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
-		parser.setDataComponents(this.dataComponents);
-		parser.reset();
-		return parser;
-	}
+	public void parse(InputStream inputStream) throws CDMException
+    {
+	    parse(inputStream, null);
+    }
 	
 	
 	public DataComponent getDataComponents()
 	{
 		return this.dataComponents;
-	}
-	
-	
-	public void setDataComponents(DataComponent dataComponents)
-	{
-		this.dataComponents = dataComponents;
 	}
 	
 	
@@ -84,22 +77,17 @@ public abstract class SWEReader implements DataDescriptionReader, InputStreamPro
 	}
 	
 	
-	public void setDataEncoding(DataEncoding dataEncoding)
-	{
-		this.dataEncoding = dataEncoding;
-	}	
+	public DataStreamParser getDataParser()
+    {
+        return this.dataParser;
+    }
 	
 	
-	public void parse(String uri) throws CDMException
+	protected DataStreamParser createDataParser() throws CDMException
 	{
-		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
-	}
-
-
-	public void parse(URI uri) throws CDMException
-	{
-		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
+	    DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
+	    parser.setDataComponents(this.dataComponents);
+	    parser.reset();
+        return parser;
 	}
 }

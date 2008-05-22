@@ -184,6 +184,11 @@ public class SWEFilter extends InputStream
 	}
 	
 	
+	/**
+	 * Sets element name that contains the data stream values (ascii, base64, etc.)
+	 * TODO setDataElementName method description
+	 * @param eltName
+	 */
 	public void setDataElementName(String eltName)
 	{
 		this.dataEltName = eltName;

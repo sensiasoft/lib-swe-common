@@ -43,7 +43,7 @@
    <Writer type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationWriterV10"/>
    <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
    <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
-   <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>   
+   <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
    <!-- -->
    <Reader type="SPS" subType="DescribeTasking" version="1.1" class="org.vast.ows.sps.DescribeTaskingRequestReaderV11"/>
    <Reader type="SPS" subType="DescribeTaskingResponse" version="1.1" class="org.vast.ows.sps.DescribeTaskingResponseReaderV11"/>
@@ -121,14 +121,17 @@
    <Reader type="SWECommon" subType="DataEncoding" version="0.0" class="org.vast.sweCommon.SweEncodingReaderV0"/>
    <Reader type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentReaderV1"/>
    <Reader type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingReaderV1"/>
+   <Reader type="SWECommon" subType="DataComponent" version="1.0.1" class="org.vast.sweCommon.SweComponentReaderV1"/>
+   <Reader type="SWECommon" subType="DataEncoding" version="1.0.1" class="org.vast.sweCommon.SweEncodingReaderV1"/>
    <!-- -->
    <Writer type="SWECommon" subType="DataComponent" version="0.0" class="org.vast.sweCommon.SweComponentWriterV0"/>
    <Writer type="SWECommon" subType="DataEncoding" version="0.0" class="org.vast.sweCommon.SweEncodingWriterV0"/>
    <Writer type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentWriterV1"/>
    <Writer type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingWriterV1"/>
    <!-- -->
-   <Reader type="OM" subType="Observation" version="0.0.1" class="org.vast.ows.om.ObservationReaderV0"/>
-   <Reader type="OM" subType="Observation" version="0.0" class="org.vast.ows.om.ObservationReaderV01"/>
+   <Reader type="OM" subType="Observation" version="1.0" class="org.vast.ows.om.ObservationReaderV10"/>
+   <Reader type="OM" subType="ObservationStream" version="0.0" class="org.vast.ows.om.ObservationStreamReaderV0"/>
+   <Reader type="OM" subType="ObservationStream" version="1.0" class="org.vast.ows.om.ObservationStreamReaderV10"/>
    <Writer type="OM" subType="Observation" version="0.0" class="org.vast.ows.om.ObservationWriterV01"/>
    <!-- -->
    <Reader type="SensorML" subType="Metadata" version="0.0" class="org.vast.sensorML.MetadataReaderV0"/>
