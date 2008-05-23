@@ -40,83 +40,104 @@ import org.vast.math.*;
  */
 public class NadirPointing
 {
-    /**
+    
+	/**
      * Compute the rotation matrix to obtain nadir/north orientation
-     * @param position position Vector in ECF
-     * @param toEcfNorth vector pointing to north in ECF
-     * @param forwardAxis number of the axis (1:x, 2:y, 3:z) to put in the forward direction
-     * @param upAxis number of the axis (1:x, 2:y, 3:z)  to put in the up direction
+     * @param position vector in ECEF
+     * @param velocity vector in ECEF
+     * @param forwardAxis number (1:x, 2:y, 3:z) to use as the forward direction (in the plane of velocity)
+     * @param upAxis number (1:x, 2:y, 3:z) to use as the up direction
      * @return the 3x3 rotation matrix
      */
-    public static Matrix3d getRotationMatrix(Vector3d position, Vector3d toEcfNorth, int forwardAxis, int upAxis)
+    public static Matrix3d getRotationMatrix(Vector3d position, Vector3d velocity, int forwardAxis, int upAxis)
     {
         Vector3d up = new Vector3d();
-        Vector3d heading = new Vector3d();
-        Vector3d other = new Vector3d();
-
+        
         double[] lla = MapProjection.ECFtoLLA(position.x, position.y, position.z, new Datum());
-        double[] ecf = MapProjection.LLAtoECF(lla[0], lla[1], -3e3, new Datum());        
+        double[] ecf = MapProjection.LLAtoECF(lla[0], lla[1], -3e3, new Datum());
         Vector3d nearPoint = new Vector3d(ecf[0], ecf[1], ecf[2]);
         
         up.sub(position, nearPoint);
         up.normalize();
 
+        return computeMatrix(up, velocity, forwardAxis, upAxis);
+    }
+    
+    
+    protected static Matrix3d computeMatrix(Vector3d up, Vector3d velocity, int forwardAxis, int upAxis)
+    {
+    	Vector3d heading = new Vector3d();
+        Vector3d other = new Vector3d();
+    	Matrix3d rotMatrix = null;
+    	
+    	// deal with z down
+        boolean inverseZ = false;
+        if (upAxis < 0)
+        {
+        	inverseZ = true;
+        	upAxis = -upAxis;
+        }
+        
         if ((forwardAxis == 1) && (upAxis == 3))
         {
-            other.cross(up, toEcfNorth);
+            other.cross(up, velocity);
             other.normalize();
             heading.cross(other, up);
-            return new Matrix3d(heading, other, up);
+            rotMatrix = new Matrix3d(heading, other, up);
         }
 
-        if ((forwardAxis == 1) && (upAxis == 2))
+        else if ((forwardAxis == 1) && (upAxis == 2))
         {
-            other.cross(toEcfNorth, up);
+            other.cross(velocity, up);
             other.normalize();
             heading.cross(up, other);
-            return new Matrix3d(heading, up, other);
+            rotMatrix = new Matrix3d(heading, up, other);
         }
 
-        if ((forwardAxis == 2) && (upAxis == 1))
+        else if ((forwardAxis == 2) && (upAxis == 1))
         {
-            other.cross(up, toEcfNorth);
+            other.cross(up, velocity);
             other.normalize();
             heading.cross(other, up);
-            return new Matrix3d(up, heading, other);
+            rotMatrix = new Matrix3d(up, heading, other);
         }
 
-        if ((forwardAxis == 2) && (upAxis == 3))
+        else if ((forwardAxis == 2) && (upAxis == 3))
         {
-            other.cross(toEcfNorth, up);
+            other.cross(velocity, up);
             other.normalize();
             heading.cross(up, other);
-            return new Matrix3d(other, heading, up);
+            rotMatrix = new Matrix3d(other, heading, up);
         }
 
-        if ((forwardAxis == 3) && (upAxis == 1))
+        else if ((forwardAxis == 3) && (upAxis == 1))
         {
-            other.cross(toEcfNorth, up);
+            other.cross(velocity, up);
             other.normalize();
             heading.cross(up, other);
-            return new Matrix3d(up, other, heading);
+            rotMatrix = new Matrix3d(up, other, heading);
         }
 
-        if ((forwardAxis == 3) && (upAxis == 2))
+        else if ((forwardAxis == 3) && (upAxis == 2))
         {
-            other.cross(up, toEcfNorth);
+            other.cross(up, velocity);
             other.normalize();
             heading.cross(other, up);
-            return new Matrix3d(other, up, heading);
+            rotMatrix = new Matrix3d(other, up, heading);
         }
+        
+        if (inverseZ)
+        	for (int r=0; r<3; r++)
+        		rotMatrix.setElement(r, 2, -rotMatrix.getElement(r, 2));
 
-        return new Matrix3d();
+        return rotMatrix;
     }
 
 
     /**
      * Computes a vector pointing to north from ecf position
-     * @param ecfPosition ECF
-     * @return ECFVelocity with new velocity vector
+     * @param ecfPosition position in ECEF
+     * @return vector toward north pole
      */
     public static Vector3d getEcfVectorToNorth(Vector3d ecfPosition)
     {
@@ -125,5 +146,29 @@ public class NadirPointing
         Vector3d res = new Vector3d();
         res.sub(northPole, ecfPosition);
         return res;
+    }
+    
+    
+    /**
+     * Computes the ENU rotation matrix from position in ECEF
+     * @param ecfPosition position in ECEF
+     * @return
+     */
+    public static Matrix3d getENURotationMatrix(Vector3d ecfPosition)
+    {
+    	Vector3d north = getEcfVectorToNorth(ecfPosition);
+    	return getRotationMatrix(ecfPosition, north, 2, 3);
+    }
+    
+    
+    /**
+     * Computes the NED rotation matrix from position in ECEF
+     * @param ecfPosition position in ECEF
+     * @return
+     */
+    public static Matrix3d getNEDRotationMatrix(Vector3d ecfPosition)
+    {
+    	Vector3d north = getEcfVectorToNorth(ecfPosition);
+    	return getRotationMatrix(ecfPosition, north, 1, -3);
     }
 }
