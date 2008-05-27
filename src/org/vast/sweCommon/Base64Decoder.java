@@ -91,14 +91,14 @@ public class Base64Decoder extends FilterInputStream
     public int read(byte[] b, int off, int length) throws IOException
     {
         int numDecodedByte = 0;
-        int byteIndex = off;        
+        int destIndex = off;
         
         // add unused bytes at begining of buffer
         for (int i=0; i<unusedBytes; i++)
         {
-            b[i+off] = byteBuf[i]; 
+            b[destIndex] = byteBuf[i];
             numDecodedByte++;
-            byteIndex++;
+            destIndex++;
         }
         unusedBytes = 0;
         
@@ -135,24 +135,21 @@ public class Base64Decoder extends FilterInputStream
             byte b3 = base64ToVal[charBuf[2]];
             byte b4 = base64ToVal[charBuf[3]];
             
-            byteIndex = off + numDecodedByte;
-            
             // compute byte 1
-            b[byteIndex] = (byte) (b1 << 2 | b2 >>> 4);
+            b[destIndex] = (byte) (b1 << 2 | b2 >>> 4);
             numDecodedByte++;
-            byteIndex++;
+            destIndex++;
             
             // compute byte 2
             if (charBuf[2] != '=')
             {
-                //byte byte2 = (byte) (((b2 & 0xf) << 4) | ((b3 >> 2) & 0xf));
-                byte byte2 = (byte) ((b2 << 4) | (b3 >> 2));
+                byte byte2 = (byte) ((b2 << 4) | (b3 >>> 2));
                 
                 if (length > numDecodedByte)
                 {
-                    b[byteIndex] = byte2;
+                    b[destIndex] = byte2;
                     numDecodedByte++;
-                    byteIndex++;
+                    destIndex++;
                 }
                 else
                 {
@@ -168,9 +165,9 @@ public class Base64Decoder extends FilterInputStream
                 
                 if (length > numDecodedByte)
                 {
-                    b[byteIndex] = byte3;
+                    b[destIndex] = byte3;
                     numDecodedByte++;
-                    byteIndex++;
+                    destIndex++;
                 }
                 else
                 {
@@ -180,8 +177,8 @@ public class Base64Decoder extends FilterInputStream
             }
             
             //System.out.println(length + " - " + numDecodedByte);
-            if (charBuf[2] == '=' || charBuf[3] == '=')
-                break;
+            //if (charBuf[2] == '=' || charBuf[3] == '=')
+            //    break;
         }       
 
         return numDecodedByte;

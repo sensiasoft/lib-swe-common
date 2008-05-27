@@ -120,18 +120,8 @@ public class Base64Encoder extends FilterOutputStream
             charBuf[2] = ValToBase64[(int)(c3&0xFF)];
             charBuf[3] = ValToBase64[(int)(c4&0xFF)];
 
-            out.write(charBuf, 0, 4);
-            
-            if (addCR)
-            {
-                charCount += 4;
-                
-                if (charCount >= 76)
-                {
-                    out.write('\n');
-                    charCount = 0;
-                }
-            }
+            out.write(charBuf, 0, 4);            
+            addCR();
         }
         
         // keep unused bytes in local buffer
@@ -161,9 +151,6 @@ public class Base64Encoder extends FilterOutputStream
     {
         if (unusedByte != 0)
         {
-            charBuf[2] = '=';
-            charBuf[3] = '=';
-            
             // make sure we write unused bytes with eventual '=' padding chars
             if (unusedByte == 2)
             {
@@ -177,6 +164,7 @@ public class Base64Encoder extends FilterOutputStream
                 charBuf[0] = ValToBase64[(int)(c1&0xFF)];
                 charBuf[1] = ValToBase64[(int)(c2&0xFF)];
                 charBuf[2] = ValToBase64[(int)(c3&0xFF)];
+                charBuf[3] = '=';
             }
             else if (unusedByte == 1)
             {
@@ -187,12 +175,30 @@ public class Base64Encoder extends FilterOutputStream
     
                 charBuf[0] = ValToBase64[(int)(c1&0xFF)];
                 charBuf[1] = ValToBase64[(int)(c2&0xFF)];
+                charBuf[2] = '=';
+                charBuf[3] = '=';
             }
             
-            charCount += 4;
             out.write(charBuf, 0, 4);
+            addCR();
+            unusedByte = 0;
         }
         
         super.flush();
+    }
+    
+    
+    protected void addCR() throws IOException
+    {
+        if (addCR)
+        {
+            charCount += 4;
+            
+            if (charCount >= 76)
+            {
+                out.write('\n');
+                charCount = 0;
+            }
+        }
     }
 }
