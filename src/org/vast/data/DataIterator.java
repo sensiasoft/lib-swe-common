@@ -101,7 +101,7 @@ public abstract class DataIterator
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
-            // case of implicit array size value
+            // case of variable array size
         	if (next instanceof DataArray && ((DataArray)next).isVariableSize())
         	{
         		if (((DataArray)next).getSizeComponent().getParent() == null)

@@ -151,13 +151,19 @@ public class DataArray extends AbstractDataComponent
     protected void updateAtomCount(int childAtomCountDiff)
     {
     	int arraySize = getComponentCount();
-    	childAtomCountDiff = childAtomCountDiff*arraySize;
+    	int atomCountDiff = childAtomCountDiff * arraySize;
         
         if (dataBlock != null)
-            dataBlock.atomCount += childAtomCountDiff;
+        {
+            AbstractDataBlock childBlock = component.dataBlock;
+            childBlock.resize(childBlock.atomCount * arraySize);
+            dataBlock.setUnderlyingObject(childBlock.getUnderlyingObject());
+            dataBlock.atomCount = childBlock.atomCount;
+            setData(dataBlock);
+        }
         
         if (parent != null)
-            parent.updateAtomCount(childAtomCountDiff);
+            parent.updateAtomCount(atomCountDiff);
     }
     
     
@@ -369,7 +375,7 @@ public class DataArray extends AbstractDataComponent
             // assign variable size value to arraySize
 	    	if (this.getSizeComponent() != null)
 	    	{
-	    		DataBlock data = sizeComponent.getData();	    		
+	    		DataBlock data = sizeComponent.getData();
 	    		if (data != null)
                 {
 	    			// continue only if sized has changed
