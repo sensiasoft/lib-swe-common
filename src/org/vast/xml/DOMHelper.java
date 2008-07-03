@@ -102,7 +102,12 @@ public class DOMHelper
     public DOMHelper(InputStream inputStream, boolean validation) throws DOMHelperException
     {
         this.validation = validation;
-        mainFragment = parseStream(inputStream, true);
+        try {
+			mainFragment = parseStream(inputStream, true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 
@@ -1088,14 +1093,24 @@ public class DOMHelper
      * @param inputStream Stream containing XML file we want to parse
      * @return The XMLDocument object created
      * @throws DOMHelperException
+     * @throws IOException 
      */
-    protected XMLFragment parseStream(InputStream inputStream, boolean addToTable) throws DOMHelperException
+    protected XMLFragment parseStream(InputStream inputStream, boolean addToTable) throws DOMHelperException, IOException
     {
         XMLDocument newDocument;
-
+        
         if (inputStream == null)
             throw new IllegalArgumentException("inputStream can't be null");
 
+   /*     String name = null;
+        int a = 0;
+        while (a !=-1){
+        	a = inputStream.read();
+        	if (a != -1){
+        		name = name + (char)a;
+        	}
+        } 
+        System.out.println(name);*/
         // parse xml stream
         newDocument = new XMLDocument(inputStream, validation);
         
