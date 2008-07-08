@@ -47,10 +47,10 @@
    <!-- -->
    <Reader type="SAS" subType="Capabilities" version="*" class="org.vast.ows.sas.SASCapabilitiesReader"/>
    <Reader type="SAS" subType="Capabilities" version="0.0" class="org.vast.ows.sas.SASCapabilitiesReader"/>
-   <Reader type="SAS" subType="GetCapabilities" version="0.0" class="org.vast.ows.sas.SASCapabilitiesReader"/>
-   <Reader type="SAS" subType="Capabilities" version="0" class="org.vast.ows.sas.SASCapabilitiesReader"/>  
-   <Reader type="SAS" subType="GetCapabilities" version="0" class="org.vast.ows.sas.SASCapabilitiesReader"/> 
-    
+   <Reader type="SAS" subType="Capabilities" version="0" class="org.vast.ows.sas.SASCapabilitiesReader"/>
+   <!-- -->   
+   <Writer type="SAS" subType="GetCapabilities" version="0.0" class="org.vast.ows.sas.SASGetCapabilitiesWriter"/> 
+   <Writer type="SAS" subType="GetCapabilities" version="0" class="org.vast.ows.sas.SASGetCapabilitiesWriter"/> 
    <!-- -->
    <Reader type="SPS" subType="DescribeTasking" version="1.1" class="org.vast.ows.sps.DescribeTaskingRequestReaderV11"/>
    <Reader type="SPS" subType="DescribeTaskingResponse" version="1.1" class="org.vast.ows.sps.DescribeTaskingResponseReaderV11"/>
