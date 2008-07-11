@@ -57,8 +57,20 @@ public abstract class SWEReader implements InputStreamProvider
 
 	public abstract void parse(InputStream inputStream, DataHandler handler) throws CDMException;
 	public abstract InputStream getDataStream() throws CDMException;
-    
-    
+
+	
+	public void setDataComponents(DataComponent dataComponents)
+	{
+		this.dataComponents = dataComponents;
+	}
+	
+	
+	public void setDataEncoding(DataEncoding dataEncoding)
+	{
+		this.dataEncoding = dataEncoding;
+	}
+	
+	
 	public void parse(InputStream inputStream) throws CDMException
     {
 	    parse(inputStream, null);
