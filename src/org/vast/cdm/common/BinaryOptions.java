@@ -37,12 +37,15 @@ public class BinaryOptions
     public final static String asciiURN = "urn:ogc:def:data:string:ascii";
     public final static String utfURN = "urn:ogc:def:data:string:utf";
     
+    public BinaryMember member;
     public DataType type;
     public Encryption encryption;
     public Compression compression;
     public int paddingBefore;
     public int paddingAfter;
-    public int bitLength;
+    public int bitLength; 
+    // byteLength is a string for taking a count as ref, didn't know how to do otherwise, to be corrected
+    public String byteLength;
     public String componentName;
 	
     

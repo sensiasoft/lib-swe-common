@@ -44,7 +44,7 @@ import org.vast.cdm.common.*;
 public class BinaryDataParser extends AbstractDataParser
 {
 	DataInputExt dataInput;
-	Hashtable<DataValue, BinaryOptions> componentEncodings;
+	Hashtable<DataComponent, BinaryOptions> componentEncodings;
 	
 	
 	public BinaryDataParser()
@@ -170,7 +170,7 @@ public class BinaryDataParser extends AbstractDataParser
 	 */
 	protected void resolveComponentEncodings() throws CDMException
 	{
-		componentEncodings = new Hashtable<DataValue, BinaryOptions>();
+		componentEncodings = new Hashtable<DataComponent, BinaryOptions>();
 		BinaryOptions[] encodingList = ((BinaryEncoding)dataEncoding).componentEncodings;
 				
 		for (int i=0; i<encodingList.length; i++)
@@ -195,8 +195,13 @@ public class BinaryDataParser extends AbstractDataParser
             }
 			
 			// add this mapping to the Hashtable
-			componentEncodings.put((DataValue)data, encodingList[i]);
-			((DataValue)data).setDataType(encodingList[i].type);
+            if(encodingList[i].member == BinaryMember.COMPONENT){
+            	componentEncodings.put((DataValue)data, encodingList[i]);
+            	((DataValue)data).setDataType(encodingList[i].type);
+            }
+            if(encodingList[i].member == BinaryMember.BLOCK){
+            	componentEncodings.put(data, encodingList[i]);
+            }
 		}
 	}
 	

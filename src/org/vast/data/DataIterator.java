@@ -85,7 +85,7 @@ public abstract class DataIterator
             newBlock = false;
         }
         
-        // send begining of block events
+        // send beginning of block events
     	if (currentComponent.index == 0 && dataHandler != null)
     	{
     		if (componentStack.isEmpty())
@@ -102,7 +102,7 @@ public abstract class DataIterator
         if (!(next instanceof DataValue))
         {
             // case of variable array size
-        	if (next instanceof DataArray && ((DataArray)next).isVariableSize())
+        	if ((next instanceof DataArray && ((DataArray)next).isVariableSize()))
         	{
         		if (((DataArray)next).getSizeComponent().getParent() == null)
         		{

@@ -135,22 +135,37 @@ public class SweEncodingReaderV1 implements DataEncodingReader
     	
     	// parse component encodings
     	NodeList components = dom.getElements(binaryBlockElement, "member/Component");
-    	int listSize = components.getLength();
-    	BinaryOptions[] componentEncodings = new BinaryOptions[listSize];
+    	int listSizeComponents = components.getLength();
+    	
+    	NodeList blocks = dom.getElements(binaryBlockElement, "member/Block");
+    	int listSizeblocks = blocks.getLength();
+    	int j = 0;
+    	
+    	BinaryOptions[] componentEncodings = new BinaryOptions[listSizeComponents+listSizeblocks];
+    	
     	for (int i=0; i<components.getLength(); i++)
     	{
     		Element componentElt = (Element)components.item(i);
-    		componentEncodings[i] = readBinaryValue(dom, componentElt);
+    		componentEncodings[i] = readComponent(dom, componentElt);
+    		j++;
     	}
+    	
+    	for (int i=0; i<blocks.getLength(); i++)
+    	{
+    		Element blockElt = (Element)blocks.item(i);
+    		componentEncodings[j+i] = readBlock(dom, blockElt);
+    	}
+    	
     	encoding.componentEncodings = componentEncodings;
     	
     	return encoding;
     }
     
 
-    private BinaryOptions readBinaryValue(DOMHelper dom, Element componentElement) throws CDMException
+    private BinaryOptions readComponent(DOMHelper dom, Element componentElement) throws CDMException
     {
         BinaryOptions binaryValue = new BinaryOptions();
+        binaryValue.member = BinaryMember.COMPONENT;
         
         // read component name
         String name = dom.getAttributeValue(componentElement, "ref");
@@ -221,4 +236,51 @@ public class SweEncodingReaderV1 implements DataEncodingReader
                
         return binaryValue;
     }
+    
+    private BinaryOptions readBlock(DOMHelper dom, Element blockElt) throws CDMException
+    {
+        BinaryOptions binaryBlock = new BinaryOptions();
+        binaryBlock.member = BinaryMember.BLOCK;
+        
+        // read component name
+        String name = dom.getAttributeValue(blockElt, "ref");
+        binaryBlock.componentName = name;
+        
+        String compression = dom.getAttributeValue(blockElt, "compression");
+        if (compression.endsWith("JPEG2000"))
+        {
+        	binaryBlock.compression = Compression.JPEG2000;
+        }
+        if (compression.endsWith("MPEG4"))
+        {
+        	binaryBlock.compression = Compression.MPEG4;
+        }
+        if (compression.endsWith("MPEG2"))
+        {
+        	binaryBlock.compression = Compression.MPEG2;
+        }
+        if (compression.endsWith("JPEG"))
+        {
+        	binaryBlock.compression = Compression.JPEG;
+        }
+        if (compression.endsWith("GZIP"))
+        {
+        	binaryBlock.compression = Compression.GZIP;
+        }
+        if (compression.endsWith("BZIP"))
+        {
+        	binaryBlock.compression = Compression.BZIP;
+        }
+                
+        // read bitLength
+        String byteLength = dom.getAttributeValue(blockElt, "byteLength");
+        binaryBlock.byteLength = byteLength;
+        
+        // next 2 lines are commented because I wanted it to be a string only for referencing...
+        //if (byteLength != null)
+        //	binaryValue.bitLength = Integer.parseInt(bitLength);
+               
+        return binaryBlock;
+    }
+    
 }
