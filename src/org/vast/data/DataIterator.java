@@ -20,12 +20,17 @@
 
 package org.vast.data;
 
+import java.util.Hashtable;
 import java.util.Stack;
+
+import org.vast.cdm.common.BinaryMember;
+import org.vast.cdm.common.BinaryOptions;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataHandler;
 import org.vast.cdm.common.DataType;
+import org.vast.cdm.common.BinaryEncoding;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
 
@@ -46,7 +51,7 @@ public abstract class DataIterator
 	protected boolean parsing = true;
 	protected DataValue selectedValue = new DataValue(":choice:", DataType.INT); // for holding choice selection index
 	protected DataValue sizeValue = new DataValue("size", DataType.INT); // for holding implicit array size
-	
+	public Hashtable<String, Double> valueTable;
     
 	protected class Record
     {
@@ -73,6 +78,9 @@ public abstract class DataIterator
 	protected abstract void processAtom(DataValue scalarInfo) throws CDMException;
 	
 	
+	protected abstract void processBlock(DataComponent scalarInfo) throws CDMException;
+	
+	
 	/**
 	 * TODO nextInfo method description
 	 * @return
@@ -97,58 +105,79 @@ public abstract class DataIterator
         // now get next child
         DataComponent next = currentComponent.parent.getComponent(currentComponent.index);
     	currentComponent.index++;
-                
+    	String nextPath = getElementPath(next);
+    	
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
-            // case of variable array size
-        	if ((next instanceof DataArray && ((DataArray)next).isVariableSize()))
+        	boolean jumpOver = false;
+        	// case of block-encoded data Aggregates
+        	if (dataEncoding.getEncodingType() == DataEncoding.EncodingType.BINARY)
         	{
-        		if (((DataArray)next).getSizeComponent().getParent() == null)
+        		 BinaryOptions [] binOptions = ((BinaryEncoding)dataEncoding).componentEncodings;
+        		 int numberOfBinaryOptions = binOptions.length;
+        		for (int i=0; i<numberOfBinaryOptions; i++)
         		{
-        			// set implicit array size (when parsing)
-        			if (parsing)
-            		{
-        				processAtom(sizeValue);
-                		int newSize = sizeValue.getData().getIntValue();
-                		((DataArray)next).updateSize(newSize);
-            		}
-            		
-            		// get array size (when writing)
-            		else
-            		{
-            			sizeValue.getData().setIntValue(((DataArray)next).getComponentCount());
-            			processAtom(sizeValue);
-            		}
-        		}        		
-        		else if (parsing)
-        			((DataArray)next).updateSize();
+        			if (binOptions[i].componentName.equalsIgnoreCase(nextPath) && binOptions[i].member == BinaryMember.BLOCK)
+        			{
+        				processBlock(next);
+        				jumpOver = true;
+        				break;
+        			}      			
+        		}
         	}
         	
-        	// case of choice
-        	else if (next instanceof DataChoice)
-        	{
-        		// set implicit choice index (when parsing)
-        		if (parsing)
+            // case of variable array size
+        	if(!jumpOver)
+        	{	
+        		if ((next instanceof DataArray) && ((DataArray)next).isVariableSize())
         		{
-        			processAtom(selectedValue);
-        			((DataChoice)next).setSelected(selectedValue.getData().getIntValue());
+        			if (((DataArray)next).getSizeComponent().getParent() == null)
+        			{
+        				// set implicit array size (when parsing)
+        				if (parsing)
+            			{
+        					processAtom(sizeValue);
+                			int newSize = sizeValue.getData().getIntValue();
+                			((DataArray)next).updateSize(newSize);
+            			}
+            		
+            			// get array size (when writing)
+            			else
+            			{
+            				sizeValue.getData().setIntValue(((DataArray)next).getComponentCount());
+            				processAtom(sizeValue);
+            			}
+        			}        		
+        			else if (parsing)
+        				((DataArray)next).updateSize();
         		}
-        		
-        		// get choice index (when writing)
-        		else
+        	
+        		// case of choice
+        		else if (next instanceof DataChoice)
         		{
-        			selectedValue.getData().setIntValue(((DataChoice)next).getSelected());
-        			processAtom(selectedValue);
-        		}
+        			// set implicit choice index (when parsing)
+        			if (parsing)
+        			{
+        				processAtom(selectedValue);
+        				((DataChoice)next).setSelected(selectedValue.getData().getIntValue());
+        			}
         		
-        		// parse selected item data
-        		next = ((DataChoice)next).getSelectedComponent();
-        	}
+        			// get choice index (when writing)
+        			else
+        			{
+        				selectedValue.getData().setIntValue(((DataChoice)next).getSelected());
+        				processAtom(selectedValue);
+        			}
+        		
+        			// parse selected item data
+        			next = ((DataChoice)next).getSelectedComponent();
+        		}
             
-            componentStack.push(currentComponent);
-        	currentComponent = new Record(next);
-            processNextElement();
+        		componentStack.push(currentComponent);
+        		currentComponent = new Record(next);
+        		processNextElement();
+        	}
         }
         
         // otherwise parse one atom element
@@ -207,6 +236,18 @@ public abstract class DataIterator
         currentComponent = new Record(dataComponents);
 	}
 	
+	/**
+	 * Reset the path of the DataComponent in the tree
+	 */
+	public String getElementPath(DataComponent dataComponent) throws CDMException
+	{
+		String path = dataComponent.getName();
+		while(dataComponent.getParent()!=null){
+			path = dataComponent.getParent().getName() + "/" + path;
+			dataComponent = dataComponent.getParent();
+		}
+		return path;
+	}
 	
 	/////////////////////
 	// Get/Set Methods //

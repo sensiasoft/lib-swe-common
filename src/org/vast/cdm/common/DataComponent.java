@@ -62,6 +62,9 @@ public interface DataComponent extends Cloneable
 	public String getName();
 	
 	
+	public DataComponent getParent();
+	
+	
 	public void setName(String name);
 
 

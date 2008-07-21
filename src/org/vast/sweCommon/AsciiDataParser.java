@@ -308,4 +308,11 @@ public class AsciiDataParser extends AbstractDataParser
         
         return data;
     }
+
+
+	@Override
+	protected void processBlock(DataComponent scalarInfo) throws CDMException {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -23,6 +23,7 @@ package org.vast.sweCommon;
 
 import java.io.InputStream;
 import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
 import org.vast.data.DataValue;
 
 /**
@@ -59,6 +60,13 @@ public class XmlDataParser extends AbstractDataParser
 	@Override
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected void processBlock(DataComponent scalarInfo) throws CDMException {
 		// TODO Auto-generated method stub
 		
 	}

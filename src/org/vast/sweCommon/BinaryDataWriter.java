@@ -287,4 +287,11 @@ public class BinaryDataWriter extends AbstractDataWriter
 			throw new CDMException(e);
 		}		
 	}
+
+
+	@Override
+	protected void processBlock(DataComponent scalarInfo) throws CDMException {
+		// TODO Auto-generated method stub
+		
+	}
 }

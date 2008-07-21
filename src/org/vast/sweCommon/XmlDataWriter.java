@@ -62,4 +62,11 @@ public class XmlDataWriter extends AbstractDataWriter
 	
 	}
 
+
+	@Override
+	protected void processBlock(DataComponent scalarInfo) throws CDMException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

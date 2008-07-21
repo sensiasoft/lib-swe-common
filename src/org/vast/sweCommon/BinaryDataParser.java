@@ -23,6 +23,7 @@ package org.vast.sweCommon;
 import java.io.*;
 import java.util.Hashtable;
 import org.vast.data.*;
+import org.vast.sweCommon.decompression.Jpeg2000Decoder;
 import org.vast.cdm.common.*;
 
 
@@ -45,7 +46,6 @@ public class BinaryDataParser extends AbstractDataParser
 {
 	DataInputExt dataInput;
 	Hashtable<DataComponent, BinaryOptions> componentEncodings;
-	
 	
 	public BinaryDataParser()
 	{
@@ -85,6 +85,7 @@ public class BinaryDataParser extends AbstractDataParser
 	public void parse(InputStream inputStream) throws CDMException
 	{
 		stopParsing = false;
+		valueTable = new Hashtable<String, Double>(); 
 		
 		try
 		{
@@ -199,8 +200,12 @@ public class BinaryDataParser extends AbstractDataParser
             	componentEncodings.put((DataValue)data, encodingList[i]);
             	((DataValue)data).setDataType(encodingList[i].type);
             }
-            if(encodingList[i].member == BinaryMember.BLOCK){
+            else if(encodingList[i].member == BinaryMember.BLOCK){
             	componentEncodings.put(data, encodingList[i]);
+            }
+            else {
+            	componentEncodings.put((DataValue)data, encodingList[i]);
+            	((DataValue)data).setDataType(encodingList[i].type);
             }
 		}
 	}
@@ -216,6 +221,14 @@ public class BinaryDataParser extends AbstractDataParser
 		parseBinaryAtom(scalarInfo, binaryBlock);
 	}
 	
+	protected void processBlock(DataComponent blockInfo) throws CDMException
+	{
+		// get next encoding block
+		BinaryOptions binaryBlock = componentEncodings.get(blockInfo);
+		
+		// parse token = dataAtom					
+		parseBinaryBlock(blockInfo, binaryBlock);
+	}
 	
 	/**
 	 * Checks if more data is available from the stream
@@ -254,6 +267,10 @@ public class BinaryDataParser extends AbstractDataParser
 	 */
 	private void parseBinaryAtom(DataValue scalarInfo, BinaryOptions binaryInfo) throws CDMException
 	{
+		
+		String key = binaryInfo.componentName;
+		Double value = null;
+		
 		try
 		{
 			switch (binaryInfo.type)
@@ -275,42 +292,50 @@ public class BinaryDataParser extends AbstractDataParser
 					
 				case SHORT:
 					short shortValue = dataInput.readShort();
-					scalarInfo.getData().setShortValue(shortValue);		
+					scalarInfo.getData().setShortValue(shortValue);	
+					value = (double)shortValue;
 					break;
 					
 				case USHORT:
 					int ushortValue = dataInput.readUnsignedShort();
 					scalarInfo.getData().setIntValue(ushortValue);
+					value = (double)ushortValue;
 					break;
 					
 				case INT:
 					int intValue = dataInput.readInt();
 					scalarInfo.getData().setIntValue(intValue);
+					value = (double)intValue;
 					break;
 					
 				case UINT:
 					long uintValue = dataInput.readUnsignedInt();
 					scalarInfo.getData().setLongValue(uintValue);
+					value = (double)uintValue;
 					break;
 					
 				case LONG:
 					long longValue = dataInput.readLong();
 					scalarInfo.getData().setLongValue(longValue);
+					value = (double)longValue;
 					break;
 					
 				case ULONG:
 					long ulongValue = dataInput.readUnsignedLong();
 					scalarInfo.getData().setLongValue(ulongValue);
+					value = (double)ulongValue;
 					break;
 					
 				case FLOAT:
 					float floatValue = dataInput.readFloat();
 					scalarInfo.getData().setFloatValue(floatValue);
+					value = (double)floatValue;
 					break;
 					
 				case DOUBLE:
 					double doubleValue = dataInput.readDouble();
 					scalarInfo.getData().setDoubleValue(doubleValue);
+					value = doubleValue;
 					break;
 					
 				case UTF_STRING:
@@ -323,6 +348,7 @@ public class BinaryDataParser extends AbstractDataParser
 					scalarInfo.getData().setStringValue(asciiValue);
 					break;
 			}
+			valueTable.put(key, (Double)value);
 		}
 		catch (RuntimeException e)
 		{
@@ -333,4 +359,70 @@ public class BinaryDataParser extends AbstractDataParser
 			throw new CDMException("Error while reading binary stream", e);
 		}
 	}
+
+	
+	/**
+	 * Parse binary block using DataInfo and DataEncoding structures
+	 * Decoded value is assigned to each DataValue
+	 * @param scalarInfo
+	 * @param binaryInfo
+	 * @throws CDMException
+	 */
+	private void parseBinaryBlock(DataComponent blockInfo, BinaryOptions binaryInfo) throws CDMException
+	{
+				
+		try {
+			String name = blockInfo.getName();
+			String referencePath = binaryInfo.componentName;
+			String byteLength = binaryInfo.byteLength;
+			int byteSize = 0;
+			double value = valueTable.get(byteLength);
+			
+			if(value==Math.floor(value)){
+				byteSize = (int)value;
+			}
+			else{
+				throw new CDMException("the referenced size of the block " + name + " with the path " + referencePath + 
+						" should be an integer, size = " + value);
+			}
+			
+			byte [] block = new byte[byteSize];
+			dataInput.readFully(block);
+			
+			if (binaryInfo.compression == Compression.JPEG2000){
+				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(block);		
+				Jpeg2000Decoder jp2kDecoder = new Jpeg2000Decoder(byteArrayInputStream);
+				byte [] byteArray = jp2kDecoder.getDecodedImageByteArray();
+				for (int i = 0; i<byteArray.length; i++){
+					blockInfo.getData().setByteValue(i, byteArray[i]);
+				}
+				
+				int min1=2000, min2=2000, max1=-2000, max2=-2000;
+				for(int i=0; i<byteArray.length; i++){
+					if(byteArray[i]<min1)
+						min1=byteArray[i];
+					if(byteArray[i]>max1)
+						max1=byteArray[i];
+					
+				}
+				System.out.println("from byte array:  " +min1 + "   " +  max1);
+				for(int i=0; i<byteArray.length; i++){
+					if(blockInfo.getData().getByteValue(i)<min2)
+						min2=blockInfo.getData().getByteValue(i);
+					if(blockInfo.getData().getByteValue(i)>max2)
+						max2=blockInfo.getData().getByteValue(i);
+					
+				}
+				System.out.println("from intblock array:  " +min2 + "   " +  max2);
+				
+			}
+
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw new CDMException("Error while reading binary stream", e);
+		}
+		
+	}
+	
 }
