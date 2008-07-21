@@ -393,30 +393,14 @@ public class BinaryDataParser extends AbstractDataParser
 				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(block);		
 				Jpeg2000Decoder jp2kDecoder = new Jpeg2000Decoder(byteArrayInputStream);
 				byte [] byteArray = jp2kDecoder.getDecodedImageByteArray();
-				for (int i = 0; i<byteArray.length; i++){
-					blockInfo.getData().setByteValue(i, byteArray[i]);
-				}
-				
-				int min1=2000, min2=2000, max1=-2000, max2=-2000;
-				for(int i=0; i<byteArray.length; i++){
-					if(byteArray[i]<min1)
-						min1=byteArray[i];
-					if(byteArray[i]>max1)
-						max1=byteArray[i];
-					
-				}
-				System.out.println("from byte array:  " +min1 + "   " +  max1);
-				for(int i=0; i<byteArray.length; i++){
-					if(blockInfo.getData().getByteValue(i)<min2)
-						min2=blockInfo.getData().getByteValue(i);
-					if(blockInfo.getData().getByteValue(i)>max2)
-						max2=blockInfo.getData().getByteValue(i);
-					
-				}
-				System.out.println("from intblock array:  " +min2 + "   " +  max2);
-				
-			}
 
+				for (int i = 0; i<byteArray.length; i++){
+					int  Byte = (0x000000FF & ((int)byteArray[i]));
+			        short unsignedByte = (short)Byte;
+					blockInfo.getData().setShortValue(i, unsignedByte);
+				}
+
+			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
