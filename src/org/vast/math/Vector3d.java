@@ -203,8 +203,32 @@ public class Vector3d extends javax.vecmath.Vector3d
         y = q.y;
         z = q.z;
     }
+    
+    // subtract vector 2 from vector1 and put return resulting vector
+    public final static Vector3d subtract(Vector3d v1, Vector3d v2){
+    	Vector3d v3 = new Vector3d(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);	
+    	return v3;
+    }
 
+    // subtract vector 2 from vector1 and put return resulting vector
+    public void subtract(Vector3d v2){
+    	this.x = this.x - v2.x;
+    	this.y = this.y - v2.y;
+    	this.z = this.z - v2.z;
+     }
 
+    // subtract vector 2 from vector1 and put return resulting vector
+    public final static Vector3d add(Vector3d v1, Vector3d v2){
+    	Vector3d v3 = new Vector3d(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);	
+    	return v3;
+    }
+
+    // subtract vector 2 from vector1 and put return resulting vector
+    public void add(Vector3d v2){
+    	this.x = this.x + v2.x;
+    	this.y = this.y + v2.y;
+    	this.z = this.z + v2.z;
+     }
     public String getCrs()
     {
         return crs;
@@ -215,4 +239,6 @@ public class Vector3d extends javax.vecmath.Vector3d
     {
         this.crs = crs;
     }
+    
+    
 }
