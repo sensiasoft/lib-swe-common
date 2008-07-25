@@ -1,4 +1,4 @@
-package org.vast.srtm;
+package org.vast.math;
 
 import javax.vecmath.Vector3d;
 
