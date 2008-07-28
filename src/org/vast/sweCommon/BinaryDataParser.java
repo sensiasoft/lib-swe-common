@@ -348,7 +348,11 @@ public class BinaryDataParser extends AbstractDataParser
 					scalarInfo.getData().setStringValue(asciiValue);
 					break;
 			}
-			valueTable.put(key, (Double)value);
+			//  Not sure what all valueTable is used for, but when the type of this value if *STRING, it 
+			//  can't be cast to a Double to go in this table.  Checking to make sure value is non-null
+			//  to avoid NPE for EC08.  Check with Alex to see how this is being used 
+			if(value!= null)
+				valueTable.put(key, (Double)value);
 		}
 		catch (RuntimeException e)
 		{
