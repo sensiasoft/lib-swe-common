@@ -86,6 +86,13 @@ public class RayIntersectEllipsoid
         R[2] = datum.polarRadius;
 	}
 
+	public RayIntersectEllipsoid(Datum datum, double metersAboveEllipsoid)
+	{
+		R[0] = datum.equatorRadius + metersAboveEllipsoid;
+        R[1] = datum.equatorRadius + metersAboveEllipsoid;
+        R[2] = datum.polarRadius + metersAboveEllipsoid;
+	}
+
 
 	public double[] getIntersection(Vector3d vertex, Vector3d direction)
 	{
