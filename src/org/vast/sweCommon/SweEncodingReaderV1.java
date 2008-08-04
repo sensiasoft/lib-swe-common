@@ -263,6 +263,14 @@ public class SweEncodingReaderV1 implements DataEncodingReader
         {
         	binaryBlock.compression = Compression.JPEG;
         }
+        if (compression.endsWith("TIFF"))
+        {
+        	binaryBlock.compression = Compression.TIFF;
+        }
+        if (compression.endsWith("PNG"))
+        {
+        	binaryBlock.compression = Compression.PNG;
+        }
         if (compression.endsWith("GZIP"))
         {
         	binaryBlock.compression = Compression.GZIP;
