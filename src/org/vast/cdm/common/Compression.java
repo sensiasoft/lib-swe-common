@@ -25,6 +25,8 @@ public enum Compression
 	GZIP,
     BZIP,
     JPEG,
+    TIFF,
+    PNG,
     JPEG2000,
     MPEG2,
     MPEG4;
