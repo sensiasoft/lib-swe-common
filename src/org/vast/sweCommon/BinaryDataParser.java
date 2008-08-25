@@ -29,9 +29,6 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 
 import org.vast.data.*;
-import org.vast.ogc.OGCRegistry;
-import org.vast.ows.OWSRequest;
-import org.vast.ows.OWSRequestReader;
 import org.vast.sweCommon.decompression.Jpeg2000Decoder;
 import org.vast.cdm.common.*;
 
@@ -378,7 +375,7 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	/**
 	 * Parse binary block using DataInfo and DataEncoding structures
-	 * Decoded value is assigned to a DataArray (or DataRecord I suppose...)
+	 * Decoded value is assigned to each DataValue
 	 * @param scalarInfo
 	 * @param binaryInfo
 	 * @throws CDMException
@@ -390,34 +387,28 @@ public class BinaryDataParser extends AbstractDataParser
 			String name = blockInfo.getName();
 			String referencePath = binaryInfo.componentName;
 			String byteLength = binaryInfo.byteLength;
-			
-			boolean isReference = !isNumber(byteLength);
 			int byteSize = 0;
+			double value = 0;
 			
-			if(isReference){
-				if(!valueTable.contains(byteLength))
-				{
-					throw new CDMException("the byteLength reference '" + byteLength + "' is not known");
-				}
-				else{
-					double value = valueTable.get(byteLength);
-					if(value==Math.floor(value)){
-						byteSize = (int)value;
-					}
-					else{
-						throw new CDMException("the referenced size of the block " + name + " with the path " + referencePath + 
-											   " should be an integer, size = " + value);
-						}
-				}
-			}			
-			else byteSize = Integer.parseInt(byteLength);
+			if(!valueTable.contains(byteLength) && valueTable.get(byteLength)==null)
+			{
+				throw new CDMException("the byteLength reference '" + byteLength + "' is not known");
+			}
+			else value = valueTable.get(byteLength);
+			
+			if(value==Math.floor(value)){
+				byteSize = (int)value;
+			}
+			else{
+				throw new CDMException("the referenced size of the block " + name + " with the path " + referencePath + 
+						" should be an integer, size = " + value);
+			}
 			
 			byte [] block = new byte[byteSize];
 			dataInput.readFully(block);
 			
-			// FOR DECOMPRESSION, ACTUALLY AFTER,IT WOULD BE BETTER TO HAVE AN RGB INT INSTEAD OF 3 INTS
-			// FOR THE COLORS, NEEDS TO IMPLEMENT RGB FOR CHANNEL SELECTION OF THE RASTER OF THE STYLER
-			// IF NOT ALREADY THERE...
+			// the decompression is going to be handled with a reader and a registry such as OGCRegistry.xml
+			// and OGCRegistry.java
 			
 			if (binaryInfo.compression == Compression.JPEG2000){
 				ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(block);		
@@ -432,59 +423,35 @@ public class BinaryDataParser extends AbstractDataParser
 			}
 			
 			if (binaryInfo.compression == Compression.JPEG || binaryInfo.compression == Compression.TIFF ||
-				binaryInfo.compression == Compression.PNG){
-				// can possibly read other formats however images would most probably be jpeg2000, 
-				// jpeg, or tiff... 
-				ImageInputStream imageInputStream = (ImageInputStream)(new ByteArrayInputStream(block));
-				BufferedImage image = ImageIO.read(imageInputStream);
-				if(blockInfo.getData().getAtomCount() != image.getWidth()*image.getHeight()){
-					throw new CDMException("the size of the decoded image is not that " +
-										   "described in the Swe Common description");
+					binaryInfo.compression == Compression.PNG){
+					// can possibly read other formats however images would most probably be jpeg2000, 
+					// jpeg, or tiff... 
+					ImageInputStream imageInputStream = (ImageInputStream)(new ByteArrayInputStream(block));
+					BufferedImage image = ImageIO.read(imageInputStream);
+					if(blockInfo.getData().getAtomCount() != image.getWidth()*image.getHeight()){
+						throw new CDMException("the size of the decoded image is not that " +
+											   "described in the Swe Common description");
+					}
+					int [] rgbArray = new int[image.getWidth()*image.getHeight()];
+					image.getRGB(0, 0, image.getWidth(), image.getHeight(), rgbArray, 0, 0);
+					Color color = null;
+					
+					for (int i = 0; i<rgbArray.length; i++){
+						color = new Color(rgbArray[i]);
+				        short red = (short)color.getRed();
+				        short green = (short)color.getGreen();
+				        short blue = (short)color.getBlue();
+						blockInfo.getData().setShortValue(i, red);
+						blockInfo.getData().setShortValue(i+1, green);
+						blockInfo.getData().setShortValue(i+2, blue);
+					}
 				}
-				int [] rgbArray = new int[image.getWidth()*image.getHeight()];
-				image.getRGB(0, 0, image.getWidth(), image.getHeight(), rgbArray, 0, 0);
-				Color color = null;
-				
-				for (int i = 0; i<rgbArray.length; i++){
-					color = new Color(rgbArray[i]);
-			        short red = (short)color.getRed();
-			        short green = (short)color.getGreen();
-			        short blue = (short)color.getBlue();
-					blockInfo.getData().setShortValue(i, red);
-					blockInfo.getData().setShortValue(i+1, green);
-					blockInfo.getData().setShortValue(i+2, blue);
-				}
-			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			throw new CDMException("Error while reading binary stream", e);
 		}
 		
-	}
-
-
-	private boolean isNumber(String string) {
-		
-		CharSequence chars = string.subSequence(0, string.length());		
-		boolean [] isPossibleValue = new boolean [string.length()];
-		int numberOfCommas = 0;
-		
-		for(int i=0; i<string.length(); i++)
-		{
-			isPossibleValue[i] = ((chars.charAt(i)>47 && chars.charAt(i)<58) || chars.charAt(i)==46);
-			
-			if(!isPossibleValue[i])
-				return false;
-				
-			if(chars.charAt(i)==46)
-				numberOfCommas++;
-		}
-		
-		if(numberOfCommas>1)
-			return false;
-		
-		return true;
 	}
 	
 }
