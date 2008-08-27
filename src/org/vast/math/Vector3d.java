@@ -83,8 +83,8 @@ public class Vector3d extends javax.vecmath.Vector3d
         c = Math.cos(angleRadians);
         s = Math.sin(angleRadians);
         Vector3d v = this.copy();
-        y = c * v.y + s * v.z;
-        z = -s * v.y + c * v.z;
+        y = c * v.y + -s * v.z;
+        z = s * v.y + c * v.z;
     }
 
 
@@ -98,8 +98,8 @@ public class Vector3d extends javax.vecmath.Vector3d
         c = Math.cos(angleRadians);
         s = Math.sin(angleRadians);
         Vector3d v = this.copy();
-        x = c * v.x - s * v.z;
-        z = s * v.x + c * v.z;
+        x = c * v.x + s * v.z;
+        z = -s * v.x + c * v.z;
     }
 
 
@@ -113,8 +113,8 @@ public class Vector3d extends javax.vecmath.Vector3d
         c = Math.cos(angleRadians);
         s = Math.sin(angleRadians);
         Vector3d v = this.copy();
-        x = c * v.x + s * v.y;
-        y = -s * v.x + c * v.y;
+        x = c * v.x - s * v.y;
+        y = s * v.x + c * v.y;
     }
 
 
