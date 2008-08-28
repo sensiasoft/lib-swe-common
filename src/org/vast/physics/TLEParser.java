@@ -139,23 +139,30 @@ public class TLEParser
     {
         boolean isLastEntry = false;
         
-        if (desiredTime < nextTime)
-        {
-        	if (desiredTime > previousTLE.tleTime)
-        		return previousTLE;
-        	
-        	this.reset();
-        }
+        // reset of requested time is before previous TLE
+        if (desiredTime < currentTime)
+        	reset();
         
-        // skip lines until we find best TLE for requested time
+        // return same TLE if time is within TLE range
+        else if (desiredTime < nextTime)
+        	return previousTLE;
+        
+        // skip lines until we find first TLE after requested time
         while (desiredTime > nextTime)
         {
-            // read next 2 lines
+        	// read next 2 lines
             isLastEntry = readNextEntry();
             if (isLastEntry)
-                break;
+            {
+            	if (nextTime != Double.POSITIVE_INFINITY)
+            	{
+            		currentTime = nextTime;
+            		nextTime = Double.POSITIVE_INFINITY;
+            	}            	
+            	break;
+            }
             
-            // check to see if this is the right time
+            // read next time time
             currentTime = nextTime;
             nextTime = getJulian(nextLine1);
         }        
@@ -163,7 +170,7 @@ public class TLEParser
         // if no more lines, use last one
         if (!isLastEntry)
         {
-            // now we have the tle greater than the input time,
+            // now we have the first tle greater than the input time,
             // which currently lies between next and current positions,
             // determine which TLE is closer
             double currentDelta = Math.abs(currentTime - desiredTime);
