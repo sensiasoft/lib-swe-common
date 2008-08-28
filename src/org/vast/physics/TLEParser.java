@@ -49,6 +49,7 @@ public class TLEParser
     private static double SECONDS_PER_LEAPYEAR = 31622400.0;  // leapseconds
 	private static double DTR =  Math.PI / 180.0;
 	
+	protected String tleFilePath;
 	protected BufferedReader tleReader;
     protected int lineNumber = 0;
     protected String currentLine1, previousLine1, nextLine1;
@@ -57,24 +58,17 @@ public class TLEParser
     protected TLEInfo previousTLE;
     
     
-    public TLEParser(String tlePath)
+    public TLEParser(String tleFilePath)
     {
+    	this.tleFilePath = tleFilePath;
     	reset();
-        
-        try
-        {
-            tleReader = new BufferedReader(new FileReader(tlePath));
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
     }
 
 
     public void reset()
     {
         closeFile();
+        
         currentTime = Double.NEGATIVE_INFINITY;
         nextTime = Double.NEGATIVE_INFINITY;
         currentLine1 = "";
@@ -84,6 +78,16 @@ public class TLEParser
         previousLine2 = "";
         nextLine2 = "";
         lineNumber = 0;
+        
+        // reopen file at beginning!
+        try
+        {
+            tleReader = new BufferedReader(new FileReader(tleFilePath));
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 
@@ -136,7 +140,12 @@ public class TLEParser
         boolean isLastEntry = false;
         
         if (desiredTime < nextTime)
-        	return previousTLE;
+        {
+        	if (desiredTime > previousTLE.tleTime)
+        		return previousTLE;
+        	
+        	this.reset();
+        }
         
         // skip lines until we find best TLE for requested time
         while (desiredTime > nextTime)
