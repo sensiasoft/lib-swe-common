@@ -44,6 +44,7 @@ public class TimeExtent
     protected boolean baseAtNow = false;  // if true baseTime is associated to machine clock
     protected boolean endNow = false;     // if true stopTime is associated to machine clock
     protected boolean beginNow = false;   // if true startTime is associated to machine clock
+    protected int timeZone = 0;
     
     
     public TimeExtent()
@@ -371,6 +372,16 @@ public class TimeExtent
     
     
     /**
+     * Check if this is a single point in time
+     * @return
+     */
+	public boolean isTimeInstant()
+	{
+        return (leadTimeDelta == 0 && lagTimeDelta == 0);
+	}
+    
+    
+    /**
      * Resets all variables so that extent is null
      */
     public void nullify()
@@ -420,5 +431,115 @@ public class TimeExtent
             now = exactNow;
         
         return now;
+    }
+    
+    
+    /**
+     * Helper method to get start time
+     * @return
+     */
+    public double getStartTime()
+    {
+        return getAdjustedLagTime();
+    }
+    
+    
+    /**
+     * Helper method to set start time
+     * @param startTime
+     */
+    public void setStartTime(double startTime)
+    {
+        beginNow = false;
+        
+        if (Double.isNaN(baseTime) || baseAtNow)
+        {
+            baseTime = startTime;
+            lagTimeDelta = 0.0;
+            baseAtNow = false;
+        }
+        
+        else if (startTime > baseTime)
+        {
+            double stopTime = baseTime + leadTimeDelta;
+            baseTime = startTime;
+            leadTimeDelta = Math.max(0.0, stopTime - baseTime);
+            lagTimeDelta = 0.0;
+        }
+        
+        else
+        {
+            lagTimeDelta = baseTime - startTime;
+        }
+    }
+
+
+    /**
+     * Helper method to get stop time
+     * @return
+     */
+    public double getStopTime()
+    {
+        return getAdjustedLeadTime();
+    }
+    
+    
+    /**
+     * Helper method to set stop time
+     * @param stopTime
+     */
+    public void setStopTime(double stopTime)
+    {
+        endNow = false;
+        
+        if (Double.isNaN(baseTime) || baseAtNow)
+        {
+            baseTime = stopTime;
+            leadTimeDelta = 0.0;
+            baseAtNow = false;
+        }
+        
+        else if (stopTime < baseTime)
+        {
+            double startTime = baseTime - lagTimeDelta;
+            baseTime = stopTime;
+            lagTimeDelta = Math.max(0.0, baseTime - startTime);
+            leadTimeDelta = 0.0;
+        }
+        
+        else
+        {
+            leadTimeDelta = stopTime - baseTime;
+        }
+    }
+
+    
+    public String getIsoString(int zone)
+    {
+        if (baseAtNow)
+        {
+            String start = beginNow ? "now" : "unknown";
+            String stop = endNow ? "now" : "unknown";
+            String duration = DateTimeFormat.formatIsoPeriod(getTimeRange());
+            return start + "/" + stop + "/" + duration;
+        }
+        else
+        {
+            String start = beginNow ? "now" : DateTimeFormat.formatIso(getStartTime(), zone);
+            String stop = endNow ? "now" : DateTimeFormat.formatIso(getStopTime(), zone);
+            return start + "/" + stop;
+        }
+    }
+
+
+    public int getTimeZone()
+    {
+        return timeZone;
+    }
+
+
+    public void setTimeZone(int timeZone)
+    {
+        this.timeZone = timeZone;
     }
 }
