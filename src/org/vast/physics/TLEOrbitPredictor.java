@@ -46,6 +46,7 @@ public class TLEOrbitPredictor extends AbstractOrbitPredictor
 {
 	protected TLEParser tleParser;
 	protected SGP4Propagator propagator;
+	protected double orbitCycle = Double.NaN;
 	
 	
 	public TLEOrbitPredictor(String tleFile)
@@ -53,6 +54,13 @@ public class TLEOrbitPredictor extends AbstractOrbitPredictor
 		tleParser = new TLEParser(tleFile);
 		propagator = new SGP4Propagator();
 	}
+	
+	
+	public TLEOrbitPredictor(String tleFile, double cycleInDays)
+    {
+        this(tleFile);
+        this.orbitCycle = cycleInDays;
+    }
 	
 	
 	/* (non-Javadoc)
@@ -72,4 +80,10 @@ public class TLEOrbitPredictor extends AbstractOrbitPredictor
 			return null;
 		}
 	}
+
+
+    public double getCycleInDays()
+    {
+        return this.orbitCycle;
+    }
 }

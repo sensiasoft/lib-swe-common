@@ -42,13 +42,20 @@ package org.vast.physics;
  */
 public interface OrbitPredictor
 {
-
+    
+    /**
+     * Gets the orbit cycle in days if any or NaN if none exists
+     * @return
+     */
+    public double getCycleInDays();
+    
+    
 	/**
 	 * Gets the satellite ECI state at a given point in time
 	 * @param time in seconds past 01/01/1970 (unix time)
 	 * @return
 	 */
-	public abstract MechanicalState getECIState(double time);
+	public MechanicalState getECIState(double time);
 
 
 	/**
@@ -56,7 +63,7 @@ public interface OrbitPredictor
 	 * @param time in seconds past 01/01/1970 (unix time)
 	 * @return
 	 */
-	public abstract MechanicalState getECFState(double time);
+	public MechanicalState getECFState(double time);
 
 
 	/**
@@ -66,7 +73,7 @@ public interface OrbitPredictor
 	 * @param step step size in seconds
 	 * @return
 	 */
-	public abstract MechanicalState[] getECITrajectory(double startTime, double stopTime, double step);
+	public MechanicalState[] getECITrajectory(double startTime, double stopTime, double step);
 
 
 	/**
@@ -76,6 +83,6 @@ public interface OrbitPredictor
 	 * @param step step size in seconds
 	 * @return
 	 */
-	public abstract MechanicalState[] getECFTrajectory(double startTime, double stopTime, double step);
+	public MechanicalState[] getECFTrajectory(double startTime, double stopTime, double step);
 
 }
