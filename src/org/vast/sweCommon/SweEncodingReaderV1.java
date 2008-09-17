@@ -162,10 +162,9 @@ public class SweEncodingReaderV1 implements DataEncodingReader
     }
     
 
-    private BinaryOptions readComponent(DOMHelper dom, Element componentElement) throws CDMException
+    private BinaryComponent readComponent(DOMHelper dom, Element componentElement) throws CDMException
     {
-        BinaryOptions binaryValue = new BinaryOptions();
-        binaryValue.member = BinaryMember.COMPONENT;
+        BinaryComponent binaryValue = new BinaryComponent();
         
         // read component name
         String name = dom.getAttributeValue(componentElement, "ref");
@@ -237,58 +236,19 @@ public class SweEncodingReaderV1 implements DataEncodingReader
         return binaryValue;
     }
     
-    private BinaryOptions readBlock(DOMHelper dom, Element blockElt) throws CDMException
+    private BinaryBlock readBlock(DOMHelper dom, Element blockElt) throws CDMException
     {
-        BinaryOptions binaryBlock = new BinaryOptions();
-        binaryBlock.member = BinaryMember.BLOCK;
+        BinaryBlock binaryBlock = new BinaryBlock();
+
+        binaryBlock.componentName = dom.getAttributeValue(blockElt, "ref");
         
-        // read component name
-        String name = dom.getAttributeValue(blockElt, "ref");
-        binaryBlock.componentName = name;
+        binaryBlock.compression = dom.getAttributeValue(blockElt, "compression");
         
-        String compression = dom.getAttributeValue(blockElt, "compression");
-        if (compression.endsWith("JPEG2000"))
-        {
-        	binaryBlock.compression = Compression.JPEG2000;
-        }
-        if (compression.endsWith("MPEG4"))
-        {
-        	binaryBlock.compression = Compression.MPEG4;
-        }
-        if (compression.endsWith("MPEG2"))
-        {
-        	binaryBlock.compression = Compression.MPEG2;
-        }
-        if (compression.endsWith("JPEG"))
-        {
-        	binaryBlock.compression = Compression.JPEG;
-        }
-        if (compression.endsWith("TIFF"))
-        {
-        	binaryBlock.compression = Compression.TIFF;
-        }
-        if (compression.endsWith("PNG"))
-        {
-        	binaryBlock.compression = Compression.PNG;
-        }
-        if (compression.endsWith("GZIP"))
-        {
-        	binaryBlock.compression = Compression.GZIP;
-        }
-        if (compression.endsWith("BZIP"))
-        {
-        	binaryBlock.compression = Compression.BZIP;
-        }
-                
-        // read bitLength
-        String byteLength = dom.getAttributeValue(blockElt, "byteLength");
-        binaryBlock.byteLength = byteLength;
-        
-        // next 2 lines are commented because I wanted it to be a string only for referencing...
-        //if (byteLength != null)
-        //	binaryValue.bitLength = Integer.parseInt(bitLength);
-               
         return binaryBlock;
+        
+        // TODO: the other attibutes must be read and implemented...
     }
+    
+    
     
 }

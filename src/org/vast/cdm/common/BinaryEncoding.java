@@ -80,7 +80,7 @@ public class BinaryEncoding implements DataEncoding
 			buf.append("  ");
 			buf.append(componentEncodings[i].componentName);
 			buf.append(" -> ");
-			buf.append(componentEncodings[i].type);
+	//		buf.append(componentEncodings[i].type);
 			buf.append('\n');
 		}
 		

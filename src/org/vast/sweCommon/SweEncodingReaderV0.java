@@ -121,7 +121,7 @@ public class SweEncodingReaderV0 implements DataEncodingReader
     	// parse component encodings
     	NodeList components = dom.getElements(binaryBlockElement, "member/Component");
     	int listSize = components.getLength();
-    	BinaryOptions[] componentEncodings = new BinaryOptions[listSize];
+    	BinaryComponent[] componentEncodings = new BinaryComponent[listSize];
     	for (int i=0; i<components.getLength(); i++)
     	{
     		Element componentElt = (Element)components.item(i);
@@ -133,9 +133,9 @@ public class SweEncodingReaderV0 implements DataEncodingReader
     }
     
 
-    private BinaryOptions readBinaryValue(DOMHelper dom, Element componentElement) throws CDMException
+    private BinaryComponent readBinaryValue(DOMHelper dom, Element componentElement) throws CDMException
     {
-        BinaryOptions binaryValue = new BinaryOptions();
+        BinaryComponent binaryValue = new BinaryComponent();
         
         // read component name
         String name = dom.getAttributeValue(componentElement, "ref");

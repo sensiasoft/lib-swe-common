@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+   <!-- -->
+   <Reader compressionType="JPEG2000" class="org.vast.decompression.Jpeg2000Decoder"/>
+   <Reader compressionType="JPEG" class="org.vast.decompression.CommonImageIODecoder"/>
+   <Reader compressionType="TIFF" class="org.vast.decompression.CommonImageIODecoder"/>
+   <Reader compressionType="PNG" class="org.vast.decompression.CommonImageIODecoder"/>
+   <!-- -->
+</Map>

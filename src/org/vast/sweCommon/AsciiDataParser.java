@@ -34,8 +34,8 @@ public class AsciiDataParser extends AbstractDataParser
 	protected char[] tokenSep, blockSep;
 	protected StringBuffer tokenBuf = new StringBuffer();
 	protected Reader reader;
+    boolean consecutiveTokenSep = false;
     
-	
 	public AsciiDataParser()
 	{
 	}
@@ -103,6 +103,7 @@ public class AsciiDataParser extends AbstractDataParser
 		
 		// skip all invalid characters and go to beginning of token
         tokenBuf.setLength(0);
+        
 		do
 		{
 			nextChar = reader.read();
@@ -121,7 +122,28 @@ public class AsciiDataParser extends AbstractDataParser
 		while (nextChar != -1)
 		{
 			tokenBuf.append((char)nextChar);
-						
+			
+			// for 2 sets of tokenSeparator without data
+			if(tokenBuf.length()==1 && tokenBuf.charAt(0)==tokenSep[0]){
+				int i = 0;
+				while(tokenBuf.length()==(i+1) && tokenBuf.charAt(i)==tokenSep[i]){
+					if(i==tokenSep.length-1)
+					{
+						consecutiveTokenSep = true;
+						break;
+					}
+					nextChar = reader.read();
+					tokenBuf.append((char)nextChar);
+					i++;
+				}
+			}
+			
+			if (consecutiveTokenSep)
+			{
+				endToken = true;
+				break;
+			}
+			
 			// check for token separator
 			tokenSepIndex = 1;
 			while ((tokenSepIndex <= tokenSep.length) &&
@@ -151,7 +173,15 @@ public class AsciiDataParser extends AbstractDataParser
 		
 		// remove separator characters from buffer
 		if (endToken)
+		{
 			tokenBuf.setLength(tokenBuf.length() - tokenSepIndex + 1);
+			if(consecutiveTokenSep)
+			{
+				tokenBuf.setLength(0);
+				consecutiveTokenSep = false;
+			}
+			
+		}
 		else if (endBlock)
 			tokenBuf.setLength(tokenBuf.length() - blockSepIndex + 1);
 		

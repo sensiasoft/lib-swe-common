@@ -182,11 +182,18 @@ public class SweComponentReaderV1 implements DataComponentReader
         {
             try
             {
-                String countValue = dom.getElementValue(arrayElt, "elementCount/Count/value");
-                arraySize = Integer.parseInt(countValue);
-                if (arraySize < 0)
-                    throw new CDMException("Invalid elementCount: The elementCount must specify a positive integer value");                
-                dataArray = new DataArray(arraySize);
+            	Element countElt = dom.getElement(arrayElt, "elementCount/Count");
+                DataValue sizeComponent = this.readScalar(dom, countElt);
+                String countValue = dom.getElementValue(countElt, "value");
+                
+                if(countValue != null)
+                {
+                	arraySize = Integer.parseInt(countValue);
+                	if (arraySize < 0)
+                		throw new CDMException("Invalid elementCount: The elementCount must specify a positive integer value");                
+                	dataArray = new DataArray(arraySize);
+                }
+                else dataArray = new DataArray(sizeComponent, true);
             }
             catch (Exception e)
             {

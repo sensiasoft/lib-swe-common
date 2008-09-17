@@ -38,7 +38,7 @@ import org.vast.cdm.common.*;
  * </p>
  *
  * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alexandre Robin & Gregoire Berthiau
  * @date Feb 10, 2006
  * @version 1.0
  */
@@ -150,7 +150,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 			componentEncodings.put((DataValue)data, encodingList[i]);
 			
 			// modify DataValue dataType
-			switch (encodingList[i].type)
+			switch (((BinaryComponent)encodingList[i]).type)
 			{
 				case UBYTE:
 					((DataValue)data).setDataType(DataType.SHORT);
@@ -169,7 +169,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 					break;
 					
 				default:
-					((DataValue)data).setDataType(encodingList[i].type);
+					((DataValue)data).setDataType(((BinaryComponent)encodingList[i]).type);
 			}		
 		}
 	}
@@ -178,22 +178,22 @@ public class BinaryDataWriter extends AbstractDataWriter
 	@Override
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
-		// get next encoding block
-		BinaryOptions binaryBlock = componentEncodings.get(scalarInfo);
+		// get next encoding component
+		BinaryComponent binaryComponent = (BinaryComponent)componentEncodings.get(scalarInfo);
 		
 		// parse token = dataAtom					
-		writeBinaryAtom(scalarInfo, binaryBlock);
+		writeBinaryAtom(scalarInfo, binaryComponent);
 	}
 	
 	
 	/**
-	 * Parse binary block using DataInfo and DataEncoding structures
+	 * Parse binary component using DataInfo and DataEncoding structures
 	 * Decoded value is assigned to each DataValue
 	 * @param scalarInfo
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void writeBinaryAtom(DataValue scalarInfo, BinaryOptions binaryInfo) throws CDMException
+	private void writeBinaryAtom(DataValue scalarInfo, BinaryComponent binaryInfo) throws CDMException
 	{
 		try
 		{
@@ -291,6 +291,22 @@ public class BinaryDataWriter extends AbstractDataWriter
 
 	@Override
 	protected void processBlock(DataComponent scalarInfo) throws CDMException {
+		
+		// get next encoding block
+		BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(scalarInfo);
+		
+		// parse token = dataAtom					
+		writeBinaryBlock(scalarInfo, binaryBlock);
+		
+	}
+
+	/**
+	 * Parse binary block using DataInfo and DataEncoding structures
+	 * @param scalarInfo
+	 * @param binaryInfo
+	 * @throws CDMException
+	 */
+	private void writeBinaryBlock(DataComponent scalarInfo,	BinaryBlock binaryBlock)  throws CDMException {
 		// TODO Auto-generated method stub
 		
 	}

@@ -21,6 +21,7 @@
 package org.vast.sweCommon;
 
 import org.w3c.dom.*;
+import org.w3c.dom.Element;
 import org.vast.cdm.common.*;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
@@ -119,15 +120,25 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
         for (int i=0; i<binaryEncoding.componentEncodings.length; i++)
         {
             Element propElt = dom.addElement(binaryEncElt, "+swe:member");
-            Element componentElt = writeBinaryValue(dom, binaryEncoding.componentEncodings[i]);
+            
+            if(binaryEncoding.componentEncodings[i] instanceof BinaryComponent)
+            {
+            Element componentElt = writeBinaryValue(dom, (BinaryComponent)binaryEncoding.componentEncodings[i]);
             propElt.appendChild(componentElt);
+            }
+            
+            if(binaryEncoding.componentEncodings[i] instanceof BinaryBlock)
+            {
+            Element componentElt = writeBinaryBlock(dom, (BinaryBlock)binaryEncoding.componentEncodings[i]);
+            propElt.appendChild(componentElt);
+            }
         }
          	
     	return binaryEncElt;
     }
     
 
-    private Element writeBinaryValue(DOMHelper dom, BinaryOptions binaryOptions) throws CDMException
+    private Element writeBinaryValue(DOMHelper dom, BinaryComponent binaryOptions) throws CDMException
     {
         Element binaryEncElt = dom.createElement("swe:Component");
         
@@ -139,61 +150,124 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
         switch (binaryOptions.type)
         {
             case BOOLEAN: 
-                dataTypeUrn = BinaryOptions.booleanURN;
+                dataTypeUrn = BinaryComponent.booleanURN;
                 break;
             
             case DOUBLE: 
-                dataTypeUrn = BinaryOptions.doubleURN;
+                dataTypeUrn = BinaryComponent.doubleURN;
                 break;
             
             case FLOAT: 
-                dataTypeUrn = BinaryOptions.floatURN;
+                dataTypeUrn = BinaryComponent.floatURN;
                 break;
                 
             case BYTE: 
-                dataTypeUrn = BinaryOptions.byteURN;
+                dataTypeUrn = BinaryComponent.byteURN;
                 break;
                 
             case UBYTE: 
-                dataTypeUrn = BinaryOptions.ubyteURN;
+                dataTypeUrn = BinaryComponent.ubyteURN;
                 break;
                 
             case SHORT: 
-                dataTypeUrn = BinaryOptions.shortURN;
+                dataTypeUrn = BinaryComponent.shortURN;
                 break;
                 
             case USHORT: 
-                dataTypeUrn = BinaryOptions.ushortURN;
+                dataTypeUrn = BinaryComponent.ushortURN;
                 break;
                 
             case INT: 
-                dataTypeUrn = BinaryOptions.intURN;
+                dataTypeUrn = BinaryComponent.intURN;
                 break;
                 
             case UINT: 
-                dataTypeUrn = BinaryOptions.uintURN;
+                dataTypeUrn = BinaryComponent.uintURN;
                 break;
                 
             case LONG: 
-                dataTypeUrn = BinaryOptions.longURN;
+                dataTypeUrn = BinaryComponent.longURN;
                 break;
                 
             case ULONG: 
-                dataTypeUrn = BinaryOptions.ulongURN;
+                dataTypeUrn = BinaryComponent.ulongURN;
                 break;
                 
             case ASCII_STRING: 
-                dataTypeUrn = BinaryOptions.asciiURN;
+                dataTypeUrn = BinaryComponent.asciiURN;
                 break;
                 
             case UTF_STRING: 
-                dataTypeUrn = BinaryOptions.utfURN;
+                dataTypeUrn = BinaryComponent.utfURN;
                 break;
         }
         binaryEncElt.setAttribute("dataType", dataTypeUrn);
         
-        // TODO write other attributes (padding, encryption, compression...)
+        // write block byteLength if any
+        if(binaryOptions.byteLength != 0)
+    	{
+        	binaryEncElt.setAttribute("byteLength", Integer.toString(binaryOptions.byteLength));
+    	}
+        
+        // write block paddingBefore if any
+        if(binaryOptions.paddingBefore != 0)
+    	{
+        	binaryEncElt.setAttribute("paddingBefore", Integer.toString(binaryOptions.paddingBefore));
+    	}
+        
+        // write block paddingAfter if any
+        if(binaryOptions.paddingAfter != 0)
+        {
+        	binaryEncElt.setAttribute("paddingAfter", Integer.toString(binaryOptions.paddingAfter));
+        }
+        
+     // write block paddingAfter if any
+        if(binaryOptions.bitLength != 0)
+        {
+        	binaryEncElt.setAttribute("bitLength", Integer.toString(binaryOptions.bitLength));
+        }
+        
+        return binaryEncElt;
+    }
+    
+    private Element writeBinaryBlock(DOMHelper dom, BinaryBlock binaryOptions) throws CDMException
+    {
+        Element binaryEncElt = dom.createElement("swe:Block");
+        
+        // write block ref
+        binaryEncElt.setAttribute("ref", binaryOptions.componentName);
+        
+        // write block compression if any
+        if(binaryOptions.compression != null)
+        	{
+        	 binaryEncElt.setAttribute("compression", binaryOptions.compression);
+        	}
+        
+        // write block byteLength if any
+        if(binaryOptions.byteLength != 0)
+    	{
+        	binaryEncElt.setAttribute("byteLength", Integer.toString(binaryOptions.byteLength));
+    	}
+        
+        // write block paddingBefore if any
+        if(binaryOptions.paddingBefore != 0)
+    	{
+        	binaryEncElt.setAttribute("paddingBefore", Integer.toString(binaryOptions.paddingBefore));
+    	}
+        
+        // write block paddingAfter if any
+        if(binaryOptions.paddingAfter != 0)
+        {
+        	binaryEncElt.setAttribute("paddingAfter", Integer.toString(binaryOptions.paddingAfter));
+        }
+        
+        // write block encryption if any
+        if(binaryOptions.encryption != null)
+        {
+        	binaryEncElt.setAttribute("encryption", binaryOptions.encryption);
+        }
                
         return binaryEncElt;
     }
+    
 }

@@ -22,15 +22,11 @@ package org.vast.data;
 
 import java.util.Hashtable;
 import java.util.Stack;
-
-import org.vast.cdm.common.BinaryMember;
-import org.vast.cdm.common.BinaryOptions;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataHandler;
 import org.vast.cdm.common.DataType;
-import org.vast.cdm.common.BinaryEncoding;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
 
@@ -51,7 +47,8 @@ public abstract class DataIterator
 	protected boolean parsing = true;
 	protected DataValue selectedValue = new DataValue(":choice:", DataType.INT); // for holding choice selection index
 	protected DataValue sizeValue = new DataValue("size", DataType.INT); // for holding implicit array size
-	public Hashtable<String, Double> valueTable;
+	protected Hashtable<DataComponent, Boolean> blockTable; // list of components that should be processed as block, and which children should not be iterated over
+	
     
 	protected class Record
     {
@@ -105,26 +102,32 @@ public abstract class DataIterator
         // now get next child
         DataComponent next = currentComponent.parent.getComponent(currentComponent.index);
     	currentComponent.index++;
-    	String nextPath = getElementPath(next);
     	
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
         	boolean jumpOver = false;
+        	
         	// case of block-encoded data Aggregates
-        	if (dataEncoding.getEncodingType() == DataEncoding.EncodingType.BINARY)
+        	/*if (dataEncoding.getEncodingType() == DataEncoding.EncodingType.BINARY)
         	{
-        		 BinaryOptions [] binOptions = ((BinaryEncoding)dataEncoding).componentEncodings;
-        		 int numberOfBinaryOptions = binOptions.length;
+        		BinaryOptions [] binOptions = ((BinaryEncoding)dataEncoding).componentEncodings;
+        		int numberOfBinaryOptions = binOptions.length;
+        		
         		for (int i=0; i<numberOfBinaryOptions; i++)
         		{
-        			if (binOptions[i].componentName.equalsIgnoreCase(nextPath) && binOptions[i].member == BinaryMember.BLOCK)
+        			if (binOptions[i] instanceof BinaryBlock && binOptions[i].componentName.equalsIgnoreCase(nextPath))
         			{
         				processBlock(next);
         				jumpOver = true;
         				break;
         			}      			
         		}
+        	}*/
+        	if (blockTable != null && blockTable.containsKey(next))
+        	{
+        		processBlock(next);
+				jumpOver = true;
         	}
         	
             // case of variable array size
@@ -235,19 +238,7 @@ public abstract class DataIterator
         componentStack.clear();
         currentComponent = new Record(dataComponents);
 	}
-	
-	/**
-	 * Reset the path of the DataComponent in the tree
-	 */
-	public String getElementPath(DataComponent dataComponent) throws CDMException
-	{
-		String path = dataComponent.getName();
-		while(dataComponent.getParent()!=null){
-			path = dataComponent.getParent().getName() + "/" + path;
-			dataComponent = dataComponent.getParent();
-		}
-		return path;
-	}
+
 	
 	/////////////////////
 	// Get/Set Methods //
