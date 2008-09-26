@@ -10,6 +10,7 @@ import java.awt.image.DataBufferInt;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 
 import javax.imageio.ImageIO;
@@ -74,9 +75,21 @@ public class CommonImageIODecoder extends CompressedStreamReader
 
 
 	@Override
-	protected void parse(DataInputExt inputStream, int byteSize, DataComponent blockInfo)
+	protected void parse(DataInputExt inputStream, DataComponent blockInfo)
 			throws CDMException {
 
+		int byteSize = 0;
+    	
+    	try
+    	{
+    		byteSize = (int)inputStream.readLong();
+    	}
+    	catch (IOException e)
+		{
+			throw new CDMException("Error while reading binary stream", e);
+		}
+    	
+		
 		byte [] block = new byte[byteSize];
 		try {
 			inputStream.readFully(block);
@@ -84,14 +97,16 @@ public class CommonImageIODecoder extends CompressedStreamReader
 			throw new CDMException("error when reading binary block of DataBlock " + blockInfo.getName(), e);
 		}
 		
-		ImageInputStream imageInputStream = (ImageInputStream)(new ByteArrayInputStream(block));
+		ByteArrayInputStream byteArrayStream = new ByteArrayInputStream(block);
+		InputStream stream = (InputStream)byteArrayStream;
+		//ImageInputStream imageInputStream = (ImageInputStream) byteArrayStream;
 		BufferedImage image;
 		try {
-			image = ImageIO.read(imageInputStream);
+			image = ImageIO.read(stream);
 		} catch (IOException e) {
 			throw new CDMException("error when generating the compressed from the binary block of DataBlock " + blockInfo.getName(), e);
 		}
-		if(blockInfo.getData().getAtomCount() != image.getWidth()*image.getHeight())
+		if(blockInfo.getData().getAtomCount() != image.getWidth()*image.getHeight()*3)
 		{
 			throw new CDMException("the size of the decoded image is not that " +
 								   "described in the Swe Common description");

@@ -245,10 +245,22 @@ public class Jpeg2000Decoder extends CompressedStreamReader
 
 
 	@Override
-	protected void parse(DataInputExt inputStream, int byteSize, DataComponent blockInfo)
+	protected void parse(DataInputExt inputStream, DataComponent blockInfo)
 			throws CDMException {
 
+		int byteSize = 0;
+    	
+    	try
+    	{
+    		byteSize = (int)inputStream.readLong();
+    	}
+    	catch (IOException e)
+		{
+			throw new CDMException("Error while reading binary stream", e);
+		}
+    	
 		byte [] block = new byte[byteSize];
+		
 		try {
 			inputStream.readFully(block);
 		} catch (IOException e) {

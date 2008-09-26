@@ -59,21 +59,11 @@ public abstract class CompressedStreamReader
      */
     public void readCompressedStream(DataInputExt inputStream, DataComponent blockInfo) throws CDMException
     {
-    	int byteSize = 0;
-    	
-    	try
-    	{
-    		byteSize = inputStream.readInt();
-    	}
-    	catch (IOException e)
-		{
-			throw new CDMException("Error while reading binary stream", e);
-		}
-        parse(inputStream, byteSize, blockInfo);
+        parse(inputStream, blockInfo);
 
     }
     
-    protected abstract void parse(DataInputExt inputStream, int byteSize, DataComponent blockInfo) throws CDMException;
+    protected abstract void parse(DataInputExt inputStream, DataComponent blockInfo) throws CDMException;
 
     public abstract void init(BinaryBlock binaryBlock, DataComponent blockComponent) throws CDMException;
     
