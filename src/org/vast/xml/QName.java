@@ -128,7 +128,7 @@ public class QName
     @Override
     public int hashCode()
     {
-    	return nsUri.hashCode() + localName.hashCode();
+    	return (nsUri + '#' + localName).hashCode();
     }
     
     
