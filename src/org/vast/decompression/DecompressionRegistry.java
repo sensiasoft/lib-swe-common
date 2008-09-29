@@ -21,11 +21,11 @@
 package org.vast.decompression;
 
 import java.util.Hashtable;
-import org.vast.util.ExceptionSystem;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
 
 /**
  * <p><b>Title:</b>
@@ -198,7 +198,7 @@ public class DecompressionRegistry
                 }
                 catch (IllegalStateException e)
                 {
-                    ExceptionSystem.display(e);
+                    //ExceptionSystem.display(e);
                 }
             }
 
