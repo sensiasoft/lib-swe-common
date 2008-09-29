@@ -20,7 +20,6 @@
 
 package org.vast.sweCommon;
 
-import org.w3c.dom.*;
 import org.w3c.dom.Element;
 import org.vast.cdm.common.*;
 import org.vast.ogc.OGCRegistry;
