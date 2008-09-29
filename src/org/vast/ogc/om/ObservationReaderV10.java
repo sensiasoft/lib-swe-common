@@ -31,8 +31,8 @@ import org.vast.ogc.gml.Feature;
 import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLGeometryReader;
 import org.vast.ogc.gml.GMLTimeReader;
-import org.vast.ows.OWSException;
-import org.vast.ows.OWSExceptionReader;
+import org.vast.ogc.OGCException;
+import org.vast.ogc.OGCExceptionReader;
 import org.vast.sweCommon.DataSourceInline;
 import org.vast.sweCommon.DataSourceURI;
 import org.vast.sweCommon.SWECommonUtils;
@@ -78,7 +78,7 @@ public class ObservationReaderV10 implements ObservationReader
             
             // parse xml header using DOMReader
             DOMHelper dom = new DOMHelper(streamFilter, false);
-            OWSExceptionReader.checkException(dom);
+            OGCExceptionReader.checkException(dom);
             
             return this.readObservation(dom, dom.getRootElement());
         }
@@ -86,7 +86,7 @@ public class ObservationReaderV10 implements ObservationReader
         {
             throw new OMException("Error while parsing XML document", e);
         }
-        catch (OWSException e)
+        catch (OGCException e)
         {
             throw new OMException(e.getMessage());
         }

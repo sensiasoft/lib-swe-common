@@ -25,8 +25,8 @@ import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataHandler;
 import org.vast.math.Vector3d;
 import org.vast.ogc.gml.GMLGeometryReader;
-import org.vast.ows.OWSException;
-import org.vast.ows.OWSExceptionReader;
+import org.vast.ogc.OGCException;
+import org.vast.ogc.OGCExceptionReader;
 import org.vast.sweCommon.SWEFilter;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.URIStreamHandler;
@@ -74,7 +74,7 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
 			
 			// parse xml header using DOMReader
 			DOMHelper dom = new DOMHelper(streamFilter, false);
-			OWSExceptionReader.checkException(dom);
+			OGCExceptionReader.checkException(dom);
 			
 			// find first Observation element
 			Element rootElement = dom.getRootElement();
@@ -141,7 +141,7 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
 		{
 			throw new CDMException("Error while parsing Observation XML", e);
 		}		
-		catch (OWSException e)
+		catch (OGCException e)
 		{
 			throw new CDMException(e.getMessage());
 		}

@@ -20,10 +20,10 @@
 
 package org.vast.ogc.gml;
 
-import org.vast.ows.OWSException;
+import org.vast.ogc.OGCException;
 
 
-public class GMLException extends OWSException
+public class GMLException extends OGCException
 {
 	static final long serialVersionUID = 0;
 		

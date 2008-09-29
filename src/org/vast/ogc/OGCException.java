@@ -18,29 +18,27 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ogc.om;
-
-import org.vast.ogc.OGCException;
+package org.vast.ogc;
 
 
-public class OMException extends OGCException
+public class OGCException extends Exception
 {
-	static final long serialVersionUID = 0;
-		
-    
-	public OMException(String message)
+	private static final long serialVersionUID = -2513653954746516706L;
+
+
+	public OGCException(String message)
 	{
 		super(message);
 	}
 	
     
-	public OMException(Exception e)
+	public OGCException(Exception e)
 	{
 		super(e);
 	}
 	
     
-	public OMException(String message, Exception e)
+	public OGCException(String message, Exception e)
 	{
 		super(message, e);
 	}

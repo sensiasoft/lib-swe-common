@@ -2,16 +2,9 @@
 <Map>
    <!-- -->
    <Namespace type="OGC" version="*" uri="http://www.opengis.net/ogc"/>
-   <Namespace type="OWS" version="*" uri="http://www.opengis.net/ows"/>
-   <Namespace type="OWS" version="1.1" uri="http://www.opengis.net/ows/1.1"/>
    <Namespace type="GML" version="*" uri="http://www.opengis.net/gml"/>
    <Namespace type="GML" version="3.2.1" uri="http://www.opengis.net/gml/3.2"/>
    <Namespace type="XLINK" version="*" uri="http://www.w3.org/1999/xlink"/>
-   <Namespace type="SLD" version="*" uri="http://www.opengis.net/sld"/>
-   <Namespace type="WMS" version="*" uri="http://www.opengis.net/wms"/>
-   <Namespace type="WCS" version="*" uri="http://www.opengis.net/wcs"/>
-   <Namespace type="WCS" version="1.1.1" uri="http://www.opengis.net/wcs/1.1.1"/>
-   <Namespace type="CSW" version="1.0" uri="http://www.opengis.net/cat/csw"/>
    <Namespace type="SWE" version="0.0" uri="http://www.opengis.net/swe/0"/>
    <Namespace type="SWE" version="1.0" uri="http://www.opengis.net/swe/1.0"/>
    <Namespace type="SWE" version="1.0.1" uri="http://www.opengis.net/swe/1.0.1"/>
@@ -22,111 +15,8 @@
    <Namespace type="SML" version="1.1" uri="http://www.opengis.net/sensorML/1.1"/>
    <Namespace type="OM" version="0.0" uri="http://www.opengis.net/om/0.0"/>
    <Namespace type="OM" version="1.0" uri="http://www.opengis.net/om/1.0"/>
-   <Namespace type="SOS" version="*" uri="http://www.opengis.net/sos"/>
-   <Namespace type="SOS" version="1.0" uri="http://www.opengis.net/sos/1.0"/>
-   <Namespace type="SAS" version="0.0" uri="http://www.opengis.net/sas/0.0"/>  
-   <Namespace type="SPS" version="1.1" uri="http://www.opengis.net/sps/1.1"/>
-   <Namespace type="WNS" version="*" uri="http://www.opengis.net/wns"/>
-   <Namespace type="WNS" version="1.0" uri="http://www.opengis.net/wns/1.0"/>
    <Namespace type="IC" uri="urn:us:gov:ic:ism:v2"/>
-   <!-- -->
-   <Reader type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesReader"/>
-   <Writer type="*" subType="GetCapabilities" version="*" class="org.vast.ows.GetCapabilitiesWriter"/>
-   <!-- -->
-   <Reader type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationReaderV10"/>
-   <Reader type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationReaderV10"/>
-   <Reader type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorReaderV10"/>
-   <Reader type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorReaderV10"/>   
-   <Reader type="SOS" subType="Capabilities" version="0.0.31" class="org.vast.ows.sos.SOSCapabilitiesReaderV031"/>
-   <Reader type="SOS" subType="Capabilities" version="1.0" class="org.vast.ows.sos.SOSCapabilitiesReaderV10"/>
-   <Reader type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultReaderV10"/>
-   <!-- -->
-   <Writer type="SOS" subType="GetResult" version="1.0" class="org.vast.ows.sos.GetResultWriterV10"/>   
-   <Writer type="SOS" subType="GetObservation" version="0.0.31" class="org.vast.ows.sos.GetObservationWriterV10"/>
-   <Writer type="SOS" subType="GetObservation" version="1.0" class="org.vast.ows.sos.GetObservationWriterV10"/>
-   <Writer type="SOS" subType="DescribeSensor" version="0.0.31" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
-   <Writer type="SOS" subType="DescribeSensor" version="1.0" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
-   <!-- -->
-   <Reader type="SAS" subType="Capabilities" version="*" class="org.vast.ows.sas.SASCapabilitiesReader"/>
-   <Reader type="SAS" subType="Capabilities" version="0.0" class="org.vast.ows.sas.SASCapabilitiesReader"/>
-   <Reader type="SAS" subType="Capabilities" version="0" class="org.vast.ows.sas.SASCapabilitiesReader"/>
-   <!-- -->   
-   <Writer type="SAS" subType="GetCapabilities" version="0.0" class="org.vast.ows.sas.SASGetCapabilitiesWriter"/> 
-   <Writer type="SAS" subType="GetCapabilities" version="0" class="org.vast.ows.sas.SASGetCapabilitiesWriter"/> 
-   <Writer type="SAS" subType="Subscribe" version="0.0" class="org.vast.ows.sas.SASSubscribeWriter"/>
-   <!-- -->
-   <Reader type="SPS" subType="DescribeTasking" version="1.1" class="org.vast.ows.sps.DescribeTaskingRequestReaderV11"/>
-   <Reader type="SPS" subType="DescribeTaskingResponse" version="1.1" class="org.vast.ows.sps.DescribeTaskingResponseReaderV11"/>
-   <Reader type="SPS" subType="DescribeSensor" version="1.1" class="org.vast.ows.sos.DescribeSensorReaderV10"/>
-   <Reader type="SPS" subType="GetFeasibility" version="1.1" class="org.vast.ows.sps.GetFeasibilityRequestReaderV11"/>
-   <Reader type="SPS" subType="GetFeasibilityResponse" version="1.1" class="org.vast.ows.sps.GetFeasibilityResponseReaderV11"/>
-   <Reader type="SPS" subType="GetStatus" version="1.1" class="org.vast.ows.sps.GetStatusRequestReaderV11"/>
-   <Reader type="SPS" subType="GetStatusResponse" version="1.1" class="org.vast.ows.sps.GetStatusResponseReaderV11"/>
-   <Reader type="SPS" subType="Submit" version="1.1" class="org.vast.ows.sps.SubmitRequestReaderV11"/>
-   <Reader type="SPS" subType="SubmitResponse" version="1.1" class="org.vast.ows.sps.SubmitResponseReaderV11"/>
-   <Reader type="SPS" subType="DescribeResultAccess" version="1.1" class="org.vast.ows.sps.DescribeResultAccessRequestReaderV11"/>
-   <Reader type="SPS" subType="DescribeResultAccessResponse" version="1.1" class="org.vast.ows.sps.DescribeResultAccessResponseReaderV11"/>
-   <!-- -->
-   <Writer type="SPS" subType="DescribeTasking" version="1.1" class="org.vast.ows.sps.DescribeTaskingRequestWriterV11"/>
-   <Writer type="SPS" subType="DescribeTaskingResponse" version="1.1" class="org.vast.ows.sps.DescribeTaskingResponseWriterV11"/>
-   <Writer type="SPS" subType="DescribeSensor" version="1.1" class="org.vast.ows.sos.DescribeSensorWriterV10"/>
-   <Writer type="SPS" subType="GetFeasibility" version="1.1" class="org.vast.ows.sps.GetFeasibilityRequestWriterV11"/>
-   <Writer type="SPS" subType="GetFeasibilityResponse" version="1.1" class="org.vast.ows.sps.GetFeasibilityResponseWriterV11"/>
-   <Writer type="SPS" subType="GetStatus" version="1.1" class="org.vast.ows.sps.GetStatusRequestWriterV11"/>
-   <Writer type="SPS" subType="GetStatusResponse" version="1.1" class="org.vast.ows.sps.GetStatusResponseWriterV11"/>
-   <Writer type="SPS" subType="Submit" version="1.1" class="org.vast.ows.sps.SubmitRequestWriterV11"/>
-   <Writer type="SPS" subType="SubmitResponse" version="1.1" class="org.vast.ows.sps.SubmitResponseWriterV11"/>
-   <Writer type="SPS" subType="DescribeResultAccess" version="1.1" class="org.vast.ows.sps.DescribeResultAccessRequestWriterV11"/>
-   <Writer type="SPS" subType="DescribeResultAccessResponse" version="1.1" class="org.vast.ows.sps.DescribeResultAccessResponseWriterV11"/>
-   <!-- -->
-   <Reader type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestReaderV07"/>
-   <Reader type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageReaderV10"/>
-   <Reader type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageReaderV11"/>
-   <Reader type="WCS" subType="DescribeCoverage" version="1.0" class="org.vast.ows.wcs.DescribeCoverageReaderV10"/>
-   <Reader type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageReaderV11"/>
-   <Reader type="WCS" subType="Capabilities" version="1.0" class="org.vast.ows.wcs.WCSCapabilitiesReaderV10"/>
-   <Reader type="WCS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wcs.WCSCapabilitiesReaderV11"/>   
-   <Reader type="WCS" subType="CoverageManifest" version="1.1.1" class="org.vast.ows.wcs.CoverageManifestReaderV11"/>
-   <Reader type="WCS" subType="CoverageDescriptions" version="1.0" class="org.vast.ows.wcs.CoverageDescriptionsReaderV10"/>
-   <Reader type="WCS" subType="CoverageDescriptions" version="1.1.1" class="org.vast.ows.wcs.CoverageDescriptionsReaderV11"/>
-   <Reader type="WCS" subType="Transaction" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionReaderV11"/>
-   <!-- -->
-   <Writer type="WCS" subType="GetCoverage" version="0.7" class="org.vast.ows.wcs.WCSRequestWriterV07"/>
-   <Writer type="WCS" subType="GetCoverage" version="1.0" class="org.vast.ows.wcs.GetCoverageWriterV10"/>
-   <Writer type="WCS" subType="GetCoverage" version="1.1.1" class="org.vast.ows.wcs.GetCoverageWriterV11"/>
-   <Writer type="WCS" subType="DescribeCoverage" version="1.0" class="org.vast.ows.wcs.DescribeCoverageWriterV10"/>
-   <Writer type="WCS" subType="DescribeCoverage" version="1.1.1" class="org.vast.ows.wcs.DescribeCoverageWriterV11"/>
-   <Writer type="WCS" subType="Capabilities" version="1.0" class="org.vast.ows.wcs.WCSCapabilitiesWriterV10"/>
-   <Writer type="WCS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wcs.WCSCapabilitiesWriterV11"/>   
-   <Writer type="WCS" subType="CoverageManifest" version="1.1.1" class="org.vast.ows.wcs.CoverageManifestWriterV11"/>
-   <Writer type="WCS" subType="CoverageDescriptions" version="1.0" class="org.vast.ows.wcs.CoverageDescriptionsWriterV10"/>
-   <Writer type="WCS" subType="CoverageDescriptions" version="1.1.1" class="org.vast.ows.wcs.CoverageDescriptionsWriterV11"/>
-   <Writer type="WCS" subType="Transaction" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionWriterV11"/>
-   <Writer type="WCS" subType="TransactionAck" version="1.1.1" class="org.vast.ows.wcst.WCSTransactionAckWriterV11"/>
-   <!-- -->
-   <Reader type="WNS" subType="Capabilities" version="1.0" class="org.vast.ows.wns.WNSCapabilitiesReaderV10"/>
-   <Reader type="WNS" subType="Register" version="1.0" class="org.vast.ows.wns.RegisterReaderV10"/>
-   <Reader type="WNS" subType="Unregister" version="1.0" class="org.vast.ows.wns.UnregisterReaderV10"/>
-   <Reader type="WNS" subType="RegisterResponse" version="1.0" class="org.vast.ows.wns.RegisterResponseReaderV10"/>
-   <Reader type="WNS" subType="UnregisterResponse" version="1.0" class="org.vast.ows.wns.UnregisterResponseReaderV10"/>
-   <!-- -->
-   <Writer type="WNS" subType="Capabilities" version="1.0" class="org.vast.ows.wns.WNSCapabilitiesWriterV10"/>
-   <Writer type="WNS" subType="Register" version="1.0" class="org.vast.ows.wns.RegisterWriterV10"/>
-   <Writer type="WNS" subType="Unregister" version="1.0" class="org.vast.ows.wns.UnregisterWriterV10"/>
-   <Writer type="WNS" subType="RegisterResponse" version="1.0" class="org.vast.ows.wns.RegisterResponseWriterV10"/>
-   <Writer type="WNS" subType="UnregisterResponse" version="1.0" class="org.vast.ows.wns.UnregisterResponseWriterV10"/>
-   <!-- -->
-   <Reader type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.GetMapReaderV10"/>
-   <Reader type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.GetMapReaderV11"/>
-   <Reader type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.GetMapReaderV11"/>
-   <Reader type="WMS" subType="Capabilities" version="1.0" class="org.vast.ows.wms.WMSCapabilitiesReaderV10"/>
-   <Reader type="WMS" subType="Capabilities" version="1.1" class="org.vast.ows.wms.WMSCapabilitiesReaderV11"/>
-   <Reader type="WMS" subType="Capabilities" version="1.1.1" class="org.vast.ows.wms.WMSCapabilitiesReaderV11"/>
-   <!-- -->
-   <Writer type="WMS" subType="GetMap" version="1.0" class="org.vast.ows.wms.GetMapWriterV10"/>
-   <Writer type="WMS" subType="GetMap" version="1.1" class="org.vast.ows.wms.GetMapWriterV11"/>
-   <Writer type="WMS" subType="GetMap" version="1.1.1" class="org.vast.ows.wms.GetMapWriterV11"/>
-   <!-- -->
+	 <!-- -->
    <Reader type="SWECommon" subType="DataComponent" version="0.0" class="org.vast.sweCommon.SweComponentReaderV0"/>
    <Reader type="SWECommon" subType="DataEncoding" version="0.0" class="org.vast.sweCommon.SweEncodingReaderV0"/>
    <Reader type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentReaderV1"/>

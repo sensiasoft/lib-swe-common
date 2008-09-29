@@ -48,7 +48,7 @@ public class GMLEnvelopeWriter
     }
     
         
-    public Element writeEnvelope(DOMHelper dom, Bbox bbox) throws GMLException
+    public Element writeEnvelope(DOMHelper dom, Bbox bbox)
     {
         dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
         
@@ -66,7 +66,7 @@ public class GMLEnvelopeWriter
     }
     
     
-    public Element writeEnvelopeWithPos(DOMHelper dom, Bbox bbox) throws GMLException
+    public Element writeEnvelopeWithPos(DOMHelper dom, Bbox bbox)
     {
         dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
         
@@ -84,7 +84,7 @@ public class GMLEnvelopeWriter
     }
     
     
-    public Element writeGridEnvelope(DOMHelper dom, Bbox bbox) throws GMLException
+    public Element writeGridEnvelope(DOMHelper dom, Bbox bbox)
     {
         dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
         
