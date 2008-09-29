@@ -425,7 +425,8 @@ public class OGCRegistry
                 }
                 catch (IllegalStateException e)
                 {
-                    ExceptionSystem.display(e);
+                    //ExceptionSystem.display(e);
+                	// don't display exception at this point
                 }
             }
 
