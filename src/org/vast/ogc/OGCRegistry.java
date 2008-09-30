@@ -21,7 +21,6 @@
 package org.vast.ogc;
 
 import java.util.Hashtable;
-import org.vast.util.ExceptionSystem;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
@@ -446,7 +445,8 @@ public class OGCRegistry
                 }
                 catch (IllegalStateException e)
                 {
-                    ExceptionSystem.display(e);
+                    //ExceptionSystem.display(e);
+                    // don't display exception at this point
                 }
             }
         }
