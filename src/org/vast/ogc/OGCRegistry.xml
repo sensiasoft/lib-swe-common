@@ -29,10 +29,10 @@
    <Writer type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentWriterV1"/>
    <Writer type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingWriterV1"/>
    <!-- -->
-   <Reader type="OM" subType="Observation" version="1.0" class="org.vast.ows.om.ObservationReaderV10"/>
-   <Reader type="OM" subType="ObservationStream" version="0.0" class="org.vast.ows.om.ObservationStreamReaderV0"/>
-   <Reader type="OM" subType="ObservationStream" version="1.0" class="org.vast.ows.om.ObservationStreamReaderV10"/>
-   <Writer type="OM" subType="Observation" version="0.0" class="org.vast.ows.om.ObservationWriterV01"/>
+   <Reader type="OM" subType="Observation" version="1.0" class="org.vast.ogc.om.ObservationReaderV10"/>
+   <Reader type="OM" subType="ObservationStream" version="0.0" class="org.vast.ogc.om.ObservationStreamReaderV0"/>
+   <Reader type="OM" subType="ObservationStream" version="1.0" class="org.vast.ogc.om.ObservationStreamReaderV10"/>
+   <Writer type="OM" subType="Observation" version="0.0" class="org.vast.ogc.om.ObservationWriterV01"/>
    <!-- -->
    <Reader type="SensorML" subType="Metadata" version="0.0" class="org.vast.sensorML.MetadataReaderV0"/>
    <Reader type="SensorML" subType="Process" version="0.0" class="org.vast.sensorML.ProcessReaderV0"/>
