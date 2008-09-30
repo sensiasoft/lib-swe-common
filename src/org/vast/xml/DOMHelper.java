@@ -41,6 +41,7 @@ import java.util.*;
  *
  * <p><b>Description:</b><br/>
  * TODO DOMHelper description
+ * TODO try to avoid calls to xerces specific classes
  * </p>
  *
  * <p>Copyright (c) 2005</p>
