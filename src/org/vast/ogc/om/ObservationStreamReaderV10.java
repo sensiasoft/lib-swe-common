@@ -152,7 +152,7 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
 	
 	public InputStream getDataStream() throws CDMException
 	{
-		if (valuesUri != null)
+		if (valuesUri != null && valuesUri.length()>0)
 		{
 			try
 			{
