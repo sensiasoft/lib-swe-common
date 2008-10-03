@@ -27,12 +27,12 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * SWE Encoding Reader v1.1
+ * SWE Encoding Reader v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Reads SWE Encoding definition for TextBlock, XMLBlock and BinaryBlock.
- * This is for version 1.1 of the SWECommon standard.
+ * This is for version 2.0 of the SWECommon standard.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -40,10 +40,10 @@ import org.vast.xml.DOMHelper;
  * @date Feb 1, 2008
  * @version 1.0
  */
-public class SweEncodingReaderV11 implements DataEncodingReader
+public class SweEncodingReaderV20 implements DataEncodingReader
 {
     
-    public SweEncodingReaderV11()
+    public SweEncodingReaderV20()
     {
     }
  
@@ -66,15 +66,15 @@ public class SweEncodingReaderV11 implements DataEncodingReader
         }
         else if (encodingElement.getLocalName().equals("XMLBlock"))
         {
-        	encoding = readXmlBlock(dom, encodingElement);
+        	encoding = readXmlEncodingOptions(dom, encodingElement);
         }
         else if (encodingElement.getLocalName().equals("BinaryBlock"))
         {
-        	encoding = readBinaryBlock(dom, encodingElement);
+        	encoding = readBinaryEncodingOptions(dom, encodingElement);
         }
         else if (encodingElement.getLocalName().equals("StandardFormat"))
         {
-        	encoding = readStandardFormat(dom, encodingElement);
+        	encoding = readStandardFormatOptions(dom, encodingElement);
         }
         else
         	throw new CDMException("Encoding not supported");
@@ -95,21 +95,18 @@ public class SweEncodingReaderV11 implements DataEncodingReader
     }
     
     
-    private XmlEncoding readXmlBlock(DOMHelper dom, Element xmlBlockElt) throws CDMException
+    private XmlEncoding readXmlEncodingOptions(DOMHelper dom, Element xmlBlockElt) throws CDMException
     {
     	XmlEncoding encoding = new XmlEncoding();
     	
-    	String useNameText = dom.getAttributeValue(xmlBlockElt, "useNames");
-    	if (useNameText == null)
-    		encoding.useNames = true; // default to true if none specified
-    	else
-    		encoding.useNames = !(useNameText.equalsIgnoreCase("false"));
+    	String namespace = dom.getAttributeValue(xmlBlockElt, "namespace");
+    	encoding.setNamespace(namespace);
     	
     	return encoding;
     }
     
     
-    private StandardFormatEncoding readStandardFormat(DOMHelper dom, Element formatElt) throws CDMException
+    private StandardFormatEncoding readStandardFormatOptions(DOMHelper dom, Element formatElt) throws CDMException
     {
     	String mimeType = dom.getAttributeValue(formatElt, "mimeType");
     	if (mimeType == null)
@@ -120,7 +117,7 @@ public class SweEncodingReaderV11 implements DataEncodingReader
     }
     
     
-    private BinaryEncoding readBinaryBlock(DOMHelper dom, Element binaryBlockElt) throws CDMException
+    private BinaryEncoding readBinaryEncodingOptions(DOMHelper dom, Element binaryBlockElt) throws CDMException
     {
     	BinaryEncoding encoding = new BinaryEncoding();
     	
@@ -153,22 +150,34 @@ public class SweEncodingReaderV11 implements DataEncodingReader
     	
     	// parse component encodings
     	NodeList components = dom.getElements(binaryBlockElt, "member/Component");
-    	int listSize = components.getLength();
-    	BinaryComponent[] componentEncodings = new BinaryComponent[listSize];
+    	int listSizeComponents = components.getLength();
+    	
+    	NodeList blocks = dom.getElements(binaryBlockElt, "member/Block");
+    	int listSizeblocks = blocks.getLength();
+    	int j = 0;
+    	
+    	BinaryOptions[] componentEncodings = new BinaryOptions[listSizeComponents+listSizeblocks];
+    	
     	for (int i=0; i<components.getLength(); i++)
     	{
     		Element componentElt = (Element)components.item(i);
-    		componentEncodings[i] = readBinaryValue(dom, componentElt);
+    		componentEncodings[i] = readComponent(dom, componentElt);
+    		j++;
     	}
-    	encoding.componentEncodings = componentEncodings;
     	
-    	// TODO parse binary sub blocks encoding
+    	for (int i=0; i<blocks.getLength(); i++)
+    	{
+    		Element blockElt = (Element)blocks.item(i);
+    		componentEncodings[j+i] = readBlock(dom, blockElt);
+    	}
+    	
+    	encoding.componentEncodings = componentEncodings;
     	
     	return encoding;
     }
     
 
-    private BinaryComponent readBinaryValue(DOMHelper dom, Element componentElement) throws CDMException
+    private BinaryComponent readComponent(DOMHelper dom, Element componentElement) throws CDMException
     {
         BinaryComponent binaryValue = new BinaryComponent();
         
@@ -240,5 +249,18 @@ public class SweEncodingReaderV11 implements DataEncodingReader
         	binaryValue.bitLength = Integer.parseInt(bitLength);
                
         return binaryValue;
+    }
+    
+    
+    private BinaryBlock readBlock(DOMHelper dom, Element blockElt) throws CDMException
+    {
+        BinaryBlock binaryBlock = new BinaryBlock();
+
+        binaryBlock.componentName = dom.getAttributeValue(blockElt, "ref");        
+        binaryBlock.compression = dom.getAttributeValue(blockElt, "compression");
+        
+        return binaryBlock;
+        
+        // TODO: the other attibutes must be read and implemented...
     }
 }

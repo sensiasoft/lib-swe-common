@@ -28,7 +28,7 @@ import org.vast.xml.DOMHelper;
 
 /**
  * <p><b>Title:</b><br/>
- * SWE Encoding Writer v1.1 
+ * SWE Encoding Writer v2.0 
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -41,17 +41,17 @@ import org.vast.xml.DOMHelper;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public class SweEncodingWriterV11 implements DataEncodingWriter
+public class SweEncodingWriterV20 implements DataEncodingWriter
 {
     
-    public SweEncodingWriterV11()
-    {        
+    public SweEncodingWriterV20()
+    {
     }
     
     
     private void enforceNS(DOMHelper dom)
     {
-        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.1"));
+        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "2.0"));
     }
     
     
@@ -90,7 +90,10 @@ public class SweEncodingWriterV11 implements DataEncodingWriter
     private Element writeXmlBlock(DOMHelper dom, XmlEncoding xmlEncoding) throws CDMException
     {
         Element dataEncElt = dom.createElement("swe:XMLBlock");
-    	dataEncElt.setAttribute("useNames", (xmlEncoding.isUseNames() ? "true" : "false"));    	
+        
+        if (xmlEncoding.getNamespace() != null)
+        	dataEncElt.setAttribute("namespace", xmlEncoding.getNamespace());
+        
     	return dataEncElt;
     }
     
@@ -126,14 +129,14 @@ public class SweEncodingWriterV11 implements DataEncodingWriter
             
             if(binaryEncoding.componentEncodings[i] instanceof BinaryComponent)
             {
-            Element componentElt = writeBinaryValue(dom, (BinaryComponent)binaryEncoding.componentEncodings[i]);
-            propElt.appendChild(componentElt);
+	            Element componentElt = writeBinaryComponent(dom, (BinaryComponent)binaryEncoding.componentEncodings[i]);
+	            propElt.appendChild(componentElt);
             }
             
             if(binaryEncoding.componentEncodings[i] instanceof BinaryBlock)
             {
-            Element componentElt = writeBinaryBlock(dom, (BinaryBlock)binaryEncoding.componentEncodings[i]);
-            propElt.appendChild(componentElt);
+	            Element componentElt = writeBinaryBlock(dom, (BinaryBlock)binaryEncoding.componentEncodings[i]);
+	            propElt.appendChild(componentElt);
             }
         }
          	
@@ -141,7 +144,7 @@ public class SweEncodingWriterV11 implements DataEncodingWriter
     }
     
 
-    private Element writeBinaryValue(DOMHelper dom, BinaryComponent binaryOptions) throws CDMException
+    private Element writeBinaryComponent(DOMHelper dom, BinaryComponent binaryOptions) throws CDMException
     {
         Element binaryEncElt = dom.createElement("swe:Component");
         
@@ -232,6 +235,7 @@ public class SweEncodingWriterV11 implements DataEncodingWriter
         
         return binaryEncElt;
     }
+    
     
     private Element writeBinaryBlock(DOMHelper dom, BinaryBlock binaryOptions) throws CDMException
     {

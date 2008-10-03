@@ -39,13 +39,13 @@ import org.vast.util.DateTimeFormat;
 
 /**
  * <p><b>Title:</b><br/>
- * Swe Component Reader V11
+ * Swe Component Reader V2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Reads SWE Components structures made of Scalar Parameters,
  * DataRecord, DataArray, and hard typed derived structures.
- * This is for version 1.1 of the SWE Common specification.
+ * This is for version 2.0 of the SWE Common specification.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -53,16 +53,16 @@ import org.vast.util.DateTimeFormat;
  * @date Feb 1, 2008
  * @version 1.0
  */
-public class SweComponentReaderV11 implements DataComponentReader
+public class SweComponentReaderV20 implements DataComponentReader
 {
 	public static Hashtable<QName, SweCustomReader> customReaders;
 	protected final static String GML_NS = OGCRegistry.getNamespaceURI(OGCRegistry.GML);
-	protected final static String SWE_NS = OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.1");
+	protected final static String SWE_NS = OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "2.0");
 	protected Hashtable<String, AbstractDataComponent> componentIds;
     protected AsciiDataParser asciiParser;
     
     
-    public SweComponentReaderV11()
+    public SweComponentReaderV20()
     {
         componentIds = new Hashtable<String, AbstractDataComponent>();
         asciiParser = new AsciiDataParser();
@@ -82,7 +82,7 @@ public class SweComponentReaderV11 implements DataComponentReader
     
     public AbstractDataComponent readComponent(DOMHelper dom, Element componentElt) throws CDMException
     {
-        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.1"));
+        dom.addUserPrefix("swe", SWE_NS);
     	
     	AbstractDataComponent container = null;
     	String nsUri = componentElt.lookupNamespaceURI(componentElt.getPrefix());
@@ -366,7 +366,7 @@ public class SweComponentReaderV11 implements DataComponentReader
         Element valuesElt = dom.getElement(arrayElt, "values");
         if (encodingElt != null && valuesElt != null)
         {
-            SweEncodingReaderV11 encodingReader = new SweEncodingReaderV11();
+            SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
             DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
             DataStreamParser parser = SWEFactory.createDataParser(encoding);
             parser.setDataComponents(dataArray);
@@ -859,6 +859,7 @@ public class SweComponentReaderV11 implements DataComponentReader
      */
     private DataConstraint readPatternConstraint(DOMHelper dom, Element constraintElement) throws CDMException
     {
+    	// TODO read pattern constraint
     	return null;
     }
 }

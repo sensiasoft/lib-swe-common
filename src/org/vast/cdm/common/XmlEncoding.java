@@ -23,17 +23,11 @@ package org.vast.cdm.common;
 
 public class XmlEncoding implements DataEncoding
 {
-	public boolean useNames = true; // whether or not to use component names as xml element names
+	public String namespace;
 	
 	
     public XmlEncoding()
     {        
-    }
-    
-    
-    public XmlEncoding(boolean useNames)
-    {
-        this.useNames = useNames;
     }
     
     
@@ -42,21 +36,21 @@ public class XmlEncoding implements DataEncoding
 		return EncodingType.XML;
 	}
 	
-	
-	public boolean isUseNames()
+
+	public String getNamespace()
 	{
-		return useNames;
+		return namespace;
 	}
 
 
-	public void setUseNames(boolean useNames)
+	public void setNamespace(String namespace)
 	{
-		this.useNames = useNames;
+		this.namespace = namespace;
 	}
 
 
 	public String toString()
 	{
-		return "XML Encoding: " + (useNames ? "Uniform Naming" : "Explicit Naming");
+		return "XML Encoding: namespace = " + namespace;
 	}
 }
