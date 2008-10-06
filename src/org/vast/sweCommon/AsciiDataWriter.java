@@ -44,7 +44,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 	String nextToken;
 	int tupleSize;
 	char[] tokenSep, blockSep;
-    boolean firstToken, newBlock;
+    boolean firstToken, appendBlockSeparator;
     Writer outputWriter;
     
 	
@@ -54,7 +54,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 	
 	
 	/**
-	 * Start writing data coming to the given stream
+	 * Start writing data to the given output stream
 	 */
 	public void write(OutputStream outputStream) throws CDMException
 	{
@@ -64,7 +64,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 			tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
 			blockSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
 			firstToken = true;
-            newBlock = false;
+            appendBlockSeparator = false;
             
 			do processNextElement();
 			while(!stopWriting);
@@ -87,7 +87,7 @@ public class AsciiDataWriter extends AbstractDataWriter
     public void reset() throws CDMException
     {
         super.reset();
-        newBlock = true;
+        appendBlockSeparator = true;
     }
 	
 	
@@ -98,18 +98,19 @@ public class AsciiDataWriter extends AbstractDataWriter
         {
             if (!firstToken)
             {
-                if (newBlock)
+                // write a block separator if this is a new block
+            	if (appendBlockSeparator)
                 {
                     outputWriter.write(blockSep);
-                    newBlock = false;
+                    appendBlockSeparator = false;
                 }
                 else
                     outputWriter.write(tokenSep);
             }
             else
-            	firstToken = newBlock = false;
+            	firstToken = appendBlockSeparator = false;
             
-            String val = scalarInfo.getData().getStringValue();
+            String val = getStringValue(scalarInfo);
             //System.out.println(scalarInfo.getName() + ": " + val);
             outputWriter.write(val);
         }
@@ -134,8 +135,8 @@ public class AsciiDataWriter extends AbstractDataWriter
 
 
 	@Override
-	protected void processBlock(DataComponent scalarInfo) throws CDMException {
-		// TODO Auto-generated method stub
-		
+	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	{
+		return true;
 	}
 }

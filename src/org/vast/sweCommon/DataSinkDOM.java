@@ -9,49 +9,64 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
-
 package org.vast.sweCommon;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataSink;
+import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
-
 /**
  * <p><b>Title:</b><br/>
- * DataSinkXML
+ * DataSink DOM
  * </p>
  *
  * <p><b>Description:</b><br/>
- * This DataSink allows to serialize data into an XML DOM tree
+ * 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Feb, 29 2008
+ * @date 6 oct. 2008
  * @version 1.0
  */
-public class DataSinkXML implements DataSink
+public class DataSinkDOM implements DataSink
 {
 	protected ByteArrayOutputStream textData;
-    protected Element xmlElt;
-    
-    
-    public DataSinkXML(Element elt)
-    {
-        this.xmlElt = elt;
-    }
+	protected DOMHelper dom;
+	protected Element parentElt;
+	
+	
+	public DataSinkDOM(DOMHelper dom, Element parentElt)
+	{
+		this.parentElt = parentElt;
+		this.dom = dom;
+	}
+
+
+	public DOMHelper getDom()
+	{
+		return dom;
+	}
+	
+	
+	public Element getParentElt()
+	{
+		return parentElt;
+	}
 
 
 	public OutputStream getDataStream() throws CDMException
@@ -64,8 +79,7 @@ public class DataSinkXML implements DataSink
 	public void flush()
 	{
 		String text = textData.toString();
-		Text textNode = xmlElt.getOwnerDocument().createTextNode(text);
-		xmlElt.appendChild(textNode);
+		Text textNode = parentElt.getOwnerDocument().createTextNode(text);
+		parentElt.appendChild(textNode);
 	}
-    
 }

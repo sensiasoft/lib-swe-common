@@ -66,9 +66,8 @@ public class XmlDataParser extends AbstractDataParser
 
 
 	@Override
-	protected void processBlock(DataComponent scalarInfo) throws CDMException {
-		// TODO Auto-generated method stub
-		
+	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	{
+		return true;
 	}
-
 }

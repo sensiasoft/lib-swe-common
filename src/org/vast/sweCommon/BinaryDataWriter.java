@@ -187,7 +187,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	
 	
 	/**
-	 * Parse binary component using DataInfo and DataEncoding structures
+	 * Parse binary component using info and encoding options
 	 * Decoded value is assigned to each DataValue
 	 * @param scalarInfo
 	 * @param binaryInfo
@@ -290,24 +290,24 @@ public class BinaryDataWriter extends AbstractDataWriter
 
 
 	@Override
-	protected void processBlock(DataComponent scalarInfo) throws CDMException {
-		
+	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	{		
 		// get next encoding block
-		BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(scalarInfo);
+		BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(blockInfo);
 		
-		// parse token = dataAtom					
-		writeBinaryBlock(scalarInfo, binaryBlock);
+		// write whole block at once
+		if (binaryBlock != null)
+		{
+			writeBinaryBlock(blockInfo, binaryBlock);
+			return false;
+		}
 		
+		return true;		
 	}
 
-	/**
-	 * Parse binary block using DataInfo and DataEncoding structures
-	 * @param scalarInfo
-	 * @param binaryInfo
-	 * @throws CDMException
-	 */
-	private void writeBinaryBlock(DataComponent scalarInfo,	BinaryBlock binaryBlock)  throws CDMException {
-		// TODO Auto-generated method stub
-		
+	
+	private void writeBinaryBlock(DataComponent scalarInfo,	BinaryBlock binaryBlock)  throws CDMException
+	{
+		// TODO call special compressed writer
 	}
 }

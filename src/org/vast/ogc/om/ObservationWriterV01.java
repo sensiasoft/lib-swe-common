@@ -28,7 +28,7 @@ import org.vast.cdm.common.DataEncoding;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeWriter;
-import org.vast.sweCommon.DataSinkXML;
+import org.vast.sweCommon.DataSinkDOM;
 import org.vast.sweCommon.SweComponentWriterV0;
 import org.vast.sweCommon.SweEncodingWriterV0;
 import org.vast.xml.*;
@@ -121,7 +121,7 @@ public class ObservationWriterV01 implements ObservationWriter
             
             // write result
             Element resultElt = dom.addElement(obsElt, "om:result");
-            DataSinkXML dataSink = new DataSinkXML(resultElt);
+            DataSinkDOM dataSink = new DataSinkDOM(dom, resultElt);
             obs.getResult().writeData(dataSink);
         }
         catch (CDMException e)

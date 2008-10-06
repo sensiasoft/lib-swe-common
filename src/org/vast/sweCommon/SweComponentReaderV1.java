@@ -296,7 +296,7 @@ public class SweComponentReaderV1 implements DataComponentReader
     private DataGroup readRange(DOMHelper dom, Element rangeElt) throws CDMException
     {
         DataValue paramVal = null;
-        DataGroup rangeValues = new DataGroup(2);        
+        DataGroup rangeValues = new DataGroup(2);
         String eltName = rangeElt.getLocalName();
         
         // Create Data component Object
@@ -319,12 +319,18 @@ public class SweComponentReaderV1 implements DataComponentReader
             throw new CDMException("Only Quantity, Time and Count ranges are allowed");
         
         // read attributes
-        readCommonAttributes(paramVal, dom, rangeElt);
-        rangeValues.setProperty(SweConstants.DEF_URI, "urn:ogc:def:data:OGC:range");
+        readGmlProperties(rangeValues, dom, rangeElt);
         
+        // assign attributes to scalar value
+        readCommonAttributes(paramVal, dom, rangeElt);
+        readUom(paramVal, dom, rangeElt);
+        readCodeSpace(paramVal, dom, rangeElt);
+        readQuality(paramVal, dom, rangeElt);
+        readConstraints(paramVal, dom, rangeElt);
+                
         // add params to DataGroup
-        rangeValues.addComponent(SweConstants.MIN_VALUE, paramVal);
-        rangeValues.addComponent(SweConstants.MAX_VALUE, paramVal.copy());
+        rangeValues.addComponent(SweConstants.MIN_VALUE_NAME, paramVal);
+        rangeValues.addComponent(SweConstants.MAX_VALUE_NAME, paramVal.copy());
         
         // Parse the two values
         String valueText = dom.getElementValue(rangeElt, "value");

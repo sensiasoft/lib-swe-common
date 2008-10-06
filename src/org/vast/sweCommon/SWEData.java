@@ -29,6 +29,7 @@ import org.vast.cdm.common.DataSink;
 import org.vast.cdm.common.DataSource;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
+import org.vast.cdm.common.XmlEncoding;
 import org.vast.data.DataList;
 
 
@@ -183,13 +184,26 @@ public class SWEData
      */
     public void writeData(DataSink dataSink) throws CDMException
     {
-        DataStreamWriter writer = getDataWriter();
-        writer.setDataHandler(new DefaultWriterHandler(this, writer));
-        
-        OutputStream dataStream = dataSink.getDataStream();
-        writer.write(dataStream);
-        writer.flush();
-        dataSink.flush();
+        // special case for writing XML encoded stream in a DataSinkXML
+        if (dataSink instanceof DataSinkDOM && dataEncoding instanceof XmlEncoding)
+        {
+        	DataSinkDOM domSink = (DataSinkDOM)dataSink;
+        	XmlDataWriterDOM writer = new XmlDataWriterDOM();
+        	writer.setDataEncoding(dataEncoding);
+        	writer.setDataComponents(dataComponents);
+        	writer.setDataHandler(new DefaultWriterHandler(this, writer));
+        	writer.write(domSink.getDom(), domSink.getParentElt());
+        }
+        else
+        {
+        	DataStreamWriter writer = getDataWriter();
+            writer.setDataHandler(new DefaultWriterHandler(this, writer));
+            
+        	OutputStream dataStream = dataSink.getDataStream();
+            writer.write(dataStream);
+            writer.flush();
+            dataSink.flush();
+        }
     }
     
 }

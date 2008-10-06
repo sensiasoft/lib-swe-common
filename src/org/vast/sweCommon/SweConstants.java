@@ -37,8 +37,10 @@ package org.vast.sweCommon;
  */
 public class SweConstants
 {
-	public final static String MIN_VALUE = "min";
-	public final static String MAX_VALUE = "max";
+	public final static String SELECTED_ITEM_NAME = "_selectedItem_";
+	public final static String ELT_COUNT_NAME = "elementCount";
+	public final static String MIN_VALUE_NAME = "min";
+	public final static String MAX_VALUE_NAME = "max";
 	
 	/* property names used to hold soft-typed information in DataComponents */ 
 	public final static String COMP_QNAME = "obj_qname"; // Hard Typed Component QName

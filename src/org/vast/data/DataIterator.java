@@ -20,7 +20,6 @@
 
 package org.vast.data;
 
-import java.util.Hashtable;
 import java.util.Stack;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
@@ -29,6 +28,7 @@ import org.vast.cdm.common.DataHandler;
 import org.vast.cdm.common.DataType;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
+import org.vast.sweCommon.SweConstants;
 
 
 public abstract class DataIterator
@@ -45,9 +45,8 @@ public abstract class DataIterator
     protected boolean newBlock = true;
 	protected boolean endOfArray = false;
 	protected boolean parsing = true;
-	protected DataValue selectedValue = new DataValue(":choice:", DataType.INT); // for holding choice selection index
-	protected DataValue sizeValue = new DataValue("size", DataType.INT); // for holding implicit array size
-	protected Hashtable<DataComponent, Boolean> blockTable; // list of components that should be processed as block, and which children should not be iterated over
+	protected DataValue selectedValue = new DataValue(SweConstants.SELECTED_ITEM_NAME, DataType.INT); // for holding choice selection index
+	protected DataValue sizeValue = new DataValue(SweConstants.ELT_COUNT_NAME, DataType.INT); // for holding implicit array size
 	
     
 	protected class Record
@@ -75,7 +74,13 @@ public abstract class DataIterator
 	protected abstract void processAtom(DataValue scalarInfo) throws CDMException;
 	
 	
-	protected abstract void processBlock(DataComponent scalarInfo) throws CDMException;
+	/**
+	 * Process an aggregate component
+	 * @param scalarInfo
+	 * @return true if children should be processed, false otherwise
+	 * @throws CDMException
+	 */
+	protected abstract boolean processBlock(DataComponent blockInfo) throws CDMException;
 	
 	
 	/**
@@ -84,7 +89,8 @@ public abstract class DataIterator
 	 */
 	protected void processNextElement() throws CDMException
 	{
-        if (newBlock)
+        // reset iterator if new block is starting
+		if (newBlock)
         {
             this.reset();
             newBlock = false;
@@ -100,44 +106,34 @@ public abstract class DataIterator
     	}
         
         // now get next child
-        DataComponent next = currentComponent.parent.getComponent(currentComponent.index);
-    	currentComponent.index++;
+    	DataComponent next;
+    	if (currentComponent.parent instanceof DataChoice)
+    	{
+    		next = ((DataChoice)currentComponent.parent).getSelectedComponent();
+    		currentComponent.index = currentComponent.count;
+    	}
+    	else
+    	{
+    		next = currentComponent.parent.getComponent(currentComponent.index);
+    		currentComponent.index++;
+    	}
     	
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
-        	boolean jumpOver = false;
+        	// process aggregate
+        	// some reader/writer may write the whole block at once
+        	// and will then return false here to skip children
+        	boolean processChildren = processBlock(next);
         	
-        	// case of block-encoded data Aggregates
-        	/*if (dataEncoding.getEncodingType() == DataEncoding.EncodingType.BINARY)
-        	{
-        		BinaryOptions [] binOptions = ((BinaryEncoding)dataEncoding).componentEncodings;
-        		int numberOfBinaryOptions = binOptions.length;
-        		
-        		for (int i=0; i<numberOfBinaryOptions; i++)
-        		{
-        			if (binOptions[i] instanceof BinaryBlock && binOptions[i].componentName.equalsIgnoreCase(nextPath))
-        			{
-        				processBlock(next);
-        				jumpOver = true;
-        				break;
-        			}      			
-        		}
-        	}*/
-        	if (blockTable != null && blockTable.containsKey(next))
-        	{
-        		processBlock(next);
-				jumpOver = true;
-        	}
-        	
-            // case of variable array size
-        	if(!jumpOver)
+        	if (processChildren)
         	{	
+        		// case of variable array size
         		if ((next instanceof DataArray) && ((DataArray)next).isVariableSize())
         		{
         			if (((DataArray)next).getSizeComponent().getParent() == null)
         			{
-        				// set implicit array size (when parsing)
+        				// read implicit array size (when parsing)
         				if (parsing)
             			{
         					processAtom(sizeValue);
@@ -145,7 +141,7 @@ public abstract class DataIterator
                 			((DataArray)next).updateSize(newSize);
             			}
             		
-            			// get array size (when writing)
+            			// write array size
             			else
             			{
             				sizeValue.getData().setIntValue(((DataArray)next).getComponentCount());
@@ -159,22 +155,19 @@ public abstract class DataIterator
         		// case of choice
         		else if (next instanceof DataChoice)
         		{
-        			// set implicit choice index (when parsing)
+        			// read implicit choice index (when parsing)
         			if (parsing)
         			{
         				processAtom(selectedValue);
         				((DataChoice)next).setSelected(selectedValue.getData().getIntValue());
         			}
         		
-        			// get choice index (when writing)
+        			// write choice index
         			else
         			{
         				selectedValue.getData().setIntValue(((DataChoice)next).getSelected());
         				processAtom(selectedValue);
         			}
-        		
-        			// parse selected item data
-        			next = ((DataChoice)next).getSelectedComponent();
         		}
             
         		componentStack.push(currentComponent);
@@ -210,6 +203,7 @@ public abstract class DataIterator
                 if (dataHandler != null)
                     dataHandler.endData(dataComponents, dataComponents.getData());
 				
+                // signal that a new block is starting
                 newBlock = true;
                 currentComponent = null;
                 
@@ -227,14 +221,18 @@ public abstract class DataIterator
 	 */
 	public void reset() throws CDMException
 	{
+		// prepare next array element
 		if (parentArray != null)
         {
             dataComponents = parentArray.getComponent(parentArrayIndex);
             parentArrayIndex++;
         }
+		
+		// generate new data block
         else
             dataComponents.renewDataBlock();
         
+		// reset component stack
         componentStack.clear();
         currentComponent = new Record(dataComponents);
 	}

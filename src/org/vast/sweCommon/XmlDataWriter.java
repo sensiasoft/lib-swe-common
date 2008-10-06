@@ -21,6 +21,9 @@
 package org.vast.sweCommon;
 
 import java.io.*;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import org.vast.data.*;
 import org.vast.cdm.common.*;
 
@@ -42,31 +45,86 @@ import org.vast.cdm.common.*;
  */
 public class XmlDataWriter extends AbstractDataWriter
 {
+	protected XMLStreamWriter writer;
+	protected String namespace;
+	protected String prefix;
+	protected int prevStackSize = 0;
 	
 
 	public void write(OutputStream outputStream) throws CDMException
 	{
-		
+		try
+		{
+			XMLOutputFactory factory = XMLOutputFactory.newInstance();
+			writer = factory.createXMLStreamWriter(outputStream);
+			
+			namespace = ((XmlEncoding)dataEncoding).namespace;
+			prefix = ((XmlEncoding)dataEncoding).prefix;
+			if (prefix == null)
+				prefix = "data";
+			
+			do processNextElement();
+			while(!stopWriting);
+		}
+		catch (XMLStreamException e)
+		{
+			throw new CDMException(e);
+		}
+		finally
+		{
+			try
+			{
+				outputStream.close();
+                dataComponents.clearData();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	
 	@Override
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
-
+		try
+        {
+            String val = scalarInfo.getData().getStringValue();
+            String eltName = scalarInfo.getName();
+            
+            if (prefix != null && namespace != null)
+            	writer.writeStartElement(prefix, eltName, namespace);           	
+            else
+            	writer.writeStartElement(eltName);            	
+            
+            writer.writeCharacters(val);
+            writer.writeEndElement();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new CDMException("Error while writing XML stream", e);
+        }
+	}
+	
+	
+	@Override
+	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	{
+		return true;	
 	}
 	
 	
 	public void flush() throws CDMException
 	{
-	
-	}
-
-
-	@Override
-	protected void processBlock(DataComponent scalarInfo) throws CDMException {
-		// TODO Auto-generated method stub
-		
+		try
+		{
+			writer.flush();
+		}
+		catch (XMLStreamException e)
+		{
+			throw new CDMException(e);
+		}
 	}
 
 }

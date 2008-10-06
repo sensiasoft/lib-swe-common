@@ -26,6 +26,7 @@ public class AsciiEncoding implements DataEncoding
 	public String blockSeparator;
 	public String tokenSeparator;
 	public char decimalSeparator = '.';
+	public boolean collapseWhiteSpaces = true;
 	
 	
     public AsciiEncoding()

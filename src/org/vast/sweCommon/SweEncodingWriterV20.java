@@ -61,11 +61,11 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
         enforceNS(dom);
         
         if (dataEncoding instanceof AsciiEncoding)
-            dataEncElt = writeAsciiBlock(dom, (AsciiEncoding)dataEncoding);
+            dataEncElt = writeTextEncodingOptions(dom, (AsciiEncoding)dataEncoding);
         else if (dataEncoding instanceof BinaryEncoding)
-            dataEncElt = writeBinaryBlock(dom, (BinaryEncoding)dataEncoding);
+            dataEncElt = writeBinaryEncoding(dom, (BinaryEncoding)dataEncoding);
         else if (dataEncoding instanceof XmlEncoding)
-            dataEncElt = writeXmlBlock(dom, (XmlEncoding)dataEncoding);
+            dataEncElt = writeXmlEncodingOptions(dom, (XmlEncoding)dataEncoding);
         else if (dataEncoding instanceof StandardFormatEncoding)
             dataEncElt = writeStandardFormat(dom, (StandardFormatEncoding)dataEncoding);
         else
@@ -75,24 +75,25 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
     }
     
     
-    private Element writeAsciiBlock(DOMHelper dom, AsciiEncoding asciiEncoding) throws CDMException
+    private Element writeTextEncodingOptions(DOMHelper dom, AsciiEncoding asciiEncoding) throws CDMException
     {
-        Element dataEncElt = dom.createElement("swe:TextBlock");
+        Element dataEncElt = dom.createElement("swe:TextEncoding");
     	
         dataEncElt.setAttribute("tokenSeparator", String.valueOf(asciiEncoding.tokenSeparator));
         dataEncElt.setAttribute("blockSeparator", String.valueOf(asciiEncoding.blockSeparator));
         dataEncElt.setAttribute("decimalSeparator", String.valueOf(asciiEncoding.decimalSeparator));
+        dataEncElt.setAttribute("collapseWhiteSpaces", asciiEncoding.collapseWhiteSpaces ? "true" : "false");
     	
     	return dataEncElt;
     }
     
     
-    private Element writeXmlBlock(DOMHelper dom, XmlEncoding xmlEncoding) throws CDMException
+    private Element writeXmlEncodingOptions(DOMHelper dom, XmlEncoding xmlEncoding) throws CDMException
     {
-        Element dataEncElt = dom.createElement("swe:XMLBlock");
+        Element dataEncElt = dom.createElement("swe:XMLEncoding");
         
-        if (xmlEncoding.getNamespace() != null)
-        	dataEncElt.setAttribute("namespace", xmlEncoding.getNamespace());
+        if (xmlEncoding.namespace != null)
+        	dataEncElt.setAttribute("namespace", xmlEncoding.namespace);
         
     	return dataEncElt;
     }
@@ -100,15 +101,15 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
     
     private Element writeStandardFormat(DOMHelper dom, StandardFormatEncoding formatEncoding) throws CDMException
     {
-        Element dataEncElt = dom.createElement("swe:StandardFormat");    	
+        Element dataEncElt = dom.createElement("swe:StandardFormat");
         dataEncElt.setAttribute("mimeType", formatEncoding.getMimeType());        
     	return dataEncElt;
     }
     
     
-    private Element writeBinaryBlock(DOMHelper dom, BinaryEncoding binaryEncoding) throws CDMException
+    private Element writeBinaryEncoding(DOMHelper dom, BinaryEncoding binaryEncoding) throws CDMException
     {
-    	Element binaryEncElt = dom.createElement("swe:BinaryBlock");
+    	Element binaryEncElt = dom.createElement("swe:BinaryEncoding");
         
         // write byteEncoding attribute
         if (binaryEncoding.byteEncoding == BinaryEncoding.ByteEncoding.BASE64)
@@ -211,27 +212,19 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
         
         // write block byteLength if any
         if(binaryOptions.byteLength != 0)
-    	{
-        	binaryEncElt.setAttribute("byteLength", Integer.toString(binaryOptions.byteLength));
-    	}
-        
+    		binaryEncElt.setAttribute("byteLength", Integer.toString(binaryOptions.byteLength));
+    	
         // write block paddingBefore if any
         if(binaryOptions.paddingBefore != 0)
-    	{
-        	binaryEncElt.setAttribute("paddingBefore", Integer.toString(binaryOptions.paddingBefore));
-    	}
-        
+    		binaryEncElt.setAttribute("paddingBefore", Integer.toString(binaryOptions.paddingBefore));
+    	
         // write block paddingAfter if any
         if(binaryOptions.paddingAfter != 0)
-        {
         	binaryEncElt.setAttribute("paddingAfter", Integer.toString(binaryOptions.paddingAfter));
-        }
         
-     // write block paddingAfter if any
+        // write block paddingAfter if any
         if(binaryOptions.bitLength != 0)
-        {
         	binaryEncElt.setAttribute("bitLength", Integer.toString(binaryOptions.bitLength));
-        }
         
         return binaryEncElt;
     }
@@ -246,33 +239,23 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
         
         // write block compression if any
         if(binaryOptions.compression != null)
-        	{
-        	 binaryEncElt.setAttribute("compression", binaryOptions.compression);
-        	}
-        
+        	binaryEncElt.setAttribute("compression", binaryOptions.compression);
+                
         // write block byteLength if any
         if(binaryOptions.byteLength != 0)
-    	{
-        	binaryEncElt.setAttribute("byteLength", Integer.toString(binaryOptions.byteLength));
-    	}
-        
+    		binaryEncElt.setAttribute("byteLength", Integer.toString(binaryOptions.byteLength));
+    	        
         // write block paddingBefore if any
         if(binaryOptions.paddingBefore != 0)
-    	{
-        	binaryEncElt.setAttribute("paddingBefore", Integer.toString(binaryOptions.paddingBefore));
-    	}
-        
+    		binaryEncElt.setAttribute("paddingBefore", Integer.toString(binaryOptions.paddingBefore));
+    	        
         // write block paddingAfter if any
         if(binaryOptions.paddingAfter != 0)
-        {
         	binaryEncElt.setAttribute("paddingAfter", Integer.toString(binaryOptions.paddingAfter));
-        }
         
         // write block encryption if any
         if(binaryOptions.encryption != null)
-        {
         	binaryEncElt.setAttribute("encryption", binaryOptions.encryption);
-        }
                
         return binaryEncElt;
     }

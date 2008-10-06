@@ -49,7 +49,6 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	public BinaryDataParser()
 	{
-		blockTable = new Hashtable<DataComponent, Boolean>();
 	}
 	
 	
@@ -202,7 +201,6 @@ public class BinaryDataParser extends AbstractDataParser
             }
             else if(encodingList[i] instanceof BinaryBlock){
             	componentEncodings.put(data, encodingList[i]);
-            	blockTable.put(data, true);              
             	((BinaryBlock)encodingList[i]).buildReader(data);
             }
 		}
@@ -221,13 +219,19 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	
 	@Override
-	protected void processBlock(DataComponent blockInfo) throws CDMException
+	protected boolean processBlock(DataComponent blockInfo) throws CDMException
 	{
-		// get next encoding block
+		// get block details
 		BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(blockInfo);
 		
-		// parse token = dataAtom					
-		parseBinaryBlock(blockInfo, binaryBlock);
+		// parse whole block at once
+		if (binaryBlock != null)
+		{
+			parseBinaryBlock(blockInfo, binaryBlock);
+			return false;
+		}
+		
+		return true;
 	}
 	
 	

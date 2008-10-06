@@ -464,7 +464,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         
         // Create Data component Object
         if (eltName.startsWith("Quantity"))
-        	paramVal = new DataValue(DataType.DOUBLE);         
+        	paramVal = new DataValue(DataType.DOUBLE);
         else if (eltName.startsWith("Count"))
             paramVal = new DataValue(DataType.INT);
         else if (eltName.startsWith("Time"))
@@ -478,16 +478,18 @@ public class SweComponentReaderV20 implements DataComponentReader
         paramVal.setProperty(SweConstants.COMP_QNAME, newQName);
         
         // read attributes
+        readGmlProperties(range, dom, rangeElt);
+        
+        // also assign attributes to scalar value
         readCommonAttributes(paramVal, dom, rangeElt);
-        readGmlProperties(paramVal, dom, rangeElt);
         readUom(paramVal, dom, rangeElt);
         readCodeSpace(paramVal, dom, rangeElt);
         readQuality(paramVal, dom, rangeElt);
         readConstraints(paramVal, dom, rangeElt);
         
         // add params to DataGroup
-        range.addComponent(SweConstants.MIN_VALUE, paramVal);
-        range.addComponent(SweConstants.MAX_VALUE, paramVal.copy());
+        range.addComponent(SweConstants.MIN_VALUE_NAME, paramVal);
+        range.addComponent(SweConstants.MAX_VALUE_NAME, paramVal.copy());
         
         // Parse the two values
         String valueText = dom.getElementValue(rangeElt, "value");

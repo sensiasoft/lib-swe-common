@@ -24,6 +24,7 @@ package org.vast.cdm.common;
 public class XmlEncoding implements DataEncoding
 {
 	public String namespace;
+	public String prefix;
 	
 	
     public XmlEncoding()
@@ -31,21 +32,16 @@ public class XmlEncoding implements DataEncoding
     }
     
     
+    public XmlEncoding(String prefix, String namespace)
+    {
+    	this.namespace = namespace;
+    	this.prefix = prefix;
+    }
+    
+    
 	public EncodingType getEncodingType()
 	{
 		return EncodingType.XML;
-	}
-	
-
-	public String getNamespace()
-	{
-		return namespace;
-	}
-
-
-	public void setNamespace(String namespace)
-	{
-		this.namespace = namespace;
 	}
 
 

@@ -267,8 +267,8 @@ public class SweComponentReaderV0 implements DataComponentReader
         rangeValues.setProperty(SweConstants.DEF_URI, "urn:ogc:def:data:range");
         
         // add params to DataGroup
-        rangeValues.addComponent(SweConstants.MIN_VALUE, paramVal);
-        rangeValues.addComponent(SweConstants.MAX_VALUE, paramVal.copy());
+        rangeValues.addComponent(SweConstants.MIN_VALUE_NAME, paramVal);
+        rangeValues.addComponent(SweConstants.MAX_VALUE_NAME, paramVal.copy());
         
         // Parse the two values
         if (valueText != null)

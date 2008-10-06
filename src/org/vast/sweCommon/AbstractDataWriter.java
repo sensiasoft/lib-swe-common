@@ -22,6 +22,8 @@ package org.vast.sweCommon;
 
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.data.DataIterator;
+import org.vast.data.DataValue;
+import org.vast.util.DateTimeFormat;
 
 
 /**
@@ -55,5 +57,25 @@ public abstract class AbstractDataWriter extends DataIterator implements DataStr
 	public synchronized void stop()
 	{
         stopWriting = true;
+	}
+	
+	
+	/**
+	 * Retrieve string value of component
+	 * This will convert to an ISO string for appropriate time components
+	 * @param scalarInfo
+	 * @return
+	 */
+	protected String getStringValue(DataValue scalarInfo)
+	{
+		String def = (String)scalarInfo.getProperty(SweConstants.UOM_URI);
+		String val;
+		
+		if (def != null && def.contains("8601"))
+			val = DateTimeFormat.formatIso(scalarInfo.getData().getDoubleValue(), 0);
+		else
+			val = scalarInfo.getData().getStringValue();
+		
+		return val;
 	}
 }
