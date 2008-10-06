@@ -65,6 +65,8 @@ public class XmlDataWriter extends AbstractDataWriter
 			
 			do processNextElement();
 			while(!stopWriting);
+			
+			closeElements();
 		}
 		catch (XMLStreamException e)
 		{
@@ -85,33 +87,68 @@ public class XmlDataWriter extends AbstractDataWriter
 	}
 	
 	
-	@Override
-	protected void processAtom(DataValue scalarInfo) throws CDMException
+	protected void closeElements() throws XMLStreamException
 	{
-		try
-        {
-            String val = scalarInfo.getData().getStringValue();
-            String eltName = scalarInfo.getName();
-            
-            if (prefix != null && namespace != null)
-            	writer.writeStartElement(prefix, eltName, namespace);           	
-            else
-            	writer.writeStartElement(eltName);            	
-            
-            writer.writeCharacters(val);
-            writer.writeEndElement();
-        }
-        catch (XMLStreamException e)
-        {
-            throw new CDMException("Error while writing XML stream", e);
-        }
+		if (prevStackSize > componentStack.size())
+		{
+			while (prevStackSize > componentStack.size())
+			{
+				writer.writeEndElement();
+				prevStackSize--;
+			}
+		}
+		else
+			prevStackSize = componentStack.size();
 	}
 	
 	
 	@Override
 	protected boolean processBlock(DataComponent blockInfo) throws CDMException
 	{
-		return true;	
+		try
+		{
+			closeElements();
+			
+			String eltName = blockInfo.getName();
+            
+            if (namespace != null)
+            	writer.writeStartElement(prefix, eltName, namespace);
+            else
+            	writer.writeStartElement(eltName); 
+			
+			return true;
+		}
+		catch (XMLStreamException e)
+		{
+			throw new CDMException("Error while writing XML stream", e);
+		}	
+	}
+	
+	
+	@Override
+	protected void processAtom(DataValue scalarInfo) throws CDMException
+	{
+		try
+        {
+			closeElements();
+			
+			if (!scalarInfo.getName().equals(SweConstants.SELECTED_ITEM_NAME))
+			{
+				String eltName = scalarInfo.getName();
+	            
+	            if (namespace != null)
+	            	writer.writeStartElement(prefix, eltName, namespace);           	
+	            else
+	            	writer.writeStartElement(eltName);
+	            
+	            writer.writeCharacters(getStringValue(scalarInfo));
+	            writer.writeEndElement();
+	        }
+        }
+        catch (XMLStreamException e)
+        {
+            throw new CDMException("Error while writing XML stream", e);
+        }
 	}
 	
 	
