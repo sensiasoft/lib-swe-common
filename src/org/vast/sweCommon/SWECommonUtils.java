@@ -95,7 +95,7 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException
     {
         DataComponentWriter writer = getDataComponentWriter();
-        return writer.writeComponent(null, dataComponents);
+        return writer.writeComponent(dom, dataComponents);
     }
 
 

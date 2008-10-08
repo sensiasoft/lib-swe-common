@@ -158,11 +158,24 @@ public class SWEData
      */
     public void parseData(DataSource dataSource) throws CDMException
     {
-        DataStreamParser parser = getDataParser();
-        parser.setDataHandler(new DefaultParserHandler(this));
+    	// special case for reading XML encoded stream from a DOM
+        if (dataSource instanceof DataSourceDOM && dataEncoding instanceof XmlEncoding)
+        {
+        	DataSourceDOM domSrc = (DataSourceDOM)dataSource;
+        	XmlDataParserDOM parser = new XmlDataParserDOM();
+        	parser.setDataEncoding(dataEncoding);
+        	parser.setDataComponents(dataComponents);
+        	parser.setDataHandler(new DefaultParserHandler(this));
+        	parser.read(domSrc.getDom(), domSrc.getParentElt());
+        }
+        else
+        {
+        	DataStreamParser parser = getDataParser();
+        	parser.setDataHandler(new DefaultParserHandler(this));
         
-        InputStream dataStream = dataSource.getDataStream();
-        parser.parse(dataStream);
+        	InputStream dataStream = dataSource.getDataStream();
+        	parser.parse(dataStream);
+        }
     }
     
     
@@ -184,7 +197,7 @@ public class SWEData
      */
     public void writeData(DataSink dataSink) throws CDMException
     {
-        // special case for writing XML encoded stream in a DataSinkXML
+        // special case for writing XML encoded stream in a DOM
         if (dataSink instanceof DataSinkDOM && dataEncoding instanceof XmlEncoding)
         {
         	DataSinkDOM domSink = (DataSinkDOM)dataSink;

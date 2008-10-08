@@ -32,6 +32,7 @@ public class AsciiDataParser extends AbstractDataParser
 {
 	protected int tupleSize;
 	protected char[] tokenSep, blockSep;
+	protected boolean collapseWhiteSpaces = true;
 	protected StringBuffer tokenBuf = new StringBuffer();
 	protected Reader reader;
     boolean consecutiveTokenSep = false;
@@ -46,6 +47,7 @@ public class AsciiDataParser extends AbstractDataParser
 		reader = new BufferedReader(new InputStreamReader(inputStream));
 		tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
 		blockSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
+		collapseWhiteSpaces = ((AsciiEncoding)dataEncoding).collapseWhiteSpaces;
 	}
 	
 	
@@ -104,7 +106,8 @@ public class AsciiDataParser extends AbstractDataParser
 		// skip all invalid characters and go to beginning of token
         tokenBuf.setLength(0);
         
-		do
+        // collapse white space characters
+        do
 		{
 			nextChar = reader.read();
 			
@@ -115,7 +118,7 @@ public class AsciiDataParser extends AbstractDataParser
 			if (nextChar == -1)
 				return null;
 		}
-		while (nextChar < 32);
+		while (nextChar <= 32 && collapseWhiteSpaces);
 
 		
 		// add characters until we find token or block separator
@@ -318,7 +321,7 @@ public class AsciiDataParser extends AbstractDataParser
                             // TODO Improve this (ok only if NO_DATA character)
                             doubleValue = Double.NaN;
                         }
-                        data.setDoubleValue(doubleValue);                           
+                        data.setDoubleValue(doubleValue);
                     }                       
                     break;
                     

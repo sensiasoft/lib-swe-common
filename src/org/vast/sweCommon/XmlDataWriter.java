@@ -14,7 +14,7 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -131,8 +131,13 @@ public class XmlDataWriter extends AbstractDataWriter
 		try
         {
 			closeElements();
+			String localName = scalarInfo.getName();
 			
-			if (!scalarInfo.getName().equals(SweConstants.SELECTED_ITEM_NAME))
+			if (localName.equals(SweConstants.ELT_COUNT_NAME))
+			{
+				writer.writeAttribute(localName, scalarInfo.getData().getStringValue());
+			}
+			else if (!localName.equals(SweConstants.SELECTED_ITEM_NAME))
 			{
 				String eltName = scalarInfo.getName();
 	            

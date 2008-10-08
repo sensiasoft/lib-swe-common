@@ -59,7 +59,9 @@ public class DefaultWriterHandler implements DataHandler
     
     public void startData(DataComponent info)
     {
-        if (blockNum < blockCount)
+        //System.out.println("start data: " + info.getName());
+        
+    	if (blockNum < blockCount)
         {
             info.setData(sweData.getDataBlocks().getComponent(blockNum).getData());
             blockNum++;
@@ -69,28 +71,34 @@ public class DefaultWriterHandler implements DataHandler
     
     public void endData(DataComponent info, DataBlock data)
     {
+    	//System.out.println("end data: " + info.getName());
+        
     	if (blockNum >= blockCount)
     		writer.stop();
     }
     
     
     public void beginDataAtom(DataComponent info)
-    {        
+    {
+    	//System.out.println("begin atom: " + info.getName());        
     }
 
 
     public void endDataAtom(DataComponent info, DataBlock data)
-    {        
+    {
+    	//System.out.println("end atom: " + info.getName());
     }
 
 
     public void startDataBlock(DataComponent info)
     {
+    	//System.out.println("begin block: " + info.getName());
     }
 
 
     public void endDataBlock(DataComponent info, DataBlock data)
     {
+    	//System.out.println("end block: " + info.getName());
     }
 
 }

@@ -14,7 +14,7 @@
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <robin@nsstc.uah.edu>
+    Alexandre Robin <alexandre.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -25,7 +25,6 @@ import org.vast.data.*;
 import org.vast.xml.DOMHelper;
 import org.vast.cdm.common.*;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 
 /**
@@ -46,7 +45,7 @@ import org.w3c.dom.NodeList;
 public class XmlDataWriterDOM extends AbstractDataWriter
 {
 	protected DOMHelper dom;
-	protected Element currentParent;
+	protected Element currentParentElt;
 	protected String namespace;
 	protected String prefix;
 	protected int prevStackSize = 0;
@@ -63,10 +62,7 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 		{
 			DOMHelper dom = new DOMHelper("SweData");
 			write(dom, dom.getRootElement());
-			
-			NodeList children = dom.getChildElements(dom.getRootElement());
-			for (int i=0; i<children.getLength(); i++)
-				dom.serialize(children.item(i), outputStream, true);
+			dom.serialize(dom.getRootElement().getFirstChild(), outputStream, true);
 		}
 		catch (IOException e)
 		{
@@ -87,7 +83,7 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 		if (namespace != null)
 			dom.addUserPrefix(prefix, namespace);
 		
-		currentParent = parentElt;
+		currentParentElt = parentElt;
 		
 		do processNextElement();
 		while(!stopWriting);
@@ -111,14 +107,18 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 	
 	protected void setCurrentParent()
 	{
+		// if stack size has decreased, we need to go up the tree
 		if (prevStackSize > componentStack.size())
 		{
+			// go back to parent of next item
 			while (prevStackSize > componentStack.size())
 			{
-				currentParent = (Element)currentParent.getParentNode();
+				currentParentElt = (Element)currentParentElt.getParentNode();
 				prevStackSize--;
 			}
 		}
+		
+		// else we just save the stack size
 		else
 			prevStackSize = componentStack.size();
 	}
@@ -130,7 +130,7 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 		setCurrentParent();
 		
 		String eltName = getElementName(blockInfo);
-		currentParent = dom.addElement(currentParent, eltName);		
+		currentParentElt = dom.addElement(currentParentElt, eltName);		
 		
 		return true;
 	}
@@ -140,12 +140,13 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
 		setCurrentParent();
+		String localName = scalarInfo.getName();
+		String eltName = getElementName(scalarInfo);
 		
-		if (!scalarInfo.getName().equals(SweConstants.SELECTED_ITEM_NAME))
-		{
-			String eltName = getElementName(scalarInfo);
-			dom.setElementValue(currentParent, eltName, getStringValue(scalarInfo));
-		}
+		if (localName.equals(SweConstants.ELT_COUNT_NAME))
+			dom.setAttributeValue(currentParentElt, localName, getStringValue(scalarInfo));
+		else if (!localName.equals(SweConstants.SELECTED_ITEM_NAME))
+			dom.setElementValue(currentParentElt, eltName, getStringValue(scalarInfo));
 	}
 	
 	

@@ -61,7 +61,7 @@ public abstract class AbstractDataWriter extends DataIterator implements DataStr
 	
 	
 	/**
-	 * Retrieve string value of component
+	 * Retrieve string representation of value of component
 	 * This will convert to an ISO string for appropriate time components
 	 * @param scalarInfo
 	 * @return

@@ -25,6 +25,7 @@ import java.io.InputStream;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataSource;
 import org.vast.ogc.OGCRegistry;
+import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
 
@@ -44,21 +45,36 @@ import org.w3c.dom.Element;
  * @date Feb, 28 2008
  * @version 1.0
  */
-public class DataSourceXML implements DataSource
+public class DataSourceDOM implements DataSource
 {
-	protected Element dataElt;
+	protected DOMHelper dom;
+	protected Element parentElt;
 	    
     
-    public DataSourceXML(Element dataElt)
+    public DataSourceDOM(DOMHelper dom, Element parentElt)
     {
-    	this.dataElt = dataElt;
+    	this.dom = dom;
+    	this.parentElt = parentElt;
     }
+    
+    
+    public DOMHelper getDom()
+	{
+		return dom;
+	}
+	
+	
+	public Element getParentElt()
+	{
+		return parentElt;
+	}
+
     
     
     public InputStream getDataStream() throws CDMException
     {
     	String xlinkUri = OGCRegistry.getNamespaceURI(OGCRegistry.XLINK);
-    	String href = dataElt.getAttributeNS(xlinkUri, "href");
+    	String href = parentElt.getAttributeNS(xlinkUri, "href");
         
     	if (href != null && href.trim().length() > 0)
         {
@@ -66,7 +82,7 @@ public class DataSourceXML implements DataSource
         }
         else
         {
-            String values = dataElt.getTextContent();
+            String values = parentElt.getTextContent();
             return(new ByteArrayInputStream(values.getBytes()));
         }
     }

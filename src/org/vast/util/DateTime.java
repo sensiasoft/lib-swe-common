@@ -20,6 +20,7 @@
 
 package org.vast.util;
 
+import java.text.ParseException;
 import java.util.Date;
 
 
@@ -60,8 +61,27 @@ public class DateTime extends Date
 	}
 	
 	
+	public DateTime(String iso8601) 
+	{
+		try
+		{
+			this.setTime((long)DateTimeFormat.parseIso(iso8601) * 1000);
+		}
+		catch (ParseException e)
+		{
+			throw new IllegalArgumentException(e);
+		}
+	}
+	
+	
 	public double getJulianTime()
 	{
 		return ((double)this.getTime()) / 1000.0;
+	}
+	
+	
+	public String formatIso(int timeZone)
+	{
+		return DateTimeFormat.formatIso(getJulianTime(), timeZone);
 	}
 }

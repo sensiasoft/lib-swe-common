@@ -16,9 +16,10 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alexandre.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
+
 package org.vast.sweCommon;
 
 import java.io.InputStream;

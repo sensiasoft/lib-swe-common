@@ -225,6 +225,8 @@ public class DataArray extends AbstractDataComponent
     	// update size component if variable size
         if (variableSize && implicitSize)
         {
+        	// TODO should infer array size differently (keep size int in data block??)
+        	// TODO potential bug here with nested variable size arrays
         	int newSize = dataBlock.getAtomCount() / component.scalarCount;
         	updateSizeComponent(newSize);
         }

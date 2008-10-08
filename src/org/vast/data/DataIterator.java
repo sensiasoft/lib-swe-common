@@ -41,7 +41,7 @@ public abstract class DataIterator
 	protected DataComponent dataComponents;
 	protected DataEncoding dataEncoding;
 	protected Stack<Record> componentStack;
-	protected Record currentComponent;
+	protected Record currentRecord;
     protected boolean newBlock = true;
 	protected boolean endOfArray = false;
 	protected boolean parsing = true;
@@ -51,14 +51,14 @@ public abstract class DataIterator
     
 	protected class Record
     {
-        public DataComponent parent;
+        public DataComponent component;
         public int index;
         public int count;
 
-        public Record(DataComponent parent)
+        public Record(DataComponent component)
         {
-            this.parent = parent;
-            this.count = parent.getComponentCount();
+            this.component = component;
+            this.count = component.getComponentCount();
             this.index = 0;
         }
     }
@@ -96,83 +96,84 @@ public abstract class DataIterator
             newBlock = false;
         }
         
-        // send beginning of block events
-    	if (currentComponent.index == 0 && dataHandler != null)
-    	{
-    		if (componentStack.isEmpty())
-				dataHandler.startData(dataComponents);
-			else
-				dataHandler.startDataBlock(currentComponent.parent);
-    	}
-        
-        // now get next child
-    	DataComponent next;
-    	if (currentComponent.parent instanceof DataChoice)
-    	{
-    		next = ((DataChoice)currentComponent.parent).getSelectedComponent();
-    		currentComponent.index = currentComponent.count;
-    	}
-    	else
-    	{
-    		next = currentComponent.parent.getComponent(currentComponent.index);
-    		currentComponent.index++;
-    	}
+        // send beginning of data event
+    	if (dataHandler != null && componentStack.isEmpty() && currentRecord.index == 0)
+    		dataHandler.startData(dataComponents);
+    	
+        // retrieve current component
+    	DataComponent next = currentRecord.component;
     	
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
-        	// process aggregate
+        	// send start block event
+        	if (dataHandler != null)
+        		dataHandler.startDataBlock(currentRecord.component);
+        	
         	// some reader/writer may write the whole block at once
         	// and will then return false here to skip children
         	boolean processChildren = processBlock(next);
         	
         	if (processChildren)
-        	{	
+        	{
+        		// push this aggregate record to the stack
+	    		componentStack.push(currentRecord);
+	    		
         		// case of variable array size
-        		if ((next instanceof DataArray) && ((DataArray)next).isVariableSize())
-        		{
-        			if (((DataArray)next).getSizeComponent().getParent() == null)
-        			{
-        				// read implicit array size (when parsing)
-        				if (parsing)
-            			{
-        					processAtom(sizeValue);
-                			int newSize = sizeValue.getData().getIntValue();
-                			((DataArray)next).updateSize(newSize);
-            			}
-            		
-            			// write array size
-            			else
-            			{
-            				sizeValue.getData().setIntValue(((DataArray)next).getComponentCount());
-            				processAtom(sizeValue);
-            			}
-        			}        		
-        			else if (parsing)
-        				((DataArray)next).updateSize();
-        		}
-        	
-        		// case of choice
-        		else if (next instanceof DataChoice)
-        		{
-        			// read implicit choice index (when parsing)
-        			if (parsing)
-        			{
-        				processAtom(selectedValue);
-        				((DataChoice)next).setSelected(selectedValue.getData().getIntValue());
-        			}
-        		
-        			// write choice index
-        			else
-        			{
-        				selectedValue.getData().setIntValue(((DataChoice)next).getSelected());
-        				processAtom(selectedValue);
-        			}
-        		}
-            
-        		componentStack.push(currentComponent);
-        		currentComponent = new Record(next);
-        		processNextElement();
+	    		if ((next instanceof DataArray) && ((DataArray)next).isVariableSize())
+	    		{
+	    			if (((DataArray)next).getSizeComponent().getParent() == null)
+	    			{
+	    				// read implicit array size (when parsing)
+	    				if (parsing)
+	        			{
+	    					processAtom(sizeValue);
+	            			int newSize = sizeValue.getData().getIntValue();
+	            			
+	            			// resize array according to size read!
+	            			((DataArray)next).updateSize(newSize);
+	            			currentRecord.count = newSize;
+	        			}
+	        		
+	        			// write array size
+	        			else
+	        			{
+	        				sizeValue.getData().setIntValue(((DataArray)next).getComponentCount());
+	        				processAtom(sizeValue);
+	        			}
+	    			}        		
+	    			else if (parsing)
+	    				((DataArray)next).updateSize();
+	    		}
+	    	
+	    		// case of choice
+	    		else if (next instanceof DataChoice)
+	    		{
+	    			// read implicit choice index (when parsing)
+	    			if (parsing)
+	    			{
+	    				processAtom(selectedValue);
+	    				((DataChoice)next).setSelected(selectedValue.getData().getIntValue());
+	    			}
+	    		
+	    			// write choice index
+	    			else
+	    			{
+	    				selectedValue.getData().setIntValue(((DataChoice)next).getSelected());
+	    				processAtom(selectedValue);
+	    			}
+	    		}
+	    		
+	    		// select first child of aggregate
+	    		if (next instanceof DataChoice)
+	    			next = ((DataChoice)next).getSelectedComponent();
+	        	else
+	        		next = next.getComponent(0);
+	        		        	
+	    		// create new record for first child an process it right away
+	    		currentRecord = new Record(next);
+	    		processNextElement();
+	    		return;
         	}
         }
         
@@ -188,31 +189,52 @@ public abstract class DataIterator
                 dataHandler.endDataAtom(next, next.getData());
         }
         
-        // if at the end of previous record
-        while(currentComponent != null && currentComponent.index >= currentComponent.count)
-    	{
-        	if (!componentStack.isEmpty())
-        	{
-                if (dataHandler != null)
-                    dataHandler.endDataBlock(currentComponent.parent, currentComponent.parent.getData());
+        // take care of parent record in stack
+        if (!componentStack.isEmpty())
+        {
+        	// recursively send 'end' event and pop from stack if parent is finished
+        	Record parentRecord = null;
+        	boolean stop = false;
+    		while (!stop)
+    		{
+    			// catch end of data
+    			if (componentStack.isEmpty())
+    			{
+    				if (dataHandler != null)
+    	                dataHandler.endData(dataComponents, dataComponents.getData());
+    				
+    	            // signal that a new block is starting
+    	            newBlock = true;
+    	            currentRecord = null;
+    	            
+    	            if (parentArray != null && parentArrayIndex == parentArray.getComponentCount())
+    	                endOfArray = true;
+    	            
+    				return;
+    			}
+    			
+    			parentRecord = componentStack.pop();
+            	
+            	// increment index of parent component
+        		if (parentRecord.component instanceof DataChoice)
+            		parentRecord.index = parentRecord.count;
+            	else
+            		parentRecord.index++;
         		
-                currentComponent = componentStack.pop();
+        		if (parentRecord.index >= parentRecord.count)
+        		{
+        			if (dataHandler != null)
+        				dataHandler.endDataBlock(parentRecord.component, parentRecord.component.getData());
+        		}
+        		else
+        			stop = true;
         	}
-        	else
-        	{
-                if (dataHandler != null)
-                    dataHandler.endData(dataComponents, dataComponents.getData());
-				
-                // signal that a new block is starting
-                newBlock = true;
-                currentComponent = null;
-                
-                if (parentArray != null && parentArrayIndex == parentArray.getComponentCount())
-                    endOfArray = true;
-                
-				break;
-        	}
-    	}
+    		
+    		// create next component record
+    		componentStack.push(parentRecord);
+    		next = parentRecord.component.getComponent(parentRecord.index);
+    		currentRecord = new Record(next);
+        }
 	}
 		
 	
@@ -234,7 +256,7 @@ public abstract class DataIterator
         
 		// reset component stack
         componentStack.clear();
-        currentComponent = new Record(dataComponents);
+        currentRecord = new Record(dataComponents);
 	}
 
 	
