@@ -194,13 +194,14 @@ public abstract class DataIterator
         {
         	// recursively send 'end' event and pop from stack if parent is finished
         	Record parentRecord = null;
-        	boolean stop = false;
-    		while (!stop)
+        	
+        	do
     		{
     			// catch end of data
     			if (componentStack.isEmpty())
     			{
-    				if (dataHandler != null)
+    				// send end of data event
+    			    if (dataHandler != null)
     	                dataHandler.endData(dataComponents, dataComponents.getData());
     				
     	            // signal that a new block is starting
@@ -213,6 +214,7 @@ public abstract class DataIterator
     				return;
     			}
     			
+    			// pop next parent from stack
     			parentRecord = componentStack.pop();
             	
             	// increment index of parent component
@@ -221,14 +223,16 @@ public abstract class DataIterator
             	else
             		parentRecord.index++;
         		
+        		// send end of block event if there are no more children
         		if (parentRecord.index >= parentRecord.count)
         		{
         			if (dataHandler != null)
         				dataHandler.endDataBlock(parentRecord.component, parentRecord.component.getData());
         		}
-        		else
-        			stop = true;
+        		
+        		// keep closing parents recursively until the parent has more children to process
         	}
+        	while (parentRecord.index >= parentRecord.count);
     		
     		// create next component record
     		componentStack.push(parentRecord);
