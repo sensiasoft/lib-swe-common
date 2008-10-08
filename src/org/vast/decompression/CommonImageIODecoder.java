@@ -16,6 +16,8 @@ import java.io.RandomAccessFile;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.JLabel;
+import jj2000.j2k.decoder.Decoder;
+import jj2000.j2k.util.ParameterList;
 
 import org.vast.cdm.common.BinaryBlock;
 import org.vast.cdm.common.CDMException;
@@ -49,6 +51,8 @@ public class CommonImageIODecoder extends CompressedStreamReader
 	protected String imageUrl;
 	protected BufferedImage image;  
 	protected DataBlock imageBlock;
+	protected ParameterList list;
+	protected Decoder dec;
 	protected boolean fileBased;
 	protected ByteArrayInputStream byteArrayInputStream;
 	protected byte[] byteArray;
@@ -107,18 +111,23 @@ public class CommonImageIODecoder extends CompressedStreamReader
 			throw new CDMException("the size of the decoded image is not that " +
 								   "described in the Swe Common description");
 		}
-		int [] rgbArray = new int[image.getWidth()*image.getHeight()];
-		image.getRGB(0, 0, image.getWidth(), image.getHeight(), rgbArray, 0, 0);
+		//int [] rgbArray = new int[image.getWidth()*image.getHeight()];
+		//image.getRGB(0, 0, image.getWidth(), image.getHeight(), rgbArray, 0, 0);
 		Color color = null;
-			
-		for (int i = 0; i<rgbArray.length; i++){
-			color = new Color(rgbArray[i]);
-		    short red = (short)color.getRed();
-		    short green = (short)color.getGreen();
-		    short blue = (short)color.getBlue();
-		    blockInfo.getData().setShortValue(i, red);
-			blockInfo.getData().setShortValue(i+1, green);
-			blockInfo.getData().setShortValue(i+2, blue);
+		
+		int m=0;
+		for (int j = 0; j<image.getHeight(); j++){
+			for (int i = 0; i<image.getWidth(); i++){
+				color = new Color(image.getRGB(i, j));
+				short red = (short)color.getRed();
+				short green = (short)color.getGreen();
+				short blue = (short)color.getBlue();
+				//System.out.println("red " + red +  " green " + green + " blue " + blue);
+				blockInfo.getData().setShortValue(m, red);
+				blockInfo.getData().setShortValue(m+1, green);
+				blockInfo.getData().setShortValue(m+2, blue);
+				m+=3;
+			}
 		}
 	}
 	
