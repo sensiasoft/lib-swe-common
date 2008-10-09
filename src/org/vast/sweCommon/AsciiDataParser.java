@@ -124,51 +124,54 @@ public class AsciiDataParser extends AbstractDataParser
 		// add characters until we find token or block separator
 		while (nextChar != -1)
 		{
-			tokenBuf.append((char)nextChar);
+			if(nextChar > 31)
+			{
+				tokenBuf.append((char)nextChar);
 			
-			// for 2 sets of tokenSeparator without data
-			if(tokenBuf.length()==1 && tokenBuf.charAt(0)==tokenSep[0]){
-				int i = 0;
-				while(tokenBuf.length()==(i+1) && tokenBuf.charAt(i)==tokenSep[i]){
-					if(i==tokenSep.length-1)
-					{
-						consecutiveTokenSep = true;
-						break;
+				// for 2 sets of tokenSeparator without data
+				if(tokenBuf.length()==1 && tokenBuf.charAt(0)==tokenSep[0]){
+					int i = 0;
+					while(tokenBuf.length()==(i+1) && tokenBuf.charAt(i)==tokenSep[i]){
+						if(i==tokenSep.length-1)
+						{
+							consecutiveTokenSep = true;
+							break;
+						}
+						nextChar = reader.read();
+						tokenBuf.append((char)nextChar);
+						i++;
 					}
-					nextChar = reader.read();
-					tokenBuf.append((char)nextChar);
-					i++;
 				}
-			}
 			
-			if (consecutiveTokenSep)
-			{
-				endToken = true;
-				break;
-			}
+				if (consecutiveTokenSep)
+				{
+					endToken = true;
+					break;
+				}
 			
-			// check for token separator
-			tokenSepIndex = 1;
-			while ((tokenSepIndex <= tokenSep.length) &&
-				   (tokenSep[tokenSep.length - tokenSepIndex] == tokenBuf.charAt(tokenBuf.length() - tokenSepIndex)))
-				tokenSepIndex++;
+				// check for token separator
+				tokenSepIndex = 1;
+				while ((tokenSepIndex <= tokenSep.length) &&
+						(tokenSep[tokenSep.length - tokenSepIndex] == tokenBuf.charAt(tokenBuf.length() - tokenSepIndex)))
+					tokenSepIndex++;
 			
-			if (tokenSepIndex > tokenSep.length)
-			{
-				endToken = true;
-				break;
-			}
+				if (tokenSepIndex > tokenSep.length)
+				{
+					endToken = true;
+					break;
+				}
 			
-			// check for block separator
-			blockSepIndex = 1;
-			while ((blockSepIndex <= blockSep.length) &&
-					(blockSep[blockSep.length - blockSepIndex] == tokenBuf.charAt(tokenBuf.length() - blockSepIndex)))
-				blockSepIndex++;
+				// check for block separator
+				blockSepIndex = 1;
+				while ((blockSepIndex <= blockSep.length) &&
+						(blockSep[blockSep.length - blockSepIndex] == tokenBuf.charAt(tokenBuf.length() - blockSepIndex)))
+					blockSepIndex++;
 			
-			if (blockSepIndex > blockSep.length)
-			{
-				endBlock = true;
-				break;
+				if (blockSepIndex > blockSep.length)
+				{
+					endBlock = true;
+					break;
+				}
 			}
 			
 			nextChar = reader.read();			
