@@ -99,7 +99,7 @@ public class CommonImageIODecoder extends CompressedStreamReader
 		
 		ByteArrayInputStream byteArrayStream = new ByteArrayInputStream(block);
 		InputStream stream = (InputStream)byteArrayStream;
-		//ImageInputStream imageInputStream = (ImageInputStream) byteArrayStream;
+
 		BufferedImage image;
 		try {
 			image = ImageIO.read(stream);
@@ -111,8 +111,6 @@ public class CommonImageIODecoder extends CompressedStreamReader
 			throw new CDMException("the size of the decoded image is not that " +
 								   "described in the Swe Common description");
 		}
-		//int [] rgbArray = new int[image.getWidth()*image.getHeight()];
-		//image.getRGB(0, 0, image.getWidth(), image.getHeight(), rgbArray, 0, 0);
 		Color color = null;
 		
 		int m=0;
@@ -122,7 +120,7 @@ public class CommonImageIODecoder extends CompressedStreamReader
 				short red = (short)color.getRed();
 				short green = (short)color.getGreen();
 				short blue = (short)color.getBlue();
-				//System.out.println("red " + red +  " green " + green + " blue " + blue);
+
 				blockInfo.getData().setShortValue(m, red);
 				blockInfo.getData().setShortValue(m+1, green);
 				blockInfo.getData().setShortValue(m+2, blue);

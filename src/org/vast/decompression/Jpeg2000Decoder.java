@@ -34,7 +34,7 @@ import sun.awt.image.ToolkitImage;
  *
  * <p><b>Description:</b><br/>
  * decoder to be used by the BinaryDataParser to decode a binary block 
- * that is compressed in jpeg2000. Handle single-tiled image only.
+ * that is compressed in jpeg2000. Probably only Handles single-tiled image.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -121,7 +121,10 @@ public class Jpeg2000Decoder extends CompressedStreamReader
 			}
 		}
 	 
-	 
+	 //TODO: the reolution is not considered appropriately, only max resolution
+	 // contains fix for EC08. To be corrected so that the byteArray provided by the 
+	 // decoder has the size of the image with the resolution considered and not that 
+	 // of the original image
 	 private void setImageInByteArray(){
     	 // if DataBufferByte, just wrap image data with a DataBlock
         DataBuffer buf = image.getData().getDataBuffer();

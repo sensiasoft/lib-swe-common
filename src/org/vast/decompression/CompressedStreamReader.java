@@ -35,16 +35,16 @@ import org.vast.sweCommon.SWEReader;
 
 /**
  * <p><b>Title:</b>
- * Observation Stream Reader
+ * Compressed Stream Reader
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Base interface for Streaming Observation Readers of all versions
+ * Base interface for Compressed Stream Readers of all versions
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @date May 22, 2008
+ * @author Alexandre Robin & Gregoire Berthiau
+ * @date Sep 22, 2008
  * @version 1.0
  */
 public abstract class CompressedStreamReader
