@@ -80,8 +80,8 @@ public class Base64Decoder extends FilterInputStream
         byte[] b = new byte[1];
         int val = read(b, 0, 1);
 
-        if (val == -1)
-            return val;
+        if (val <= 0)
+            return -1;
         else
             return (b[0]&0xFF);
     }
@@ -93,20 +93,29 @@ public class Base64Decoder extends FilterInputStream
         int numDecodedByte = 0;
         int destIndex = off;
         
-        // add unused bytes at begining of buffer
+        // add unused bytes at begining of buffer (max 2!)
         for (int i=0; i<unusedBytes; i++)
         {
             b[destIndex] = byteBuf[i];
             numDecodedByte++;
             destIndex++;
+                        
+            // if desired length was less than number of unused bytes
+            if (numDecodedByte >= length)
+            {
+                // shift bytes in buffer
+                byteBuf[0] = byteBuf[1];
+                unusedBytes -= numDecodedByte;
+                return numDecodedByte;
+            }
         }
-        unusedBytes = 0;
-        
+                
         // read new data
+        unusedBytes = 0;
         while (numDecodedByte < length)
         {
             int val = 0;
-            
+                        
             // read next quadruplet
             for (int j=0; j<4; j++)
             {
