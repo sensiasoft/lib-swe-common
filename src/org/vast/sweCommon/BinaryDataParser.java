@@ -364,6 +364,7 @@ public class BinaryDataParser extends AbstractDataParser
 	{
 		// TODO: PADDING IS TAKEN CARE OF HERE... 
 		(binaryInfo.reader).readCompressedStream(dataInput, blockInfo);
+		System.gc();
 					
 	}
 
