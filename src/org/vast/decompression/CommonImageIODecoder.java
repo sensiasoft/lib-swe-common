@@ -1,21 +1,16 @@
 package org.vast.decompression;
 
 import java.awt.Color;
-import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
+import java.util.Iterator;
+import javax.imageio.stream.MemoryCacheImageInputStream;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.swing.JLabel;
+import javax.imageio.ImageReader;
+
 import jj2000.j2k.decoder.Decoder;
 import jj2000.j2k.util.ParameterList;
 
@@ -24,11 +19,8 @@ import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataType;
-import org.vast.data.DataBlockFactory;
 import org.vast.data.DataValue;
 import org.vast.sweCommon.DataInputExt;
-
-import sun.awt.image.ToolkitImage;
 
 
 /**
@@ -56,7 +48,13 @@ public class CommonImageIODecoder extends CompressedStreamReader
 	protected boolean fileBased;
 	protected ByteArrayInputStream byteArrayInputStream;
 	protected byte[] byteArray;
-	
+	protected boolean checkedForSize;
+	protected byte [] block;
+	protected ByteArrayInputStream byteArrayStream;
+	protected InputStream stream;
+	protected MemoryCacheImageInputStream imageStream;
+	protected Color color;
+	protected ImageReader imageReader;
 	
 	public CommonImageIODecoder() 
 	{
@@ -71,6 +69,30 @@ public class CommonImageIODecoder extends CompressedStreamReader
 		{
 			((DataValue)primitiveRecord.getComponent(i)).setDataType(DataType.BYTE);
 		}
+		String compression = binaryBlock.compression;
+		
+		String mimeType = "";
+		Iterator<ImageReader> readersList = null;
+		
+		if(compression.equals("jpeg") || compression.equals("jpg"))
+		{
+			mimeType = "image/jpeg";
+		}
+		else if(compression.equals("gif"))
+		{
+			mimeType = "image/gif";
+		}
+		else if(compression.equals("png"))
+		{
+			mimeType = "image/png";
+		}
+		readersList = ImageIO.getImageReadersByMIMEType(mimeType);
+		
+		if(readersList.hasNext())
+		{
+			imageReader = readersList.next();
+		}
+		else throw new CDMException("ImageIO cannot decode this image compression: " + compression);
 	}
 
 
@@ -90,28 +112,33 @@ public class CommonImageIODecoder extends CompressedStreamReader
 		}
     	
 		
-		byte [] block = new byte[byteSize];
+    	block = new byte[byteSize];
 		try {
 			inputStream.readFully(block);
 		} catch (IOException e) {
 			throw new CDMException("error when reading binary block of DataBlock " + blockInfo.getName(), e);
 		}
 		
-		ByteArrayInputStream byteArrayStream = new ByteArrayInputStream(block);
-		InputStream stream = (InputStream)byteArrayStream;
-
-		BufferedImage image;
+		byteArrayStream = new ByteArrayInputStream(block);
+		stream = (InputStream)byteArrayStream;
+		imageStream = new MemoryCacheImageInputStream(stream);
+		
 		try {
-			image = ImageIO.read(stream);
+			imageReader.setInput(imageStream);
+			image = imageReader.read(0);			
 		} catch (IOException e) {
 			throw new CDMException("error when generating the compressed from the binary block of DataBlock " + blockInfo.getName(), e);
 		}
+		
+		if(checkedForSize)
 		if(blockInfo.getData().getAtomCount() != image.getWidth()*image.getHeight()*3)
 		{
 			throw new CDMException("the size of the decoded image is not that " +
 								   "described in the Swe Common description");
 		}
-		Color color = null;
+		checkedForSize = true;
+		
+		color = null;
 		
 		int m=0;
 		for (int j = 0; j<image.getHeight(); j++){
@@ -127,6 +154,10 @@ public class CommonImageIODecoder extends CompressedStreamReader
 				m+=3;
 			}
 		}
+		image = null;
+		block = null;
+		byteArrayStream = null;
+		stream = null;
 	}
 	
 }

@@ -60,7 +60,6 @@ public abstract class CompressedStreamReader
     public void readCompressedStream(DataInputExt inputStream, DataComponent blockInfo) throws CDMException
     {
         parse(inputStream, blockInfo);
-
     }
     
     protected abstract void parse(DataInputExt inputStream, DataComponent blockInfo) throws CDMException;
