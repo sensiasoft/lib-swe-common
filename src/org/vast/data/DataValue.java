@@ -20,6 +20,7 @@
 
 package org.vast.data;
 
+import java.util.List;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
@@ -106,21 +107,17 @@ public class DataValue extends AbstractDataComponent
     
     
     @Override
-    public void validateData() throws CDMException
+    public void validateData(List<CDMException> errorList)
     {
     	ConstraintList constraints = (ConstraintList)properties.get(SweConstants.CONSTRAINTS);
     	if (constraints != null)
     	{
-    		try
-			{
-				constraints.validate(this.dataBlock);
-			}
-			catch (CDMException e)
-			{
-				throw new CDMException("Value '" + dataBlock.getStringValue() +
-									   "' is not valid for component '" +
-									   name + "': " + e.getMessage());
-			}
+    		if (!constraints.validate(this.dataBlock))
+    		{
+    			errorList.add(new CDMException(name, "Value '" + dataBlock.getStringValue() +
+									   		   "' is not valid for component '" +
+									           name + "': " + constraints.getAssertionMessage()));
+    		}
     	}
     }
     
@@ -243,4 +240,11 @@ public class DataValue extends AbstractDataComponent
     {
         // DO NOTHING
     }
+
+
+	@Override
+	public boolean hasConstraints()
+	{
+		return (getProperty(SweConstants.CONSTRAINTS) != null);
+	}
 }

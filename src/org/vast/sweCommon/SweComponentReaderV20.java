@@ -761,7 +761,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     		{
     			if (constrainType.equals("pattern"))
         			constraint = readPatternConstraint(dom, constraintElt);
-        		else if (constrainType.equals("valueList"))
+        		else if (constrainType.equals("enumeration"))
         			constraint = readTokenEnumConstraint(dom, constraintElt);
     		}
     		else if (timeConstraints)
@@ -772,7 +772,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     		{
     			if (constrainType.equals("interval"))
         			constraint = readIntervalConstraint(dom, constraintElt);
-        		else if (constrainType.equals("valueList"))
+        		else if (constrainType.equals("enumeration"))
         			constraint = readNumberEnumConstraint(dom, constraintElt);
     		}
     		
@@ -816,7 +816,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @return
      * @throws CDMException
      */
-    private NumberEnumConstraint readNumberEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    private EnumNumberConstraint readNumberEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
     {
     	String values = dom.getElementValue(constraintElement);
     	
@@ -828,7 +828,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 			for (int i=0; i<valueArray.length; i++)
 				valueArray[i] = Double.parseDouble(valueList[i]);
 			
-			return new NumberEnumConstraint(valueArray);
+			return new EnumNumberConstraint(valueArray);
 		}
 		catch (Exception e)
 		{
@@ -844,11 +844,11 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @return
      * @throws CDMException
      */
-    private TokenEnumConstraint readTokenEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    private EnumTokenConstraint readTokenEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
     {
     	String values = dom.getElementValue(constraintElement);
     	String[] valueList = values.split(" ");
-		return new TokenEnumConstraint(valueList);
+		return new EnumTokenConstraint(valueList);
     }
     
     
@@ -861,7 +861,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      */
     private DataConstraint readPatternConstraint(DOMHelper dom, Element constraintElement) throws CDMException
     {
-    	// TODO read pattern constraint
-    	return null;
+    	String pattern = dom.getElementValue(constraintElement);
+    	return new PatternConstraint(pattern);
     }
 }

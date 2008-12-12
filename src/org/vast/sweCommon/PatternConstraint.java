@@ -24,9 +24,9 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataConstraint;
+
 
 /**
  * <p><b>Title:</b><br/>
@@ -44,33 +44,36 @@ import org.vast.cdm.common.DataConstraint;
  */
 public class PatternConstraint implements DataConstraint
 {
-	protected String[] patternList;
+	protected String pattern;
 	
 	
-	public PatternConstraint(String[] patternList)
+	public PatternConstraint(String pattern)
     {
-    	this.patternList = patternList;
+    	this.pattern = pattern;
     }
 	
 	
-	public void validate(DataBlock data) throws CDMException
+	public boolean validate(DataBlock data)
     {
-    	//String value = data.getStringValue();
-    	
-
-    	
-    	//throw new CDMException("Value must be match " + patternList[0]);
+    	String value = data.getStringValue();
+    	return value.matches(pattern);
     }
-
-
-	public String[] getPatternList()
+	
+	
+	public String getAssertionMessage()
 	{
-		return patternList;
+		return "match {" + pattern + "}";
 	}
 
 
-	public void setPatternList(String[] patternList)
+	public String getPattern()
 	{
-		this.patternList = patternList;
+		return pattern;
+	}
+
+
+	public void setPattern(String pattern)
+	{
+		this.pattern = pattern;
 	}
 }

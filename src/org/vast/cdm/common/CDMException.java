@@ -23,11 +23,19 @@ package org.vast.cdm.common;
 public class CDMException extends Exception
 {
 	public final static long serialVersionUID = 0;
+	protected String locator;
 	
 	
 	public CDMException(String message)
 	{
 		super(message);
+	}
+	
+	
+	public CDMException(String locator, String message)
+	{
+		super(message);
+		this.locator = locator;
 	}
 	
 	
@@ -40,5 +48,17 @@ public class CDMException extends Exception
 	public CDMException(String message, Exception e)
 	{
 		super(message, e);
+	}
+	
+	
+	public String getLocator()
+	{
+		return locator;
+	}
+
+
+	public void setLocator(String locator)
+	{
+		this.locator = locator;
 	}
 }

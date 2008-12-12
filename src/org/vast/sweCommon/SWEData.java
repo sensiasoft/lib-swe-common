@@ -22,6 +22,7 @@ package org.vast.sweCommon;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
@@ -171,8 +172,7 @@ public class SWEData
         else
         {
         	DataStreamParser parser = getDataParser();
-        	parser.setDataHandler(new DefaultParserHandler(this));
-        
+        	parser.setDataHandler(new DefaultParserHandler(this));        
         	InputStream dataStream = dataSource.getDataStream();
         	parser.parse(dataStream);
         }
@@ -184,9 +184,9 @@ public class SWEData
      * the data components definition
      * @throws CDMException
      */
-    public void validateData() throws CDMException
+    public void validateData(List<CDMException> errorList)
     {
-    	dataBlocks.validateData();
+    	dataBlocks.validateData(errorList);
     }
     
     
@@ -210,8 +210,7 @@ public class SWEData
         else
         {
         	DataStreamWriter writer = getDataWriter();
-            writer.setDataHandler(new DefaultWriterHandler(this, writer));
-            
+            writer.setDataHandler(new DefaultWriterHandler(this, writer));            
         	OutputStream dataStream = dataSink.getDataStream();
             writer.write(dataStream);
             writer.flush();

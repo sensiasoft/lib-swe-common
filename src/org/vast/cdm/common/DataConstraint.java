@@ -28,5 +28,7 @@ package org.vast.cdm.common;
 
 public interface DataConstraint
 {
-	public void validate(DataBlock data) throws CDMException;
+	public boolean validate(DataBlock data);
+	
+	public String getAssertionMessage();
 }

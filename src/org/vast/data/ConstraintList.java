@@ -21,18 +21,17 @@
 package org.vast.data;
 
 import java.util.ArrayList;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataConstraint;
 
 
 /**
  * <p><b>Title:</b>
- * SweConstraintList
+ * ConstraintList
  * </p>
  *
  * <p><b>Description:</b><br/>
- * List of constraints for a given field in SWE Common v1.0
+ * List of constraints for a given field in SWE Common
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -45,9 +44,31 @@ public class ConstraintList extends ArrayList<DataConstraint> implements DataCon
     private static final long serialVersionUID = 8873758049042174380L;
    
     
-    public void validate(DataBlock data) throws CDMException
+    public boolean validate(DataBlock data)
     {
     	for (int i=0; i<size(); i++)
-    		get(i).validate(data);
+    	{
+    		boolean result = get(i).validate(data);
+    		if (result == true)
+    			return true;
+    	}
+    	
+    	return false;
     }
+    
+    
+    public String getAssertionMessage()
+	{
+		StringBuffer msg = new StringBuffer();
+    	msg.append("Value MUST ");
+    	
+		for (int i=0; i<size(); i++)
+    	{
+    		msg.append(get(i).getAssertionMessage());
+    		if (i < size()-1)
+    			msg.append(" OR ");
+    	}
+
+    	return msg.toString();
+	}
 }

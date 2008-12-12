@@ -20,6 +20,8 @@
 
 package org.vast.cdm.common;
 
+import java.util.List;
+
 
 /**
  * <p><b>Title:</b><br/>
@@ -83,7 +85,10 @@ public interface DataComponent extends Cloneable
     public void clearData();
     
     
-    public void validateData() throws CDMException;
+    public void validateData(List<CDMException> errorList);
+    
+    
+    public boolean hasConstraints();
     
     
     public DataComponent copy();

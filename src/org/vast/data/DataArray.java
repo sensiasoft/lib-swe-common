@@ -20,11 +20,11 @@
 
 package org.vast.data;
 
+import java.util.List;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataType;
-import org.vast.sweCommon.SweConstants;
 
 
 /**
@@ -249,51 +249,24 @@ public class DataArray extends AbstractDataComponent
     
     
     @Override
-    public void validateData() throws CDMException
+    public void validateData(List<CDMException> errorList)
     {
     	// do only if constraints are specified on descendants
-    	if (hasConstraints(this))
+    	if (hasConstraints())
     	{
-    		for (int i = 0; i < getComponentCount(); i++)
-    			getComponent(i).validateData();
-    	}
-    }
-    
-    
-    /**
-     * Recursively checks if constraints are specified in descendants
-     * @param component
-     * @return
-     */
-    private boolean hasConstraints(DataComponent component)
-    {
-    	
-    	if (component instanceof DataArray)
-    	{
-    		return hasConstraints(((DataArray)component).component);
-    	}
-    	else if (component instanceof DataList)
-    	{
-    		return hasConstraints(((DataList)component).component);
-    	}
-    	else if (component instanceof DataValue)
-    	{
-    		return (component.getProperty(SweConstants.CONSTRAINTS) != null);
-    	}
-    	else if (component instanceof DataGroup || component instanceof DataChoice)
-    	{
-    		for (int i = 0; i < component.getComponentCount(); i++)
-    		{
-    			if (hasConstraints(component.getComponent(i)))
-    				return true;
-    		}
+    		int numErrors = errorList.size();
     		
-    		return false;
+    		for (int i = 0; i < getComponentCount(); i++)
+    		{
+    			getComponent(i).validateData(errorList);
+    			
+    			// max 10 errors generated!
+    			if (errorList.size() > numErrors + 10)
+    				return;
+    		}
     	}
-    	else
-    		return false;
     }
-    
+
     
     /**
      * Create the right data block to carry this array data
@@ -590,4 +563,11 @@ public class DataArray extends AbstractDataComponent
     {
         this.sizeComponent = sizeComponent;
     }
+    
+    
+	@Override
+	public boolean hasConstraints()
+	{
+		return component.hasConstraints();
+	}
 }

@@ -624,10 +624,12 @@ public class SweComponentWriterV20 implements DataComponentWriter
     			
     			if (constraint instanceof IntervalConstraint)
     				writeIntervalConstraint(dom, (IntervalConstraint)constraint, allowedValuesElt);
-    			else if (constraint instanceof TokenEnumConstraint)
-    				writeTokenEnumConstraint(dom, (TokenEnumConstraint)constraint, allowedValuesElt);
-    			else if (constraint instanceof NumberEnumConstraint)
-    				writeNumberEnumConstraint(dom, (NumberEnumConstraint)constraint, allowedValuesElt);
+    			else if (constraint instanceof EnumTokenConstraint)
+    				writeTokenEnumConstraint(dom, (EnumTokenConstraint)constraint, allowedValuesElt);
+    			else if (constraint instanceof EnumNumberConstraint)
+    				writeNumberEnumConstraint(dom, (EnumNumberConstraint)constraint, allowedValuesElt);
+    			else if (constraint instanceof PatternConstraint)
+    				writePatternConstraint(dom, (PatternConstraint)constraint, allowedValuesElt);
     		}    		
     	}
     }
@@ -635,15 +637,16 @@ public class SweComponentWriterV20 implements DataComponentWriter
     
     private void writeIntervalConstraint(DOMHelper dom, IntervalConstraint constraint, Element constraintElt) throws CDMException
     {
-    	Element intervalElt = dom.addElement(constraintElt, "swe:interval");
+    	Element intervalElt = dom.addElement(constraintElt, "+swe:interval");
     	String text = constraint.getMin() + " " + constraint.getMax();
     	dom.setElementValue(intervalElt, text);
     }
     
     
-    private void writeNumberEnumConstraint(DOMHelper dom, NumberEnumConstraint constraint, Element constraintElt) throws CDMException
+    private void writeNumberEnumConstraint(DOMHelper dom, EnumNumberConstraint constraint, Element constraintElt) throws CDMException
     {
-    	Element valueListElt = dom.addElement(constraintElt, "swe:valueList");
+    	Element eunmElt = dom.addElement(constraintElt, "swe:enumeration");
+    	
     	StringBuffer text = new StringBuffer();    	
     	double[] valueList = constraint.getValueList();
     	
@@ -654,13 +657,14 @@ public class SweComponentWriterV20 implements DataComponentWriter
     			text.append(" ");
     	}
     	
-    	dom.setElementValue(valueListElt, text.toString());
+    	dom.setElementValue(eunmElt, text.toString());
     }
     
     
-    private void writeTokenEnumConstraint(DOMHelper dom, TokenEnumConstraint constraint, Element constraintElt) throws CDMException
+    private void writeTokenEnumConstraint(DOMHelper dom, EnumTokenConstraint constraint, Element constraintElt) throws CDMException
     {
-    	Element valueListElt = dom.addElement(constraintElt, "swe:valueList");
+    	Element eunmElt = dom.addElement(constraintElt, "swe:enumeration");
+    	
     	StringBuffer text = new StringBuffer();    	
     	String[] valueList = constraint.getValueList();
     	
@@ -671,7 +675,14 @@ public class SweComponentWriterV20 implements DataComponentWriter
     			text.append(" ");
     	}
     	
-    	dom.setElementValue(valueListElt, text.toString());
+    	dom.setElementValue(eunmElt, text.toString());
+    }
+    
+    
+    private void writePatternConstraint(DOMHelper dom, PatternConstraint constraint, Element constraintElt) throws CDMException
+    {
+    	Element patternElt = dom.addElement(constraintElt, "+swe:pattern");
+    	dom.setElementValue(patternElt, constraint.getPattern());
     }
     
     

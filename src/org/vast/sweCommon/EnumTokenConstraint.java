@@ -24,13 +24,12 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataConstraint;
 
 /**
  * <p><b>Title:</b><br/>
- * TokenEnumConstraint
+ * EnumTokenConstraint
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -42,37 +41,44 @@ import org.vast.cdm.common.DataConstraint;
  * @date 3 janv. 08
  * @version 1.0
  */
-public class TokenEnumConstraint implements DataConstraint
+public class EnumTokenConstraint implements DataConstraint
 {
 	protected String[] valueList;
 	
 	
-	public TokenEnumConstraint(String[] valueList)
+	public EnumTokenConstraint(String[] valueList)
     {
     	this.valueList = valueList;
     }
 	
 	
-	public void validate(DataBlock data) throws CDMException
+	public boolean validate(DataBlock data)
     {
     	String value = data.getStringValue();
     	
     	for (int i=0; i<valueList.length; i++)
     		if (valueList[i].equals(value))
-    			return;
+    			return true;
     	
-    	StringBuffer numberList = new StringBuffer();
-    	numberList.append('{');
+    	return false;
+    }
+	
+	
+	public String getAssertionMessage()
+	{
+		StringBuffer msg = new StringBuffer();
+		msg.append("be one of {");
+    	
     	for (int i=0; i<valueList.length; i++)
     	{
-    		numberList.append(valueList[i]);
+    		msg.append(valueList[i]);
     		if (i < valueList.length-1)
-    			numberList.append(", ");
+    			msg.append(", ");
     	}
-    	numberList.append('}');
     	
-    	throw new CDMException("Value must be one of " + numberList);
-    }
+    	msg.append('}');
+    	return msg.toString();
+	}
 
 
 	public String[] getValueList()

@@ -202,12 +202,9 @@ public class DataChoice extends AbstractDataComponent
     
     
     @Override
-    public void validateData() throws CDMException
+    public void validateData(List<CDMException> errorList)
     {
-    	if (selected < 0)
-    		throw new CDMException(UNSELECTED_ERROR + name);
-    	
-    	itemList.get(selected).validateData();
+    	itemList.get(selected).validateData(errorList);
     }
     
     
@@ -333,4 +330,11 @@ public class DataChoice extends AbstractDataComponent
 
         return text.toString();
     }
+    
+    
+	@Override
+	public boolean hasConstraints()
+	{
+		return getSelectedComponent().hasConstraints();
+	}
 }

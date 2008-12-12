@@ -24,7 +24,6 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataConstraint;
 
@@ -55,16 +54,29 @@ public class IntervalConstraint implements DataConstraint
     }
     
     
-    public void validate(DataBlock data) throws CDMException
+    public boolean validate(DataBlock data)
     {
     	double value = data.getDoubleValue();
     	
-    	if (value < min)
-    		throw new CDMException("Value must be higher or equal to " + min);
+    	if (value < min || value > max)
+    		return false;
     	
-    	if (value > max)
-    		throw new CDMException("Value must be lower or equal to " + max);
+    	return true;
     }
+    
+    
+    public String getAssertionMessage()
+	{
+		StringBuffer msg = new StringBuffer();
+		
+		msg.append("be within [");
+		msg.append(Double.toString(min));
+		msg.append(' ');
+		msg.append(Double.toString(max));
+		msg.append(']');
+    	
+    	return msg.toString();
+	}
 
 
 	public double getMin()

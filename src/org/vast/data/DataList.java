@@ -20,11 +20,11 @@
 
 package org.vast.data;
 
+import java.util.List;
 import java.util.ListIterator;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
-import org.vast.sweCommon.SweConstants;
 
 
 /**
@@ -143,49 +143,14 @@ public class DataList extends AbstractDataComponent
     
     
     @Override
-    public void validateData() throws CDMException
+    public void validateData(List<CDMException> errorList)
     {
     	// do only if constraints are specified on descendants
-    	if (hasConstraints(this))
+    	if (hasConstraints())
     	{
     		for (int i = 0; i < getComponentCount(); i++)
-    			getComponent(i).validateData();
+    			getComponent(i).validateData(errorList);
     	}
-    }
-    
-    
-    /**
-     * Recursively checks if constraints are specified in descendants
-     * @param component
-     * @return
-     */
-    private boolean hasConstraints(DataComponent component)
-    {
-    	
-    	if (component instanceof DataArray)
-    	{
-    		return hasConstraints(((DataArray)component).component);
-    	}
-    	else if (component instanceof DataList)
-    	{
-    		return hasConstraints(((DataList)component).component);
-    	}
-    	else if (component instanceof DataValue)
-    	{
-    		return (component.getProperty(SweConstants.CONSTRAINTS) != null);
-    	}
-    	else if (component instanceof DataGroup || component instanceof DataChoice)
-    	{
-    		for (int i = 0; i < component.getComponentCount(); i++)
-    		{
-    			if (hasConstraints(component.getComponent(i)))
-    				return true;
-    		}
-    		
-    		return false;
-    	}
-    	else
-    		return false;
     }
     
     
@@ -250,4 +215,11 @@ public class DataList extends AbstractDataComponent
     {
     	removeAllComponents();
     }
+    
+    
+	@Override
+	public boolean hasConstraints()
+	{
+		return component.hasConstraints();
+	}
 }

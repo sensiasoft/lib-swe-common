@@ -255,10 +255,10 @@ public class DataGroup extends AbstractDataComponent
     
     
     @Override
-    public void validateData() throws CDMException
+    public void validateData(List<CDMException> errorList)
     {
     	for (int i = 0; i < componentList.size(); i++)
-    		componentList.get(i).validateData();
+    		componentList.get(i).validateData(errorList);
     }
     
     
@@ -410,4 +410,17 @@ public class DataGroup extends AbstractDataComponent
 
         return text.toString();
     }
+
+
+	@Override
+	public boolean hasConstraints()
+	{
+		for (int i = 0; i < componentList.size(); i++)
+		{
+			if (getComponent(i).hasConstraints())
+				return true;
+		}
+		
+		return false;
+	}
 }

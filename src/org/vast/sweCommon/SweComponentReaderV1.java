@@ -635,7 +635,7 @@ public class SweComponentReaderV1 implements DataComponentReader
     }
     
     
-    private NumberEnumConstraint readNumberEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    private EnumNumberConstraint readNumberEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
     {
     	String values = dom.getElementValue(constraintElement, "AllowedValues/valueList");
     	
@@ -647,7 +647,7 @@ public class SweComponentReaderV1 implements DataComponentReader
 			for (int i=0; i<valueArray.length; i++)
 				valueArray[i] = Double.parseDouble(valueList[i]);
 			
-			return new NumberEnumConstraint(valueArray);
+			return new EnumNumberConstraint(valueArray);
 		}
 		catch (Exception e)
 		{
@@ -656,10 +656,10 @@ public class SweComponentReaderV1 implements DataComponentReader
     }
     
     
-    private TokenEnumConstraint readTokenEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    private EnumTokenConstraint readTokenEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
     {
     	String values = dom.getElementValue(constraintElement, "AllowedTokens/valueList");
     	String[] valueList = values.split(" ");
-		return new TokenEnumConstraint(valueList);
+		return new EnumTokenConstraint(valueList);
     }    
 }

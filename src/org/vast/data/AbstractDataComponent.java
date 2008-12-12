@@ -237,7 +237,14 @@ public abstract class AbstractDataComponent implements DataComponent
     /**
      * Validates dataBlock against constraints if any
      */
-    public abstract void validateData() throws CDMException;
+    public abstract void validateData(List<CDMException> errorList);
+	
+    
+    /**
+     * Recursively checks if constraints are specified in descendants
+     * @return
+     */
+	public abstract boolean hasConstraints();
 	
 	
 	/**
