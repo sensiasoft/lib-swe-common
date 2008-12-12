@@ -58,6 +58,7 @@ public class OGCRegistry
     public final static String SML = "SML";
     public final static String OM = "OM";
     public final static String SOS = "SOS";
+    public final static String WPS = "WPS";
     public final static String SAS = "SAS";    
     public final static String SPS = "SPS";
     public final static String IC = "IC";
