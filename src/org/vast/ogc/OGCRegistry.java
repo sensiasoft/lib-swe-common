@@ -46,24 +46,9 @@ import org.w3c.dom.NodeList;
 public class OGCRegistry
 {
     public final static String OGC = "OGC";
-    public final static String OWS = "OWS";
-    public final static String WMS = "WMS";
-    public final static String WCS = "WCS";
-    public final static String WFS = "WFS";
-    public final static String CSW = "CSW";
     public final static String GML = "GML";
     public final static String XLINK = "XLINK";
     public final static String SLD = "SLD";
-    public final static String SWE = "SWE";
-    public final static String SML = "SML";
-    public final static String OM = "OM";
-    public final static String SOS = "SOS";
-    public final static String WPS = "WPS";
-    public final static String SAS = "SAS";    
-    public final static String SPS = "SPS";
-    public final static String IC = "IC";
-    public final static String WNS = "WNS";
-    
     protected static Hashtable<String, Class> readerClasses;
     protected static Hashtable<String, Class> writerClasses;
     protected static Hashtable<String, String> namespaces;

@@ -29,6 +29,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.sweCommon.DataSinkDOM;
+import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.SweComponentWriterV0;
 import org.vast.sweCommon.SweEncodingWriterV0;
 import org.vast.xml.*;
@@ -81,8 +82,8 @@ public class ObservationWriterV01 implements ObservationWriter
     
     public Element writeObservation(DOMHelper dom, AbstractObservation obs) throws OMException
     {
-        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.0"));
-        dom.addUserPrefix("om", OGCRegistry.getNamespaceURI(OGCRegistry.OM, "0.0"));
+        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "1.0"));
+        dom.addUserPrefix("om", OGCRegistry.getNamespaceURI(OMUtils.OM, "0.0"));
         dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
         dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
         
