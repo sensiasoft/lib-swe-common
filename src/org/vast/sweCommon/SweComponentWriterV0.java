@@ -59,7 +59,7 @@ public class SweComponentWriterV0 implements DataComponentWriter
     
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException
     {
-        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "0.0"));
+        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "0.0"));
         
         Element newElt = null;
         

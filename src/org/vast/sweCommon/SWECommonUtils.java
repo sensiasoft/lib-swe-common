@@ -50,7 +50,8 @@ import org.w3c.dom.Element;
  */
 public class SWECommonUtils implements DataComponentReader, DataComponentWriter, DataEncodingReader, DataEncodingWriter
 {
-    public final static String SWECOMMON = "SWECommon";
+	public final static String SWE = "SWE";
+	public final static String SWECOMMON = "SWECommon";
     public final static String DATACOMPONENT = "DataComponent";
     public final static String DATAENCODING = "DataEncoding";
     private String version = "1.0";
@@ -60,7 +61,7 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     private DataComponentWriter componentWriter = null;
     private DataEncodingReader encodingReader = null;
     private DataEncodingWriter encodingWriter = null;
-    
+	    
     
     public DataComponent readComponent(DOMHelper dom, Element componentElement) throws CDMException
     {

@@ -57,7 +57,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 {
 	public static Hashtable<QName, SweCustomReader> customReaders;
 	protected final static String GML_NS = OGCRegistry.getNamespaceURI(OGCRegistry.GML);
-	protected final static String SWE_NS = OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "2.0");
+	protected final static String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
 	protected Hashtable<String, AbstractDataComponent> componentIds;
     protected AsciiDataParser asciiParser;
     

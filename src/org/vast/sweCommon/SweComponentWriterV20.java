@@ -55,7 +55,7 @@ import org.vast.xml.QName;
 public class SweComponentWriterV20 implements DataComponentWriter
 {
 	public static Hashtable<QName, SweCustomWriter> customWriters;
-	protected String SWE_NS = OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "2.0");
+	protected String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
     protected boolean writeInlineData = false;
     
     

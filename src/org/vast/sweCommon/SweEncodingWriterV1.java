@@ -51,7 +51,7 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
     
     private void enforceNS(DOMHelper dom)
     {
-        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(OGCRegistry.SWE, "1.0"));
+        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "1.0"));
     }
     
     
