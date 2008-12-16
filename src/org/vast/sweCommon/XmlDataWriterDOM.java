@@ -9,12 +9,14 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "SensorML DataProcessing Engine".
+ The Original Code is the "SWE Common Data Framework".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is Spotimage S.A.
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@sensiasoftware.com>
+    Alexandre Robin <alexandre.robin@spotimage.fr>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -130,7 +132,7 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 		setCurrentParent();
 		
 		String eltName = getElementName(blockInfo);
-		currentParentElt = dom.addElement(currentParentElt, eltName);		
+		currentParentElt = dom.addElement(currentParentElt, eltName);	
 		
 		return true;
 	}
@@ -141,10 +143,11 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 	{
 		setCurrentParent();
 		String localName = scalarInfo.getName();
-		String eltName = getElementName(scalarInfo);
+		String eltName = getElementName(scalarInfo);		
+		String val = getStringValue(scalarInfo);
 		
 		if (localName.equals(SweConstants.ELT_COUNT_NAME))
-			dom.setAttributeValue(currentParentElt, localName, getStringValue(scalarInfo));
+			dom.setAttributeValue(currentParentElt, localName, val);
 		else if (!localName.equals(SweConstants.SELECTED_ITEM_NAME))
 			dom.setElementValue(currentParentElt, eltName, getStringValue(scalarInfo));
 	}

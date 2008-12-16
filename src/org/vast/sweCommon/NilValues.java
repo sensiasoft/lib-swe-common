@@ -22,72 +22,51 @@
 
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataConstraint;
+import java.util.Hashtable;
+
 
 /**
  * <p><b>Title:</b><br/>
- * EnumNumberConstraint
+ * NilValues
  * </p>
  *
  * <p><b>Description:</b><br/>
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
+ * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 3 janv. 08
+ * @date 12 Dec. 08
  * @version 1.0
  */
-public class EnumNumberConstraint implements DataConstraint
+public class NilValues
 {
-	protected double[] valueList;
+	protected Hashtable<String, Object> reasonsToValues;
+	protected Hashtable<Object, String> valuesToReasons;
 	
 	
-	public EnumNumberConstraint(double[] valueList)
-    {
-    	this.valueList = valueList;
-    }
-	
-	
-	public boolean validate(DataBlock data)
-    {
-    	double value = data.getDoubleValue();
-    	
-    	for (int i=0; i<valueList.length; i++)
-    		if (valueList[i] == value)
-    			return true;
-    	
-    	return false;
-    }
-	
-	
-	public String getAssertionMessage()
+	public NilValues()
 	{
-		StringBuffer msg = new StringBuffer();
-		msg.append("be one of {");
-    	
-    	for (int i=0; i<valueList.length; i++)
-    	{
-    		msg.append(Double.toString(valueList[i]));
-    		if (i < valueList.length-1)
-    			msg.append(", ");
-    	}
-    	
-    	msg.append('}');
-    	
-    	return msg.toString();
+		reasonsToValues = new Hashtable<String, Object>();
+		valuesToReasons = new Hashtable<Object, String>();
 	}
-
-
-	public double[] getValueList()
+	
+	
+	public void addNilValue(String reason, Object value)
 	{
-		return valueList;
+		reasonsToValues.put(reason, value);
+		valuesToReasons.put(value, reason);
 	}
-
-
-	public void setValueList(double[] valueList)
+	
+	
+	public Object getReservedValue(String reason)
 	{
-		this.valueList = valueList;
+		return reasonsToValues.get(reason);
+	}
+	
+	
+	public String getReason(Object value)
+	{
+		return valuesToReasons.get(value);
 	}
 }
