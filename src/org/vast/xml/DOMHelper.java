@@ -692,9 +692,14 @@ public class DOMHelper
     public Element setElementValue(Element parentElement, String nodePath, String val)
     {
         Element elt = addElement(parentElement, nodePath);
-        Text text = getParentDocument(parentElement).getDocument().createTextNode(val);
-        removeAllText(elt);
-        elt.appendChild(text);
+        
+        if (val != null)
+        {
+	        Text text = getParentDocument(parentElement).getDocument().createTextNode(val);
+	        removeAllText(elt);
+	        elt.appendChild(text);
+        }
+        
         return elt;
     }
     
