@@ -42,6 +42,8 @@ import org.vast.data.DataIterator;
  */
 public abstract class AbstractDataParser extends DataIterator implements DataStreamParser
 {
+	protected final static String STREAM_ERROR = "IO Error while parsing data stream";
+	protected final static String CHOICE_ERROR = "Invalid choice selection: ";
 	protected boolean stopParsing = false;
 		
 	

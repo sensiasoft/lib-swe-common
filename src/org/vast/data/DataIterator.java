@@ -45,7 +45,6 @@ public abstract class DataIterator
     protected boolean newBlock = true;
 	protected boolean endOfArray = false;
 	protected boolean parsing = true;
-	protected DataValue selectedValue = new DataValue(SweConstants.SELECTED_ITEM_NAME, DataType.INT); // for holding choice selection index
 	protected DataValue sizeValue = new DataValue(SweConstants.ELT_COUNT_NAME, DataType.INT); // for holding implicit array size
 	
     
@@ -146,24 +145,6 @@ public abstract class DataIterator
 	    				((DataArray)next).updateSize();
 	    		}
 	    	
-	    		// case of choice
-	    		else if (next instanceof DataChoice)
-	    		{
-	    			// read implicit choice index (when parsing)
-	    			if (parsing)
-	    			{
-	    				processAtom(selectedValue);
-	    				((DataChoice)next).setSelected(selectedValue.getData().getIntValue());
-	    			}
-	    		
-	    			// write choice index
-	    			else
-	    			{
-	    				selectedValue.getData().setIntValue(((DataChoice)next).getSelected());
-	    				processAtom(selectedValue);
-	    			}
-	    		}
-	    		
 	    		// select first child of aggregate
 	    		if (next instanceof DataChoice)
 	    			next = ((DataChoice)next).getSelectedComponent();

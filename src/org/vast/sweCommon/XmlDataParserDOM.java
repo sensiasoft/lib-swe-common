@@ -197,7 +197,14 @@ public class XmlDataParserDOM extends AbstractDataParser
 	{
 		currentParentElt = getCurrentElement(blockInfo);
 		
-		/* deal with optional values here
+		if (blockInfo instanceof DataChoice)
+		{
+			// figure out choice selection
+			Element firstChild = dom.getFirstChildElement(currentParentElt);
+			((DataChoice)blockInfo).setSelectedComponent(firstChild.getLocalName());
+		}
+		
+		/* deal with optional block here
 		if (currentParentElt == null)
 		{
 			// skip children if the block is optional
@@ -219,33 +226,22 @@ public class XmlDataParserDOM extends AbstractDataParser
 	{
 		setCurrentParent();
 		String localName = scalarInfo.getName();
-		String val;
+		String val;		
 		
-		// figure out choice selection
-		if (localName.equals(SweConstants.SELECTED_ITEM_NAME))
+		// special case of array size -> read from elementCount attribute
+		if (localName.equals(SweConstants.ELT_COUNT_NAME))
 		{
-			Element firstChild = dom.getFirstChildElement(currentParentElt);
-			DataComponent choice = componentStack.peek().component;
-			int selectedIndex = choice.getComponentIndex(firstChild.getLocalName());
-			scalarInfo.getData().setIntValue(selectedIndex);
+			val = dom.getAttributeValue(currentParentElt, localName);
 		}
+		
+		// else read from element content
 		else
-		{		
-			// special case of array size -> read from elementCount attribute
-			if (localName.equals(SweConstants.ELT_COUNT_NAME))
-			{
-				val = dom.getAttributeValue(currentParentElt, localName);
-			}
-			
-			// else read from element content
-			else
-			{
-				Element currentElt = getCurrentElement(scalarInfo);
-				val = dom.getElementValue(currentElt);
-			}
-			
-			//System.out.println(scalarInfo.getName());
-			tokenParser.parseToken(scalarInfo, val, (char)0);
+		{
+			Element currentElt = getCurrentElement(scalarInfo);
+			val = dom.getElementValue(currentElt);
 		}
+		
+		//System.out.println(scalarInfo.getName());
+		tokenParser.parseToken(scalarInfo, val, (char)0);
 	}
 }

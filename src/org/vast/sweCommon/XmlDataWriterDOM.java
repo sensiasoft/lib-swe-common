@@ -148,7 +148,7 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 		
 		if (localName.equals(SweConstants.ELT_COUNT_NAME))
 			dom.setAttributeValue(currentParentElt, localName, val);
-		else if (!localName.equals(SweConstants.SELECTED_ITEM_NAME))
+		else
 			dom.setElementValue(currentParentElt, eltName, getStringValue(scalarInfo));
 	}
 	

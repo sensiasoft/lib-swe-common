@@ -37,7 +37,6 @@ package org.vast.sweCommon;
  */
 public class SweConstants
 {
-	public final static String SELECTED_ITEM_NAME = "_selectedItem_";
 	public final static String ELT_COUNT_NAME = "elementCount";
 	public final static String MIN_VALUE_NAME = "min";
 	public final static String MAX_VALUE_NAME = "max";

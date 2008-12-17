@@ -42,6 +42,8 @@ import org.vast.util.DateTimeFormat;
  */
 public abstract class AbstractDataWriter extends DataIterator implements DataStreamWriter
 {
+	protected final static String STREAM_ERROR = "IO Error while writing data stream";
+	protected final static String CHOICE_ERROR = "Invalid choice selection: ";
 	protected boolean stopWriting = false;
 		
 	

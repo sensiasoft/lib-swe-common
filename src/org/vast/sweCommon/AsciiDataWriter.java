@@ -78,7 +78,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				throw new CDMException(STREAM_ERROR, e);
 			}
 		}
 	}
@@ -94,31 +94,38 @@ public class AsciiDataWriter extends AbstractDataWriter
     @Override
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
-		try
-        {
-            if (!firstToken)
-            {
-                // write a block separator if this is a new block
-            	if (appendBlockSeparator)
-                {
-                    outputWriter.write(blockSep);
-                    appendBlockSeparator = false;
-                }
-                else
-                    outputWriter.write(tokenSep);
-            }
-            else
-            	firstToken = appendBlockSeparator = false;
-            
-            String val = getStringValue(scalarInfo);
-            //System.out.println(scalarInfo.getName() + ": " + val);
-            outputWriter.write(val);
-        }
-        catch (IOException e)
-        {
-            throw new CDMException("Error while writing ASCII tuple stream", e);
-        }
+    	String val = getStringValue(scalarInfo);
+        //System.out.println(scalarInfo.getName() + ": " + val);
+    	
+        writeToken(val);
 	}
+    
+    
+    protected void writeToken(String token) throws CDMException
+    {
+    	try
+		{
+			if (!firstToken)
+			{
+			    // write a block separator if this is a new block
+				if (appendBlockSeparator)
+			    {
+			        outputWriter.write(blockSep);
+			        appendBlockSeparator = false;
+			    }
+			    else
+			        outputWriter.write(tokenSep);
+			}
+			else
+				firstToken = appendBlockSeparator = false;
+			
+			outputWriter.write(token);
+		}
+		catch (IOException e)
+		{
+			throw new CDMException(STREAM_ERROR, e);
+		}
+    }
 
 
 	public void flush() throws CDMException
@@ -129,7 +136,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 		}
 		catch (IOException e)
 		{
-			throw new CDMException(e);
+			throw new CDMException(STREAM_ERROR, e);
 		}		
 	}
 
@@ -137,6 +144,22 @@ public class AsciiDataWriter extends AbstractDataWriter
 	@Override
 	protected boolean processBlock(DataComponent blockInfo) throws CDMException
 	{
+		if (blockInfo instanceof DataChoice)
+		{
+			String token = null;
+			
+			// write implicit choice token
+			try
+			{
+				token = ((DataChoice)blockInfo).getSelectedComponent().getName();
+				writeToken(token);
+			}
+			catch (IllegalStateException e)
+			{
+				throw new CDMException(CHOICE_ERROR);
+			}
+		}
+		
 		return true;
 	}
 }

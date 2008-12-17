@@ -271,7 +271,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 		}
 		catch (IOException e)
 		{
-			throw new CDMException("Error while writing binary stream", e);
+			throw new CDMException(STREAM_ERROR, e);
 		}
 	}
 	
@@ -284,7 +284,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 		}
 		catch (IOException e)
 		{
-			throw new CDMException(e);
+			throw new CDMException(STREAM_ERROR, e);
 		}		
 	}
 
@@ -292,14 +292,34 @@ public class BinaryDataWriter extends AbstractDataWriter
 	@Override
 	protected boolean processBlock(DataComponent blockInfo) throws CDMException
 	{		
-		// get next encoding block
-		BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(blockInfo);
-		
-		// write whole block at once
-		if (binaryBlock != null)
+		if (blockInfo instanceof DataChoice)
 		{
-			writeBinaryBlock(blockInfo, binaryBlock);
-			return false;
+			// write implicit choice index
+			try
+			{
+				int selected = ((DataChoice)blockInfo).getSelected();
+				dataOutput.writeByte(selected);
+			}
+			catch (IllegalStateException e)
+			{
+				throw new CDMException(CHOICE_ERROR);
+			}
+			catch (IOException e)
+			{
+				throw new CDMException(STREAM_ERROR);
+			}
+		}
+		else
+		{
+			// get next encoding block
+			BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(blockInfo);
+			
+			// write whole block at once
+			if (binaryBlock != null)
+			{
+				writeBinaryBlock(blockInfo, binaryBlock);
+				return false;
+			}
 		}
 		
 		return true;		

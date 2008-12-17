@@ -94,101 +94,107 @@ public class AsciiDataParser extends AbstractDataParser
 	 * @return next token as a String
 	 * @throws IOException
 	 */
-	private String readToken() throws IOException
+	private String readToken() throws CDMException
 	{
 		int tokenSepIndex = 0;
 		int blockSepIndex = 0;
 		boolean endToken = false;
 		boolean endBlock = false;
-		int nextChar;
+		int nextChar;		
 		
-		
-		// skip all invalid characters and go to beginning of token
-        tokenBuf.setLength(0);
-        
-        // collapse white space characters
-        do
+		try
 		{
-			nextChar = reader.read();
+			// skip all invalid characters and go to beginning of token
+			tokenBuf.setLength(0);
 			
-            // to support single char separators below ASCII code 32 
-            //if (nextChar == (int)tokenSep[0] || nextChar == (int)blockSep[0])
-            //    break;
-            
-			if (nextChar == -1)
-				return null;
-		}
-		while (nextChar <= 32 && collapseWhiteSpaces);
+			// collapse white space characters
+			do
+			{
+				nextChar = reader.read();
+				
+			    // to support single char separators below ASCII code 32 
+			    //if (nextChar == (int)tokenSep[0] || nextChar == (int)blockSep[0])
+			    //    break;
+			    
+				if (nextChar == -1)
+					return null;
+			}
+			while (nextChar <= 32 && collapseWhiteSpaces);
 
-		
-		// add characters until we find token or block separator
-		while (nextChar != -1)
-		{
-			tokenBuf.append((char)nextChar);
 			
-			// for 2 sets of tokenSeparator without data
-			if(tokenBuf.length()==1 && tokenBuf.charAt(0)==tokenSep[0]){
-				int i = 0;
-				while(tokenBuf.length()==(i+1) && tokenBuf.charAt(i)==tokenSep[i]){
-					if(i==tokenSep.length-1)
-					{
-						consecutiveTokenSep = true;
-						break;
+			// add characters until we find token or block separator
+			while (nextChar != -1)
+			{
+				tokenBuf.append((char)nextChar);
+				
+				// for 2 sets of tokenSeparator without data
+				if(tokenBuf.length()==1 && tokenBuf.charAt(0)==tokenSep[0]){
+					int i = 0;
+					while(tokenBuf.length()==(i+1) && tokenBuf.charAt(i)==tokenSep[i]){
+						if(i==tokenSep.length-1)
+						{
+							consecutiveTokenSep = true;
+							break;
+						}
+						nextChar = reader.read();
+						tokenBuf.append((char)nextChar);
+						i++;
 					}
-					nextChar = reader.read();
-					tokenBuf.append((char)nextChar);
-					i++;
 				}
-			}
-		
-			if (consecutiveTokenSep)
-			{
-				endToken = true;
-				break;
-			}
-		
-			// check for token separator
-			tokenSepIndex = 1;
-			while ((tokenSepIndex <= tokenSep.length) &&
-					(tokenSep[tokenSep.length - tokenSepIndex] == tokenBuf.charAt(tokenBuf.length() - tokenSepIndex)))
-				tokenSepIndex++;
-		
-			if (tokenSepIndex > tokenSep.length)
-			{
-				endToken = true;
-				break;
-			}
-		
-			// check for block separator
-			blockSepIndex = 1;
-			while ((blockSepIndex <= blockSep.length) &&
-					(blockSep[blockSep.length - blockSepIndex] == tokenBuf.charAt(tokenBuf.length() - blockSepIndex)))
-				blockSepIndex++;
-		
-			if (blockSepIndex > blockSep.length)
-			{
-				endBlock = true;
-				break;
-			}
 			
-			nextChar = reader.read();
-		}		
-		
-		// remove separator characters from buffer
-		if (endToken)
-		{
-			tokenBuf.setLength(tokenBuf.length() - tokenSepIndex + 1);
-			if(consecutiveTokenSep)
-			{
-				tokenBuf.setLength(0);
-				consecutiveTokenSep = false;
-			}
+				if (consecutiveTokenSep)
+				{
+					endToken = true;
+					break;
+				}
 			
+				// check for token separator
+				tokenSepIndex = 1;
+				while ((tokenSepIndex <= tokenSep.length) &&
+						(tokenSep[tokenSep.length - tokenSepIndex] == tokenBuf.charAt(tokenBuf.length() - tokenSepIndex)))
+					tokenSepIndex++;
+			
+				if (tokenSepIndex > tokenSep.length)
+				{
+					endToken = true;
+					break;
+				}
+			
+				// check for block separator
+				blockSepIndex = 1;
+				while ((blockSepIndex <= blockSep.length) &&
+						(blockSep[blockSep.length - blockSepIndex] == tokenBuf.charAt(tokenBuf.length() - blockSepIndex)))
+					blockSepIndex++;
+			
+				if (blockSepIndex > blockSep.length)
+				{
+					endBlock = true;
+					break;
+				}
+				
+				nextChar = reader.read();
+			}		
+			
+			// remove separator characters from buffer
+			if (endToken)
+			{
+				tokenBuf.setLength(tokenBuf.length() - tokenSepIndex + 1);
+				if(consecutiveTokenSep)
+				{
+					tokenBuf.setLength(0);
+					consecutiveTokenSep = false;
+				}
+				
+			}
+			else if (endBlock)
+				tokenBuf.setLength(tokenBuf.length() - blockSepIndex + 1);
+			
+			return tokenBuf.toString();
 		}
-		else if (endBlock)
-			tokenBuf.setLength(tokenBuf.length() - blockSepIndex + 1);
-		
-		return tokenBuf.toString();
+		catch (IOException e)
+		{
+			throw new CDMException(STREAM_ERROR, e);
+		}
 	}
 	
 	
@@ -196,16 +202,8 @@ public class AsciiDataParser extends AbstractDataParser
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
 		char decimalSep = ((AsciiEncoding)dataEncoding).decimalSeparator;
-
-		try
-		{
-			String token = readToken();
-			parseToken(scalarInfo, token, decimalSep);
-		}
-		catch (IOException e)
-		{
-			throw new CDMException("Invalid ASCII stream");
-		}			
+		String token = readToken();
+		parseToken(scalarInfo, token, decimalSep);
 	}
     
     
@@ -213,7 +211,7 @@ public class AsciiDataParser extends AbstractDataParser
 	 * Checks if more data is available from the stream
 	 * @return true if more data needs to be parsed, false otherwise
 	 */
-	protected boolean moreData()
+	protected boolean moreData() throws CDMException
 	{
 		try
 		{
@@ -231,8 +229,7 @@ public class AsciiDataParser extends AbstractDataParser
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			return false;
+			throw new CDMException(STREAM_ERROR, e);
 		}
 	}
     
@@ -336,7 +333,7 @@ public class AsciiDataParser extends AbstractDataParser
             if ((e instanceof NumberFormatException) || (e instanceof ParseException))
             	throw new CDMException("Invalid data '" + token + "' for component '" + scalarInfo.getName() + "'", e);
             else
-            	e.printStackTrace();
+            	throw new CDMException(STREAM_ERROR, e);
         }
         
         return data;
@@ -346,6 +343,22 @@ public class AsciiDataParser extends AbstractDataParser
 	@Override
 	protected boolean processBlock(DataComponent blockInfo) throws CDMException
 	{
+		if (blockInfo instanceof DataChoice)
+		{
+			String token = null;
+			
+			// read implicit choice token
+			try
+			{
+				token = readToken();
+				((DataChoice)blockInfo).setSelectedComponent(token);
+			}
+			catch (IllegalStateException e)
+			{
+				throw new CDMException(CHOICE_ERROR + token);
+			}
+		}
+		
 		return true;
 	}
 }

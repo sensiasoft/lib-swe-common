@@ -79,9 +79,6 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 
 	
-	/**
-	 * 
-	 */
 	public void parse(InputStream inputStream) throws CDMException
 	{
 		stopParsing = false;
@@ -134,7 +131,7 @@ public class BinaryDataParser extends AbstractDataParser
 		}
 		catch (IOException e)
 		{
-			throw new CDMException("Error while reading binary stream", e);
+			throw new CDMException(STREAM_ERROR, e);
 		}
 		finally
 		{
@@ -145,7 +142,7 @@ public class BinaryDataParser extends AbstractDataParser
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				throw new CDMException(STREAM_ERROR, e);
 			}
 		}
 	}
@@ -221,14 +218,36 @@ public class BinaryDataParser extends AbstractDataParser
 	@Override
 	protected boolean processBlock(DataComponent blockInfo) throws CDMException
 	{
-		// get block details
-		BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(blockInfo);
-		
-		// parse whole block at once
-		if (binaryBlock != null)
+		if (blockInfo instanceof DataChoice)
 		{
-			parseBinaryBlock(blockInfo, binaryBlock);
-			return false;
+			int choiceIndex = -1;
+			
+			// read implicit choice index
+			try
+			{
+				choiceIndex = dataInput.readByte();
+				((DataChoice)blockInfo).setSelected(choiceIndex);
+			}
+			catch (IllegalStateException e)
+			{
+				throw new CDMException(CHOICE_ERROR + choiceIndex);
+			}
+			catch (IOException e)
+			{
+				throw new CDMException(STREAM_ERROR);
+			}
+		}
+		else
+		{		
+			// get block details
+			BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(blockInfo);
+			
+			// parse whole block at once if compression found
+			if (binaryBlock != null)
+			{
+				parseBinaryBlock(blockInfo, binaryBlock);
+				return false;
+			}
 		}
 		
 		return true;
@@ -239,12 +258,13 @@ public class BinaryDataParser extends AbstractDataParser
 	 * Checks if more data is available from the stream
 	 * @return true if more data needs to be parsed, false otherwise
 	 */
-	protected boolean moreData()
+	protected boolean moreData() throws CDMException
 	{
 		try
 		{
 			dataInput.mark(1);
 			int result = dataInput.read();
+			
 			if (result == -1)
 			{
 				return false;
@@ -257,8 +277,7 @@ public class BinaryDataParser extends AbstractDataParser
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
-			return false;
+			throw new CDMException(STREAM_ERROR, e);
 		}
 	}
 	

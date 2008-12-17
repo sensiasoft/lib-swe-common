@@ -72,7 +72,7 @@ public class XmlDataWriter extends AbstractDataWriter
 		}
 		catch (XMLStreamException e)
 		{
-			throw new CDMException(e);
+			throw new CDMException(STREAM_ERROR, e);
 		}
 		finally
 		{
@@ -83,7 +83,7 @@ public class XmlDataWriter extends AbstractDataWriter
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				throw new CDMException(STREAM_ERROR, e);
 			}
 		}
 	}
@@ -122,7 +122,7 @@ public class XmlDataWriter extends AbstractDataWriter
 		}
 		catch (XMLStreamException e)
 		{
-			throw new CDMException("Error while writing XML stream", e);
+			throw new CDMException(STREAM_ERROR, e);
 		}	
 	}
 	
@@ -139,7 +139,7 @@ public class XmlDataWriter extends AbstractDataWriter
 			{
 				writer.writeAttribute(localName, scalarInfo.getData().getStringValue());
 			}
-			else if (!localName.equals(SweConstants.SELECTED_ITEM_NAME))
+			else
 			{
 				String eltName = scalarInfo.getName();
 	            
@@ -154,7 +154,7 @@ public class XmlDataWriter extends AbstractDataWriter
         }
         catch (XMLStreamException e)
         {
-            throw new CDMException("Error while writing XML stream", e);
+            throw new CDMException(STREAM_ERROR, e);
         }
 	}
 	
@@ -167,7 +167,7 @@ public class XmlDataWriter extends AbstractDataWriter
 		}
 		catch (XMLStreamException e)
 		{
-			throw new CDMException(e);
+			throw new CDMException(STREAM_ERROR, e);
 		}
 	}
 
