@@ -20,8 +20,10 @@
 
 package org.vast.data;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 import org.vast.cdm.common.DataType;
@@ -43,7 +45,7 @@ import org.vast.cdm.common.DataType;
  */
 public class DataBlockList extends AbstractDataBlock
 {
-    protected LinkedList<AbstractDataBlock> blockList;
+    protected List<AbstractDataBlock> blockList;
 	protected int blockAtomCount = -1;
 	protected int blockIndex;
 	protected int localIndex;
@@ -53,6 +55,13 @@ public class DataBlockList extends AbstractDataBlock
     public DataBlockList()
     {
     	this.blockList = new LinkedList<AbstractDataBlock>();
+    	this.equalBlockSize = true;
+    }
+    
+    
+    public DataBlockList(boolean useArrayList)
+    {
+    	this.blockList = new ArrayList<AbstractDataBlock>();
     	this.equalBlockSize = true;
     }
     
@@ -102,13 +111,13 @@ public class DataBlockList extends AbstractDataBlock
     }
     
     
-    public LinkedList<AbstractDataBlock> getUnderlyingObject()
+    public List<AbstractDataBlock> getUnderlyingObject()
     {
         return blockList;
     }
     
     
-    public void setUnderlyingObject(LinkedList<AbstractDataBlock> blockList)
+    public void setUnderlyingObject(List<AbstractDataBlock> blockList)
     {
         this.blockList = blockList;
     }
@@ -136,12 +145,14 @@ public class DataBlockList extends AbstractDataBlock
 	public void resize(int size)
 	{
 		AbstractDataBlock childBlock = get(0);
-        blockList.clear();
+        atomCount = childBlock.atomCount * size;
+		blockList.clear();
+        
         if (childBlock != null)
         {
             for (int i=0; i<size; i++)
-                blockList.add(childBlock.copy());
-        }
+                blockList.add(childBlock.clone());
+        }        
 	}
 
     
@@ -177,6 +188,12 @@ public class DataBlockList extends AbstractDataBlock
     public ListIterator<AbstractDataBlock> blockIterator()
     {
         return this.blockList.listIterator();
+    }
+    
+    
+    public int getListSize()
+    {
+    	return this.blockList.size();
     }
     
     
@@ -230,7 +247,7 @@ public class DataBlockList extends AbstractDataBlock
 	public String toString()
     {
     	StringBuffer buffer = new StringBuffer();
-		buffer.append("Block List " + super.toString());
+		buffer.append("LIST " + super.toString());
 		buffer.append('\n');
     	int imax = blockList.size();
     	

@@ -52,28 +52,26 @@ import org.vast.data.DataList;
  */
 public class SWEData
 {
-    protected DataComponent dataComponents;
     protected DataEncoding dataEncoding;
     protected DataSource dataSource;
-    protected DataList dataBlocks;
+    protected DataList dataList;
 
 
     public SWEData()
     {
-        dataBlocks = new DataList();
+        dataList = new DataList();
     }
     
     
     public DataComponent getDataComponents()
     {
-        return dataComponents;
+        return dataList.getListComponent();
     }
 
 
     public void setDataComponents(DataComponent dataComponents)
     {
-        this.dataComponents = dataComponents;
-        dataBlocks.addComponent(dataComponents);
+        dataList.addComponent(dataComponents);
     }
 
 
@@ -101,15 +99,15 @@ public class SWEData
     }
     
     
-    public DataList getDataBlocks()
+    public DataList getDataList()
     {
-        return dataBlocks;
+        return dataList;
     }
 
 
-    public void setDataBlocks(DataList dataList)
+    public void setDataList(DataList dataList)
     {
-        this.dataBlocks = dataList;
+        this.dataList = dataList;
     }
     
     
@@ -121,7 +119,7 @@ public class SWEData
     public DataStreamParser getDataParser()
     {
         DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
-        parser.setDataComponents(dataComponents);
+        parser.setDataComponents(getDataComponents());
         return parser;
     }
     
@@ -134,7 +132,7 @@ public class SWEData
     public DataStreamWriter getDataWriter()
     {
         DataStreamWriter writer = SWEFactory.createDataWriter(dataEncoding);
-        writer.setDataComponents(dataComponents);
+        writer.setDataComponents(getDataComponents());
         return writer;
     }
     
@@ -165,7 +163,7 @@ public class SWEData
         	DataSourceDOM domSrc = (DataSourceDOM)dataSource;
         	XmlDataParserDOM parser = new XmlDataParserDOM();
         	parser.setDataEncoding(dataEncoding);
-        	parser.setDataComponents(dataComponents);
+        	parser.setDataComponents(getDataComponents());
         	parser.setDataHandler(new DefaultParserHandler(this));
         	parser.read(domSrc.getDom(), domSrc.getParentElt());
         }
@@ -186,7 +184,7 @@ public class SWEData
      */
     public void validateData(List<CDMException> errorList)
     {
-    	dataBlocks.validateData(errorList);
+    	dataList.validateData(errorList);
     }
     
     
@@ -203,7 +201,7 @@ public class SWEData
         	DataSinkDOM domSink = (DataSinkDOM)dataSink;
         	XmlDataWriterDOM writer = new XmlDataWriterDOM();
         	writer.setDataEncoding(dataEncoding);
-        	writer.setDataComponents(dataComponents);
+        	writer.setDataComponents(getDataComponents());
         	writer.setDataHandler(new DefaultWriterHandler(this, writer));
         	writer.write(domSink.getDom(), domSink.getParentElt());
         }

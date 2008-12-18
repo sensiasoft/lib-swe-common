@@ -56,11 +56,13 @@ public class DataBlockMixed extends AbstractDataBlock
 		blockArray = new AbstractDataBlock[numBlocks];
 	}
 	
+	
 	public DataBlockMixed(int numBlocks, int atomCount)
 	{
 		blockArray = new AbstractDataBlock[numBlocks];
 		this.atomCount = atomCount;
 	}
+	
 	
 	public DataBlockMixed copy()
 	{

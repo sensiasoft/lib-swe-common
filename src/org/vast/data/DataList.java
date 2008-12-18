@@ -114,6 +114,12 @@ public class DataList extends AbstractDataComponent
     }
     
     
+    public DataComponent getListComponent()
+    {
+    	return component;
+    }
+    
+    
     public AbstractDataComponent nextComponent()
     {
         component.setData(blockIterator.next());        

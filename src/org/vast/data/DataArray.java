@@ -151,15 +151,26 @@ public class DataArray extends AbstractDataComponent
     protected void updateAtomCount(int childAtomCountDiff)
     {
     	int arraySize = getComponentCount();
-    	int atomCountDiff = childAtomCountDiff * arraySize;
+    	int atomCountDiff = 0;
         
         if (dataBlock != null)
         {
-            AbstractDataBlock childBlock = component.dataBlock;
-            childBlock.resize(childBlock.atomCount * arraySize);
-            dataBlock.setUnderlyingObject(childBlock.getUnderlyingObject());
-            dataBlock.atomCount = childBlock.atomCount;
-            setData(dataBlock);
+            // if using DataBlockList, each array element is
+        	// independant and can be of variable length
+        	if (dataBlock instanceof DataBlockList)
+            {
+            	atomCountDiff = childAtomCountDiff;
+            	dataBlock.atomCount += atomCountDiff;
+            }
+            else
+            {        	
+            	atomCountDiff = childAtomCountDiff * arraySize;
+            	AbstractDataBlock childBlock = component.dataBlock;
+	            childBlock.resize(childBlock.atomCount * arraySize);
+	            dataBlock.setUnderlyingObject(childBlock.getUnderlyingObject());
+	            dataBlock.atomCount = childBlock.atomCount;
+	            setData(dataBlock);
+            }
         }
         
         if (parent != null)
@@ -231,9 +242,19 @@ public class DataArray extends AbstractDataComponent
     	// update size component if variable size
         if (variableSize && implicitSize)
         {
-        	// TODO should infer array size differently (keep size int in data block??)
-        	// TODO potential bug here with nested variable size arrays
-        	int newSize = dataBlock.getAtomCount() / component.scalarCount;
+        	int newSize = 0;
+        	
+        	if (dataBlock instanceof DataBlockList)
+        	{
+        		newSize = ((DataBlockList)dataBlock).getListSize();
+        	}
+        	else
+        	{
+	        	// TODO should infer array size differently (keep size int in data block??)
+	        	// TODO potential bug here with nested variable size arrays
+	        	newSize = dataBlock.getAtomCount() / component.scalarCount;	        	
+        	}
+        	
         	updateSizeComponent(newSize);
         }
         
@@ -343,6 +364,39 @@ public class DataArray extends AbstractDataComponent
     
     
     /**
+     * Do everyting that is necessary to properly resize data block 
+     * @param oldArraySize
+     * @param newArraySize
+     */
+    protected void resizeDataBlock(int oldArraySize, int newArraySize)
+    {
+    	if (dataBlock != null)
+        {
+            if (dataBlock instanceof DataBlockList)
+            {
+            	dataBlock.resize(newArraySize);
+            }
+            else
+            {
+            	this.scalarCount = component.scalarCount * newArraySize;
+            	dataBlock.resize(scalarCount);
+            	
+            	// reassign a copy of dataBlock to child
+            	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
+        		childBlock.atomCount = component.scalarCount;
+        		component.setData(childBlock);
+            }
+        }
+    	
+    	this.currentSize = newArraySize;
+    	
+    	// update parent atom count
+        if (parent != null)
+            parent.updateAtomCount(component.scalarCount * (newArraySize - oldArraySize));
+    }
+    
+    
+    /**
      * Dynamically update size of a VARIABLE SIZE array
      * Note that sizeData must carry the right value at this time
      */
@@ -385,34 +439,6 @@ public class DataArray extends AbstractDataComponent
             // resize datablock
             resizeDataBlock(oldSize, newSize);
     	}
-    }
-    
-    
-    protected void resizeDataBlock(int oldArraySize, int newArraySize)
-    {
-    	if (dataBlock != null)
-        {
-            if (dataBlock instanceof DataBlockList)
-            {
-            	dataBlock.resize(newArraySize);
-            }
-            else
-            {
-            	this.scalarCount = component.scalarCount * newArraySize;
-            	dataBlock.resize(scalarCount);
-            }
-            
-            // also assign dataBlock to child
-        	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
-    		childBlock.atomCount = component.scalarCount;
-    		component.setData(childBlock);
-        }
-    	
-    	this.currentSize = newArraySize;
-    	
-    	// update parent atom count
-        if (parent != null)
-            parent.updateAtomCount(component.scalarCount * (newArraySize - oldArraySize));
     }
     
     

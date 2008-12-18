@@ -53,7 +53,7 @@ public class DefaultWriterHandler implements DataHandler
     {
         this.sweData = sweData;
         this.writer = writer;
-        this.blockCount = sweData.getDataBlocks().getComponentCount();
+        this.blockCount = sweData.getDataList().getComponentCount();
     }
     
     
@@ -63,7 +63,7 @@ public class DefaultWriterHandler implements DataHandler
         
     	if (blockNum < blockCount)
         {
-            info.setData(sweData.getDataBlocks().getComponent(blockNum).getData());
+            info.setData(sweData.getDataList().getComponent(blockNum).getData());
             blockNum++;
         }            
     }
