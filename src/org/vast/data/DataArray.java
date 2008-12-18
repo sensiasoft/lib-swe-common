@@ -217,6 +217,12 @@ public class DataArray extends AbstractDataComponent
     }
     
     
+    public DataComponent getArrayComponent()
+    {
+    	return component;
+    }
+    
+    
     @Override
     public void setData(DataBlock dataBlock)
     {
@@ -347,14 +353,22 @@ public class DataArray extends AbstractDataComponent
     		int newSize = 0;
     		int oldSize = this.currentSize;
     		
-            // assign variable size value to arraySize
+    		// stop here if parent also has variable size
+            // in this case updateSize() will be called from parent anyway!!
+            if (parent instanceof DataArray)
+            {
+                if (((DataArray)parent).isVariableSize())
+                    return;
+            }
+            
+            //  
 	    	if (this.getSizeComponent() != null)
 	    	{
 	    		DataBlock data = sizeComponent.getData();
 	    		if (data != null)
                 {
 	    			// continue only if sized has changed
-	    			newSize = data.getIntValue();                    
+	    			newSize = data.getIntValue();
                     if (newSize == oldSize)
                         return;
                 }
@@ -368,32 +382,37 @@ public class DataArray extends AbstractDataComponent
                     ((DataArray)component).updateSize();
             }
             
-            // update scalarCount according to new arraySize
-            this.scalarCount = component.scalarCount * newSize;
-            
-            // save size so that we can detect if size changes later
-            // this avoids resizing arrays for nothing if size does not change!
-            this.currentSize = newSize;
-            
-            // stop here if parent also has variable size
-            // in this case parent will have to resize datablock anyway!!
-            if (parent instanceof DataArray)
-            {
-                if (((DataArray)parent).isVariableSize())
-                    return;
-            }
-            
-            // resize datablock if non null
-            if (dataBlock != null)
-            {
-                dataBlock.resize(scalarCount);
-                setData(dataBlock);
-            }
-            
-            // propagate to parents atomCount as well
-            if (parent != null)
-                parent.updateAtomCount(component.scalarCount * (newSize - oldSize));
+            // resize datablock
+            resizeDataBlock(oldSize, newSize);
     	}
+    }
+    
+    
+    protected void resizeDataBlock(int oldArraySize, int newArraySize)
+    {
+    	if (dataBlock != null)
+        {
+            if (dataBlock instanceof DataBlockList)
+            {
+            	dataBlock.resize(newArraySize);
+            }
+            else
+            {
+            	this.scalarCount = component.scalarCount * newArraySize;
+            	dataBlock.resize(scalarCount);
+            }
+            
+            // also assign dataBlock to child
+        	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
+    		childBlock.atomCount = component.scalarCount;
+    		component.setData(childBlock);
+        }
+    	
+    	this.currentSize = newArraySize;
+    	
+    	// update parent atom count
+        if (parent != null)
+            parent.updateAtomCount(component.scalarCount * (newArraySize - oldArraySize));
     }
     
     
@@ -412,21 +431,8 @@ public class DataArray extends AbstractDataComponent
     		int oldSize = this.currentSize; // don't use getComponentCount() because sizeData may have changed already
     		updateSizeComponent(newSize);
     		
-            // resize underlying datablock
-        	if (dataBlock != null)
-            {
-                this.scalarCount = component.scalarCount * newSize;
-                dataBlock.resize(scalarCount);
-                
-                // also assign dataBlock to child
-            	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
-        		childBlock.atomCount = component.scalarCount;
-        		component.setData(childBlock);
-            }
-            
-        	// update parent atom count
-            if (parent != null)
-                parent.updateAtomCount(component.scalarCount * (newSize - oldSize));
+    		// resize underlying datablock
+    		resizeDataBlock(oldSize, newSize);
         }
     }
     
@@ -446,27 +452,13 @@ public class DataArray extends AbstractDataComponent
         	DataBlock sizeBlock = sizeComponent.getData();
         	sizeBlock.setIntValue(newSize);
         	this.variableSize = false;
-        	this.currentSize = newSize;
         	
         	// stop here if size is same as before!
         	if (newSize == oldSize)
                 return;
         	
         	// resize underlying datablock
-        	if (dataBlock != null)
-            {
-                this.scalarCount = component.scalarCount * newSize;
-                dataBlock.resize(scalarCount);
-                
-                // also assign dataBlock to child
-            	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
-        		childBlock.atomCount = component.scalarCount;
-        		component.setData(childBlock);
-            }
-            
-        	// update parent atom count
-            if (parent != null)
-                parent.updateAtomCount(component.scalarCount * (newSize - oldSize));           
+        	resizeDataBlock(oldSize, newSize);         
         }
     }
     

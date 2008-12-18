@@ -54,6 +54,9 @@ public class ParamHelper
 
 	public DataComponent findParameterByName(String name, DataComponent parent)
 	{
+		if (parent instanceof DataArray)
+			parent = ((DataArray)parent).getArrayComponent();
+		
 		int childCount = parent.getComponentCount();
 		for (int i=0; i<childCount; i++)
 		{
@@ -75,6 +78,9 @@ public class ParamHelper
 
 	public DataComponent findParameterByDefinition(String defUri, DataComponent parent)
 	{
+		if (parent instanceof DataArray)
+			parent = ((DataArray)parent).getArrayComponent();
+		
 		int childCount = parent.getComponentCount();
 		for (int i=0; i<childCount; i++)
 		{
@@ -92,5 +98,4 @@ public class ParamHelper
 		
 		return null;
 	}
-
 }

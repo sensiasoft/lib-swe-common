@@ -136,7 +136,7 @@ public class DataBlockList extends AbstractDataBlock
 	public void resize(int size)
 	{
 		AbstractDataBlock childBlock = get(0);
-        blockList.clear();        
+        blockList.clear();
         if (childBlock != null)
         {
             for (int i=0; i<size; i++)

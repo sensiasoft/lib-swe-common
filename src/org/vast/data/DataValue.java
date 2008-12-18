@@ -26,7 +26,6 @@ import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataType;
 import org.vast.sweCommon.SweConstants;
-import org.vast.unit.Unit;
 
 
 /**
@@ -45,7 +44,6 @@ import org.vast.unit.Unit;
 public class DataValue extends AbstractDataComponent
 {
     protected DataType dataType;
-    protected Unit uom;
     
     
     public DataValue(String name)
@@ -208,18 +206,6 @@ public class DataValue extends AbstractDataComponent
     public void removeAllComponents()
     {
         throw new UnsupportedOperationException();
-    }
-
-
-    public Unit getUom()
-    {
-        return uom;
-    }
-
-
-    public void setUom(Unit uom)
-    {
-        this.uom = uom;
     }
 
 
