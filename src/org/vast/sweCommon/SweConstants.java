@@ -47,7 +47,7 @@ public class SweConstants
 	public final static String ID = "id"; // String
 	public final static String META = "meta"; // Object
 	public final static String DESC = "desc"; // String
-	public final static String NAMES = "names"; // List<QName>
+	public final static String NAME = "name"; // String
 	public final static String REF_FRAME = "ref_frame"; // String
 	public final static String REF_TIME = "ref_time"; // Double
 	public final static String LOCAL_FRAME = "loc_frame"; // String
@@ -65,4 +65,5 @@ public class SweConstants
 	public final static String UPDATABLE = "updatable"; // Boolean
 	public final static String OPTIONAL = "optional"; // Boolean
 	public final static String NIL_VALUES = "nil_values"; // NilValues object
+	public static final String ENCODING_TYPE = "encoding"; // DataEncoding object for DataArray
 }

@@ -23,7 +23,6 @@ package org.vast.sweCommon;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
@@ -388,21 +387,9 @@ public class SweComponentReaderV1 implements DataComponentReader
             dataComponent.setProperty(SweConstants.DESC, description);
         
         // gml names
-        NodeList nameList = dom.getElements(componentElt, "gml:name");
-        int listSize = nameList.getLength();
-        if (listSize != 0)
-        {
-            ArrayList<QName> names = new ArrayList<QName>(listSize);
-            for (int i=0; i<listSize; i++)
-            {
-                Element nextElt = (Element)nameList.item(i);
-                String value = dom.getElementValue(nextElt, "");
-                String codeSpace = dom.getAttributeValue(nextElt, "@codeSpace");
-                QName name = new QName(codeSpace, value);
-                names.add(name);
-            }
-            dataComponent.setProperty(SweConstants.NAMES, names);
-        }
+        String name = dom.getElementValue(componentElt, "gml:name");
+        if (name != null)
+            dataComponent.setProperty(SweConstants.NAME, name);
     }
     
     

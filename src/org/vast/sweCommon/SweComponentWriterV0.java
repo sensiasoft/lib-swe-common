@@ -57,27 +57,33 @@ public class SweComponentWriterV0 implements DataComponentWriter
     }
     
     
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponent) throws CDMException
+    {
+    	return writeComponent(dom, dataComponent, false);
+    }
+    
+    
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponent, boolean writeInlineData) throws CDMException
     {
         dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "0.0"));
-        
+        this.writeInlineData = writeInlineData;
         Element newElt = null;
         
-        if (dataComponents instanceof DataGroup)
+        if (dataComponent instanceof DataGroup)
         {
-            newElt = writeDataGroup(dom, (DataGroup)dataComponents);
+            newElt = writeDataGroup(dom, (DataGroup)dataComponent);
         }
-        else if (dataComponents instanceof DataArray)
+        else if (dataComponent instanceof DataArray)
         {
-            newElt = writeDataArray(dom, dataComponents);
+            newElt = writeDataArray(dom, dataComponent);
         }
-        else if (dataComponents instanceof DataList)
+        else if (dataComponent instanceof DataList)
         {
-            newElt = writeDataArray(dom, dataComponents);
+            newElt = writeDataArray(dom, dataComponent);
         }
-        else if (dataComponents instanceof DataValue)
+        else if (dataComponent instanceof DataValue)
         {
-            newElt = writeDataValue(dom, (DataValue)dataComponents);
+            newElt = writeDataValue(dom, (DataValue)dataComponent);
         }
 
         return newElt;

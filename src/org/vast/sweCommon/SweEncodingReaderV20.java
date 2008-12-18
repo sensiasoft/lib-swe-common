@@ -81,7 +81,10 @@ public class SweEncodingReaderV20 implements DataEncodingReader
     {
     	AsciiEncoding encoding = new AsciiEncoding();
     	
-    	encoding.decimalSeparator = dom.getAttributeValue(asciiEncodingElt, "decimalSeparator").charAt(0);
+    	String decimalSep = dom.getAttributeValue(asciiEncodingElt, "decimalSeparator");
+    	if (decimalSep != null)
+    		encoding.decimalSeparator = decimalSep.charAt(0);
+    	
     	encoding.tokenSeparator = dom.getAttributeValue(asciiEncodingElt, "tokenSeparator");
     	encoding.blockSeparator = dom.getAttributeValue(asciiEncodingElt, "blockSeparator");
     	

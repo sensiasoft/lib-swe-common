@@ -3,10 +3,11 @@
    <!-- -->
    <Namespace type="OGC" version="*" uri="http://www.opengis.net/ogc"/>
    <Namespace type="GML" version="*" uri="http://www.opengis.net/gml"/>
+   <Namespace type="GML" version="3.2" uri="http://www.opengis.net/gml/3.2"/>
    <Namespace type="GML" version="3.2.1" uri="http://www.opengis.net/gml/3.2"/>
    <Namespace type="XLINK" version="1.0" uri="http://www.w3.org/1999/xlink"/>
-    <Namespace type="XLINK" version="*" uri="http://www.w3.org/1999/xlink"/>
-    <Namespace type="SWE" version="0.0" uri="http://www.opengis.net/swe/0"/>
+   <Namespace type="XLINK" version="*" uri="http://www.w3.org/1999/xlink"/>
+   <Namespace type="SWE" version="0.0" uri="http://www.opengis.net/swe/0"/>
    <Namespace type="SWE" version="1.0" uri="http://www.opengis.net/swe/1.0"/>
    <Namespace type="SWE" version="1.0.1" uri="http://www.opengis.net/swe/1.0.1"/>
    <Namespace type="SWE" version="2.0" uri="http://www.opengis.net/swe/2.0"/>

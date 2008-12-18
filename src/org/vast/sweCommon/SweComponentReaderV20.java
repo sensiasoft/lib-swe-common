@@ -24,7 +24,6 @@ package org.vast.sweCommon;
 
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
@@ -541,11 +540,6 @@ public class SweComponentReaderV20 implements DataComponentReader
     {
         dom.addUserPrefix("gml", GML_NS);
         
-    	// gml:id
-    	String id = dom.getAttributeValue(componentElt, "@gml:id");
-        if (id != null)
-            dataComponent.setProperty(SweConstants.ID, id);
-        
         // gml metadata?
         
         // gml description
@@ -553,22 +547,10 @@ public class SweComponentReaderV20 implements DataComponentReader
         if (description != null)
             dataComponent.setProperty(SweConstants.DESC, description);
         
-        // gml names
-        NodeList nameList = dom.getElements(componentElt, "gml:name");
-        int listSize = nameList.getLength();
-        if (listSize > 0)
-        {
-            ArrayList<QName> names = new ArrayList<QName>(listSize);
-            for (int i=0; i<listSize; i++)
-            {
-                Element nextElt = (Element)nameList.item(i);
-                String value = dom.getElementValue(nextElt, "");
-                String codeSpace = dom.getAttributeValue(nextElt, "@codeSpace");
-                QName name = new QName(codeSpace, value);
-                names.add(name);
-            }
-            dataComponent.setProperty(SweConstants.NAMES, names);
-        }
+        // gml name
+        String name = dom.getElementValue(componentElt, "gml:name");
+        if (name != null)
+            dataComponent.setProperty(SweConstants.NAME, name);
     }
     
     
@@ -580,7 +562,12 @@ public class SweComponentReaderV20 implements DataComponentReader
      */
     private void readCommonAttributes(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws CDMException
     {
-        // definition URI
+    	// id
+    	String id = dom.getAttributeValue(componentElt, "@id");
+        if (id != null)
+            dataComponent.setProperty(SweConstants.ID, id);
+        
+    	// definition URI
         String defUri = readComponentDefinition(dom, componentElt);
         if (defUri != null)
             dataComponent.setProperty(SweConstants.DEF_URI, defUri);

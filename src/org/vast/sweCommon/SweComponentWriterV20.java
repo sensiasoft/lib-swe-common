@@ -23,13 +23,14 @@
 package org.vast.sweCommon;
 
 import java.util.Hashtable;
-import java.util.List;
 import org.w3c.dom.*;
+import org.vast.cdm.common.AsciiEncoding;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentWriter;
 import org.vast.cdm.common.DataConstraint;
+import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataType;
 import org.vast.data.*;
 import org.vast.ogc.OGCRegistry;
@@ -59,6 +60,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
 	public static Hashtable<QName, SweCustomWriter> customWriters;
 	protected String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
     protected boolean writeInlineData = false;
+    protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();
     
     
     public SweComponentWriterV20()
@@ -66,10 +68,17 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
         
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponent) throws CDMException
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException
+    {
+    	return writeComponent(dom, dataComponents, false);
+    }
+    
+    
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponent, boolean writeInlineData) throws CDMException
     {
         dom.addUserPrefix("swe", SWE_NS);
         dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
+        this.writeInlineData = writeInlineData;
         
         Element newElt = null;
         QName compQName = (QName)dataComponent.getProperty(SweConstants.COMP_QNAME);
@@ -155,7 +164,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	if (optional != null)
         		fieldElt.setAttribute("optional", (optional ? "true" : "false"));
     		
-            Element componentElt = writeComponent(dom, component);
+            Element componentElt = writeComponent(dom, component, writeInlineData);
             fieldElt.appendChild(componentElt);
         }
 
@@ -207,7 +216,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	if (optional != null)
         		fieldElt.setAttribute("optional", (optional ? "true" : "false"));
         	
-            Element componentElt = writeComponent(dom, component);
+            Element componentElt = writeComponent(dom, component, writeInlineData);
             fieldElt.appendChild(componentElt);
         }
 
@@ -239,7 +248,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
             Element propElt = dom.addElement(dataChoiceElt, "+swe:item");
         	propElt.setAttribute("name", component.getName());
         	
-            Element componentElt = writeComponent(dom, component);
+            Element componentElt = writeComponent(dom, component, writeInlineData);
             propElt.appendChild(componentElt);        
         }       
 
@@ -278,7 +287,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	Element fieldElt = dom.addElement(dataChoiceElt, fieldQName.getFullName());
         	dom.setAttributeValue(fieldElt, "@is", "item");
         	
-            Element componentElt = writeComponent(dom, component);
+            Element componentElt = writeComponent(dom, component, writeInlineData);
             fieldElt.appendChild(componentElt);
         }
 
@@ -325,10 +334,11 @@ public class SweComponentWriterV20 implements DataComponentWriter
     
     private void writeArrayContent(DOMHelper dom, DataArray dataArray, Element arrayElt) throws CDMException
     {
-        // write GML names and description
+    	// write common stuffs
         writeGmlProperties(dom, dataArray, arrayElt);
-        
-        // write elementCount
+    	writeCommonAttributes(dom, dataArray, arrayElt);
+    	
+    	// write elementCount
         int arraySize = dataArray.getComponentCount();
         Element eltCountElt = dom.addElement(arrayElt, "swe:elementCount");
         DataValue sizeData = dataArray.getSizeComponent();
@@ -346,8 +356,11 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	// case of explicitly referenced field
         	else
         	{
-	        	// TODO correctly write variable array size component ID here!!
-	        	dom.setAttributeValue(eltCountElt, "ref", "ARRAY_SIZE_IDREF");
+	        	String sizeCompID = (String)sizeData.getProperty(SweConstants.ID);
+	        	if (sizeCompID != null)
+	        		dom.setAttributeValue(eltCountElt, "ref", sizeCompID);
+	        	else
+	        		throw new CDMException("Component used for storing variable array size MUST have an ID");
         	}
         }
         
@@ -372,19 +385,23 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	if (!fieldName.equals("elementType"))
     		propElt.setAttribute("name", fieldName);
     	
-    	Element componentElt = writeComponent(dom, component);
+    	Element componentElt = writeComponent(dom, component, writeInlineData);
     	propElt.appendChild(componentElt);
     	
-    	// write common attributes
-    	writeCommonAttributes(dom, dataArray, arrayElt);
-        
-        // restore state of writeInlineData
+    	// restore state of writeInlineData
         writeInlineData = saveWriteInlineDataState;
                 
         // write tuple values if present
         if (dataArray.getData() != null && writeInlineData)
         {
-            // TODO write encoding!
+        	DataEncoding dataEncoding = (DataEncoding)dataArray.getProperty(SweConstants.ENCODING_TYPE);
+        	if (dataEncoding == null)
+        		dataEncoding = new AsciiEncoding("\n", " ");
+        	
+        	Element encPropElt = dom.addElement(arrayElt, "swe:encoding");
+        	Element encElt = encodingWriter.writeEncoding(dom, dataEncoding);
+        	encPropElt.appendChild(encElt);
+        	
         	Element tupleValuesElt = writeArrayValues(dom, dataArray);
         	arrayElt.appendChild(tupleValuesElt);
         }
@@ -416,7 +433,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	
         // write value if necessary
         if (writeInlineData)
-            dataValueElt.setTextContent(data.getStringValue());
+            dom.setElementValue(dataValueElt, "swe:value", data.getStringValue());
         
         return dataValueElt;
     }
@@ -447,7 +464,8 @@ public class SweComponentWriterV20 implements DataComponentWriter
         
         // write min/max values if necessary
         if (writeInlineData)
-        	rangeElt.setTextContent(min.getData().getStringValue() + " " + max.getData().getStringValue());
+        	dom.setElementValue(rangeElt, "swe:value", 
+        			min.getData().getStringValue() + " " + max.getData().getStringValue());
 
         return rangeElt;
     }
@@ -491,38 +509,32 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeGmlProperties(DOMHelper dom, DataComponent dataComponent, Element dataValueElt) throws CDMException
+    private void writeGmlProperties(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws CDMException
     {
-    	dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+    	dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML, "3.2.1"));
     	
     	// gml:id
     	String id = (String)dataComponent.getProperty(SweConstants.ID);
     	if (id != null)
-    		dom.setAttributeValue(dataValueElt, "@gml:id", id);
+    		dom.setAttributeValue(dataComponentElt, "@gml:id", id);
     	
     	// gml metadata?
     	
     	// description
     	String description = (String)dataComponent.getProperty(SweConstants.DESC);
     	if (description != null)
-    		dom.setElementValue(dataValueElt, "gml:description", description);
+    		dom.setElementValue(dataComponentElt, "gml:description", description);
     	
-    	// names
-    	List<QName> names = (List<QName>)dataComponent.getProperty(SweConstants.NAMES);
-    	if (names != null)
-    		for (int n=0; n<names.size(); n++)
-    		{
-    			QName qname = names.get(n);
-    			Element nameElt = dom.setElementValue(dataValueElt, "+gml:name", qname.getLocalName());
-    			if (qname.getNsUri() != null)
-    				dom.setAttributeValue(nameElt, "@codeSpace", qname.getNsUri());
-    		}
+    	// name
+    	String name = (String)dataComponent.getProperty(SweConstants.NAME);
+    	if (name != null)
+    		dom.setElementValue(dataComponentElt, "gml:name", name);
     }
     
     
     private void writeCommonAttributes(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws CDMException
     {
-        // definition URI
+    	// definition URI
         Object defUri = dataComponent.getProperty(SweConstants.DEF_URI);
         if (defUri != null)
             dataComponentElt.setAttribute("definition", (String)defUri);
@@ -692,17 +704,4 @@ public class SweComponentWriterV20 implements DataComponentWriter
     {
     	// TODO write Quality 
     }
-
-
-    public boolean getWriteInlineData()
-    {
-        return writeInlineData;
-    }
-
-
-    public void setWriteInlineData(boolean writeInlineData)
-    {
-        this.writeInlineData = writeInlineData;
-    }
-
 }

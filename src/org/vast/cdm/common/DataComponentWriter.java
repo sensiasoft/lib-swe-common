@@ -52,4 +52,15 @@ public interface DataComponentWriter
 	 */
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException;
     
+    
+    /**
+     * Creates a DOM Element from a DataComponent object
+     * with the option of writing inline data in all components of the tree
+     * @param dom
+     * @param dataComponents
+     * @param writeInlineData
+     * @return
+     * @throws CDMException
+     */
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents, boolean writeInlineData) throws CDMException;
 }

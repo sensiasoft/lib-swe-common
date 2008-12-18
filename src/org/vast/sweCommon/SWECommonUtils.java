@@ -98,6 +98,13 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         DataComponentWriter writer = getDataComponentWriter();
         return writer.writeComponent(dom, dataComponents);
     }
+    
+    
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents, boolean writeInlineData) throws CDMException
+    {
+        DataComponentWriter writer = getDataComponentWriter();
+        return writer.writeComponent(dom, dataComponents, writeInlineData);
+    }
 
 
     public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws CDMException
