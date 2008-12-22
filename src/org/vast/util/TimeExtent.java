@@ -291,18 +291,48 @@ public class TimeExtent
     }
 
 
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null)
+        	return false;
+        
+    	if (!(obj instanceof TimeExtent))
+        	return false;
+    	
+    	return equals((TimeExtent)obj);
+    }
+    
+    
     /**
-     * Tests if time ranges are equal
+     * Checks if time extents are equal (no null check)
+     * (i.e. stop=stop AND start=start)
      * @param timeExtent
      * @return
      */
-    public boolean compareTimeRange(TimeExtent timeExtent)
+    public boolean equals(TimeExtent timeExtent)
     {
-        if (this.getAdjustedLagTime() != timeExtent.getAdjustedLagTime())
-            return false;
-        
-        if (this.getAdjustedLeadTime() != timeExtent.getAdjustedLeadTime())
-            return false;
+    	if (!baseAtNow)
+    	{
+    	   	if (( this.getAdjustedLagTime() != timeExtent.getAdjustedLagTime() ) &&
+	    	   !( this.isBeginNow() && timeExtent.isBeginNow() ))
+	            return false;
+	        
+	        if (( this.getAdjustedLeadTime() != timeExtent.getAdjustedLeadTime() ) &&
+	    	   !( this.isEndNow() && timeExtent.isEndNow() ))
+	            return false;
+    	}
+    	else
+    	{
+    		if (!timeExtent.isBaseAtNow())
+    			return false;
+    		
+    		if (this.getLagTimeDelta() != timeExtent.getLagTimeDelta())
+    			return false;
+    		
+    		if (this.getLeadTimeDelta() != timeExtent.getLeadTimeDelta())
+    			return false;    		
+    	}
         
         return true;
     }
