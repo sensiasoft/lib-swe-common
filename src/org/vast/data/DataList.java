@@ -154,8 +154,16 @@ public class DataList extends AbstractDataComponent
     	// do only if constraints are specified on descendants
     	if (hasConstraints())
     	{
+    		int numErrors = errorList.size();
+    		
     		for (int i = 0; i < getComponentCount(); i++)
+    		{
     			getComponent(i).validateData(errorList);
+    			
+    			// max N errors generated!
+    			if (errorList.size() > numErrors + MAX_ARRAY_ERRORS)
+    				return;
+    		}
     	}
     }
     

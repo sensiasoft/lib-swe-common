@@ -287,8 +287,8 @@ public class DataArray extends AbstractDataComponent
     		{
     			getComponent(i).validateData(errorList);
     			
-    			// max 10 errors generated!
-    			if (errorList.size() > numErrors + 10)
+    			// max N errors generated!
+    			if (errorList.size() > numErrors + MAX_ARRAY_ERRORS)
     				return;
     		}
     	}
