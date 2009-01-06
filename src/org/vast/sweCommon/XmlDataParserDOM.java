@@ -163,10 +163,13 @@ public class XmlDataParserDOM extends AbstractDataParser
 	}
 	
 	
-	protected Element getCurrentElement(DataComponent componentInfo)
+	protected Element getCurrentElement(DataComponent componentInfo) throws CDMException
 	{
 		setCurrentParent();
 		String eltName = getElementName(componentInfo);
+		
+		if (!dom.existElement(currentParentElt, eltName))
+			throw new CDMException("Missing XML element: " + eltName);
 		
 		// case of element at root of block
 		if (componentStack.isEmpty())
@@ -226,7 +229,7 @@ public class XmlDataParserDOM extends AbstractDataParser
 	{
 		setCurrentParent();
 		String localName = scalarInfo.getName();
-		String val;		
+		String val;
 		
 		// special case of array size -> read from elementCount attribute
 		if (localName.equals(SweConstants.ELT_COUNT_NAME))
