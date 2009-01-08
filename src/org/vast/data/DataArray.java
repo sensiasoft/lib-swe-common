@@ -493,7 +493,7 @@ public class DataArray extends AbstractDataComponent
      * Simply update value in size data component w/o resizing datablock
      * @param newSize
      */
-    protected void updateSizeComponent(int newSize)
+    public void updateSizeComponent(int newSize)
     {
     	// update value of size data
     	DataBlock data = sizeComponent.getData();
