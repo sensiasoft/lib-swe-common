@@ -57,15 +57,15 @@ public class DateTime extends Date
 	
 	public DateTime(double julianTime)
 	{
-		super((long)julianTime*1000);
+		super((long)(julianTime*1000));
 	}
 	
 	
-	public DateTime(String iso8601) 
+	public DateTime(String iso8601)
 	{
 		try
 		{
-			this.setTime((long)DateTimeFormat.parseIso(iso8601) * 1000);
+			this.setTime((long)(DateTimeFormat.parseIso(iso8601) * 1000));
 		}
 		catch (ParseException e)
 		{
