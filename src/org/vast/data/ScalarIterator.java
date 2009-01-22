@@ -42,7 +42,7 @@ import org.vast.cdm.common.DataComponent;
 public class ScalarIterator
 {
     protected Stack<Record> componentStack = new Stack<Record>();
-    protected Record currentComponent;
+    protected Record currentRecord;
     protected DataComponent nextComponent;
     protected DataComponent baseComponent;
 
@@ -55,7 +55,12 @@ public class ScalarIterator
         public Record(DataComponent parent)
         {
             this.parent = parent;
-            this.count = parent.getComponentCount();
+            
+            if (parent instanceof DataArray)
+                this.count = 1;
+            else
+                this.count = parent.getComponentCount();
+            
             this.index = 0;
         }
     }
@@ -71,33 +76,33 @@ public class ScalarIterator
     public void reset()
     {
     	componentStack.clear();
-    	currentComponent = new Record(baseComponent);
-    	componentStack.push(currentComponent);
+    	currentRecord = new Record(baseComponent);
+    	//componentStack.push(currentComponent);
     }
 
 
     public boolean hasNext()
     {
         // if at the end of previous record
-        while(currentComponent.index >= currentComponent.count)
+        while(currentRecord.index >= currentRecord.count)
         {
             if (!componentStack.isEmpty())
-                currentComponent = componentStack.pop();
+                currentRecord = componentStack.pop();
             else
                 break;
         }
         
-        if (componentStack.isEmpty() && (currentComponent.index >= currentComponent.count))
+        if (componentStack.isEmpty() && (currentRecord.index >= currentRecord.count))
             return false;
         else
             return true;
     }
 
 
-    public DataComponent next()
+    public DataValue next()
     {
         nextComponent = getNextScalar();
-        return nextComponent;
+        return (DataValue)nextComponent;
     }
     
     
@@ -105,14 +110,14 @@ public class ScalarIterator
     {
         nextComponent = getNextScalar();
         
-        int numComponents = componentStack.size();
-        DataComponent[] componentPath = new DataComponent[numComponents+1];
+        int numComponents = componentStack.size() + 2;
+        DataComponent[] componentPath = new DataComponent[numComponents];
         
-        for (int i=0; i<numComponents; i++)
+        for (int i=0; i<numComponents-2; i++)
             componentPath[i] = componentStack.get(i).parent;
         
-        //componentPath[numComponents-1] = oldParent;
-        componentPath[numComponents] = nextComponent;
+        componentPath[numComponents-2] = currentRecord.parent;
+        componentPath[numComponents-1] = nextComponent;
         
         return componentPath;
     }
@@ -124,24 +129,20 @@ public class ScalarIterator
      * Uses a stack instead of recursion
      * @return DataContainer
      */
-    private DataComponent getNextScalar()
+    private DataValue getNextScalar()
     {
     	// now get next child
-    	DataComponent next = currentComponent.parent.getComponent(currentComponent.index);
-        currentComponent.index++;
+    	DataComponent next = currentRecord.parent.getComponent(currentRecord.index);
+        currentRecord.index++;
         
         // if child is not a DataValue, go in !!
         if (!(next instanceof DataValue))
         {
-        	componentStack.push(currentComponent);
-        	currentComponent = new Record(next);
-        	
-        	if (next instanceof DataArray)
-        		currentComponent.count = 1;
-        	
+        	componentStack.push(currentRecord);
+        	currentRecord = new Record(next);
         	return getNextScalar();
         }
         
-        return next;
+        return (DataValue)next;
     }
 }

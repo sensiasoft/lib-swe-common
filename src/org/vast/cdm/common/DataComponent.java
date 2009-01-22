@@ -76,6 +76,12 @@ public interface DataComponent extends Cloneable
 	public void setProperty(String propName, Object propValue);
 	
 	
+	public EncodingInfo getEncodingInfo();
+	
+	
+	public void setEncodingInfo(EncodingInfo encInfo);
+	
+	
 	public DataBlock getData();
 	
 	

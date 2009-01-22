@@ -53,41 +53,51 @@ public class AsciiDataWriter extends AbstractDataWriter
 	}
 	
 	
-	/**
-	 * Start writing data to the given output stream
-	 */
-	public void write(OutputStream outputStream) throws CDMException
-	{
-		try
-		{
-            outputWriter = new OutputStreamWriter(outputStream);
-			tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
-			blockSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
-			firstToken = true;
-            appendBlockSeparator = false;
-            
-			do processNextElement();
-			while(!stopWriting);
-		}
-		finally
-		{
-			try
-			{
-				outputStream.close();
-                dataComponents.clearData();
-			}
-			catch (IOException e)
-			{
-				throw new CDMException(STREAM_ERROR, e);
-			}
-		}
-	}
+	@Override
+    public void setOutput(OutputStream outputStream) throws CDMException
+    {
+	    outputWriter = new OutputStreamWriter(outputStream);
+        tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
+        blockSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
+        firstToken = true;
+        appendBlockSeparator = false;
+    }
     
     
+	@Override
     public void reset() throws CDMException
     {
         super.reset();
         appendBlockSeparator = true;
+    }
+	
+	
+	@Override
+    public void close() throws CDMException
+    {
+        try
+        {
+            outputWriter.flush();
+            outputWriter.close();
+        }
+        catch (IOException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }
+    }
+	
+	
+	@Override
+    public void flush() throws CDMException
+    {
+        try
+        {
+            outputWriter.flush();
+        }
+        catch (IOException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }       
     }
 	
 	
@@ -128,20 +138,7 @@ public class AsciiDataWriter extends AbstractDataWriter
     }
 
 
-	public void flush() throws CDMException
-	{
-		try
-		{
-			outputWriter.flush();
-		}
-		catch (IOException e)
-		{
-			throw new CDMException(STREAM_ERROR, e);
-		}		
-	}
-
-
-	@Override
+    @Override
 	protected boolean processBlock(DataComponent blockInfo) throws CDMException
 	{
 		if (blockInfo instanceof DataChoice)

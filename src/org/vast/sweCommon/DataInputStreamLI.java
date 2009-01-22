@@ -33,8 +33,8 @@ import java.io.InputStream;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Extension of DataInputStream to support reading unsigned int and long
- * values as well as ASCII (0 terminated) strings from byte stream.
+ * Equivalent of DataInputStream to read little endian ordered streams
+ * (i.e. Lower Significant Byte first)
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -199,7 +199,6 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
 		
 		return buf.toString();
 	}
-
 
 
     public void readFully(byte[] b) throws IOException

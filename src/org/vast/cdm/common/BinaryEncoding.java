@@ -20,6 +20,10 @@
 
 package org.vast.cdm.common;
 
+import java.util.ArrayList;
+import org.vast.data.DataValue;
+import org.vast.data.ScalarIterator;
+
 
 /**
  * <p><b>Title:</b>
@@ -75,15 +79,54 @@ public class BinaryEncoding implements DataEncoding
 		buf.append(byteOrder);
 		buf.append('\n');
 		
-		for (int i=0; i<componentEncodings.length; i++)
+		for (BinaryOptions binaryOpts: componentEncodings)
 		{
 			buf.append("  ");
-			buf.append(componentEncodings[i].componentName);
+			buf.append(binaryOpts.componentName);
 			buf.append(" -> ");
-	//		buf.append(componentEncodings[i].type);
+			
+			if (binaryOpts instanceof BinaryComponent)
+			    buf.append(((BinaryComponent)binaryOpts).type);
+			else if (binaryOpts instanceof BinaryBlock)
+			    buf.append(((BinaryBlock)binaryOpts).compression);
+			    
 			buf.append('\n');
 		}
 		
 		return buf.toString(); 
 	}
+    
+    
+    public static BinaryEncoding getDefaultEncoding(DataComponent dataComponents)
+    {
+        BinaryEncoding encoding = new BinaryEncoding();
+        encoding.byteEncoding = ByteEncoding.RAW;
+        encoding.byteOrder = ByteOrder.BIG_ENDIAN;
+        
+        ArrayList<BinaryOptions> encodingList = new ArrayList<BinaryOptions>();
+        
+        // use default encoding info for each data value
+        ScalarIterator it = new ScalarIterator(dataComponents);
+        while (it.hasNext())
+        {
+            DataComponent[] nextPath = it.nextPath();
+            DataValue nextScalar = (DataValue)nextPath[nextPath.length-1];
+            
+            // build path
+            StringBuffer pathString = new StringBuffer();
+            for (DataComponent component: nextPath)
+                pathString.append(component.getName() + '/');
+            
+            BinaryComponent binaryOpts = new BinaryComponent();
+            binaryOpts.type = nextScalar.getDataType();
+            binaryOpts.componentName = pathString.substring(0, pathString.length()-1);
+            
+            encodingList.add(binaryOpts);
+            nextScalar.setEncodingInfo(binaryOpts);
+        }
+        
+        encoding.componentEncodings = encodingList.toArray(new BinaryOptions[0]);
+        
+        return encoding;
+    }
 }

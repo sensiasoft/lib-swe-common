@@ -237,7 +237,11 @@ public class DataArray extends AbstractDataComponent
     @Override
     public void setData(DataBlock dataBlock)
     {
-    	this.dataBlock = (AbstractDataBlock)dataBlock;
+    	// HACK makes sure scalar count was properly computed
+        if (scalarCount == 0)
+            this.assignNewDataBlock();
+        
+        this.dataBlock = (AbstractDataBlock)dataBlock;
     	
     	// update size component if variable size
         if (variableSize && implicitSize)

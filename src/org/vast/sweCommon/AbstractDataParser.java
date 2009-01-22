@@ -62,6 +62,17 @@ public abstract class AbstractDataParser extends DataIterator implements DataStr
 	}
 	
 	
+	@Override
+	public void reset() throws CDMException
+    {
+	    super.reset();
+	    
+	    // generate new data block if not parsing to an array
+	    if (parentArray == null)
+	        dataComponents.renewDataBlock();
+    }
+	
+	
 	/**
 	 * Default parse method from a URI string
 	 */

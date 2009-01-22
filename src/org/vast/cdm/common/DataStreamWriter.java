@@ -69,7 +69,13 @@ public interface DataStreamWriter
     public void setDataEncoding(DataEncoding encoding);
 
 
-	public void write(OutputStream outputStream) throws CDMException;
+    public void write(OutputStream outputStream) throws CDMException;
+    
+    
+    public void write(DataBlock data) throws CDMException;
+    
+    
+    public void setOutput(OutputStream outputStream) throws CDMException;
     
     
     public void reset() throws CDMException;

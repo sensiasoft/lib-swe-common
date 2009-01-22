@@ -51,6 +51,7 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 	protected String namespace;
 	protected String prefix;
 	protected int prevStackSize = 0;
+	protected OutputStream outputStream;
 	
 	
 	public XmlDataWriterDOM()
@@ -58,34 +59,85 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 	}
 	
 	
+	@Override
+    public void setOutput(OutputStream outputStream) throws CDMException
+    {
+	    // in this writer the output stream is not always use
+	    // since we're writing to the DOM tree!
+	    this.outputStream = outputStream;
+	    
+	    if (dom == null)
+	        dom = new DOMHelper();
+	    
+	    namespace = ((XmlEncoding)dataEncoding).namespace;
+        prefix = ((XmlEncoding)dataEncoding).prefix;
+        if (prefix == null)
+            prefix = "data";
+        
+        if (namespace != null)
+            dom.addUserPrefix(prefix, namespace);
+    }
+	
+	
+    public void init(DOMHelper dom, Element parentElt) throws CDMException
+    {
+	    this.dom = dom;
+        this.currentParentElt = parentElt;
+        setOutput(null);
+    }
+    
+    
+    @Override
+    public void flush() throws CDMException
+    {
+        try
+        {
+            dom.serialize(dom.getRootElement().getFirstChild(), outputStream, true);
+        }
+        catch (IOException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }
+    }
+    
+    
+    @Override
+    public void close() throws CDMException
+    {
+        this.flush();
+        
+        try
+        {
+            outputStream.close();
+        }
+        catch (IOException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }
+    }
+	
+	
+	@Override
 	public void write(OutputStream outputStream) throws CDMException
 	{
-		try
-		{
-			DOMHelper dom = new DOMHelper("SweData");
-			write(dom, dom.getRootElement());
-			dom.serialize(dom.getRootElement().getFirstChild(), outputStream, true);
-		}
-		catch (IOException e)
-		{
-			throw new CDMException(e);
-		}
+		DOMHelper dom = new DOMHelper("SweData");
+		write(dom, dom.getRootElement());
 	}
+	
+	
+	@Override
+    public void write(DataBlock data) throws CDMException
+    {
+	    do processNextElement();
+        while(!isEndOfDataBlock());
+        
+        dataComponents.clearData();
+    }
 	
 	
 	public void write(DOMHelper dom, Element parentElt) throws CDMException
 	{
-		this.dom = dom;
-		
-		namespace = ((XmlEncoding)dataEncoding).namespace;
-		prefix = ((XmlEncoding)dataEncoding).prefix;
-		if (prefix == null)
-			prefix = "data";
-		
-		if (namespace != null)
-			dom.addUserPrefix(prefix, namespace);
-		
-		currentParentElt = parentElt;
+	    init(dom, parentElt);
 		
 		do processNextElement();
 		while(!stopWriting);
@@ -150,10 +202,5 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 			dom.setAttributeValue(currentParentElt, localName, val);
 		else
 			dom.setElementValue(currentParentElt, eltName, getStringValue(scalarInfo));
-	}
-	
-	
-	public void flush() throws CDMException
-	{
 	}
 }

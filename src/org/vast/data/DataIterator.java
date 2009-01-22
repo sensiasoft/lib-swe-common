@@ -86,7 +86,7 @@ public abstract class DataIterator
 	 * TODO nextInfo method description
 	 * @return
 	 */
-	protected void processNextElement() throws CDMException
+	public void processNextElement() throws CDMException
 	{
         // reset iterator if new block is starting
 		if (newBlock)
@@ -221,6 +221,12 @@ public abstract class DataIterator
     		currentRecord = new Record(next);
         }
 	}
+	
+	
+	public boolean isEndOfDataBlock()
+	{
+	    return newBlock;
+	}
 		
 	
 	/**
@@ -234,10 +240,6 @@ public abstract class DataIterator
             dataComponents = parentArray.getComponent(parentArrayIndex);
             parentArrayIndex++;
         }
-		
-		// generate new data block
-        else
-            dataComponents.renewDataBlock();
         
 		// reset component stack
         componentStack.clear();

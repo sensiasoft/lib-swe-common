@@ -390,7 +390,7 @@ public class SweComponentReaderV0 implements DataComponentReader
         // loop and read each array token        
         while (it.hasNext())
         {
-        	DataValue component = (DataValue)it.next();
+        	DataValue component = it.next();
             
             if (tokenCounter >= tokenCount)
             {

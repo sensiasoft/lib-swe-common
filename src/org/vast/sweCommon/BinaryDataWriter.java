@@ -21,7 +21,6 @@
 package org.vast.sweCommon;
 
 import java.io.*;
-import java.util.Hashtable;
 import org.vast.data.*;
 import org.vast.cdm.common.*;
 
@@ -44,8 +43,8 @@ import org.vast.cdm.common.*;
  */
 public class BinaryDataWriter extends AbstractDataWriter
 {
-	SWEOutputStream dataOutput;
-	Hashtable<DataValue, BinaryOptions> componentEncodings;
+    protected DataOutputExt dataOutput;
+	protected boolean componentEncodingResolved = false;
 	
 	
 	public BinaryDataWriter()
@@ -53,63 +52,68 @@ public class BinaryDataWriter extends AbstractDataWriter
 	}
 
 	
-	/**
-	 * 
-	 */
-	public void write(OutputStream outputStream) throws CDMException
+	@Override
+	public void setOutput(OutputStream outputStream) throws CDMException
 	{
-		OutputStream dataOut = null;
-		stopWriting = false;
-		
-		try
-		{
-			// use Base64 converter, and TODO swap bytes if necessary
-			switch (((BinaryEncoding)dataEncoding).byteEncoding)
-			{
-				case BASE64:
-					dataOut = new Base64Encoder(outputStream);
-					break;
-					
-				case RAW:
-					dataOut = outputStream;
-					break;
-					
-				default:
-					throw new CDMException("Unsupported byte encoding");
-			}
-			
-			// if a dataHandler is registered, parse each individual element
-			if (dataHandler != null)
-			{
-				dataOutput = new SWEOutputStream(new BufferedOutputStream(dataOut));
-				
-				do processNextElement();
-				while(!stopWriting);
-			}
-		}
-		finally
-		{
-			try
-			{
-				outputStream.close();
-                dataComponents.clearData();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
+	    // use Base64 converter
+        switch (((BinaryEncoding)dataEncoding).byteEncoding)
+        {
+            case BASE64:
+                outputStream = new Base64Encoder(outputStream);
+                break;
+                
+            case RAW:
+                break;
+                
+            default:
+                throw new CDMException("Unsupported byte encoding");
+        }
+        
+        // create right data output stream
+        if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.BIG_ENDIAN)
+            dataOutput = new DataOutputStreamBI(new BufferedOutputStream(outputStream));
+        else if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.LITTLE_ENDIAN)
+            dataOutput = new DataOutputStreamLI(new BufferedOutputStream(outputStream));
 	}
 	
-	
+		
 	@Override
 	public void reset() throws CDMException
 	{
-		if (componentEncodings == null)
+		if (!componentEncodingResolved)
 			resolveComponentEncodings();
 		
 		super.reset();
 	}
+	
+	
+	@Override
+	public void close() throws CDMException
+	{
+	    try
+        {
+	        dataOutput.flush();
+	        dataOutput.close();
+        }
+        catch (IOException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }
+	}
+	
+	
+	@Override
+	public void flush() throws CDMException
+    {
+        try
+        {
+            dataOutput.flush();
+        }
+        catch (IOException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }
+    }
 	
 	
 	/**
@@ -121,67 +125,45 @@ public class BinaryDataWriter extends AbstractDataWriter
 	 */
 	protected void resolveComponentEncodings()
 	{
-		componentEncodings = new Hashtable<DataValue, BinaryOptions>();
 		BinaryOptions[] encodingList = ((BinaryEncoding)dataEncoding).componentEncodings;
-				
-		for (int i=0; i<encodingList.length; i++)
+		
+	    for (BinaryOptions binaryOpts: encodingList)
 		{
-			String [] dataPath = encodingList[i].componentName.split("/");
-			DataComponent data = null;
+			String [] dataPath = binaryOpts.componentName.split("/");
+			DataComponent dataComponent = null;
 			
+			// find component in tree
             for (int j=0; j<dataPath.length; j++)
             {
                 if (j==0)
                 {
                     if (dataPath[0].equals(dataComponents.getName()))
-                        data = dataComponents;
+                        dataComponent = dataComponents;
                 }
                 else
-                    data = data.getComponent(dataPath[j]);
+                    dataComponent = dataComponent.getComponent(dataPath[j]);
                 
-                if (data == null)
+                if (dataComponent == null)
                 {
                     System.err.println("Unknown component " + dataPath[j]);
                     continue;
                 }
             }
 			
-			// add this mapping to the Hashtable
-			componentEncodings.put((DataValue)data, encodingList[i]);
-			
-			// modify DataValue dataType
-			switch (((BinaryComponent)encodingList[i]).type)
-			{
-				case UBYTE:
-					((DataValue)data).setDataType(DataType.SHORT);
-					break;
-			
-				case USHORT:
-					((DataValue)data).setDataType(DataType.INT);
-					break;
-					
-				case UINT:
-					((DataValue)data).setDataType(DataType.LONG);
-					break;
-					
-				case ULONG:
-					((DataValue)data).setDataType(DataType.LONG);
-					break;
-					
-				default:
-					((DataValue)data).setDataType(((BinaryComponent)encodingList[i]).type);
-			}		
+			dataComponent.setEncodingInfo(binaryOpts);	
 		}
+		
+		componentEncodingResolved = true;
 	}
 	
 	
 	@Override
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
-		// get next encoding component
-		BinaryComponent binaryComponent = (BinaryComponent)componentEncodings.get(scalarInfo);
+		// get encoding info for component
+		BinaryComponent binaryComponent = (BinaryComponent)scalarInfo.getEncodingInfo();
 		
-		// parse token = dataAtom					
+		// write token = dataAtom					
 		writeBinaryAtom(scalarInfo, binaryComponent);
 	}
 	
@@ -197,7 +179,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	{
 		try
 		{
-			switch (scalarInfo.getDataType())
+			switch (binaryInfo.type)
 			{
 				case BOOLEAN:
 					boolean boolValue = scalarInfo.getData().getBooleanValue();
@@ -276,19 +258,6 @@ public class BinaryDataWriter extends AbstractDataWriter
 	}
 	
 	
-	public void flush() throws CDMException
-	{
-		try
-		{
-			dataOutput.flush();
-		}
-		catch (IOException e)
-		{
-			throw new CDMException(STREAM_ERROR, e);
-		}		
-	}
-
-
 	@Override
 	protected boolean processBlock(DataComponent blockInfo) throws CDMException
 	{		
@@ -312,7 +281,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 		else
 		{
 			// get next encoding block
-			BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(blockInfo);
+			BinaryBlock binaryBlock = (BinaryBlock)blockInfo.getEncodingInfo();
 			
 			// write whole block at once
 			if (binaryBlock != null)
@@ -328,6 +297,6 @@ public class BinaryDataWriter extends AbstractDataWriter
 	
 	private void writeBinaryBlock(DataComponent scalarInfo,	BinaryBlock binaryBlock)  throws CDMException
 	{
-		// TODO call special compressed writer
+		// TODO implement writeBinaryBlock: call special compressed writer
 	}
 }

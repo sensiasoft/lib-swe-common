@@ -33,6 +33,7 @@ import java.io.DataInputStream;
  * <p><b>Description:</b><br/>
  * Extension of DataInputStream to support reading unsigned int and long
  * values as well as ASCII (0 terminated) strings from byte stream.
+ * This is for big endian order (i.e. Most Significant Byte first)
  * </p>
  *
  * <p>Copyright (c) 2005</p>

@@ -172,7 +172,11 @@ public class DataChoice extends AbstractDataComponent
     @Override
     public void setData(DataBlock dataBlock)
     {
-    	// must always be a datablock mixed!
+        // HACK makes sure scalar count was properly computed
+        if (scalarCount == 0)
+            this.assignNewDataBlock();
+        
+        // must always be a datablock mixed!
     	DataBlockMixed mixedBlock = (DataBlockMixed)dataBlock;
     	this.dataBlock = mixedBlock;
 

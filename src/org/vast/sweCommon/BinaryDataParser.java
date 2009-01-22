@@ -21,7 +21,6 @@
 package org.vast.sweCommon;
 
 import java.io.*;
-import java.util.Hashtable;
 import org.vast.data.*;
 import org.vast.cdm.common.*;
 
@@ -43,8 +42,8 @@ import org.vast.cdm.common.*;
  */
 public class BinaryDataParser extends AbstractDataParser
 {
-	protected Hashtable<DataComponent, BinaryOptions> componentEncodings;
 	protected DataInputExt dataInput;
+	protected boolean componentEncodingResolved = false;
 	
 	
 	public BinaryDataParser()
@@ -52,6 +51,7 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 	
 	
+	@Override
 	public void setInput(InputStream inputStream) throws CDMException
 	{
 		InputStream dataIn = null;
@@ -79,6 +79,7 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 
 	
+	@Override
 	public void parse(InputStream inputStream) throws CDMException
 	{
 		stopParsing = false;
@@ -148,11 +149,21 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 	
 	
+	//@Override
+	public DataBlock parse() throws CDMException
+	{
+	    do processNextElement();
+        while(!isEndOfDataBlock());
+	    
+	    return dataComponents.getData();
+	}
+	
+	
 	@Override
 	public void reset() throws CDMException
 	{
-		if (componentEncodings == null)
-			resolveComponentEncodings();
+		if (!componentEncodingResolved)
+		    resolveComponentEncodings();
 		
 		super.reset();
 	}
@@ -167,40 +178,44 @@ public class BinaryDataParser extends AbstractDataParser
 	 */
 	protected void resolveComponentEncodings() throws CDMException
 	{
-		componentEncodings = new Hashtable<DataComponent, BinaryOptions>();
 		BinaryOptions[] encodingList = ((BinaryEncoding)dataEncoding).componentEncodings;
 				
-		for (int i=0; i<encodingList.length; i++)
+		for (BinaryOptions binaryOpts: encodingList)
 		{
-			String [] dataPath = encodingList[i].componentName.split("/");
-			DataComponent data = null;
+			String [] dataPath = binaryOpts.componentName.split("/");
+			DataComponent dataComponent = null;
 			
+			// find component in tree
             for (int j=0; j<dataPath.length; j++)
             {
                 if (j==0)
                 {
                     if (dataPath[0].equals(this.dataComponents.getName()))
-                        data = this.dataComponents;
+                        dataComponent = this.dataComponents;
                 }
                 else
-                    data = data.getComponent(dataPath[j]);
+                    dataComponent = dataComponent.getComponent(dataPath[j]);
                 
-                if (data == null)
+                if (dataComponent == null)
                 {
-                    throw new CDMException("Unknown component " + encodingList[i].componentName);
+                    throw new CDMException("Unknown component " + binaryOpts.componentName);
                 }
             }
 			
-			// add this mapping to the Hashtable
-            if(encodingList[i] instanceof BinaryComponent){
-            	componentEncodings.put((DataValue)data, encodingList[i]);
-            	((DataValue)data).setDataType(((BinaryComponent)encodingList[i]).type);
+			// add binary info to component
+            if (binaryOpts instanceof BinaryComponent)
+            {
+            	((DataValue)dataComponent).setDataType(((BinaryComponent)binaryOpts).type);
+            	dataComponent.setEncodingInfo(binaryOpts);
             }
-            else if(encodingList[i] instanceof BinaryBlock){
-            	componentEncodings.put(data, encodingList[i]);
-            	((BinaryBlock)encodingList[i]).buildReader(data);
+            else if(binaryOpts instanceof BinaryBlock)
+            {
+                dataComponent.setEncodingInfo(binaryOpts);
+            	((BinaryBlock)binaryOpts).buildReader(dataComponent);
             }
 		}
+		
+		componentEncodingResolved = true;
 	}
 	
 	
@@ -208,7 +223,7 @@ public class BinaryDataParser extends AbstractDataParser
 	protected void processAtom(DataValue scalarInfo) throws CDMException
 	{
 		// get next encoding block
-		BinaryComponent binaryComponent = (BinaryComponent)componentEncodings.get(scalarInfo);
+		BinaryComponent binaryComponent = (BinaryComponent)scalarInfo.getEncodingInfo();
 		
 		// parse token = dataAtom					
 		parseBinaryAtom(scalarInfo, binaryComponent);
@@ -240,7 +255,7 @@ public class BinaryDataParser extends AbstractDataParser
 		else
 		{		
 			// get block details
-			BinaryBlock binaryBlock = (BinaryBlock)componentEncodings.get(blockInfo);
+			BinaryBlock binaryBlock = (BinaryBlock)blockInfo.getEncodingInfo();
 			
 			// parse whole block at once if compression found
 			if (binaryBlock != null)
@@ -258,7 +273,7 @@ public class BinaryDataParser extends AbstractDataParser
 	 * Checks if more data is available from the stream
 	 * @return true if more data needs to be parsed, false otherwise
 	 */
-	protected boolean moreData() throws CDMException
+	public boolean moreData() throws CDMException
 	{
 		try
 		{

@@ -20,6 +20,10 @@
 
 package org.vast.sweCommon;
 
+import java.io.OutputStream;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataBlock;
+import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.data.DataIterator;
 import org.vast.data.DataValue;
@@ -44,18 +48,70 @@ public abstract class AbstractDataWriter extends DataIterator implements DataStr
 {
 	protected final static String STREAM_ERROR = "IO Error while writing data stream";
 	protected final static String CHOICE_ERROR = "Invalid choice selection: ";
+	protected final static String NO_HANDLER_ERROR = "A DataHandler must be registered";
+	
 	protected boolean stopWriting = false;
-		
+	
 	
 	public AbstractDataWriter()
 	{
 		super(false);
 	}
+
+
+	public abstract void setOutput(OutputStream os) throws CDMException;
 	
+	public abstract void close() throws CDMException;
 	
-	/**
-	 * Stop the parsing from another thread
-	 */
+    public abstract void flush() throws CDMException;
+                
+    protected abstract void processAtom(DataValue scalarInfo) throws CDMException;
+
+    protected abstract boolean processBlock(DataComponent blockInfo) throws CDMException;
+    
+    
+    @Override
+    public void write(OutputStream outputStream) throws CDMException
+    {
+        // error if no dataHandler is registered
+        if (dataHandler == null)
+            throw new IllegalStateException(NO_HANDLER_ERROR);
+        
+        stopWriting = false;
+        
+        try
+        {
+            setOutput(outputStream);
+            
+            // keep writing until told to stop
+            do processNextElement();
+            while(!stopWriting);
+        }
+        finally
+        {
+            dataComponents.clearData();
+        }
+    }
+    
+    
+    @Override
+    public void write(DataBlock dataBlock) throws CDMException
+    {
+        dataComponents.setData(dataBlock);
+        
+        try
+        {
+            do processNextElement();
+            while(!isEndOfDataBlock());
+        }
+        finally
+        {
+            dataComponents.clearData();
+        }
+    }
+    
+    
+    @Override
 	public synchronized void stop()
 	{
         stopWriting = true;

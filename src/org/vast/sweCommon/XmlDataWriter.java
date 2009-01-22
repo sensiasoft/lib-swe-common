@@ -47,45 +47,79 @@ import org.vast.cdm.common.*;
  */
 public class XmlDataWriter extends AbstractDataWriter
 {
-	protected XMLStreamWriter writer;
+	protected XMLStreamWriter xmlWriter;
 	protected String namespace;
 	protected String prefix;
 	protected int prevStackSize = 0;
 	
 
+	public XmlDataWriter()
+	{	    
+	}
+	
+	
+	@Override
+    public void setOutput(OutputStream outputStream) throws CDMException
+    {
+	    try
+        {
+    	    XMLOutputFactory factory = XMLOutputFactory.newInstance();
+            xmlWriter = factory.createXMLStreamWriter(outputStream);
+            
+            namespace = ((XmlEncoding)dataEncoding).namespace;
+            prefix = ((XmlEncoding)dataEncoding).prefix;
+            if (prefix == null)
+                prefix = "data";
+        }
+	    catch (XMLStreamException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }
+    }
+	
+	
+	@Override
+    public void close() throws CDMException
+    {
+        try
+        {
+            xmlWriter.flush();
+            xmlWriter.close();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }
+    }
+    
+    
+    @Override
+    public void flush() throws CDMException
+    {
+        try
+        {
+            xmlWriter.flush();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }
+    }
+	
+	
+    @Override
 	public void write(OutputStream outputStream) throws CDMException
 	{
+		super.write(outputStream);
+		
 		try
-		{
-			XMLOutputFactory factory = XMLOutputFactory.newInstance();
-			writer = factory.createXMLStreamWriter(outputStream);
-			
-			namespace = ((XmlEncoding)dataEncoding).namespace;
-			prefix = ((XmlEncoding)dataEncoding).prefix;
-			if (prefix == null)
-				prefix = "data";
-			
-			do processNextElement();
-			while(!stopWriting);
-			
-			closeElements();
-		}
-		catch (XMLStreamException e)
-		{
-			throw new CDMException(STREAM_ERROR, e);
-		}
-		finally
-		{
-			try
-			{
-				outputStream.close();
-                dataComponents.clearData();
-			}
-			catch (IOException e)
-			{
-				throw new CDMException(STREAM_ERROR, e);
-			}
-		}
+        {
+            closeElements();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new CDMException(STREAM_ERROR, e);
+        }
 	}
 	
 	
@@ -95,7 +129,7 @@ public class XmlDataWriter extends AbstractDataWriter
 		{
 			while (prevStackSize > componentStack.size())
 			{
-				writer.writeEndElement();
+				xmlWriter.writeEndElement();
 				prevStackSize--;
 			}
 		}
@@ -114,9 +148,9 @@ public class XmlDataWriter extends AbstractDataWriter
 			String eltName = blockInfo.getName();
             
             if (namespace != null)
-            	writer.writeStartElement(prefix, eltName, namespace);
+            	xmlWriter.writeStartElement(prefix, eltName, namespace);
             else
-            	writer.writeStartElement(eltName); 
+            	xmlWriter.writeStartElement(eltName); 
 			
 			return true;
 		}
@@ -137,19 +171,19 @@ public class XmlDataWriter extends AbstractDataWriter
 			
 			if (localName.equals(SweConstants.ELT_COUNT_NAME))
 			{
-				writer.writeAttribute(localName, scalarInfo.getData().getStringValue());
+				xmlWriter.writeAttribute(localName, scalarInfo.getData().getStringValue());
 			}
 			else
 			{
 				String eltName = scalarInfo.getName();
 	            
 	            if (namespace != null)
-	            	writer.writeStartElement(prefix, eltName, namespace);           	
+	            	xmlWriter.writeStartElement(prefix, eltName, namespace);           	
 	            else
-	            	writer.writeStartElement(eltName);
+	            	xmlWriter.writeStartElement(eltName);
 	            
-	            writer.writeCharacters(getStringValue(scalarInfo));
-	            writer.writeEndElement();
+	            xmlWriter.writeCharacters(getStringValue(scalarInfo));
+	            xmlWriter.writeEndElement();
 	        }
         }
         catch (XMLStreamException e)
@@ -157,18 +191,4 @@ public class XmlDataWriter extends AbstractDataWriter
             throw new CDMException(STREAM_ERROR, e);
         }
 	}
-	
-	
-	public void flush() throws CDMException
-	{
-		try
-		{
-			writer.flush();
-		}
-		catch (XMLStreamException e)
-		{
-			throw new CDMException(STREAM_ERROR, e);
-		}
-	}
-
 }

@@ -27,12 +27,13 @@ import java.io.OutputStream;
 
 /**
  * <p><b>Title:</b><br/>
- * CDM Output Stream
+ * Data Output Stream for Big Endian
  * </p>
  *
  * <p><b>Description:</b><br/>
  * Extension of DataOutputStream to support writing unsigned int and long
- * values as well as ASCII (0 terminated) strings as byte sequence.
+ * values as well as ASCII (0 terminated) strings as byte sequence. This
+ * is for big endian order (i.e. Most Significant Byte first)
  * </p>
  *
  * <p>Copyright (c) 2005</p>
@@ -40,48 +41,57 @@ import java.io.OutputStream;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public class SWEOutputStream extends DataOutputStream
+public class DataOutputStreamBI extends DataOutputStream implements DataOutputExt
 {
 	
-	public SWEOutputStream(OutputStream is)
+	public DataOutputStreamBI(OutputStream is)
 	{
 		super(is);
 	}
 	
 	
-    public void writeUnsignedByte(short val) throws IOException
+    public void writeUnsignedByte(short v) throws IOException
     {
-        //TODO
+        byte b = (byte)(0xff & v);
+        this.write(b);
     }
     
     
-    public void writeUnsignedShort(int val) throws IOException
+    public void writeUnsignedShort(int v) throws IOException
     {
-        //TODO
+        byte[] b = new byte[2];
+        
+        // MSB first
+        b[0] = (byte)(0xff & (v >> 8) & 0xff);
+        b[1] = (byte)(0xff & v);
+        
+        this.write(b);
     }
     
     
-	public void writeUnsignedInt(long val) throws IOException
+	public void writeUnsignedInt(long v) throws IOException
 	{
-		//TODO
+	    byte[] b = new byte[4];
+	    
+	    // MSB first
+        b[0] = (byte)(0xff & (v >> 24));
+        b[1] = (byte)(0xff & (v >> 16));
+        b[2] = (byte)(0xff & (v >> 8));
+        b[3] = (byte)(0xff & v);
+        
+        this.write(b);
 	}
-	
-	
+		
 
-	public void writeUnsignedLong(long val) throws IOException
+	public void writeUnsignedLong(long v) throws IOException
 	{
-		this.writeLong(val);
+		this.writeLong(v);
 	}
 	
 	
-	/**
-     * Writes a zero terminated ascii string to the stream 
-     * @param asciiString
-     * @throws IOException
-	 */
-	public void writeASCII(String asciiString) throws IOException
+	public void writeASCII(String s) throws IOException
 	{
-		this.writeBytes(asciiString);
+		this.writeBytes(s);
 		this.writeByte(0);
     }
 }

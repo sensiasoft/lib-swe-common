@@ -194,6 +194,10 @@ public class DataGroup extends AbstractDataComponent
     {
     	assert(dataBlock != null);
     	
+    	// HACK makes sure scalar count was properly computed
+        if (scalarCount == 0)
+            this.assignNewDataBlock();
+        
     	this.dataBlock = (AbstractDataBlock)dataBlock;
 
 		// also assign dataBlock to children

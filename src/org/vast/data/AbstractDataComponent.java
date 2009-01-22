@@ -24,6 +24,7 @@ import java.util.*;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.EncodingInfo;
 
 
 /**
@@ -49,6 +50,7 @@ public abstract class AbstractDataComponent implements DataComponent
 	protected AbstractDataComponent parent = null;
 	protected int scalarCount = 0;
 	protected String name;
+	protected EncodingInfo encodingInfo;
 
 	
 	/**
@@ -131,6 +133,23 @@ public abstract class AbstractDataComponent implements DataComponent
 	public abstract AbstractDataComponent getComponent(int index);
 
 
+	/**
+     * Gives the index of the sub-component registered with this name
+     * @param componentName String
+     * @throws DataException
+     * @return int
+     */
+    public int getComponentIndex(String componentName)
+    {
+        Integer componentIndex = names.get(componentName);
+
+        if (componentIndex == null)
+            return -1;
+
+        return componentIndex.intValue();
+    }
+    
+    
 	/**
 	 * Returns data registered with the specified name
 	 * @param componentName String
@@ -300,19 +319,14 @@ public abstract class AbstractDataComponent implements DataComponent
 	}
 
 
-	/**
-	 * Gives the index of the component registered with this name
-	 * @param componentName String
-	 * @throws DataException
-	 * @return int
-	 */
-	public int getComponentIndex(String componentName)
-	{
-		Integer componentIndex = names.get(componentName);
+	public EncodingInfo getEncodingInfo()
+    {
+        return encodingInfo;
+    }
 
-		if (componentIndex == null)
-			return -1;
 
-		return componentIndex.intValue();
-	}
+    public void setEncodingInfo(EncodingInfo encodingInfo)
+    {
+        this.encodingInfo = encodingInfo;
+    }
 }
