@@ -24,8 +24,6 @@ import org.vast.data.DataBlockFactory;
 import org.vast.data.DataValue;
 import org.vast.sweCommon.DataInputExt;
 
-import sun.awt.image.ToolkitImage;
-
 
 /**
  * <p><b>Title:</b>
@@ -102,7 +100,7 @@ public class Jpeg2000Decoder extends CompressedStreamReader
 
 			Image imTmp = dec.getImage();
 			waitForImage(imTmp);
-			image = ((ToolkitImage)imTmp).getBufferedImage();
+			image = ((BufferedImage)imTmp).getBufferedImage();
 			setImageInByteArray();
 			return byteArray;
 		}

@@ -70,7 +70,6 @@ public abstract class AbstractDataWriter extends DataIterator implements DataStr
     protected abstract boolean processBlock(DataComponent blockInfo) throws CDMException;
     
     
-    @Override
     public void write(OutputStream outputStream) throws CDMException
     {
         // error if no dataHandler is registered
@@ -94,7 +93,6 @@ public abstract class AbstractDataWriter extends DataIterator implements DataStr
     }
     
     
-    @Override
     public void write(DataBlock dataBlock) throws CDMException
     {
         dataComponents.setData(dataBlock);
@@ -111,7 +109,6 @@ public abstract class AbstractDataWriter extends DataIterator implements DataStr
     }
     
     
-    @Override
 	public synchronized void stop()
 	{
         stopWriting = true;

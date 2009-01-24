@@ -51,7 +51,6 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 	
 	
-	@Override
 	public void setInput(InputStream inputStream) throws CDMException
 	{
 		InputStream dataIn = null;
@@ -79,7 +78,6 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 
 	
-	@Override
 	public void parse(InputStream inputStream) throws CDMException
 	{
 		stopParsing = false;
