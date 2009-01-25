@@ -49,14 +49,14 @@ public class OGCRegistry
     public final static String GML = "GML";
     public final static String XLINK = "XLINK";
     public final static String SLD = "SLD";
-    protected static Hashtable<String, Class> readerClasses;
-    protected static Hashtable<String, Class> writerClasses;
+    protected static Hashtable<String, Class<?>> readerClasses;
+    protected static Hashtable<String, Class<?>> writerClasses;
     protected static Hashtable<String, String> namespaces;
 
     static
     {
-        readerClasses = new Hashtable<String, Class>();
-        writerClasses = new Hashtable<String, Class>();
+        readerClasses = new Hashtable<String, Class<?>>();
+        writerClasses = new Hashtable<String, Class<?>>();
         namespaces = new Hashtable<String, String>();
         String mapFileUrl = OGCRegistry.class.getResource("OGCRegistry.xml").toString();
         loadMaps(mapFileUrl, false);
@@ -185,7 +185,7 @@ public class OGCRegistry
      * @param version
      * @return null if none found
      */
-    public static Class getReaderClass(String type, String subType, String version)
+    public static Class<?> getReaderClass(String type, String subType, String version)
     {
         return getClass(readerClasses, type, subType, version);
     }
@@ -198,7 +198,7 @@ public class OGCRegistry
      * @param version
      * @return null if none found
      */
-    public static Class getWriterClass(String type, String subType, String version)
+    public static Class<?> getWriterClass(String type, String subType, String version)
     {
         return getClass(writerClasses, type, subType, version);
     }
@@ -213,7 +213,7 @@ public class OGCRegistry
      * @param className
      * @throws IllegalStateException
      */
-    private static void addClass(Hashtable<String, Class> table, String type, String subType, String version, String className) throws IllegalStateException
+    private static void addClass(Hashtable<String, Class<?>> table, String type, String subType, String version, String className) throws IllegalStateException
     {
         type = normalizeTypeString(type);
         subType = normalizeSubtypeString(subType);
@@ -238,7 +238,7 @@ public class OGCRegistry
         // try to instantiate corresponding class
         try
         {
-            Class ioClass = Class.forName(className);
+            Class<?> ioClass = Class.forName(className);
             table.put(key.toString(), ioClass);
         }
         catch (ClassNotFoundException e)
@@ -258,9 +258,9 @@ public class OGCRegistry
      * @return
      * @throws IllegalStateException
      */
-    private static Class getClass(Hashtable<String, Class> table, String type, String subType, String version) throws IllegalStateException
+    private static Class<?> getClass(Hashtable<String, Class<?>> table, String type, String subType, String version) throws IllegalStateException
     {
-        Class ioClass;
+        Class<?> ioClass;
         StringBuffer key;
         type = normalizeTypeString(type);
         subType = normalizeSubtypeString(subType);
@@ -342,9 +342,9 @@ public class OGCRegistry
      * @param version
      * @return
      */
-    private static Object createObject(Hashtable<String, Class> table, String type, String subType, String version) throws IllegalStateException
+    private static Object createObject(Hashtable<String, Class<?>> table, String type, String subType, String version) throws IllegalStateException
     {
-        Class objClass = getClass(table, type, subType, version);
+        Class<?> objClass = getClass(table, type, subType, version);
 
         // instantiate the reader class using reflection
         try
@@ -483,7 +483,7 @@ public class OGCRegistry
      * Provides direct access to the readerClasses hashtable
      * @return
      */
-    public static Hashtable<String, Class> getReaderClasses()
+    public static Hashtable<String, Class<?>> getReaderClasses()
     {
         return readerClasses;
     }
@@ -493,7 +493,7 @@ public class OGCRegistry
      * Provides direct access to the writerClasses hashtable
      * @return
      */
-    public static Hashtable<String, Class> getWriterClasses()
+    public static Hashtable<String, Class<?>> getWriterClasses()
     {
         return writerClasses;
     }
