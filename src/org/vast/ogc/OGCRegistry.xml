@@ -45,6 +45,7 @@
    <Reader type="SensorML" subType="System" version="0.0" class="org.vast.sensorML.SystemReaderV0"/>
    <Reader type="SensorML" subType="Metadata" version="1.0" class="org.vast.sensorML.MetadataReaderV1"/>
    <Reader type="SensorML" subType="Process" version="1.0" class="org.vast.sensorML.ProcessReaderV1"/>
+   <Reader type="SensorML" subType="Process" version="1.0.1" class="org.vast.sensorML.ProcessReaderV1"/>
    <Reader type="SensorML" subType="System" version="1.0" class="org.vast.sensorML.SystemReaderV1"/>
    <!-- -->
 </Map>
