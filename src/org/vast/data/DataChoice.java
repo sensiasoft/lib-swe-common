@@ -238,7 +238,8 @@ public class DataChoice extends AbstractDataComponent
     		newBlock.blockArray[0].setIntValue(UNSELECTED);
     		newBlock.atomCount = 1;
     	}
-    	    	
+    	
+    	this.scalarCount = newBlock.atomCount;
         return newBlock;
     }
     
