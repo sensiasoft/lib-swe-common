@@ -45,7 +45,7 @@ public abstract class DataIterator
     protected boolean newBlock = true;
 	protected boolean endOfArray = false;
 	protected boolean parsing = true;
-	protected DataValue sizeValue = new DataValue(SweConstants.ELT_COUNT_NAME, DataType.INT); // for holding implicit array size
+	protected DataValue sizeValue; // for holding implicit array size
 	
     
 	protected class Record
@@ -67,6 +67,8 @@ public abstract class DataIterator
 	{
 		this.parsing = parsing;
 		this.componentStack = new Stack<Record>();
+		this.sizeValue = new DataValue(SweConstants.ELT_COUNT_NAME, DataType.INT);
+		this.sizeValue.assignNewDataBlock();
 	}
 	
 	

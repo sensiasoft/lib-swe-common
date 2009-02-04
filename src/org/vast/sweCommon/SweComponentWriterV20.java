@@ -417,8 +417,6 @@ public class SweComponentWriterV20 implements DataComponentWriter
      */
     private Element writeDataValue(DOMHelper dom, DataValue dataValue) throws CDMException
     {
-        DataBlock data = dataValue.getData();
-
         // create right element
         String eltName = getElementName(dataValue);
         Element dataValueElt = dom.createElement(eltName);
@@ -432,7 +430,8 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	writeQuality(dom, dataValue, dataValueElt);
     	
         // write value if necessary
-        if (writeInlineData)
+    	DataBlock data = dataValue.getData();
+    	if (writeInlineData && data != null)
             dom.setElementValue(dataValueElt, "swe:value", data.getStringValue());
         
         return dataValueElt;

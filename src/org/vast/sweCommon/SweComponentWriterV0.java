@@ -154,8 +154,7 @@ public class SweComponentWriterV0 implements DataComponentWriter
     {
         Object def = dataValue.getProperty("definition");
         String eltName = "swe:Parameter";
-        DataBlock data = dataValue.getData();
-        
+                
         // create right element and write value
         String scalarType = (String)dataValue.getProperty(SweConstants.COMP_QNAME);
         if (scalarType != null)
@@ -183,7 +182,8 @@ public class SweComponentWriterV0 implements DataComponentWriter
     	writeAttributes(dataValue, dataValueElt);
         
         // write value
-        if (writeInlineData)
+    	DataBlock data = dataValue.getData();
+        if (writeInlineData && data != null)
             dataValueElt.setTextContent(data.getStringValue());
         
         return dataValueElt;

@@ -501,8 +501,12 @@ public class DataArray extends AbstractDataComponent
     {
     	// update value of size data
     	DataBlock data = sizeComponent.getData();
-        if (data != null)
-            data.setIntValue(newSize);
+        if (data == null)
+        {
+        	sizeComponent.renewDataBlock();
+        	data = sizeComponent.getData();
+        }        
+        data.setIntValue(newSize);
         
         // save size so that we can detect if size changes later
         // this avoids resizing arrays for nothing if size does not change!
