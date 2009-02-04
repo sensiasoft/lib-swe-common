@@ -579,7 +579,7 @@ public class DataArray extends AbstractDataComponent
         
         // initialize size to 1 if variable size
         if (variableSize)
-        	sizeComponent.getData().setIntValue(1);
+        	updateSizeComponent(1);
         
         return sizeComponent;
     }

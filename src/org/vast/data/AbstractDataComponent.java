@@ -69,7 +69,7 @@ public abstract class AbstractDataComponent implements DataComponent
     public AbstractDataComponent clone()
     {
         AbstractDataComponent newComponent = this.copy();
-        if (newComponent.dataBlock != null)
+        if (this.dataBlock != null)
             newComponent.dataBlock = this.dataBlock.clone();
         return newComponent;
     }
