@@ -338,6 +338,10 @@ public class SweComponentWriterV20 implements DataComponentWriter
         writeGmlProperties(dom, dataArray, arrayElt);
     	writeCommonAttributes(dom, dataArray, arrayElt);
     	
+    	// make sure we disable writing data inline
+        boolean saveWriteInlineDataState = writeInlineData;
+        writeInlineData = false;
+        
     	// write elementCount
         int arraySize = dataArray.getComponentCount();
         Element eltCountElt = dom.addElement(arrayElt, "swe:elementCount");
@@ -372,10 +376,6 @@ public class SweComponentWriterV20 implements DataComponentWriter
     		eltCountElt.appendChild(countElt);
         }
                 	
-        // make sure we disable writing data inline
-        boolean saveWriteInlineDataState = writeInlineData;
-        writeInlineData = false;
-        
         // write array component
         Element propElt = dom.addElement(arrayElt, "swe:elementType");
         DataComponent component = dataArray.getComponent(0);
