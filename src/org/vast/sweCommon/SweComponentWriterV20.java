@@ -462,7 +462,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	writeQuality(dom, min, rangeElt);
         
         // write min/max values if necessary
-        if (writeInlineData)
+        if (writeInlineData && min.getData() != null && max.getData() != null)
         	dom.setElementValue(rangeElt, "swe:value", 
         			min.getData().getStringValue() + " " + max.getData().getStringValue());
 
