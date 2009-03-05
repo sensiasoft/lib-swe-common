@@ -32,6 +32,16 @@ public class OGCExceptionReader
 	public static void checkException(DOMHelper dom) throws OGCException
 	{
 		Element rootElt = dom.getRootElement();
+		
+		// SOAP envelope and fault cases
+		if (rootElt.getLocalName().equals("Envelope"))
+		{
+			rootElt = dom.getElement(rootElt, "Body/*");
+		
+			if (rootElt.getLocalName().equals("Fault"))
+				rootElt = dom.getElement(rootElt, "faultstring");
+		}
+		
         String exceptionText = dom.getElementValue(rootElt, "");
         
         if (exceptionText == null)
@@ -54,7 +64,7 @@ public class OGCExceptionReader
 	}
 	
 	
-	public void parseException(InputStream in) throws OGCException
+	public static void parseException(InputStream in) throws OGCException
 	{
 		try
         {
