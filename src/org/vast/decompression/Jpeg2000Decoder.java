@@ -82,7 +82,8 @@ public class Jpeg2000Decoder extends CompressedStreamReader
 
 			if(!fileBased){
 				ParameterList list = new ParameterList(getDefaultParams());
-				list.put("res", "3");
+				list.put("res", "5"); // full resolution
+				//list.put("res", "3"); // resolution divide by 4
 				dec = new Decoder(list);
 		 		dec.setByteArrayInputStream(byteArrayInputStream);
 			}
@@ -133,7 +134,9 @@ public class Jpeg2000Decoder extends CompressedStreamReader
             byte[] data = ((DataBufferByte)buf).getData();
             byteArray = data;
         }
-        else if (buf instanceof DataBufferInt)
+        
+        // for reduced resolution
+        /* else if (buf instanceof DataBufferInt)
         {
             int[] data = ((DataBufferInt)buf).getData();
             byte[] byteData = new byte[data.length*3/16];
@@ -154,22 +157,23 @@ public class Jpeg2000Decoder extends CompressedStreamReader
             	
             }
             byteArray = byteData;
-        }
+        }*/
         
-//        else if (buf instanceof DataBufferInt)
-//        {
-//            int[] data = ((DataBufferInt)buf).getData();
-//            byte[] byteData = new byte[data.length*3];
-//            
-//            for (int i=0; i<data.length; i++)
-//            {
-//                int b = i*3;
-//                byteData[b+2] = (byte)(data[i] & 0xFF);
-//                byteData[b+1] = (byte)((data[i] >> 8) & 0xFF);
-//                byteData[b] = (byte)((data[i] >> 16) & 0xFF);
-//            }
-//            byteArray = byteData;
-//        }
+        // for full resolution
+        else if (buf instanceof DataBufferInt)
+        {
+            int[] data = ((DataBufferInt)buf).getData();
+            byte[] byteData = new byte[data.length*3];
+            
+            for (int i=0; i<data.length; i++)
+            {
+                int b = i*3;
+                byteData[b+2] = (byte)(data[i] & 0xFF);
+                byteData[b+1] = (byte)((data[i] >> 8) & 0xFF);
+                byteData[b] = (byte)((data[i] >> 16) & 0xFF);
+            }
+            byteArray = byteData;
+        }
     }
 	
 	 private DataBlock getDecodedImageDataBlock(){
