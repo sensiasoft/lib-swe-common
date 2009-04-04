@@ -480,7 +480,6 @@ public class DataArray extends AbstractDataComponent
         	int oldSize = getComponentCount();
     		
     		// reset size data to fixed value
-        	this.sizeComponent = new DataValue("ArraySize", DataType.INT);
         	updateSizeComponent(newSize);
         	
         	this.variableSize = false;
