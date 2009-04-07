@@ -209,7 +209,6 @@ public class DataArray extends AbstractDataComponent
                     startIndex += index * ((DataArray)component).getComponentCount();
                 else
                     startIndex += index;
-               // System.err.println("DataArr: startIndx = " + startIndex);
             }
             else if (dataBlock instanceof DataBlockList)
             {
@@ -479,9 +478,10 @@ public class DataArray extends AbstractDataComponent
         {
         	int oldSize = getComponentCount();
     		
-    		// reset size data to fixed value
-        	updateSizeComponent(newSize);
-        	
+    		// set size data to fixed value
+        	if (this.variableSize)
+        	    this.sizeComponent = new DataValue(ARRAY_SIZE_FIELD, DataType.INT);
+        	updateSizeComponent(newSize);            
         	this.variableSize = false;
         	
         	// stop here if size is same as before!
