@@ -33,7 +33,7 @@ import org.vast.cdm.common.DataType;
  * <p><b>Description:</b><br/>
  * Array of identical DataContainers. Can be of variable size.
  * In the case of a variable size array, size is actually given
- * by another component: sizeData which should be a DataValue
+ * by another component: sizeComponent which should be a DataValue
  * carrying an Integer value.
  * There are two cases of variable size component:
  *  - The component is explicitely listed in the component tree
@@ -483,6 +483,7 @@ public class DataArray extends AbstractDataComponent
         	    this.sizeComponent = new DataValue(ARRAY_SIZE_FIELD, DataType.INT);
         	updateSizeComponent(newSize);            
         	this.variableSize = false;
+        	this.implicitSize = false;
         	
         	// stop here if size is same as before!
         	if (newSize == oldSize)
