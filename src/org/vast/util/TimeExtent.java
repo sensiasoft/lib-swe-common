@@ -124,7 +124,7 @@ public class TimeExtent
 
 
     /**
-     * To get baseTime without bias applied
+     * To get baseTime without bias applied (unless baseAtNow is true)
      * @return
      */
     public double getBaseTime()
@@ -139,6 +139,10 @@ public class TimeExtent
     /**
      * To get baseTime or absTime with bias applied
      * @return
+     * NOTE:  Check the logic here.  This applies timeBias twice if baseAtNow == true.
+     *       Is this even needed anymore.  Only two refs in project (including one in STT
+     *       from my timeWidget, which I think I can remove)
+     *       Consider removing and replacing with calls to getBaseTime();
      */
     public double getAdjustedTime()
     {
