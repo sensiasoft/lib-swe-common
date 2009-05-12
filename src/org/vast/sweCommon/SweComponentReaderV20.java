@@ -478,13 +478,13 @@ public class SweComponentReaderV20 implements DataComponentReader
         QName newQName = new QName(rangeElt.getNamespaceURI(), localName);
         paramVal.setProperty(SweConstants.COMP_QNAME, newQName);
         
-        // read attributes
+        // read group attributes
         readGmlProperties(range, dom, rangeElt);
+        readCommonAttributes(range, dom, rangeElt);
         
         // also assign attributes to scalar value
         readCommonAttributes(paramVal, dom, rangeElt);
         readUom(paramVal, dom, rangeElt);
-        readCodeSpace(paramVal, dom, rangeElt);
         readQuality(paramVal, dom, rangeElt);
         readConstraints(paramVal, dom, rangeElt);
         

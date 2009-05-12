@@ -453,11 +453,12 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	// create right range element
         Element rangeElt = dom.createElement(rangeQName.getFullName());
         
-        // write all properties
-        writeCommonAttributes(dom, min, rangeElt);
-        writeGmlProperties(dom, min, rangeElt);
+        // write group properties
+        writeCommonAttributes(dom, dataGroup, rangeElt);
+        writeGmlProperties(dom, dataGroup, rangeElt);
+        
+        // extracted some from min component and not from DataGroup!!
         writeUom(dom, min, rangeElt);
-        writeCodeSpace(dom, min, rangeElt);
     	writeConstraints(dom, min, rangeElt);
     	writeQuality(dom, min, rangeElt);
         

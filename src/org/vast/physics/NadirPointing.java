@@ -40,7 +40,9 @@ import org.vast.math.*;
  */
 public class NadirPointing
 {
-    
+    // TODO implement automatic yaw steering in computeMatrix
+	
+	
 	/**
      * Compute the rotation matrix to obtain nadir/north orientation
      * @param position vector in ECEF
