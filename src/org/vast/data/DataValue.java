@@ -121,7 +121,7 @@ public class DataValue extends AbstractDataComponent
     
     
     @Override
-    protected AbstractDataBlock createDataBlock()
+    public AbstractDataBlock createDataBlock()
     {
     	switch (dataType)
         {

@@ -54,14 +54,17 @@ public class DataBlockList extends AbstractDataBlock
     
     public DataBlockList()
     {
-    	this.blockList = new LinkedList<AbstractDataBlock>();
-    	this.equalBlockSize = true;
+    	this(false);
     }
     
     
     public DataBlockList(boolean useArrayList)
     {
-    	this.blockList = new ArrayList<AbstractDataBlock>();
+    	if (useArrayList)
+    		this.blockList = new ArrayList<AbstractDataBlock>();
+    	else
+    		this.blockList = new LinkedList<AbstractDataBlock>();
+    	
     	this.equalBlockSize = true;
     }
     
@@ -72,7 +75,7 @@ public class DataBlockList extends AbstractDataBlock
         newBlock.startIndex = this.startIndex;
         newBlock.blockAtomCount = this.blockAtomCount;
         newBlock.equalBlockSize = this.equalBlockSize;
-        newBlock.blockList = this.blockList;        
+        newBlock.blockList = this.blockList;       
         return newBlock;
     }
     

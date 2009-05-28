@@ -147,7 +147,7 @@ public class DataBlockMixed extends AbstractDataBlock
         int cumul = 0;
         int size;
         int desiredIndex = startIndex + index;
-                   
+        
         do
         {
             size = blockArray[i].atomCount;
@@ -198,18 +198,21 @@ public class DataBlockMixed extends AbstractDataBlock
 		buffer.append(": ");
 		buffer.append('[');
 
-		selectBlock(0);
-		int start = blockIndex;
-		selectBlock(getAtomCount() - 1);
-		int stop = blockIndex + 1;
-		
-		for (int i = start; i < stop; i++)
+		if (atomCount > 0)
 		{
-			buffer.append(blockArray[i].toString());
-			if (i < stop - 1)
-				buffer.append(',');
+			selectBlock(0);
+			int start = blockIndex;
+			selectBlock(getAtomCount() - 1);
+			int stop = blockIndex + 1;
+			
+			for (int i = start; i < stop; i++)
+			{
+				buffer.append(blockArray[i].toString());
+				if (i < stop - 1)
+					buffer.append(',');
+			}
 		}
-
+		
 		buffer.append(']');
 		return buffer.toString();
 	}

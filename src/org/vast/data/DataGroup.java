@@ -195,7 +195,7 @@ public class DataGroup extends AbstractDataComponent
     	assert(dataBlock != null);
     	
     	// HACK makes sure scalar count was properly computed
-        if (scalarCount == 0)
+        if (scalarCount < 0)
             this.assignNewDataBlock();
         
     	this.dataBlock = (AbstractDataBlock)dataBlock;
@@ -272,7 +272,7 @@ public class DataGroup extends AbstractDataComponent
      * Saved copy would be discarded every time the structure changes
      */
     @Override
-    protected AbstractDataBlock createDataBlock() 
+    public AbstractDataBlock createDataBlock() 
     {
     	DataType currentType = DataType.OTHER;
         DataType previousType = DataType.OTHER;

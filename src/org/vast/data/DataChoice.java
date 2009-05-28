@@ -173,7 +173,7 @@ public class DataChoice extends AbstractDataComponent
     public void setData(DataBlock dataBlock)
     {
         // HACK makes sure scalar count was properly computed
-        if (scalarCount == 0)
+        if (scalarCount < 0)
             this.assignNewDataBlock();
         
         // must always be a datablock mixed!
@@ -213,7 +213,7 @@ public class DataChoice extends AbstractDataComponent
     
     
     @Override
-    protected AbstractDataBlock createDataBlock()
+    public AbstractDataBlock createDataBlock()
     {
     	DataBlockMixed newBlock = new DataBlockMixed(2);
     	newBlock.blockArray[0] = new DataBlockInt(1);
@@ -223,7 +223,7 @@ public class DataChoice extends AbstractDataComponent
         for (int i=0; i<childNumber; i++)
         {
         	AbstractDataComponent nextComponent = itemList.get(i);
-            nextComponent.assignNewDataBlock();
+            nextComponent.assignNewDataBlock(); // HACK should only call createDataBlock
         }
         
         // if one item is selected, set data

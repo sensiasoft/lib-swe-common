@@ -81,9 +81,9 @@ public class DataArray extends AbstractDataComponent
         if (sizeComponent.getParent() == null)
         	implicitSize = true;
         
-        // initialize size to 1 if variable size
+        // initialize size to 0 if variable size
         if (variableSize)
-        	updateSizeComponent(1);
+        	updateSizeComponent(0);
         else
             currentSize = sizeComponent.getData().getIntValue();
     }
@@ -228,6 +228,16 @@ public class DataArray extends AbstractDataComponent
     }
     
     
+    @Override
+    public AbstractDataComponent getComponent(String componentName)
+	{
+		if (!componentName.equals(component.getName()))
+			return null;
+		
+		return component;
+	}
+    
+    
     public DataComponent getArrayComponent()
     {
     	return component;
@@ -238,7 +248,7 @@ public class DataArray extends AbstractDataComponent
     public void setData(DataBlock dataBlock)
     {
     	// HACK makes sure scalar count was properly computed
-        if (scalarCount == 0)
+        if (scalarCount < 0)
             this.assignNewDataBlock();
         
         this.dataBlock = (AbstractDataBlock)dataBlock;
@@ -275,7 +285,7 @@ public class DataArray extends AbstractDataComponent
         this.dataBlock = null;
         component.clearData();
         if (variableSize)
-        	updateSizeComponent(1);
+        	updateSizeComponent(0);
     }
     
     
@@ -305,14 +315,14 @@ public class DataArray extends AbstractDataComponent
      * or a group of mixed types parallel arrays (DataBlockMixed)
      */
     @Override
-    protected AbstractDataBlock createDataBlock()
+    public AbstractDataBlock createDataBlock()
     {
     	AbstractDataBlock childBlock = component.createDataBlock();
     	AbstractDataBlock newBlock = null;
     	int arraySize = getComponentCount();
         int newSize = 0;
         
-    	if (arraySize > 0)
+    	if (arraySize >= 0)
     	{
 	    	// if child is parallel block, create bigger parallel block
 	        if (childBlock instanceof DataBlockParallel)
@@ -368,7 +378,7 @@ public class DataArray extends AbstractDataComponent
     
     
     /**
-     * Do everyting that is necessary to properly resize data block 
+     * Do everything that is necessary to properly resize data block 
      * @param oldArraySize
      * @param newArraySize
      */
@@ -378,6 +388,11 @@ public class DataArray extends AbstractDataComponent
         {
             if (dataBlock instanceof DataBlockList)
             {
+            	if (dataBlock.atomCount == 0)
+            	{
+            		AbstractDataBlock childBlock = component.createDataBlock();
+            		((DataBlockList)dataBlock).add(childBlock);
+            	}
             	dataBlock.resize(newArraySize);
             }
             else
@@ -457,7 +472,7 @@ public class DataArray extends AbstractDataComponent
     	if (newSize == this.currentSize)
             return;
     	
-    	if (newSize > 0)
+    	if (newSize >= 0)
         {
     		int oldSize = this.currentSize; // don't use getComponentCount() because sizeData may have changed already
     		updateSizeComponent(newSize);
@@ -474,7 +489,7 @@ public class DataArray extends AbstractDataComponent
      */
     public void setSize(int newSize)
     {
-        if (newSize > 0)
+        if (newSize >= 0)
         {
         	int oldSize = getComponentCount();
     		
@@ -502,7 +517,7 @@ public class DataArray extends AbstractDataComponent
     public void updateSizeComponent(int newSize)
     {
     	// update value of size data
-    	DataBlock data = sizeComponent.getData();
+    	DataBlock data = getSizeComponent().getData();
         if (data == null)
         {
         	sizeComponent.renewDataBlock();
@@ -530,7 +545,7 @@ public class DataArray extends AbstractDataComponent
     	if (data != null)
     	{
     		int arraySize = data.getIntValue();
-    		if (arraySize > 0)
+    		if (arraySize >= 0)
     			return arraySize;
     	}
     	
@@ -579,9 +594,9 @@ public class DataArray extends AbstractDataComponent
             dataComponent = dataComponent.parent;
         sizeComponent = (DataValue)dataComponent.getComponent(sizeDataName);
         
-        // initialize size to 1 if variable size
+        // initialize size to 0 if variable size
         if (variableSize)
-        	updateSizeComponent(1);
+        	updateSizeComponent(0);
         
         return sizeComponent;
     }

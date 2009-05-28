@@ -378,7 +378,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
                 	
         // write array component
         Element propElt = dom.addElement(arrayElt, "swe:elementType");
-        DataComponent component = dataArray.getComponent(0);
+        DataComponent component = dataArray.getArrayComponent();
         
         // add name attribute if different from 'elementType'
     	String fieldName = component.getName();

@@ -48,7 +48,7 @@ public abstract class AbstractDataComponent implements DataComponent
 	protected Hashtable<String, Integer> names = new Hashtable<String, Integer>(0, 1.0f);
 	protected AbstractDataBlock dataBlock;
 	protected AbstractDataComponent parent = null;
-	protected int scalarCount = 0;
+	protected int scalarCount = -1;
 	protected String name;
 	protected EncodingInfo encodingInfo;
 
@@ -202,7 +202,7 @@ public abstract class AbstractDataComponent implements DataComponent
 	 * Create a new container's datablock
 	 * @param value Object
 	 */
-	protected abstract AbstractDataBlock createDataBlock();
+	public abstract AbstractDataBlock createDataBlock();
     
     
 	/**

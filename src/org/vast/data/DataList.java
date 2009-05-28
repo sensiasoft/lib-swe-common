@@ -176,7 +176,7 @@ public class DataList extends AbstractDataComponent
     
     
     @Override
-    protected AbstractDataBlock createDataBlock()
+    public AbstractDataBlock createDataBlock()
     {
     	this.dataBlock = new DataBlockList();
     	return this.dataBlock;

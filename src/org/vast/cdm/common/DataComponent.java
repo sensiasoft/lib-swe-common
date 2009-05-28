@@ -103,6 +103,9 @@ public interface DataComponent extends Cloneable
     public DataComponent clone();
     
     
+    public DataBlock createDataBlock();
+    
+    
     public void assignNewDataBlock();
     
     

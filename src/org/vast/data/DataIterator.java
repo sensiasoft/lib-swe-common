@@ -111,15 +111,12 @@ public abstract class DataIterator
         	if (dataHandler != null)
         		dataHandler.startDataBlock(currentRecord.component);
         	
-        	// some reader/writer may write the whole block at once
+        	// some reader/writer may process the whole block at once
         	// and will then return false here to skip children
         	boolean processChildren = processBlock(next);
         	
         	if (processChildren)
         	{
-        		// push this aggregate record to the stack
-	    		componentStack.push(currentRecord);
-	    		
         		// case of variable array size
 	    		if ((next instanceof DataArray) && ((DataArray)next).isVariableSize())
 	    		{
@@ -147,16 +144,23 @@ public abstract class DataIterator
 	    				((DataArray)next).updateSize();
 	    		}
 	    	
-	    		// select first child of aggregate
-	    		if (next instanceof DataChoice)
-	    			next = ((DataChoice)next).getSelectedComponent();
-	        	else
-	        		next = next.getComponent(0);
-	        		        	
-	    		// create new record for first child an process it right away
-	    		currentRecord = new Record(next);
-	    		processNextElement();
-	    		return;
+	    		// do only if we actually have children
+	    		if (currentRecord.count > 0)
+	    		{
+	    			// push this aggregate record to the stack
+		    		componentStack.push(currentRecord);
+		    		
+		    		// select first child of aggregate
+	    			if (next instanceof DataChoice)
+	    				next = ((DataChoice)next).getSelectedComponent();
+	    			else
+	    				next = next.getComponent(0);
+	        	
+	    			// create new record for first child an process it right away
+		    		currentRecord = new Record(next);
+		    		processNextElement();
+		    		return;
+	    		}
         	}
         }
         
