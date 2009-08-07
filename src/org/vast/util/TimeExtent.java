@@ -343,6 +343,26 @@ public class TimeExtent
     
     
     /**
+     * Checks if this timeExtent contains the given time
+     * @param time
+     * @return
+     */
+    public boolean contains(double time)
+    {
+    	double thisLag = this.getAdjustedLagTime();
+        double thisLead = this.getAdjustedLeadTime();
+        
+        if (time < thisLag)
+        	return false;
+        
+        if (time > thisLead)
+        	return false;
+        
+        return true;
+    }
+    
+    
+    /**
      * Checks if this timeExtent contains the given timeExtent
      * @param timeExtent
      * @return
