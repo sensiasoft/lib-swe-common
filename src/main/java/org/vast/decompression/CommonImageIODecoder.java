@@ -11,9 +11,6 @@ import javax.imageio.stream.MemoryCacheImageInputStream;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 
-import jj2000.j2k.decoder.Decoder;
-import jj2000.j2k.util.ParameterList;
-
 import org.vast.cdm.common.BinaryBlock;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
@@ -43,8 +40,6 @@ public class CommonImageIODecoder extends CompressedStreamReader
 	protected String imageUrl;
 	protected BufferedImage image;  
 	protected DataBlock imageBlock;
-	protected ParameterList list;
-	protected Decoder dec;
 	protected boolean fileBased;
 	protected ByteArrayInputStream byteArrayInputStream;
 	protected byte[] byteArray;

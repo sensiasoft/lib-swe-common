@@ -10,10 +10,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
-import jj2000.j2k.decoder.Decoder;
-import jj2000.j2k.util.ParameterList;
 
 import org.vast.cdm.common.BinaryBlock;
 import org.vast.cdm.common.CDMException;
@@ -23,7 +23,6 @@ import org.vast.cdm.common.DataType;
 import org.vast.data.DataBlockFactory;
 import org.vast.data.DataValue;
 import org.vast.sweCommon.DataInputExt;
-import sun.awt.image.ToolkitImage;
 
 
 /**
@@ -46,8 +45,6 @@ public class Jpeg2000Decoder extends CompressedStreamReader
 	protected String imageUrl;
 	protected BufferedImage image;  
 	protected DataBlock imageBlock;
-	protected ParameterList list;
-	protected Decoder dec;
 	protected boolean fileBased;
 	protected ByteArrayInputStream byteArrayInputStream;
 	protected byte[] byteArray;
@@ -70,43 +67,20 @@ public class Jpeg2000Decoder extends CompressedStreamReader
 	}
 
 
-	 public byte[] getDecodedImageByteArray(){
-			// Create parameter list using defaults
-		 	if(fileBased){
-		 		ParameterList list = new ParameterList(getDefaultParams());
-		 		list.put("i", imageUrl);
-		 		list.put("debug", "on");
-		 		list.put("res", "5");
-		 		dec = new Decoder(list);
-		 	}
-
-			if(!fileBased){
-				ParameterList list = new ParameterList(getDefaultParams());
-				list.put("res", "5"); // full resolution
-				//list.put("res", "3"); // resolution divide by 4
-				dec = new Decoder(list);
-		 		dec.setByteArrayInputStream(byteArrayInputStream);
+	public byte[] getDecodedImageByteArray() {
+		// Create parameter list using defaults
+		try {
+			if (fileBased) {
+				image = ImageIO.read(new URL(imageUrl));
+			} else {
+				image = ImageIO.read(byteArrayInputStream);
 			}
-			
-			// Run the decoder
-			try {
-				dec.run();
-			} catch (Throwable e) {
-				e.printStackTrace();
-			} 
-			finally {
-				if (dec.getExitCode() != 0) {
-					System.exit(dec.getExitCode());
-				}
-			}
-
-			Image imTmp = dec.getImage();
-			waitForImage(imTmp);
-			image = ((ToolkitImage)imTmp).getBufferedImage();
-			setImageInByteArray();
-			return byteArray;
+		} catch (Exception e) {
+			throw new RuntimeException("Could not decode image", e);
 		}
-	 
+		setImageInByteArray();
+		return byteArray;
+	}	 
 
 	 private void waitForImage(Image img){
 			MediaTracker tracker = new MediaTracker(new JLabel());
@@ -183,19 +157,6 @@ public class Jpeg2000Decoder extends CompressedStreamReader
         return imageBlock;
     }
 	 
-	protected ParameterList getDefaultParams(){
-		ParameterList def  = new ParameterList();
-		String[][] param = Decoder.getAllParameters();
-
-		for (int i = param.length - 1; i >= 0; i--) {
-			if (param[i][3] != null)
-				def.put(param[i][0], param[i][3]);
-		
-		}
-		return def;
-	}
-
-
 	public static void main(String [] args){
 		try
         {
