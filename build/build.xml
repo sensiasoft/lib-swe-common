@@ -1,0 +1,95 @@
+<project name="OGC SWE Common" basedir="." default="build_all">
+
+	<tstamp>
+	  <format property="date" pattern="yyyy-MM-dd"/>
+	</tstamp>
+	
+	<property environment="env" />
+
+	<property name="src.dir" value="../src" />
+	<property name="lib.dir" value="../lib" />
+	<property name="dist.dir" value="." />
+	<property name="temp.dir" value="temp" />
+
+
+	<target name="inc_major_ver_number">
+	  <propertyfile file="${dist.dir}/version.txt">
+	    <entry key="maj.ver" type="int" operation="+" value="1" default="-1" />
+	  	<entry key="min.ver" type="int" operation="=" value="0" />
+	  	<entry key="build.num" type="int" operation="=" value="0" />
+	  </propertyfile>
+	</target>
+	
+	
+	<target name="inc_minor_ver_number">
+    <propertyfile file="${dist.dir}/version.txt">
+      <entry key="min.ver" type="int" operation="+" value="1" default="0" />
+    	<entry key="build.num" type="int" operation="=" value="0" />
+    </propertyfile>
+  </target>
+	
+	
+	<target name="inc_build_number">
+	  <propertyfile file="${dist.dir}/version.txt">
+	    <entry key="build.num" type="int" operation="+" default="0" />
+	  </propertyfile>
+	</target>
+	
+	
+	<property file="${dist.dir}/version.txt"/>
+	
+	
+	<!-- TARGET GZIP_SRC -->
+	<target name="package_src">
+		
+		<!-- Zip only this project source files -->
+    <tar destfile="${dist.dir}/swe-common-core-${maj.ver}.${min.ver}.${build.num}-src.tar.gz" compression="gzip">
+      <tarfileset dir="${src.dir}" />
+    </tar>
+	
+	</target>
+	
+	
+	<!-- TARGET COMPILE_JAR -->
+	<target name="package_bin" depends="clean">
+		
+    <!-- Compile this project + dependencies source files -->
+    <javac destdir="${temp.dir}" target="1.5">
+      <src>
+      	<dirset dir="${src.dir}"/>
+      </src>
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+    </javac>
+    
+    <!-- Copy xml files -->
+    <copy todir="${temp.dir}">
+    	<fileset dir="${src.dir}">
+        <include name="**/*.xml"/>
+      </fileset>  	
+    </copy>
+    
+    <!-- Create jar file -->
+    <jar destfile="${dist.dir}/swe-common-core-${maj.ver}.${min.ver}.${build.num}.jar">
+      <fileset dir="${temp.dir}"/>
+    </jar>
+			
+	</target>
+	
+
+	<target name="clean">
+		<delete dir="${temp.dir}" />
+		<mkdir dir="${temp.dir}" />
+	</target>
+	
+	
+  <target name="build_all">     
+    <antcall target="package_src"/>
+    <antcall target="package_bin"/>
+    <antcall target="inc_build_number"/>      
+  </target>
+
+</project>

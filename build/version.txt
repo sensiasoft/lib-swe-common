@@ -1,0 +1,4 @@
+#Thu Nov 19 14:40:42 CET 2009
+min.ver=8
+build.num=3
+maj.ver=0
