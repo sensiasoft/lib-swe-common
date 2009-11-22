@@ -56,6 +56,19 @@ public class DataBlockParallel extends AbstractDataBlock
 	}
 	
 	
+	public void setChildBlock(int blockIndex, AbstractDataBlock dataBlock)
+	{
+	    if (blockArray[0] != null)
+	        if (blockArray[0].atomCount != dataBlock.atomCount)
+	            throw new IllegalArgumentException("All child data blocks of a parallel data block must have the same size");
+	    
+	    if (blockArray[blockIndex] == null)
+	        this.atomCount += dataBlock.atomCount;
+	    
+	    blockArray[blockIndex] = dataBlock;
+	}
+	
+	
 	public DataBlockParallel copy()
 	{
 		DataBlockParallel newBlock = new DataBlockParallel();

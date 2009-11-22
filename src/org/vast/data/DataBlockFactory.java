@@ -203,4 +203,19 @@ public class DataBlockFactory
 		
 		return block;
 	}
+	
+	
+	public static DataBlockParallel createParallelBlock(AbstractDataBlock... dataBlocks)
+    {
+        DataBlockParallel block = new DataBlockParallel(dataBlocks.length);
+        block.startIndex = 0;
+        
+        for (int b=0; b<dataBlocks.length; b++)
+        {
+            block.blockArray[b] = dataBlocks[b];
+            block.atomCount += dataBlocks[b].atomCount;
+        }   
+        
+        return block;
+    }
 }

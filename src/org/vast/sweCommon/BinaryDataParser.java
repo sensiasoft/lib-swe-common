@@ -209,7 +209,7 @@ public class BinaryDataParser extends AbstractDataParser
             else if(binaryOpts instanceof BinaryBlock)
             {
                 dataComponent.setEncodingInfo(binaryOpts);
-            	((BinaryBlock)binaryOpts).buildReader(dataComponent);
+            	((BinaryBlock)binaryOpts).createReader(dataComponent);
             }
 		}
 		
@@ -395,8 +395,7 @@ public class BinaryDataParser extends AbstractDataParser
 	private void parseBinaryBlock(DataComponent blockInfo, BinaryBlock binaryInfo) throws CDMException
 	{
 		// TODO: PADDING IS TAKEN CARE OF HERE... 
-		(binaryInfo.reader).readCompressedStream(dataInput, blockInfo);
-					
+		(binaryInfo.reader).decode(dataInput, blockInfo);					
 	}
 
 }
