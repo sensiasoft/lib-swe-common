@@ -27,15 +27,21 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+
 import jj2000.j2k.decoder.Decoder;
+import jj2000.j2k.io.RandomAccessIO;
+import jj2000.j2k.util.ISRandomAccessIO;
 import jj2000.j2k.util.ParameterList;
+import junit.framework.TestCase;
+
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataType;
 import org.vast.data.DataArray;
 import org.vast.data.DataGroup;
 import org.vast.data.DataValue;
+import org.vast.decompression.JP2KDecoder;
 import org.vast.decompression.JP2KStreamDecoder;
-import junit.framework.TestCase;
 
 
 public class TestDecompression extends TestCase
@@ -56,8 +62,26 @@ public class TestDecompression extends TestCase
         return new ParameterList(defpl);
     }
     
+    public void testJP2KDecompression() throws Exception {
+    	InputStream is = getClass().getResourceAsStream("/file1.jp2");
+    	RandomAccessIO raio = new ISRandomAccessIO(is);
+    	JP2KDecoder decoder = new JP2KDecoder();
+    	byte [][] decodedImage = decoder.decode(raio);
+    	int bandSize = 768 * 512;
+    	assertEquals("Wrong number of bands returned.", 3, decodedImage.length);
+    	assertNotNull("Band 0 is null.", decodedImage[0]);
+    	assertEquals("Wrong size of decoded image.", bandSize, decodedImage[0].length);
+    	assertNotNull("Band 1 is null.", decodedImage[1]);
+    	assertEquals("Wrong size of decoded image.", bandSize, decodedImage[1].length);
+    	assertNotNull("Band 2 is null.", decodedImage[2]);
+    	assertEquals("Wrong size of decoded image.", bandSize, decodedImage[2].length);
+    }
     
-    public void testJP2KDecompression() throws Exception
+    // The following method was disabled by Chris Dillard on 2009-12-09 for these reasons:
+    //   1. Hard coded file path is bad.  (Maven runs JUnit tests by default.)
+    //   2. Test seems invalid any way... throws NullPointerExceptions.
+    // Put in a simple replacement above.
+    public void DISABLED_testJP2KDecompression() throws Exception
     {
         String filePath = "F:\\Data\\ErdasTigerShark\\2008-07-21\\images\\A121665541042.jp2";//.small.jpc";
         File file = new File(filePath);
