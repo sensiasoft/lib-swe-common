@@ -68,9 +68,13 @@ public class DataSourceDOM implements DataSource
 	{
 		return parentElt;
 	}
-
     
     
+	/**
+     * Gets the right input stream from href or inline values
+     * @return input stream to read data from
+     * @throws CDMException
+     */
     public InputStream getDataStream() throws CDMException
     {
     	String xlinkUri = OGCRegistry.getNamespaceURI(OGCRegistry.XLINK);

@@ -370,7 +370,7 @@ public class SweComponentReaderV20 implements DataComponentReader
             SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
             DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
             DataStreamParser parser = SWEFactory.createDataParser(encoding);
-            parser.setDataComponents(dataArray);
+            parser.setParentArray(dataArray);
             parser.reset();
             InputStream is = new DataSourceDOM(dom, valuesElt).getDataStream();
             parser.parse(is);

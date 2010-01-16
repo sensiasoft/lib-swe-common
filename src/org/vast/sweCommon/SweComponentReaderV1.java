@@ -20,7 +20,6 @@
 
 package org.vast.sweCommon;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Hashtable;
@@ -218,33 +217,11 @@ public class SweComponentReaderV1 implements DataComponentReader
             DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
             DataStreamParser parser = SWEFactory.createDataParser(encoding);
             parser.setParentArray(dataArray);
-            InputStream is = getDataStream(dom, valuesElt);
+            InputStream is = new DataSourceDOM(dom, valuesElt).getDataStream();
             parser.parse(is);
         }
         
         return dataArray;
-    }
-    
-    
-    /**
-     * Gets the right input stream for href or inline values
-     * @param dom
-     * @param valuesElt
-     * @return
-     * @throws CDMException
-     */
-    private InputStream getDataStream(DOMHelper dom, Element valuesElt) throws CDMException
-    {
-        String href = dom.getAttributeValue(valuesElt, "@href");
-        if (href != null)
-        {
-            return URIStreamHandler.openStream(href);
-        }
-        else
-        {
-            String values = dom.getElementValue(valuesElt, "");
-            return(new ByteArrayInputStream(values.getBytes()));
-        }
     }
 
 

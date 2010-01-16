@@ -86,8 +86,8 @@ public class BinaryDataParser extends AbstractDataParser
 		{
 			setInput(inputStream);				
 			
-			// if a dataHandler is registered, parse each individual element
-			if (dataHandler != null)
+			// if no rawHandler is registered, parse each individual element
+			if (rawHandler == null)
 			{
 				do
 				{
@@ -100,9 +100,9 @@ public class BinaryDataParser extends AbstractDataParser
 				while(!stopParsing && !endOfArray);
 			}
 			
-			// if a raw handler is registered, just extract byte arrays
+			// else just extract byte array
 			// of the whole block size and send it directly.
-			else if (rawHandler != null)
+			else
 			{
 				int size = (int)((BinaryEncoding)dataEncoding).byteLength;			
 				int byteLeft = size;
