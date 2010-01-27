@@ -76,6 +76,8 @@
     <jar destfile="${dist.dir}/swe-common-core-${maj.ver}.${min.ver}.${build.num}.jar">
       <fileset dir="${temp.dir}"/>
     </jar>
+		
+		<delete dir="${temp.dir}" />
 			
 	</target>
 	
