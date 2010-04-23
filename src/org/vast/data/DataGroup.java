@@ -404,7 +404,7 @@ public class DataGroup extends AbstractDataComponent
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append("DataGroup: " + name + "\n");
+        text.append("DataRecord: " + name + "\n");
 
         for (int i=0; i<componentList.size(); i++)
         {

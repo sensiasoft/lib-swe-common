@@ -23,7 +23,6 @@ package org.vast.sweCommon;
 import java.io.*;
 import java.net.URI;
 import org.vast.cdm.common.*;
-import org.vast.data.DataIterator;
 
 
 /**
@@ -40,7 +39,7 @@ import org.vast.data.DataIterator;
  * @date Aug 16, 2005
  * @version 1.0
  */
-public abstract class AbstractDataParser extends DataIterator implements DataStreamParser
+public abstract class AbstractDataParser extends DataTreeVisitor implements DataStreamParser
 {
 	protected final static String STREAM_ERROR = "IO Error while parsing data stream";
 	protected final static String CHOICE_ERROR = "Invalid choice selection: ";

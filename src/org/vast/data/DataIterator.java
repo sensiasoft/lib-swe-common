@@ -20,32 +20,18 @@
 
 package org.vast.data;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Stack;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
-import org.vast.cdm.common.DataHandler;
-import org.vast.cdm.common.DataType;
-import org.vast.cdm.common.ErrorHandler;
-import org.vast.cdm.common.RawDataHandler;
-import org.vast.sweCommon.SweConstants;
+import org.vast.data.DataArray;
+import org.vast.data.DataValue;
 
 
-public abstract class DataIterator
+public class DataIterator implements Iterator<DataComponent>
 {
-	protected DataHandler dataHandler;
-	protected RawDataHandler rawHandler;
-	protected ErrorHandler errorHandler;
-    protected DataArray parentArray;
-    protected int parentArrayIndex;
-	protected DataComponent dataComponents;
-	protected DataEncoding dataEncoding;
+	protected DataComponent rootComponent;
 	protected Stack<Record> componentStack;
-	protected Record currentRecord;
-    protected boolean newBlock = true;
-	protected boolean endOfArray = false;
-	protected boolean parsing = true;
-	protected DataValue sizeValue; // for holding implicit array size
 	
     
 	protected class Record
@@ -58,268 +44,88 @@ public abstract class DataIterator
         {
             this.component = component;
             this.count = component.getComponentCount();
-            this.index = 0;
+            this.index = -1;
+            
+            if (component instanceof DataArray)
+                this.count = 1;
         }
     }
     
     
-	public DataIterator(boolean parsing)
+	public DataIterator(DataComponent rootComponent)
 	{
-		this.parsing = parsing;
 		this.componentStack = new Stack<Record>();
-		this.sizeValue = new DataValue(SweConstants.ELT_COUNT_NAME, DataType.INT);
-		this.sizeValue.assignNewDataBlock();
+		this.componentStack.push(new Record(rootComponent));
 	}
 	
 	
-	protected abstract void processAtom(DataValue scalarInfo) throws CDMException;
-	
-	
-	/**
-	 * Process an aggregate component
-	 * @param scalarInfo
-	 * @return true if children should be processed, false otherwise
-	 * @throws CDMException
+	/*
+	 * (non-Javadoc)
+	 * @see java.util.Iterator#next()
 	 */
-	protected abstract boolean processBlock(DataComponent blockInfo) throws CDMException;
-	
-	
-	/**
-	 * TODO nextInfo method description
-	 * @return
-	 */
-	public void processNextElement() throws CDMException
-	{
-        // reset iterator if new block is starting
-		if (newBlock)
-        {
-            this.reset();
-            newBlock = false;
-        }
+	public DataComponent next()
+	{   	
+        if (!hasNext())
+            throw new NoSuchElementException();
+	    
+	    DataComponent next = null;
         
-        // send beginning of data event
-    	if (dataHandler != null && componentStack.isEmpty() && currentRecord.index == 0)
-    		dataHandler.startData(dataComponents);
-    	
-        // retrieve current component
-    	DataComponent next = currentRecord.component;
-    	
+	    // retrieve current component
+        Record currentRecord = componentStack.peek();
+    	DataComponent current = currentRecord.component;
+    	    	
         // if child is not a DataValue, go in !!
-        if (!(next instanceof DataValue))
+        if (!(current instanceof DataValue))
         {
-        	// send start block event
-        	if (dataHandler != null)
-        		dataHandler.startDataBlock(currentRecord.component);
-        	
-        	// some reader/writer may process the whole block at once
-        	// and will then return false here to skip children
-        	boolean processChildren = processBlock(next);
-        	
-        	if (processChildren)
-        	{
-        		// case of variable array size
-	    		if ((next instanceof DataArray) && ((DataArray)next).isVariableSize())
-	    		{
-	    			if (((DataArray)next).getSizeComponent().getParent() == null)
-	    			{
-	    				// read implicit array size (when parsing)
-	    				if (parsing)
-	        			{
-	    					processAtom(sizeValue);
-	            			int newSize = sizeValue.getData().getIntValue();
-	            			
-	            			// resize array according to size read!
-	            			((DataArray)next).updateSize(newSize);
-	            			currentRecord.count = newSize;
-	        			}
-	        		
-	        			// write array size
-	        			else
-	        			{
-	        				sizeValue.getData().setIntValue(((DataArray)next).getComponentCount());
-	        				processAtom(sizeValue);
-	        			}
-	    			}        		
-	    			else if (parsing)
-	    				((DataArray)next).updateSize();
-	    		}
-	    	
-	    		// do only if we actually have children
-	    		if (currentRecord.count > 0)
-	    		{
-	    			// push this aggregate record to the stack
-		    		componentStack.push(currentRecord);
-		    		
-		    		// select first child of aggregate
-	    			if (next instanceof DataChoice)
-	    				next = ((DataChoice)next).getSelectedComponent();
-	    			else
-	    				next = next.getComponent(0);
-	        	
-	    			// create new record for first child an process it right away
-		    		currentRecord = new Record(next);
-		    		processNextElement();
-		    		return;
-	    		}
-        	}
+            // return the aggregate itself for 1st pass   
+            if (currentRecord.index < 0)
+            {
+                currentRecord.index = 0;
+                return current;
+            }
+            
+            // select next child of aggregate
+            DataComponent child;
+            if (current instanceof DataArray)
+                child = ((DataArray)current).getArrayComponent();
+            else
+                child = current.getComponent(currentRecord.index);
+            currentRecord.index++;
+            
+            // create new record for next child and push it to the stack
+            componentStack.push(new Record(child));
+            next = next();
         }
-        
-        // otherwise parse one atom element
         else
         {
-            if (dataHandler != null)
-                dataHandler.beginDataAtom(next);
-            
-            processAtom((DataValue)next);
-            
-            if (dataHandler != null)
-                dataHandler.endDataAtom(next, next.getData());
+            currentRecord.index++;
+            next = current;
         }
+
+        // pop components until we find one that still has components to process
+        while (!componentStack.isEmpty() && componentStack.peek().index >= componentStack.peek().count)
+            componentStack.pop();
         
-        // take care of parent record in stack
-        if (!componentStack.isEmpty())
-        {
-        	// recursively send 'end' event and pop from stack if parent is finished
-        	Record parentRecord = null;
-        	
-        	do
-    		{
-    			// catch end of data
-    			if (componentStack.isEmpty())
-    			{
-    				// send end of data event
-    			    if (dataHandler != null)
-    	                dataHandler.endData(dataComponents, dataComponents.getData());
-    				
-    	            // signal that a new block is starting
-    	            newBlock = true;
-    	            currentRecord = null;
-    	            
-    	            if (parentArray != null && parentArrayIndex == parentArray.getComponentCount())
-    	                endOfArray = true;
-    	            
-    				return;
-    			}
-    			
-    			// pop next parent from stack
-    			parentRecord = componentStack.pop();
-            	
-            	// increment index of parent component
-        		if (parentRecord.component instanceof DataChoice)
-            		parentRecord.index = parentRecord.count;
-            	else
-            		parentRecord.index++;
-        		
-        		// send end of block event if there are no more children
-        		if (parentRecord.index >= parentRecord.count)
-        		{
-        			if (dataHandler != null)
-        				dataHandler.endDataBlock(parentRecord.component, parentRecord.component.getData());
-        		}
-        		
-        		// keep closing parents recursively until the parent has more children to process
-        	}
-        	while (parentRecord.index >= parentRecord.count);
-    		
-    		// create next component record
-    		componentStack.push(parentRecord);
-    		next = parentRecord.component.getComponent(parentRecord.index);
-    		currentRecord = new Record(next);
-        }
+        return next;
 	}
 	
 	
-	public boolean isEndOfDataBlock()
+	public boolean hasNext()
 	{
-	    return newBlock;
-	}
-		
-	
-	/**
-	 * Reset the parser before parsing a new tuple
-	 */
-	public void reset() throws CDMException
-	{
-		// prepare next array element
-		if (parentArray != null)
-        {
-            dataComponents = parentArray.getComponent(parentArrayIndex);
-            parentArrayIndex++;
-        }
-        
-		// reset component stack
-        componentStack.clear();
-        currentRecord = new Record(dataComponents);
-	}
-
-	
-	/////////////////////
-	// Get/Set Methods //
-	/////////////////////
-	public DataHandler getDataHandler()
-	{
-		return this.dataHandler;
+	    return !componentStack.isEmpty();
 	}
 	
 	
-	public RawDataHandler getRawDataHandler()
+	public void skipChildren()
 	{
-		return this.rawHandler;
+	    // pop last component from stack
+	    componentStack.pop();
 	}
 
 
-	public ErrorHandler getErrorHandler()
-	{
-		return this.errorHandler;
-	}
-	
-	
-	public DataComponent getDataComponents()
-	{
-		return this.dataComponents;
-	}
-
-
-	public DataEncoding getDataEncoding()
-	{
-		return this.dataEncoding;
-	}
-
-
-	public void setDataHandler(DataHandler handler)
-	{
-		this.dataHandler = handler;
-	}
-	
-	
-	public void setRawDataHandler(RawDataHandler handler)
-	{
-		this.rawHandler = handler;		
-	}
-
-
-	public void setErrorHandler(ErrorHandler handler)
-	{
-		this.errorHandler = handler;
-	}
-	
-	
-	public void setDataComponents(DataComponent dataInfo)
-	{
-		this.dataComponents = (AbstractDataComponent)dataInfo;
-	}
-
-
-	public void setDataEncoding(DataEncoding dataEncoding)
-	{
-		this.dataEncoding = dataEncoding;
-	}
-    
-    
-    public void setParentArray(DataArray parentArray)
+    @Override
+    public void remove()
     {
-        this.parentArray = parentArray;
-        parentArray.renewDataBlock();
-        parentArrayIndex = 0;
+        throw new UnsupportedOperationException();
     }
 }

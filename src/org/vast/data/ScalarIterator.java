@@ -31,118 +31,49 @@ import org.vast.cdm.common.DataComponent;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * TODO ScalarIterator type description
+ * Iterates through scalar component definitions only.
+ * This does not iterate through each array value.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
+ * <p>Copyright (c) 2010</p>
  * @author Alexandre Robin
- * @date Aug 15, 2005
+ * @date Apr 21, 2010
  * @version 1.0
  */
-public class ScalarIterator
+public class ScalarIterator extends DataIterator
 {
-    protected Stack<Record> componentStack = new Stack<Record>();
-    protected Record currentRecord;
-    protected DataComponent nextComponent;
-    protected DataComponent baseComponent;
-
-    protected class Record
-    {
-        public DataComponent parent;
-        public int index;
-        public int count;
-
-        public Record(DataComponent parent)
-        {
-            this.parent = parent;
-            
-            if (parent instanceof DataArray)
-                this.count = 1;
-            else
-                this.count = parent.getComponentCount();
-            
-            this.index = 0;
-        }
-    }
     
-    
-    public ScalarIterator(DataComponent baseContainer)
+    public ScalarIterator(DataComponent rootComponent)
     {
-    	this.baseComponent = baseContainer;
-    	this.reset();
-    }
-    
-    
-    public void reset()
-    {
-    	componentStack.clear();
-    	currentRecord = new Record(baseComponent);
-    	//componentStack.push(currentComponent);
-    }
-
-
-    public boolean hasNext()
-    {
-        // if at the end of previous record
-        while(currentRecord.index >= currentRecord.count)
-        {
-            if (!componentStack.isEmpty())
-                currentRecord = componentStack.pop();
-            else
-                break;
-        }
-        
-        if (componentStack.isEmpty() && (currentRecord.index >= currentRecord.count))
-            return false;
-        else
-            return true;
+    	super(rootComponent);
     }
 
 
     public DataValue next()
     {
-        nextComponent = getNextScalar();
+        DataComponent nextComponent = null;
+        
+        do { nextComponent = super.next(); }
+        while (!(nextComponent instanceof DataValue));
+            
         return (DataValue)nextComponent;
     }
     
     
     public DataComponent[] nextPath()
     {
-        nextComponent = getNextScalar();
+        DataComponent nextComponent = next();        
+        List<DataComponent> componentList = new ArrayList<DataComponent>();
         
-        int numComponents = componentStack.size() + 2;
-        DataComponent[] componentPath = new DataComponent[numComponents];
-        
-        for (int i=0; i<numComponents-2; i++)
-            componentPath[i] = componentStack.get(i).parent;
-        
-        componentPath[numComponents-2] = currentRecord.parent;
-        componentPath[numComponents-1] = nextComponent;
-        
-        return componentPath;
-    }
-
-
-
-    /**
-     * Finds next container given current record
-     * Uses a stack instead of recursion
-     * @return DataContainer
-     */
-    private DataValue getNextScalar()
-    {
-    	// now get next child
-    	DataComponent next = currentRecord.parent.getComponent(currentRecord.index);
-        currentRecord.index++;
-        
-        // if child is not a DataValue, go in !!
-        if (!(next instanceof DataValue))
+        do
         {
-        	componentStack.push(currentRecord);
-        	currentRecord = new Record(next);
-        	return getNextScalar();
+            componentList.add(nextComponent);
+            nextComponent = nextComponent.getParent();
         }
+        while (nextComponent != null);
         
-        return (DataValue)next;
+        Collections.reverse(componentList);
+        
+        return (DataComponent[])componentList.toArray(new DataComponent[0]);
     }
 }

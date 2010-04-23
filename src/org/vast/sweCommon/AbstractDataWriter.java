@@ -25,7 +25,6 @@ import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataStreamWriter;
-import org.vast.data.DataIterator;
 import org.vast.data.DataValue;
 import org.vast.util.DateTimeFormat;
 
@@ -44,7 +43,7 @@ import org.vast.util.DateTimeFormat;
  * @date Feb 10, 2006
  * @version 1.0
  */
-public abstract class AbstractDataWriter extends DataIterator implements DataStreamWriter
+public abstract class AbstractDataWriter extends DataTreeVisitor implements DataStreamWriter
 {
 	protected final static String STREAM_ERROR = "IO Error while writing data stream";
 	protected final static String CHOICE_ERROR = "Invalid choice selection: ";
