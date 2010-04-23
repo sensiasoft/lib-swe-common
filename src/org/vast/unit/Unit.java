@@ -132,6 +132,18 @@ public class Unit
     
     
     /**
+     * Checks if this unit is equivalent to the given unit
+     * TODO isEquivalent method description
+     * @param unit
+     * @return
+     */
+    public boolean isEquivalent(Unit unit)
+    {
+        return isCompatible(unit) && (this.scaleToSI == unit.scaleToSI) && (this.pi == unit.pi);
+    }
+    
+    
+    /**
      * Raises this unit to the given power, thus modifying
      * all powers of metric base SI coefs.
      * @param power
