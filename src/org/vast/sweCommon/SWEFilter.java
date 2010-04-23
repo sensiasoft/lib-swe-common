@@ -74,23 +74,15 @@ public class SWEFilter extends InputStream
 		
 		if (readData)
 		{
-			int val = -1;
-			
-			// skip all control characters (before space)
-			do
-			{
-				val = source.read();
+			int val = source.read();
 				
-				// simulate eof if closing xml tag is reached
-				if ((char)val == '<' || val == -1)
-				{
-					readData = false;
-					return -1;
-				}
+			// simulate eof if closing xml tag is reached
+			if ((char)val == '<' || val == -1)
+			{
+				readData = false;
+				return -1;
 			}
-			while (val < 32);
-			
-			//System.out.print((char)val);
+
 			return val;				
 		}
 		else if (finishXML)

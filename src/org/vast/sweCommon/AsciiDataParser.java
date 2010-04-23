@@ -34,7 +34,9 @@ public class AsciiDataParser extends AbstractDataParser
 	protected char[] tokenSep, blockSep;
 	protected boolean collapseWhiteSpaces = true;
 	protected StringBuffer tokenBuf = new StringBuffer();
-	protected Reader reader;
+	protected String lastToken;
+	//protected Reader reader;
+	protected InputStream reader;
     boolean consecutiveTokenSep = false;
     
 	public AsciiDataParser()
@@ -44,7 +46,8 @@ public class AsciiDataParser extends AbstractDataParser
 	
 	public void setInput(InputStream inputStream) throws CDMException
 	{
-		reader = new BufferedReader(new InputStreamReader(inputStream));
+		//reader = new BufferedReader(new InputStreamReader(inputStream));
+	    reader = new BufferedInputStream(inputStream);
 		tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
 		blockSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
 		collapseWhiteSpaces = ((AsciiEncoding)dataEncoding).collapseWhiteSpaces;
@@ -104,7 +107,14 @@ public class AsciiDataParser extends AbstractDataParser
 		
 		try
 		{
-			// skip all invalid characters and go to beginning of token
+			// if a token has already been parsed in moreData() just return it
+		    if (lastToken != null)
+            {
+		        String token = lastToken;
+		        lastToken = null;
+		        return token;
+            }
+		    
 			tokenBuf.setLength(0);
 			
 			// collapse white space characters
@@ -115,7 +125,7 @@ public class AsciiDataParser extends AbstractDataParser
 			    // to support single char separators below ASCII code 32 
 			    //if (nextChar == (int)tokenSep[0] || nextChar == (int)blockSep[0])
 			    //    break;
-			    
+
 				if (nextChar == -1)
 					return null;
 			}
@@ -213,24 +223,8 @@ public class AsciiDataParser extends AbstractDataParser
 	 */
 	protected boolean moreData() throws CDMException
 	{
-		try
-		{
-			reader.mark(256);
-			String token = readToken();
-			if (token == null)
-			{
-				return false;
-			}
-			else
-			{
-				reader.reset();
-				return true;
-			}				
-		}
-		catch (IOException e)
-		{
-			throw new CDMException(STREAM_ERROR, e);
-		}
+	    lastToken = readToken();
+        return !(lastToken == null);
 	}
     
     
