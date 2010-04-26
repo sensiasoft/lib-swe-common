@@ -179,56 +179,51 @@ public abstract class DataTreeVisitor
                 dataHandler.endDataAtom(next, next.getData());
         }
         
-        // take care of parent record in stack
-        if (!componentStack.isEmpty())
+        // take care of parent record(s) in stack
+        Record parentRecord = null;        
+        do
         {
-        	// recursively send 'end' event and pop from stack if parent is finished
-        	Record parentRecord = null;
-        	
-        	do
-    		{
-    			// catch end of data
-    			if (componentStack.isEmpty())
-    			{
-    				// send end of data event
-    			    if (dataHandler != null)
-    	                dataHandler.endData(dataComponents, dataComponents.getData());
-    				
-    	            // signal that a new block is starting
-    	            newBlock = true;
-    	            currentRecord = null;
-    	            
-    	            if (parentArray != null && parentArrayIndex == parentArray.getComponentCount())
-    	                endOfArray = true;
-    	            
-    				return;
-    			}
-    			
-    			// pop next parent from stack
-    			parentRecord = componentStack.pop();
-            	
-            	// increment index of parent component
-        		if (parentRecord.component instanceof DataChoice)
-            		parentRecord.index = parentRecord.count;
-            	else
-            		parentRecord.index++;
-        		
-        		// send end of block event if there are no more children
-        		if (parentRecord.index >= parentRecord.count)
-        		{
-        			if (dataHandler != null)
-        				dataHandler.endDataBlock(parentRecord.component, parentRecord.component.getData());
-        		}
-        		
-        		// keep closing parents recursively until the parent has more children to process
-        	}
-        	while (parentRecord.index >= parentRecord.count);
-    		
-    		// create next component record
-    		componentStack.push(parentRecord);
-    		next = parentRecord.component.getComponent(parentRecord.index);
-    		currentRecord = new Record(next);
+            // catch end of data
+            if (componentStack.isEmpty())
+            {
+                // send end of data event
+                if (dataHandler != null)
+                    dataHandler.endData(dataComponents, dataComponents.getData());
+                
+                // signal that a new block is starting
+                newBlock = true;
+                currentRecord = null;
+                
+                if (parentArray != null && parentArrayIndex == parentArray.getComponentCount())
+                    endOfArray = true;
+                
+                return;
+            }
+            
+            // pop next parent from stack
+            parentRecord = componentStack.pop();
+            
+            // increment index of parent component
+            if (parentRecord.component instanceof DataChoice)
+                parentRecord.index = parentRecord.count;
+            else
+                parentRecord.index++;
+            
+            // send end of block event if there are no more children
+            if (parentRecord.index >= parentRecord.count)
+            {
+                if (dataHandler != null)
+                    dataHandler.endDataBlock(parentRecord.component, parentRecord.component.getData());
+            }
+            
+            // keep closing parents recursively until the parent has more children to process
         }
+        while (parentRecord.index >= parentRecord.count);
+        
+        // create next component record
+        componentStack.push(parentRecord);
+        next = parentRecord.component.getComponent(parentRecord.index);
+        currentRecord = new Record(next);
 	}
 	
 	
