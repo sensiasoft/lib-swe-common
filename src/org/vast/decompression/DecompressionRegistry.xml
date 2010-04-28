@@ -6,5 +6,5 @@
    <Reader compressionType="TIFF" class="org.vast.decompression.CommonImageIODecoder"/>
    <Reader compressionType="PNG" class="org.vast.decompression.CommonImageIODecoder"/>
    <!-- -->
-   <Reader compressionType="MPEG2" class="com.sensia.codecs.mpeg2.MPEG2StreamDecoder"/>
+   <Reader compressionType="MPEG2" class="org.vast.decompression.MPEG2StreamDecoder"/>
 </Map>
