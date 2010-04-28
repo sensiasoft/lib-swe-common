@@ -48,61 +48,67 @@ public class UnitParserURI implements UnitParser
 
 
     /**
-     * Map to URNS to UCUM codes
-     * @param unit
+     * Map URIs to UCUM codes
+     * @param unitURI
      * @return
      */
-    protected String getUCUMCode(String unit)
+    protected String getUCUMCode(String unitURI)
     {
         /////////////////
         // angle units //
         /////////////////
-        if (unit.contains(":radian"))
+        if (unitURI.contains(":radian"))
             return "rad";
-        else if (unit.contains(":degree"))
+        else if (unitURI.contains(":degree"))
             return "deg";
 
         ////////////////////
         // distance units //
         ////////////////////
-        else if (unit.contains(":meter"))
+        else if (unitURI.contains(":meter"))
             return "m";
-        else if (unit.contains(":kilometer"))
+        else if (unitURI.contains(":kilometer"))
             return "km";
-        else if (unit.contains(":centimeter"))
+        else if (unitURI.contains(":centimeter"))
             return "cm";
-        else if (unit.contains(":millimeter"))
+        else if (unitURI.contains(":millimeter"))
             return "mm";
-        else if (unit.contains(":micrometer") || unit.contains(":micron"))
+        else if (unitURI.contains(":micrometer") || unitURI.contains(":micron"))
             return "um";
-        else if (unit.contains(":nanometer"))
+        else if (unitURI.contains(":nanometer"))
             return "nm";
-        else if (unit.contains(":feet") || unit.contains(":foot"))
+        else if (unitURI.contains(":feet") || unitURI.contains(":foot"))
             return "[ft_i]";
-        else if (unit.contains(":inch"))
+        else if (unitURI.contains(":inch"))
             return "[in_i]";
-        else if (unit.contains(":mile"))
+        else if (unitURI.contains(":mile"))
             return "[mi_i]";
 
         /////////////////////////////////////
         // time units - convert to seconds //
         /////////////////////////////////////
-        else if (unit.contains(":second"))
+        else if (unitURI.contains(":second"))
             return "s";
-        else if (unit.contains(":minute"))
+        else if (unitURI.contains(":minute"))
             return "min";
-        else if (unit.contains(":hour"))
+        else if (unitURI.contains(":hour"))
             return "h";
-        else if (unit.contains(":day"))
+        else if (unitURI.contains(":day"))
             return "d";
-        else if (unit.contains(":year"))
+        else if (unitURI.contains(":year"))
             return "a";
-        else if (unit.contains(":millisecond"))
+        else if (unitURI.contains(":millisecond"))
             return "ms";
-        else if (unit.contains(":microsecond"))
+        else if (unitURI.contains(":microsecond"))
             return "us";
-        else if (unit.contains(":nanosecond"))
+        else if (unitURI.contains(":nanosecond"))
             return "ns";
+        
+        // ISO time
+        else if (unitURI.contains("8601"))
+            return "s";
+        
+        // TODO delegates to custom unit registry if needed
         
         else return "1";
     }

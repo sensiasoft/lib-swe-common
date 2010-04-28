@@ -33,6 +33,7 @@ import org.vast.ogc.gml.GMLUnitReader;
 import org.vast.sweCommon.IntervalConstraint;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
+import org.vast.unit.UnitParserURI;
 import org.vast.util.DateTimeFormat;
 
 
@@ -437,23 +438,26 @@ public class SweComponentReaderV1 implements DataComponentReader
         
         String ucumCode = dom.getAttributeValue(scalarElt, "uom/@code");
         String href = dom.getAttributeValue(scalarElt, "uom/@href");           
-                
+        Unit unit = null;
+        
         // uom code        
         if (ucumCode != null)
         {
             dataComponent.setProperty(SweConstants.UOM_CODE, ucumCode);
             
             // also create unit object
-            UnitParserUCUM ucumParser = new UnitParserUCUM();
-            Unit unit = ucumParser.getUnit(ucumCode);
-            if (unit != null)
-                dataComponent.setProperty(SweConstants.UOM_OBJ, unit);
+            UnitParserUCUM unitParser = new UnitParserUCUM();
+            unit = unitParser.getUnit(ucumCode);
         }
         
         // if no code, read href
         else if (href != null)
         {
             dataComponent.setProperty(SweConstants.UOM_URI, href);
+            
+            // also create unit object
+            UnitParserURI unitParser = new UnitParserURI();
+            unit = unitParser.getUnit(href);            
         }
         
         // inline unit
@@ -463,15 +467,17 @@ public class SweComponentReaderV1 implements DataComponentReader
             GMLUnitReader unitReader = new GMLUnitReader();
             try
             {
-                Unit unit = unitReader.readUnit(dom, unitElt);
-                if (unit != null)
-                    dataComponent.setProperty(SweConstants.UOM_OBJ, unit);
+                unit = unitReader.readUnit(dom, unitElt);
             }
             catch (GMLException e)
             {
                 throw new CDMException("Invalid Inline Unit", e);
             }
         }
+        
+        // assign unit object to component
+        if (unit != null)
+            dataComponent.setProperty(SweConstants.UOM_OBJ, unit);
     }
     
     
