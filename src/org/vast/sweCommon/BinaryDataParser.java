@@ -22,6 +22,8 @@ package org.vast.sweCommon;
 
 import java.io.*;
 import org.vast.data.*;
+import org.vast.decompression.CompressedStreamParser;
+import org.vast.decompression.DecompressionRegistry;
 import org.vast.cdm.common.*;
 
 
@@ -42,7 +44,8 @@ import org.vast.cdm.common.*;
  */
 public class BinaryDataParser extends AbstractDataParser
 {
-	protected DataInputExt dataInput;
+	protected static String BLOCK_READER = "BLOCK_READER";
+    protected DataInputExt dataInput;
 	protected boolean componentEncodingResolved = false;
 	
 	
@@ -209,12 +212,20 @@ public class BinaryDataParser extends AbstractDataParser
             else if(binaryOpts instanceof BinaryBlock)
             {
                 dataComponent.setEncodingInfo(binaryOpts);
-            	((BinaryBlock)binaryOpts).createReader(dataComponent);
+                initReader(dataComponent, (BinaryBlock)binaryOpts);
             }
 		}
 		
 		componentEncodingResolved = true;
 	}
+	
+	
+	protected void initReader(DataComponent blockComponent, BinaryBlock binaryOpts) throws CDMException
+    {
+	    CompressedStreamParser reader = (CompressedStreamParser)DecompressionRegistry.createReader(binaryOpts.compression);
+        reader.init(blockComponent, binaryOpts);
+        blockComponent.setProperty(BLOCK_READER, reader);
+    }
 	
 	
 	@Override
@@ -395,7 +406,8 @@ public class BinaryDataParser extends AbstractDataParser
 	private void parseBinaryBlock(DataComponent blockInfo, BinaryBlock binaryInfo) throws CDMException
 	{
 		// TODO: PADDING IS TAKEN CARE OF HERE... 
-		(binaryInfo.reader).decode(dataInput, blockInfo);					
+	    CompressedStreamParser reader = (CompressedStreamParser)blockInfo.getProperty(BLOCK_READER);
+		reader.decode(dataInput, blockInfo);					
 	}
 
 }

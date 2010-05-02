@@ -21,7 +21,12 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.common;
+package org.vast.decompression;
+
+import org.vast.cdm.common.BinaryBlock;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataInputExt;
 
 
 

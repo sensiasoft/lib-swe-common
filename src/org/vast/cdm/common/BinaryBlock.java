@@ -20,7 +20,6 @@
 
 package org.vast.cdm.common;
 
-import org.vast.decompression.DecompressionRegistry;
 
 /**
  * <p><b>Title:</b><br/>
@@ -37,13 +36,11 @@ import org.vast.decompression.DecompressionRegistry;
  * @since Sep 15, 2008
  * @version 1.0
  */
-
 public class BinaryBlock extends BinaryOptions
-{
-    
+{    
     public String encryption;
     public String compression;
-    public CompressedStreamParser reader;
+    
     
     public BinaryBlock() 
     {
@@ -71,12 +68,5 @@ public class BinaryBlock extends BinaryOptions
         text.append(this.byteLength + " bits, " + this.componentName + "\n");
 
         return text.toString();
-    }
-    
-    
-    public void createReader(DataComponent blockComponent) throws CDMException
-    {
-    	reader = (CompressedStreamParser)DecompressionRegistry.createReader(this.compression);
-    	reader.init(blockComponent, this);
     }
 }

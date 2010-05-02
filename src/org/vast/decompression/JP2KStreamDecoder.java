@@ -32,7 +32,6 @@ import jj2000.j2k.io.RandomAccessIO;
 import jj2000.j2k.util.ISRandomAccessIO;
 import org.vast.cdm.common.BinaryBlock;
 import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.CompressedStreamParser;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataInputExt;
 import org.vast.cdm.common.DataType;
