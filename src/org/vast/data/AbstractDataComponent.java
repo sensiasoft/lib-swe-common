@@ -44,8 +44,8 @@ public abstract class AbstractDataComponent implements DataComponent
 {
     public static int MAX_ARRAY_ERRORS = 10;
     
-	protected Hashtable<String, Object> properties = null;
-	protected Hashtable<String, Integer> names = new Hashtable<String, Integer>(0, 1.0f);
+	protected HashMap<String, Object> properties = null;
+	protected HashMap<String, Integer> names = new HashMap<String, Integer>(0, 1.0f);
 	protected AbstractDataBlock dataBlock;
 	protected AbstractDataComponent parent = null;
 	protected int scalarCount = -1;
@@ -313,7 +313,7 @@ public abstract class AbstractDataComponent implements DataComponent
 	public void setProperty(String propName, Object propValue)
 	{
 		if (properties == null)
-			properties = new Hashtable<String, Object>(5, 1.0f);
+			properties = new HashMap<String, Object>(5, 1.0f);
 		
 		properties.put(propName, propValue);
 	}

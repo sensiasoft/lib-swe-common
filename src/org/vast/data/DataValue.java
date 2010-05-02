@@ -25,7 +25,6 @@ import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataType;
-import org.vast.sweCommon.SweConstants;
 
 
 /**
@@ -44,6 +43,7 @@ import org.vast.sweCommon.SweConstants;
 public class DataValue extends AbstractDataComponent
 {
     protected DataType dataType;
+    protected ConstraintList constraints;
     
     
     public DataValue(String name)
@@ -107,7 +107,6 @@ public class DataValue extends AbstractDataComponent
     @Override
     public void validateData(List<CDMException> errorList)
     {
-    	ConstraintList constraints = (ConstraintList)properties.get(SweConstants.CONSTRAINTS);
     	if (constraints != null)
     	{
     		if (!constraints.validate(this.dataBlock))
@@ -228,9 +227,21 @@ public class DataValue extends AbstractDataComponent
     }
 
 
-	@Override
+	public ConstraintList getConstraints()
+    {
+        return constraints;
+    }
+
+
+    public void setConstraints(ConstraintList constraints)
+    {
+        this.constraints = constraints;
+    }
+
+
+    @Override
 	public boolean hasConstraints()
 	{
-		return (getProperty(SweConstants.CONSTRAINTS) != null);
+		return (constraints != null);
 	}
 }

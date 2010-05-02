@@ -67,7 +67,7 @@ public class DataBlockString extends AbstractDataBlock
     public DataBlockString renew()
     {
         DataBlockString newBlock = new DataBlockString();
-        newBlock.primitiveArray = new String[this.primitiveArray.length];
+        newBlock.primitiveArray = new String[this.atomCount];
         newBlock.startIndex = this.startIndex;
         newBlock.atomCount = this.atomCount;
         return newBlock;
@@ -78,7 +78,9 @@ public class DataBlockString extends AbstractDataBlock
     {
         // TODO make sure new Strings are created
         DataBlockString newBlock = new DataBlockString();
-        newBlock.primitiveArray = this.primitiveArray.clone();
+        //newBlock.primitiveArray = this.primitiveArray.clone();
+        newBlock.primitiveArray = new String[this.atomCount];
+        System.arraycopy(this.primitiveArray, 0, newBlock.primitiveArray, 0, this.atomCount);
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }

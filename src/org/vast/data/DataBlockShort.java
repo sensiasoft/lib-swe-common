@@ -67,7 +67,7 @@ public class DataBlockShort extends AbstractDataBlock
     public DataBlockShort renew()
     {
         DataBlockShort newBlock = new DataBlockShort();
-        newBlock.primitiveArray = new short[this.primitiveArray.length];
+        newBlock.primitiveArray = new short[this.atomCount];
         newBlock.startIndex = this.startIndex;
         newBlock.atomCount = this.atomCount;
         return newBlock;
@@ -77,7 +77,9 @@ public class DataBlockShort extends AbstractDataBlock
     public DataBlockShort clone()
     {
         DataBlockShort newBlock = new DataBlockShort();
-        newBlock.primitiveArray = this.primitiveArray.clone();
+        //newBlock.primitiveArray = this.primitiveArray.clone();
+        newBlock.primitiveArray = new short[this.atomCount];
+        System.arraycopy(this.primitiveArray, 0, newBlock.primitiveArray, 0, this.atomCount);
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }

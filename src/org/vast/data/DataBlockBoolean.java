@@ -69,7 +69,7 @@ public class DataBlockBoolean extends AbstractDataBlock
     public DataBlockBoolean renew()
     {
         DataBlockBoolean newBlock = new DataBlockBoolean();
-        newBlock.primitiveArray = new boolean[this.primitiveArray.length];
+        newBlock.primitiveArray = new boolean[this.atomCount];
         newBlock.startIndex = this.startIndex;
         newBlock.atomCount = this.atomCount;
         return newBlock;
@@ -79,7 +79,9 @@ public class DataBlockBoolean extends AbstractDataBlock
     public DataBlockBoolean clone()
     {
         DataBlockBoolean newBlock = new DataBlockBoolean();
-        newBlock.primitiveArray = this.primitiveArray.clone();
+        //newBlock.primitiveArray = this.primitiveArray.clone();
+        newBlock.primitiveArray = new boolean[this.atomCount];
+        System.arraycopy(this.primitiveArray, 0, newBlock.primitiveArray, 0, this.atomCount);
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }

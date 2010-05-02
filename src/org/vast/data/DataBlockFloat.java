@@ -67,7 +67,7 @@ public class DataBlockFloat extends AbstractDataBlock
     public DataBlockFloat renew()
     {
         DataBlockFloat newBlock = new DataBlockFloat();
-        newBlock.primitiveArray = new float[this.primitiveArray.length];
+        newBlock.primitiveArray = new float[this.atomCount];
         newBlock.startIndex = this.startIndex;
         newBlock.atomCount = this.atomCount;
         return newBlock;
@@ -77,7 +77,9 @@ public class DataBlockFloat extends AbstractDataBlock
     public DataBlockFloat clone()
     {
         DataBlockFloat newBlock = new DataBlockFloat();
-        newBlock.primitiveArray = this.primitiveArray.clone();
+        //newBlock.primitiveArray = this.primitiveArray.clone();
+        newBlock.primitiveArray = new float[this.atomCount];
+        System.arraycopy(this.primitiveArray, 0, newBlock.primitiveArray, 0, this.atomCount);
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }

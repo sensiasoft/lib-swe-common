@@ -61,7 +61,6 @@ public class SweConstants
 	public final static String DIC_URI = "dic_uri"; // String
 	public final static String DIC_OBJ = "dic_obj";
 	public final static String QUALITY = "quality"; // DataComponent
-	public final static String CONSTRAINTS = "constraint"; // ConstraintList object
 	public final static String UPDATABLE = "updatable"; // Boolean
 	public final static String OPTIONAL = "optional"; // Boolean
 	public final static String NIL_VALUES = "nil_values"; // NilValues object

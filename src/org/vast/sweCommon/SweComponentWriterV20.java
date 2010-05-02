@@ -619,7 +619,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     
     private void writeConstraints(DOMHelper dom, DataValue dataValue, Element dataValueElt) throws CDMException
     {
-    	ConstraintList constraints = (ConstraintList)dataValue.getProperty(SweConstants.CONSTRAINTS);
+    	ConstraintList constraints = dataValue.getConstraints();
     	
     	if (constraints != null && !constraints.isEmpty())
     	{

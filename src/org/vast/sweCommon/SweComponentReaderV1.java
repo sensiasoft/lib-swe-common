@@ -523,7 +523,7 @@ public class SweComponentReaderV1 implements DataComponentReader
      * @return
      * @throws CDMException
      */
-    private void readConstraints(DataComponent dataComponent, DOMHelper dom, Element scalarElement) throws CDMException
+    private void readConstraints(DataValue dataValue, DOMHelper dom, Element scalarElement) throws CDMException
     {
     	NodeList constraintElts = dom.getElements(scalarElement, "constraint");
     	ConstraintList constraintList = new ConstraintList();
@@ -549,7 +549,7 @@ public class SweComponentReaderV1 implements DataComponentReader
     	}
     	
     	if (!constraintList.isEmpty())
-    		dataComponent.setProperty(SweConstants.CONSTRAINTS, constraintList);
+    	    dataValue.setConstraints(constraintList);
     }
     
     
