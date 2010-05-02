@@ -23,6 +23,7 @@ package org.vast.sweCommon;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import org.vast.cdm.common.DataOutputExt;
 
 
 /**

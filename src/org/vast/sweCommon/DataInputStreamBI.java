@@ -23,6 +23,7 @@ package org.vast.sweCommon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.DataInputStream;
+import org.vast.cdm.common.DataInputExt;
 
 
 /**

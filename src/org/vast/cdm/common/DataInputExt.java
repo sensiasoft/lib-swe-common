@@ -18,7 +18,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.sweCommon;
+package org.vast.cdm.common;
 
 import java.io.DataInput;
 import java.io.IOException;

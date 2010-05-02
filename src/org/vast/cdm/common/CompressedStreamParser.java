@@ -23,7 +23,6 @@
 
 package org.vast.cdm.common;
 
-import org.vast.sweCommon.DataInputExt;
 
 
 /**
