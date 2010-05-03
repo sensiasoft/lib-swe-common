@@ -20,10 +20,12 @@
 
 package org.vast.data;
 
+import java.io.Serializable;
 import org.vast.cdm.common.DataBlock;
 
 
-public abstract class AbstractDataBlock implements DataBlock
+@SuppressWarnings("serial")
+public abstract class AbstractDataBlock implements DataBlock, Serializable
 {
 	protected int atomCount;
 	protected int startIndex = 0;

@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-
 import org.vast.cdm.common.DataType;
 
 
@@ -45,6 +44,7 @@ import org.vast.cdm.common.DataType;
  */
 public class DataBlockList extends AbstractDataBlock
 {
+    private static final long serialVersionUID = -9032080133600839734L;
     protected List<AbstractDataBlock> blockList;
 	protected int blockAtomCount = -1;
 	protected int blockIndex;

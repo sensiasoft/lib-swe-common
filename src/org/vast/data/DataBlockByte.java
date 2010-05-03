@@ -40,7 +40,8 @@ import org.vast.cdm.common.DataType;
  */
 public class DataBlockByte extends AbstractDataBlock
 {
-	protected byte[] primitiveArray;
+	private static final long serialVersionUID = 3073014348738463661L;
+    protected byte[] primitiveArray;
 	
 	
 	public DataBlockByte()

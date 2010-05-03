@@ -42,6 +42,7 @@ import org.vast.cdm.common.DataType;
  */
 public class DataGroup extends AbstractDataComponent
 {
+    private static final long serialVersionUID = 5402778409089789225L;
     protected List<AbstractDataComponent> componentList;
 
 

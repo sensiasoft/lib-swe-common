@@ -20,10 +20,13 @@
 
 package org.vast.cdm.common;
 
+import java.io.Serializable;
 
-public class AsciiEncoding implements DataEncoding
+
+public class AsciiEncoding implements DataEncoding, Serializable
 {
-	public String blockSeparator;
+	private static final long serialVersionUID = 705357395103964244L;	
+    public String blockSeparator;
 	public String tokenSeparator;
 	public char decimalSeparator = '.';
 	public boolean collapseWhiteSpaces = true;

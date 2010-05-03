@@ -40,7 +40,8 @@ import org.vast.cdm.common.DataType;
  */
 public class DataBlockBoolean extends AbstractDataBlock
 {
-	public static byte trueVal = 1;
+	private static final long serialVersionUID = 6984929839422362525L;
+    public static byte trueVal = 1;
 	public static byte falseVal = 0;
 	protected boolean[] primitiveArray;
 	

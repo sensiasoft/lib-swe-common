@@ -42,8 +42,14 @@ import org.vast.cdm.common.DataType;
  */
 public class DataValue extends AbstractDataComponent
 {
+    private static final long serialVersionUID = -7411819306997320628L;
     protected DataType dataType;
     protected ConstraintList constraints;
+    
+    
+    public DataValue()
+    {        
+    }
     
     
     public DataValue(String name)

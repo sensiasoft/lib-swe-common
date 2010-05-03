@@ -25,6 +25,8 @@
 
 package org.vast.cdm.common;
 
+import java.io.Serializable;
+
 /**
  * <p><b>Title:</b><br/>
  * Binary Options
@@ -40,7 +42,8 @@ package org.vast.cdm.common;
  * @version 1.0
  */
 
-public abstract class BinaryOptions implements EncodingInfo
+@SuppressWarnings("serial")
+public abstract class BinaryOptions implements EncodingInfo, Serializable
 {
     public int paddingBefore;
     public int paddingAfter;

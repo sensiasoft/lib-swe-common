@@ -48,8 +48,10 @@ import org.vast.cdm.common.DataType;
  */
 public class DataArray extends AbstractDataComponent
 {
+    private static final long serialVersionUID = -585236845658753642L;
+    protected final static String errorBlockMixed = "Error: DataArrays should never contain a DataBlockMixed";
     public final static String ARRAY_SIZE_FIELD = "ArraySize";
-	protected final static String errorBlockMixed = "Error: DataArrays should never contain a DataBlockMixed";
+    
     protected AbstractDataComponent component = null;
     protected DataValue sizeComponent = null;
     protected String sizeDataName = null;

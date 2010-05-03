@@ -20,6 +20,7 @@
 
 package org.vast.cdm.common;
 
+
 public enum DataType
 {
 	BOOLEAN,

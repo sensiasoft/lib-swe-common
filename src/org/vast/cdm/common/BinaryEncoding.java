@@ -20,6 +20,7 @@
 
 package org.vast.cdm.common;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import org.vast.data.DataValue;
 import org.vast.data.ScalarIterator;
@@ -39,9 +40,11 @@ import org.vast.data.ScalarIterator;
  * @date Dec 20, 2006
  * @version 1.0
  */
-public class BinaryEncoding implements DataEncoding
+public class BinaryEncoding implements DataEncoding, Serializable
 {
-	public enum ByteEncoding
+	private static final long serialVersionUID = -3230565687425849338L;
+
+    public enum ByteEncoding
 	{
 		RAW,
 		BASE16,

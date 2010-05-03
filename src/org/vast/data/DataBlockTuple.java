@@ -42,7 +42,8 @@ import org.vast.cdm.common.DataType;
  */
 public class DataBlockTuple extends AbstractDataBlock
 {
-	protected AbstractDataBlock[] blockArray;
+	private static final long serialVersionUID = 3140890401720138678L;
+    protected AbstractDataBlock[] blockArray;
 
 
 	public DataBlockTuple()

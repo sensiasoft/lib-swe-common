@@ -45,6 +45,7 @@ import org.vast.cdm.common.DataComponent;
  */
 public class DataList extends AbstractDataComponent
 {
+    private static final long serialVersionUID = 3525149069812989611L;
     protected ListIterator<AbstractDataBlock> blockIterator;
     protected AbstractDataComponent component = null;
     protected int size = 0;

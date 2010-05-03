@@ -20,10 +20,13 @@
 
 package org.vast.cdm.common;
 
+import java.io.Serializable;
 
-public class StandardFormatEncoding implements DataEncoding
+
+public class StandardFormatEncoding implements DataEncoding, Serializable
 {
-	public String mimeType;
+	private static final long serialVersionUID = 2058172188467605880L;
+    public String mimeType;
     
     
 	public StandardFormatEncoding()

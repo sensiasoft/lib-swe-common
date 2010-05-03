@@ -40,7 +40,8 @@ import org.vast.cdm.common.DataType;
  */
 public class DataBlockParallel extends AbstractDataBlock
 {
-	protected AbstractDataBlock[] blockArray;
+	private static final long serialVersionUID = 8610635426607515415L;
+    protected AbstractDataBlock[] blockArray;
 	protected int blockIndex;
 	protected int localIndex;
 

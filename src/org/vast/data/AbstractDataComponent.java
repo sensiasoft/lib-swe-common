@@ -20,6 +20,7 @@
 
 package org.vast.data;
 
+import java.io.Serializable;
 import java.util.*;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
@@ -40,7 +41,8 @@ import org.vast.cdm.common.EncodingInfo;
  * @author Alexandre Robin
  * @version 1.0
  */
-public abstract class AbstractDataComponent implements DataComponent
+@SuppressWarnings("serial")
+public abstract class AbstractDataComponent implements DataComponent, Serializable
 {
     public static int MAX_ARRAY_ERRORS = 10;
     
@@ -52,6 +54,11 @@ public abstract class AbstractDataComponent implements DataComponent
 	protected String name;
 	protected EncodingInfo encodingInfo;
 
+	
+	public AbstractDataComponent()
+	{	    
+	}
+	
 	
 	/**
 	 * Return a structural copy of this container

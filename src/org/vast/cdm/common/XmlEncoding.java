@@ -20,10 +20,13 @@
 
 package org.vast.cdm.common;
 
+import java.io.Serializable;
 
-public class XmlEncoding implements DataEncoding
+
+public class XmlEncoding implements DataEncoding, Serializable
 {
-	public String namespace;
+	private static final long serialVersionUID = -6581882598795000427L;
+    public String namespace;
 	public String prefix;
 	
 	

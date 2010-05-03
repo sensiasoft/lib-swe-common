@@ -38,6 +38,7 @@ package org.vast.cdm.common;
  */
 public class BinaryBlock extends BinaryOptions
 {    
+    private static final long serialVersionUID = -5489375012750387976L;
     public String encryption;
     public String compression;
     

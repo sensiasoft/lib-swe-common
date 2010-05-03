@@ -20,6 +20,7 @@
 
 package org.vast.cdm.common;
 
+
 /**
  * <p><b>Title:</b><br/>
  * Binary Component
@@ -35,9 +36,9 @@ package org.vast.cdm.common;
  * @since Sep 15, 2008
  * @version 1.0
  */
-
 public class BinaryComponent extends BinaryOptions
 {
+    private static final long serialVersionUID = -3816840058163340347L;
     public final static String doubleURN = "urn:ogc:def:data:double";
     public final static String floatURN = "urn:ogc:def:data:float";
     public final static String booleanURN = "urn:ogc:def:data:boolean";

@@ -23,13 +23,14 @@
 
 package org.vast.cdm.common;
 
+
 /**
  * <p><b>Title:</b>
  * EncodingInfo
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Tagging interface for all types of encoding ingo
+ * Tagging interface for all types of encoding info
  * that can be associated to a data component
  * </p>
  *

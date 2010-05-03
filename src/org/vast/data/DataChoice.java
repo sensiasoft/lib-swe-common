@@ -41,7 +41,8 @@ import org.vast.cdm.common.DataComponent;
  */
 public class DataChoice extends AbstractDataComponent
 {
-	protected static int UNSELECTED = -1;
+	private static final long serialVersionUID = -4379114506800177446L;
+    protected static int UNSELECTED = -1;
 	protected static String UNSELECTED_ERROR = "No item was selected in DataChoice ";
 	protected List<AbstractDataComponent> itemList;
 	protected int selected = -1;
