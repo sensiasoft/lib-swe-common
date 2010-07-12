@@ -95,7 +95,7 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
         Element dataEncElt = dom.createElement("swe:XMLEncoding");
         
         if (xmlEncoding.namespace != null)
-        	dataEncElt.setAttribute("namespace", xmlEncoding.namespace);
+        	dataEncElt.setAttribute("defaultNamespace", xmlEncoding.namespace);
         
     	return dataEncElt;
     }

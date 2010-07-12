@@ -100,34 +100,19 @@ public class SweComponentReaderV20 implements DataComponentReader
         	// get element name
         	String eltName = componentElt.getLocalName();
         	
-        	// determine super type
-            String sweType = dom.getAttributeValue(componentElt, "@is");
-            
         	// call the right default method depending on type
-            if (sweType == null)
-            {
-            	if (eltName.endsWith("DataRecord"))
-    	        	container = readDataRecord(dom, componentElt);
-    	        else if (eltName.endsWith("DataArray"))
-    	            container = readDataArray(dom, componentElt);
-    	        else if (eltName.endsWith("DataChoice"))
-    	            container = readDataChoice(dom, componentElt);
-    	        else if (eltName.endsWith("Range"))
-    	            container = readRange(dom, componentElt);
-    	        else // default to scalar
-    	            container = readScalar(dom, componentElt);
-            }
-            else
-            {
-            	if (sweType.equals("Record"))
-     	        	container = readDerivedRecord(dom, componentElt);
-     	        else if (sweType.equals("Array"))
-     	        	container = readDerivedArray(dom, componentElt);
-     	        else if (sweType.equals("Choice"))
-     	        	container = readDerivedChoice(dom, componentElt);
-     	        else
-     	        	throw new CDMException("Unknown base type: " + sweType);
-            }
+        	if (eltName.equals("DataRecord"))
+	        	container = readDataRecord(dom, componentElt);
+        	else if (eltName.equals("Vector"))
+	        	container = readVector(dom, componentElt);
+	        else if (eltName.equals("DataArray") || eltName.equals("Matrix"))
+	            container = readDataArray(dom, componentElt);
+	        else if (eltName.equals("DataChoice"))
+	            container = readDataChoice(dom, componentElt);
+	        else if (eltName.endsWith("Range"))
+	            container = readRange(dom, componentElt);
+	        else // default to scalar
+	            container = readScalar(dom, componentElt);
         }
         
         // set type to element QName        
@@ -183,50 +168,35 @@ public class SweComponentReaderV20 implements DataComponentReader
     
     
     /**
-     * Reads a derived (hard-typed) Record structure and all its fields
+     * Reads a generic (soft-typed) DataRecord structure and all its fields
      * @param recordElt Element
      * @throws CDMException
      * @return DataGroup
      */
-    private DataGroup readDerivedRecord(DOMHelper dom, Element recordElt) throws CDMException
+    private DataGroup readVector(DOMHelper dom, Element vectorElt) throws CDMException
     {
-        DataGroup dataGroup = new DataGroup(2);
-    		
-		// save component QName
-    	QName componentQName = new QName(recordElt.getNamespaceURI(), recordElt.getTagName());
-    	dataGroup.setProperty(SweConstants.COMP_QNAME, componentQName);
-    	
-		// parse all field elements
-		NodeList childList = dom.getAllChildElements(recordElt);
-        int childCount = childList.getLength();
+       // parse all fields elements
+		NodeList coordList = dom.getElements(vectorElt, "swe:coordinate");
+        int coordCount = coordList.getLength();
+        DataGroup dataGroup = new DataGroup(coordCount);
 		
-		// loop through all children
-        for (int i = 0; i < childCount; i++)
+		// loop through all fields
+        for (int i = 0; i < coordCount; i++)
         {
-            Element childElt = (Element)childList.item(i);
-            String isAtt = dom.getAttributeValue(childElt, "@is");
-            
-            // skip everything w/o 'is' attribute set to 'field'
-            if (isAtt != null && isAtt.equals("field"))
-            {
-            	// parse and add field
-                DataComponent dataComponent = readComponentProperty(dom, childElt);
-                dataGroup.addComponent(readPropertyName(dom, childElt), dataComponent);
-                
-                // save field QName
-            	QName fieldQName = new QName(childElt.getNamespaceURI(), childElt.getTagName());
-            	dataComponent.setProperty(SweConstants.FIELD_QNAME, fieldQName);
-            	
-            	// optional flag
-                Boolean optional = getBooleanAttribute(dom, childElt, "optional");
-                if (optional != null)
-                	dataComponent.setProperty(SweConstants.OPTIONAL, optional);
-            }
+            Element coordElt = (Element)coordList.item(i);
+
+            // add field components
+            DataComponent dataComponent = readComponentProperty(dom, coordElt);
+            dataGroup.addComponent(readPropertyName(dom, coordElt), dataComponent);
         }
+    	
+        // error if no field present
+        if (dataGroup.getComponentCount() == 0)
+            throw new CDMException("Invalid Vector: Must have AT LEAST ONE coordinate");
 
         // read common stuffs
-        readGmlProperties(dataGroup, dom, recordElt);
-        readCommonAttributes(dataGroup, dom, recordElt);
+        readGmlProperties(dataGroup, dom, vectorElt);
+        readCommonAttributes(dataGroup, dom, vectorElt);
 
         return dataGroup;
     }
@@ -264,52 +234,6 @@ public class SweComponentReaderV20 implements DataComponentReader
     }
     
     
-    /**
-     * Reads a derived (hard-typed) Choice structure and all its items
-     * @param dom
-     * @param choiceElt
-     * @return
-     * @throws CDMException
-     */
-    private DataChoice readDerivedChoice(DOMHelper dom, Element choiceElt) throws CDMException
-    {
-    	DataChoice dataChoice = new DataChoice(2);
-		
-		// save component QName
-    	QName componentQName = new QName(choiceElt.getNamespaceURI(), choiceElt.getTagName());
-    	dataChoice.setProperty(SweConstants.COMP_QNAME, componentQName);
-    	
-		// parse all item elements
-		NodeList childList = dom.getAllChildElements(choiceElt);
-        int childCount = childList.getLength();
-		
-		// loop through all children
-        for (int i = 0; i < childCount; i++)
-        {
-            Element childElt = (Element)childList.item(i);
-            String isAtt = dom.getAttributeValue(childElt, "@is");
-            
-            // skip everything w/o 'is' attribute set to 'item'
-            if (isAtt != null && isAtt.equals("item"))
-            {
-            	// save field QName
-            	QName fieldQName = new QName(childElt.getNamespaceURI(), childElt.getTagName());
-            	dataChoice.setProperty(SweConstants.FIELD_QNAME, fieldQName);
-            	
-            	// parse and add field
-                DataComponent dataComponent = readComponentProperty(dom, childElt);
-                dataChoice.addComponent(readPropertyName(dom, childElt), dataComponent);
-            }
-        }
-
-        // read common stuffs
-        readGmlProperties(dataChoice, dom, choiceElt);
-        readCommonAttributes(dataChoice, dom, choiceElt);
-
-        return dataChoice;
-    }
-
-
     /**
      * Reads a generic (soft-typed) DataArray structure the unique member
      * @param arrayElt Element
@@ -380,25 +304,6 @@ public class SweComponentReaderV20 implements DataComponentReader
     }
     
     
-    /**
-     * Reads a derived (hard-typed) Array structure and its sub component
-     * @param dom
-     * @param arrayElt
-     * @return
-     * @throws CDMException
-     */
-    private DataArray readDerivedArray(DOMHelper dom, Element arrayElt) throws CDMException
-    {
-    	DataArray dataArray = readDataArray(dom, arrayElt);
-    	
-    	// save component QName
-    	QName componentQName = new QName(arrayElt.getNamespaceURI(), arrayElt.getTagName());
-    	dataArray.setProperty(SweConstants.COMP_QNAME, componentQName);
-    	
-    	return dataArray;
-    }
-
-
     /**
      * Reads a scalar value and atributes (Quantity, Count, Term...)
      * @param scalarElt
@@ -576,11 +481,6 @@ public class SweComponentReaderV20 implements DataComponentReader
         Boolean updatable = getBooleanAttribute(dom, componentElt, "updatable");
         if (updatable != null)
         	dataComponent.setProperty(SweConstants.UPDATABLE, updatable);
-        
-        // crs
-        String crs = dom.getAttributeValue(componentElt, "crs");
-        if (crs != null)
-            dataComponent.setProperty(SweConstants.CRS, crs);
         
         // reference frame
         String refFrame = dom.getAttributeValue(componentElt, "referenceFrame");

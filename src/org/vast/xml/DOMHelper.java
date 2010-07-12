@@ -1023,28 +1023,20 @@ public class DOMHelper
         // add namespaces xmlns attributes
         XMLDocument parentDoc = getParentDocument(elt);
         Enumeration nsEnum = parentDoc.nsUriToPrefix.keys();
+
         while (nsEnum.hasMoreElements())
         {
             String uri = (String)nsEnum.nextElement();
             String prefix = parentDoc.getNSPrefix(uri);
             
-            // add namespace attributes only if missing
-            if (prefix.equals(QName.DEFAULT_PREFIX))
-            {
-                if (!elt.hasAttribute("xmlns"))
-                    elt.setAttribute("xmlns", uri);
-            }
-            else
-            {
-                if (!elt.hasAttribute("xmlns:" + prefix))
-                    elt.setAttribute("xmlns:" + prefix, uri);
-            }
+            // add namespace attributes to root element
+            elt.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:"+prefix, uri);
         }
         
         // setup serializer and launch serialization
         serializer.setOutputByteStream(out);
         serializer.setOutputFormat(format);
-        serializer.setNamespaces(false);
+        serializer.setNamespaces(true);
         serializer.serialize(elt);
     }
     
@@ -1337,7 +1329,7 @@ public class DOMHelper
         {
             if (eltQName.prefix != QName.DEFAULT_PREFIX)
                 throw new IllegalStateException("No namespace URI defined for user prefix " + eltQName.prefix);
-            
+            eltQName.nsUri = null;
             return eltQName;
         }
         

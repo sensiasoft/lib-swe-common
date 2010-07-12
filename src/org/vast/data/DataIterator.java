@@ -123,7 +123,6 @@ public class DataIterator implements Iterator<DataComponent>
 	}
 
 
-    @Override
     public void remove()
     {
         throw new UnsupportedOperationException();
