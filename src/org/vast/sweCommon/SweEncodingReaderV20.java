@@ -100,7 +100,7 @@ public class SweEncodingReaderV20 implements DataEncodingReader
     {
     	XmlEncoding encoding = new XmlEncoding();
     	
-    	String namespace = dom.getAttributeValue(xmlEncodingElt, "namespace");
+    	String namespace = dom.getAttributeValue(xmlEncodingElt, "defaultNamespace");
     	encoding.namespace = namespace;
     	
     	return encoding;

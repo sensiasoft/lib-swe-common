@@ -632,19 +632,29 @@ public class SweComponentWriterV20 implements DataComponentWriter
     		else
     			allowedValuesElt = dom.addElement(constraintElt, "swe:AllowedValues");
     		
+    		// write all enumeration constraints
+    		for (int c=0; c<constraints.size(); c++)
+    		{
+    			DataConstraint constraint = constraints.get(c);
+    			
+    			if (constraint instanceof EnumTokenConstraint)
+    				writeTokenEnumConstraint(dom, (EnumTokenConstraint)constraint, allowedValuesElt);
+    			else if (constraint instanceof EnumNumberConstraint)
+    				writeNumberEnumConstraint(dom, (EnumNumberConstraint)constraint, allowedValuesElt);
+    		} 
+    		
+    		// write all other constraints
     		for (int c=0; c<constraints.size(); c++)
     		{
     			DataConstraint constraint = constraints.get(c);
     			
     			if (constraint instanceof IntervalConstraint)
     				writeIntervalConstraint(dom, (IntervalConstraint)constraint, allowedValuesElt);
-    			else if (constraint instanceof EnumTokenConstraint)
-    				writeTokenEnumConstraint(dom, (EnumTokenConstraint)constraint, allowedValuesElt);
-    			else if (constraint instanceof EnumNumberConstraint)
-    				writeNumberEnumConstraint(dom, (EnumNumberConstraint)constraint, allowedValuesElt);
     			else if (constraint instanceof PatternConstraint)
     				writePatternConstraint(dom, (PatternConstraint)constraint, allowedValuesElt);
-    		}    		
+    		}
+    		
+    		// TODO write significantFigures
     	}
     }
     
@@ -659,37 +669,17 @@ public class SweComponentWriterV20 implements DataComponentWriter
     
     private void writeNumberEnumConstraint(DOMHelper dom, EnumNumberConstraint constraint, Element constraintElt) throws CDMException
     {
-    	Element eunmElt = dom.addElement(constraintElt, "swe:enumeration");
-    	
-    	StringBuffer text = new StringBuffer();    	
-    	double[] valueList = constraint.getValueList();
-    	
+    	double[] valueList = constraint.getValueList();    	
     	for (int i=0; i<valueList.length; i++)
-    	{
-    		text.append(Double.toString(valueList[i]));
-    		if (i < valueList.length-1)
-    			text.append(" ");
-    	}
-    	
-    	dom.setElementValue(eunmElt, text.toString());
+    		dom.setElementValue(constraintElt, "+swe:value", Double.toString(valueList[i]));
     }
     
     
     private void writeTokenEnumConstraint(DOMHelper dom, EnumTokenConstraint constraint, Element constraintElt) throws CDMException
     {
-    	Element eunmElt = dom.addElement(constraintElt, "swe:enumeration");
-    	
-    	StringBuffer text = new StringBuffer();    	
-    	String[] valueList = constraint.getValueList();
-    	
+    	String[] valueList = constraint.getValueList();    	
     	for (int i=0; i<valueList.length; i++)
-    	{
-    		text.append(valueList[i]);
-    		if (i < valueList.length-1)
-    			text.append(" ");
-    	}
-    	
-    	dom.setElementValue(eunmElt, text.toString());
+    		dom.setElementValue(constraintElt, "+swe:value", valueList[i]);
     }
     
     

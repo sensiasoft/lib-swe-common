@@ -79,6 +79,7 @@ public class DataValue extends AbstractDataComponent
     {
     	DataValue newVal = new DataValue(name, dataType);
     	newVal.properties = this.properties;
+    	newVal.constraints = this.constraints;
     	return newVal;
     }
     

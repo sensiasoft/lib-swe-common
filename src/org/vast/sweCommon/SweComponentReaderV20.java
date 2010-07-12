@@ -632,42 +632,91 @@ public class SweComponentReaderV20 implements DataComponentReader
      */
     private void readConstraints(DataValue dataValue, DOMHelper dom, Element scalarElement) throws CDMException
     {
-    	NodeList constraintElts = dom.getElements(scalarElement, "constraint/*/*");
-    	if (constraintElts.getLength() == 0)
+    	Element constraintElt = dom.getElement(scalarElement, "constraint/*");
+    	if (constraintElt == null)
     		return;
     	
-    	ConstraintList constraintList = new ConstraintList();    	
-    	boolean tokenConstraints = dom.existElement(scalarElement, "constraint/AllowedTokens");
-    	boolean timeConstraints = dom.existElement(scalarElement, "constraint/AllowedTimes");
-    		
-    	for (int i=0; i<constraintElts.getLength(); i++)
-    	{
-    		DataConstraint constraint = null;
-    		Element constraintElt = (Element)constraintElts.item(i);
-    		String constrainType = constraintElt.getLocalName();
-    		
-    		if (tokenConstraints)
+    	boolean tokenConstraints = dom.hasQName(constraintElt, "swe:AllowedTokens");
+    	boolean timeConstraints = dom.hasQName(constraintElt, "swe:AllowedTimes");
+    	ConstraintList constraintList = new ConstraintList();  
+    	DataConstraint constraint = null;
+    	
+    	if (tokenConstraints)
+		{
+			Element patternElt = dom.getElement(constraintElt, "pattern");
+			if (patternElt != null)
+			{
+				constraint = new PatternConstraint(dom.getElementValue(patternElt));
+				constraintList.add(constraint);
+			}
+			
+    		NodeList valueElts = dom.getElements(constraintElt, "value");
+    		if (valueElts.getLength() > 0)
     		{
-    			if (constrainType.equals("pattern"))
-        			constraint = readPatternConstraint(dom, constraintElt);
-        		else if (constrainType.equals("enumeration"))
-        			constraint = readTokenEnumConstraint(dom, constraintElt);
+	    		String[] values = new String[valueElts.getLength()];
+	    		for (int i=0; i<valueElts.getLength(); i++)
+	    			values[i] = dom.getElementValue((Element)valueElts.item(i));
+	    		constraintList.add(new EnumTokenConstraint(values));
     		}
-    		else if (timeConstraints)
+		}
+		else if (timeConstraints)
+		{
+			NodeList intervalElts = dom.getElements(constraintElt, "interval");
+    		for (int i=0; i<intervalElts.getLength(); i++)
     		{
-    			// TODO read AllowedTimes!
+    			constraint = readTimeIntervalConstraint(dom, (Element)intervalElts.item(i));
+	    		constraintList.add(constraint);
     		}
-    		else
+			
+			NodeList valueElts = dom.getElements(constraintElt, "value");
+    		if (valueElts.getLength() > 0)
     		{
-    			if (constrainType.equals("interval"))
-        			constraint = readIntervalConstraint(dom, constraintElt);
-        		else if (constrainType.equals("enumeration"))
-        			constraint = readNumberEnumConstraint(dom, constraintElt);
+	    		double[] values = new double[valueElts.getLength()];
+	    		for (int i=0; i<valueElts.getLength(); i++)
+	    		{
+	    			String val = dom.getElementValue((Element)valueElts.item(i));
+    				try
+		        	{
+		    			values[i] = DateTimeFormat.parseIso(val);
+		    		}
+					catch (ParseException e)
+					{
+						throw new CDMException("Invalid Time Enumeration constraint: " + val);
+					}
+	    		}
+	    		constraintList.add(new EnumNumberConstraint(values));
+    		}
+		}
+		else
+		{
+			NodeList intervalElts = dom.getElements(constraintElt, "interval");
+    		for (int i=0; i<intervalElts.getLength(); i++)
+    		{
+    			constraint = readIntervalConstraint(dom, (Element)intervalElts.item(i));
+	    		constraintList.add(constraint);
+    		}
+			    		
+    		NodeList valueElts = dom.getElements(constraintElt, "value");
+    		if (valueElts.getLength() > 0)
+    		{
+	    		double[] values = new double[valueElts.getLength()];
+	    		for (int i=0; i<valueElts.getLength(); i++)
+	    		{
+	    			String val = dom.getElementValue((Element)valueElts.item(i));
+    				try
+		        	{
+		    			values[i] = Double.parseDouble(val);
+		    		}
+					catch (Exception e)
+					{
+						throw new CDMException("Invalid Number Enumeration constraint: " + val);
+					}
+	    		}
+	    		constraintList.add(new EnumNumberConstraint(values));
     		}
     		
-    		if (constraint != null)
-    			constraintList.add(constraint);
-    	}
+    		// TODO read significantFigures
+		}
     	
     	if (!constraintList.isEmpty())
     	    dataValue.setConstraints(constraintList);
@@ -699,58 +748,25 @@ public class SweComponentReaderV20 implements DataComponentReader
     
     
     /**
-     * Reads a numerical enumeration constraint
+     * Reads a time interval constraint
      * @param dom
      * @param constraintElement
      * @return
-     * @throws CDMException
      */
-    private EnumNumberConstraint readNumberEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    private IntervalConstraint readTimeIntervalConstraint(DOMHelper dom, Element constraintElement) throws CDMException
     {
-    	String values = dom.getElementValue(constraintElement);
+    	String rangeText = dom.getElementValue(constraintElement);
     	
-    	try
+		try
 		{
-			String[] valueList = values.split(" ");
-			double[] valueArray = new double[valueList.length];
-			
-			for (int i=0; i<valueArray.length; i++)
-				valueArray[i] = Double.parseDouble(valueList[i]);
-			
-			return new EnumNumberConstraint(valueArray);
+			String[] rangeValues = rangeText.split(" ");
+			double min = DateTimeFormat.parseIso(rangeValues[0]);
+			double max = DateTimeFormat.parseIso(rangeValues[1]);
+			return new IntervalConstraint(min, max);
 		}
 		catch (Exception e)
 		{
-			throw new CDMException("Invalid Number Enumeration constraint: " + values);
+			throw new CDMException("Invalid Time Interval Constraint: " + rangeText);
 		}
-    }
-    
-    
-    /**
-     * Reads a token enumeration constraint
-     * @param dom
-     * @param constraintElement
-     * @return
-     * @throws CDMException
-     */
-    private EnumTokenConstraint readTokenEnumConstraint(DOMHelper dom, Element constraintElement) throws CDMException
-    {
-    	String values = dom.getElementValue(constraintElement);
-    	String[] valueList = values.split(" ");
-		return new EnumTokenConstraint(valueList);
-    }
-    
-    
-    /**
-     * Reads a regex pattern constraint
-     * @param dom
-     * @param constraintElement
-     * @return
-     * @throws CDMException
-     */
-    private DataConstraint readPatternConstraint(DOMHelper dom, Element constraintElement) throws CDMException
-    {
-    	String pattern = dom.getElementValue(constraintElement);
-    	return new PatternConstraint(pattern);
     }
 }

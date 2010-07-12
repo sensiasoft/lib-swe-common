@@ -1030,7 +1030,10 @@ public class DOMHelper
             String prefix = parentDoc.getNSPrefix(uri);
             
             // add namespace attributes to root element
-            elt.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:"+prefix, uri);
+            String attName = "xmlns";
+            if (!prefix.equals(QName.DEFAULT_PREFIX))
+            	attName += ":" + prefix;
+            elt.setAttributeNS("http://www.w3.org/2000/xmlns/", attName, uri);
         }
         
         // setup serializer and launch serialization
