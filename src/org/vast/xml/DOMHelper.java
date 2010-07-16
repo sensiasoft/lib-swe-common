@@ -20,12 +20,10 @@
 
 package org.vast.xml;
 
-import org.apache.xml.serialize.Method;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 import org.vast.util.ExceptionSystem;
 import org.vast.util.URIResolver;
 import org.w3c.dom.*;
+import org.w3c.dom.ls.LSSerializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -212,8 +210,8 @@ public class DOMHelper
     {
         XMLDocument xmlDocument = new XMLDocument(domDocument);
         mainFragment = new XMLFragment(xmlDocument, xmlDocument.getDocumentElement());
-        xmlDocument.readIdentifiers(domDocument.getDocumentElement());
-        xmlDocument.readNamespaces(domDocument.getDocumentElement());
+        xmlDocument.readIdentifiers(domDocument.getDocumentElement(), true);
+        xmlDocument.readNamespaces(domDocument.getDocumentElement(), false);
         loadedDocuments.put("NEW", xmlDocument);
     }
     
@@ -755,7 +753,7 @@ public class DOMHelper
             elt = addElement(startElement, attPath);
         
         QName qnameObj = getQName(getParentDocument(elt), attName);
-        if (qnameObj.getNsUri() == null)
+        if (qnameObj.getNsUri() == null || qnameObj.getPrefix().equals(QName.DEFAULT_PREFIX))
             elt.setAttribute(attName, val);
         else
             elt.setAttributeNS(qnameObj.getNsUri(), qnameObj.getFullName(), val);
@@ -995,52 +993,12 @@ public class DOMHelper
      * Helper method to serialize this DOM node to a stream using the provided serializer
      * @param node
      * @param out
-     * @param format
      * @param serializer
      * @throws IOException
      */
-    public void serialize(Node node, OutputStream out, OutputFormat format, XMLSerializer serializer) throws IOException
+    public void serialize(Node node, OutputStream out, LSSerializer serializer) throws IOException
     {
-        // select root element to serialize
-        Element elt = null;
-        if (node.getNodeType() == Node.ELEMENT_NODE)
-            elt = (Element)node;
-        else if (node.getNodeType() == Node.DOCUMENT_NODE)
-            elt = ((Document)node).getDocumentElement();
-        else
-            return;
-        
-        // use default format if no format specified
-        if (format == null)
-        {
-            format = new OutputFormat();
-            format.setMethod(Method.XML);
-            format.setIndenting(true);
-            format.setIndent(3);
-            format.setLineWidth(0);
-        }
-        
-        // add namespaces xmlns attributes
-        XMLDocument parentDoc = getParentDocument(elt);
-        Enumeration nsEnum = parentDoc.nsUriToPrefix.keys();
-
-        while (nsEnum.hasMoreElements())
-        {
-            String uri = (String)nsEnum.nextElement();
-            String prefix = parentDoc.getNSPrefix(uri);
-            
-            // add namespace attributes to root element
-            String attName = "xmlns";
-            if (!prefix.equals(QName.DEFAULT_PREFIX))
-            	attName += ":" + prefix;
-            elt.setAttributeNS("http://www.w3.org/2000/xmlns/", attName, uri);
-        }
-        
-        // setup serializer and launch serialization
-        serializer.setOutputByteStream(out);
-        serializer.setOutputFormat(format);
-        serializer.setNamespaces(true);
-        serializer.serialize(elt);
+        getParentDocument(node).serialize(node, out, serializer);
     }
     
     
@@ -1048,44 +1006,12 @@ public class DOMHelper
      * Helper method to serialize this DOM to a stream
      * @param node
      * @param out
-     * @param format use specified format or default format if null
-     * @throws IOException
-     */
-    public void serialize(Node node, OutputStream out, OutputFormat format) throws IOException
-    {
-        XMLSerializer serializer = new XMLSerializer();
-        serialize(node, out, format, serializer);
-    }
-    
-    
-    /**
-     * Helper method to serialize xml in pretty or compact formats
-     * @param node
-     * @param out
-     * @param pretty if true, adds CR/LF and indents ech child element
+     * @param pretty set to true to indent output
      * @throws IOException
      */
     public void serialize(Node node, OutputStream out, boolean pretty) throws IOException
     {
-        OutputFormat myFormat = new OutputFormat();
-        
-        if (pretty)
-        {
-            myFormat.setMethod(Method.XML);
-            myFormat.setIndenting(true);
-            myFormat.setIndent(3);
-            myFormat.setLineWidth(0);
-        }
-        else
-        {
-            myFormat.setMethod(Method.TEXT);
-            myFormat.setIndenting(false);
-            myFormat.setIndent(1);
-            myFormat.setLineSeparator("");
-            myFormat.setLineWidth(0);
-        }
-        
-        serialize(node, out, myFormat);
+        getParentDocument(node).serialize(node, out, pretty);
     }
 
 
@@ -1103,15 +1029,6 @@ public class DOMHelper
         if (inputStream == null)
             throw new IllegalArgumentException("inputStream can't be null");
 
-   /*     String name = null;
-        int a = 0;
-        while (a !=-1){
-        	a = inputStream.read();
-        	if (a != -1){
-        		name = name + (char)a;
-        	}
-        } 
-        System.out.println(name);*/
         // parse xml stream
         newDocument = new XMLDocument(inputStream, validation);
         
@@ -1248,7 +1165,7 @@ public class DOMHelper
     public XMLDocument getParentDocument(Node node)
     {
         XMLDocument nextDoc = null;
-        Enumeration docs = loadedDocuments.elements();
+        Enumeration<XMLDocument> docs = loadedDocuments.elements();
 
         // find corresponding document
         while (docs.hasMoreElements())

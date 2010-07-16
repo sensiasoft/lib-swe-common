@@ -21,17 +21,18 @@
 package org.vast.xml;
 
 import java.util.*;
-
-import org.apache.xerces.dom.DOMImplementationImpl;
-import org.apache.xerces.parsers.DOMParser;
-import org.apache.xerces.xni.Augmentations;
-import org.apache.xerces.xni.XMLAttributes;
-import org.apache.xerces.xni.XNIException;
 import org.w3c.dom.*;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSParser;
+import org.w3c.dom.ls.LSParserFilter;
+import org.w3c.dom.ls.LSSerializer;
+import org.w3c.dom.traversal.NodeFilter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.*;
 
 
@@ -51,6 +52,8 @@ import java.net.*;
  */
 public class XMLDocument
 {
+    protected static DOMImplementation domImpl;
+    
     /** document uri */
 	protected URI uri = null;
 
@@ -67,15 +70,34 @@ public class XMLDocument
     protected Hashtable<String, String> nsPrefixToUri = new Hashtable<String, String>();
     
 
+    public static DOMImplementation getDOMImplementation()
+    {
+        if (domImpl == null)
+        {
+            try
+            {
+                DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+                domImpl = registry.getDOMImplementation("LS");
+            }
+            catch (Exception e)
+            {
+                throw new IllegalStateException("Impossible to initialize DOM 3.0 LS implementation");
+            }
+        }
+        
+        return domImpl;
+    }
+    
+    
 	public XMLDocument()
 	{
-        domDocument = DOMImplementationImpl.getDOMImplementation().createDocument(null, null, null);
+        domDocument = getDOMImplementation().createDocument(null, null, null);
 	}
     
     
     public XMLDocument(QName qname)
     {    
-        domDocument = DOMImplementationImpl.getDOMImplementation().createDocument(qname.nsUri, qname.getFullName(), null);
+        domDocument = getDOMImplementation().createDocument(qname.nsUri, qname.getFullName(), null);
         addNS(qname.prefix, qname.nsUri);
     }
 
@@ -214,102 +236,178 @@ public class XMLDocument
      */
     protected Document parseDOM(InputStream inputStream, boolean validate) throws DOMHelperException
     {
-        // create a custom DOMParser for catching namespace and ids declarations
-        final XMLDocument xmlDoc = this;
-        DOMParser domParser = new DOMParser()
+        DOMImplementationLS impl = ((DOMImplementationLS)getDOMImplementation());
+        
+        // wrap input stream
+        LSInput input = impl.createLSInput();
+        input.setByteStream(inputStream);
+        
+        // prepare filter to extract IDs and namespaces
+        LSParserFilter filter = new LSParserFilter()
         {
-            @Override
-            public void startElement(org.apache.xerces.xni.QName qname, XMLAttributes attribs, Augmentations aug) throws XNIException
+            public int getWhatToShow()
             {
-                super.startElement(qname, attribs, aug);
+                return NodeFilter.SHOW_ELEMENT;
+            }
+            
+            public short acceptNode(Node node)
+            {
+                if (!(node instanceof Element))
+                    return LSParserFilter.FILTER_ACCEPT;
                 
-                // pick up all id and xmlns attributes
-                int attrCount = attribs.getLength();
-                for (int i = 0; i < attrCount; i++)
-                {
-                    String prefix = attribs.getPrefix(i);
-                    String localName = attribs.getLocalName(i);
-                    
-                    if (prefix.equals("xmlns"))
-                        xmlDoc.addNS(localName, attribs.getValue(i));
-                    else if(localName.equals("xmlns"))
-                        xmlDoc.addNS(QName.DEFAULT_PREFIX, attribs.getValue(i));
-                    else if(localName.equalsIgnoreCase("id"))
-                        xmlDoc.addId(attribs.getValue(i), (Element)fCurrentNode);
-                }
-            }          
+                Element elt = (Element)node;
+                readIdentifiers(elt, false);
+                readNamespaces(elt, false);
+                
+                return LSParserFilter.FILTER_ACCEPT;
+            }
+
+            public short startElement(Element arg0)
+            {
+                return LSParserFilter.FILTER_ACCEPT;
+            }            
         };
-
-        //domParser.setErrorHandler(new HandlerBase());
-
+        
+        // init parser
+        LSParser parser = impl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, null);
+        parser.setFilter(filter);
+        
+        // configure parser
+        DOMConfiguration config = parser.getDomConfig();
+        config.setParameter("namespace-declarations", true);
+        
+        if (validate)
+        {
+            config.setParameter("schema-type", "http://www.w3.org/2001/XMLSchema");
+            config.setParameter("validate-if-schema", true);
+        }
+        
+        // don't use defered nodes
+        //domParser.setFeature("http://apache.org/xml/features/dom/defer-node-expansion", false);
+        
+        // start parsing
         try
         {
-            // validation ?
-            domParser.setFeature("http://xml.org/sax/features/validation", validate);
-            domParser.setFeature("http://apache.org/xml/features/validation/dynamic", validate);
-            domParser.setFeature("http://apache.org/xml/features/validation/schema", validate);
-            domParser.setFeature("http://apache.org/xml/features/validation/schema-full-checking", validate);
-            
-            // don't use defered nodes
-            domParser.setFeature("http://apache.org/xml/features/dom/defer-node-expansion", false);
-            
-            // force use of real URI when needed ?
-            //domParser.setFeature("http://apache.org/xml/features/standard-uri-conformant", false);
-
-            domParser.parse(new InputSource(inputStream));
+            Document document = parser.parse(input);
+            readIdentifiers(document.getDocumentElement(), false);
+            readNamespaces(document.getDocumentElement(), false);
             inputStream.close();
+            return document;
         }
-        catch (SAXParseException e)
-        {
-            String xmlDebugInfo = "Line " + e.getLineNumber() + ", Column " + e.getColumnNumber();
-            throw new DOMHelperException("Error while parsing XML document at " + xmlDebugInfo, e);
-        }
-        catch (SAXException e)
-        {
-            throw new DOMHelperException("SAX Error while parsing XML document", e);
-        }
-        catch (java.io.IOException e)
+        catch (Exception e)
         {
             throw new DOMHelperException("Error while reading XML document", e);
         }
-
-        return domParser.getDocument();
     }
     
     
-      /**
+    /**
+     * Helper method to serialize this DOM node to a stream using the provided serializer
+     * @param node
+     * @param out
+     * @param serializer
+     * @throws IOException
+     */
+    public void serialize(Node node, OutputStream out, LSSerializer serializer) throws IOException
+    {
+        // select root element to serialize
+        Element elt = null;
+        if (node.getNodeType() == Node.ELEMENT_NODE)
+            elt = (Element)node;
+        else if (node.getNodeType() == Node.DOCUMENT_NODE)
+            elt = ((Document)node).getDocumentElement();
+        else
+            return;
+
+        // wrap output stream
+        DOMImplementationLS impl = (DOMImplementationLS)getDOMImplementation();
+        LSOutput output = impl.createLSOutput();
+        output.setByteStream(out);
+        
+        // add namespaces xmlns attributes
+        Enumeration<String> nsEnum = nsUriToPrefix.keys();
+        while (nsEnum.hasMoreElements())
+        {
+            String uri = (String)nsEnum.nextElement();
+            String prefix = getNSPrefix(uri);
+            
+            // skip if prefix is not really used
+            if (elt.getOwnerDocument().lookupPrefix(prefix) == null)
+                continue;
+            
+            // add namespace attributes to root element
+            String attName = "xmlns";
+            if (!prefix.equals(QName.DEFAULT_PREFIX))
+                attName += ":" + prefix;
+            elt.setAttributeNS("http://www.w3.org/2000/xmlns/", attName, uri);
+        }
+        
+        // launch serialization
+        serializer.write(elt, output);
+    }
+    
+    
+    /**
+     * Helper method to serialize this DOM to a stream
+     * @param node
+     * @param out
+     * @param pretty set to true to indent output
+     * @throws IOException
+     */
+    public void serialize(Node node, OutputStream out, boolean pretty) throws IOException
+    {
+        try
+        {
+            DOMImplementationLS impl = (DOMImplementationLS)XMLDocument.getDOMImplementation();
+            
+            // init and configure serializer
+            LSSerializer serializer = impl.createLSSerializer();
+            DOMConfiguration config = serializer.getDomConfig();
+            config.setParameter("format-pretty-print", pretty);
+            
+            serialize(node, out, serializer);
+        }
+        catch (Exception e)
+        {
+            throw new IllegalStateException("Impossible to initilize DOM implementation for serialization");
+        }
+    }
+    
+    
+    /**
      * This function looks and stores all identifiers attributes found in the document<br>
      * <br>This adds every id it found to the corresponding hashtable in the given XMLDocument<br>
      * <br>This is called recursively for each child node
      * @param xmlDocument The document where the search is done
      * @param node The node from which we start the search (if null, we use the root element)
      */
-    public void readIdentifiers(Element elt)
+    public void readIdentifiers(Element elt, boolean recursive)
     {
         if (elt == null)
             elt = getDocument().getDocumentElement();
-
-        NodeList children = elt.getChildNodes();
+        
         NamedNodeMap attribs = elt.getAttributes();
-        short nodeType = elt.getNodeType();
-
-        if ((nodeType == Node.ELEMENT_NODE) && (attribs != null))
+        if (attribs != null)
         {
             for (int i = 0; i < attribs.getLength(); i++)
             {
-                if (attribs.item(i).getLocalName().equalsIgnoreCase("id"))
-                    addId(attribs.item(i).getNodeValue(), elt);
+                Attr attrib = (Attr)attribs.item(i);
+                String localName = attrib.getLocalName();
+                String val = attrib.getValue();
+                if (localName.equalsIgnoreCase("id"))
+                    addId(val, elt);
             }
         }
 
         // call the function for all the child nodes
-        if (children != null)
+        NodeList children = elt.getChildNodes();
+        if (children != null && recursive)
         {
             for (int i = 0; i < children.getLength(); i++)
             {
                 Node nextNode = children.item(i);
                 if (nextNode instanceof Element)
-                    readIdentifiers((Element) children.item(i));
+                    readIdentifiers((Element) children.item(i), recursive);
             }
         }
     }
@@ -319,30 +417,34 @@ public class XMLDocument
      * Reads all the namespace prefix:domain pairs and store them in the hashtable of the XMLDocument
      * @param xmlDocument document to read the namespaces from
      */
-    public void readNamespaces(Element elt)
+    public void readNamespaces(Element elt, boolean recursive)
     {
-        String uri, prefix;
-
         if (elt == null)
             elt = getDocument().getDocumentElement();
 
         NamedNodeMap attribs = elt.getAttributes();
-
         for (int i = 0; i < attribs.getLength(); i++)
         {
-            String attribName = attribs.item(i).getNodeName();
-            if (attribName.startsWith("xmlns"))
+            Attr att = (Attr)attribs.item(i);
+            String prefix = att.getPrefix();
+            String localName = att.getLocalName().trim();
+            String val = att.getValue().trim();
+                
+            if (prefix != null && prefix.equals("xmlns"))
+                addNS(localName, val);
+            else if(localName.equals("xmlns"))
+                addNS(QName.DEFAULT_PREFIX, val);
+        }
+        
+        // call the function for all the child nodes
+        NodeList children = elt.getChildNodes();
+        if (children != null && recursive)
+        {
+            for (int i = 0; i < children.getLength(); i++)
             {
-                uri = attribs.item(i).getNodeValue().trim();
-
-                // get the prefix from the attrib name
-                int index = attribName.indexOf(":");
-                if (index == -1)
-                    prefix = QName.DEFAULT_PREFIX;
-                else
-                    prefix = attribName.substring(index + 1);
-
-                addNS(prefix, uri);
+                Node nextNode = children.item(i);
+                if (nextNode instanceof Element)
+                    readNamespaces((Element) children.item(i), recursive);
             }
         }
     }
