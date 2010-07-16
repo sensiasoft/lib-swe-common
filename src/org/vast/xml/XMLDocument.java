@@ -331,10 +331,6 @@ public class XMLDocument
             String uri = (String)nsEnum.nextElement();
             String prefix = getNSPrefix(uri);
             
-            // skip if prefix is not really used
-            if (elt.getOwnerDocument().lookupPrefix(prefix) == null)
-                continue;
-            
             // add namespace attributes to root element
             String attName = "xmlns";
             if (!prefix.equals(QName.DEFAULT_PREFIX))

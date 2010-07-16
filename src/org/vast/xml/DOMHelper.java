@@ -1173,19 +1173,24 @@ public class DOMHelper
             nextDoc = (XMLDocument) docs.nextElement();
             if (nextDoc.getDocument() == node.getOwnerDocument())
                 break;
+            if (nextDoc.getDocument() == node)
+                break;
         }
 
         return nextDoc;
     }
     
+        
     /**
      * Adds a node to the end of the children list<br>
      * @param parent Node Parent node receiving the new child
      * @param child String Child node to be added
      */
-   public Node appendChild(Node parent, String child){
-	   	return parent.appendChild(createElement(child));
+    public Node appendChild(Node parent, String child)
+    {
+        return parent.appendChild(createElement(child));
     }
+    
     
     /**
      * Check if the paths are matching<br>
