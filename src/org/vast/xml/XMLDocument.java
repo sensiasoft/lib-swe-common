@@ -91,7 +91,9 @@ public class XMLDocument
     
 	public XMLDocument()
 	{
-        domDocument = getDOMImplementation().createDocument(null, null, null);
+        // HACK because createDocument(null, null, null) throws an exception with some DOM impl
+		domDocument = getDOMImplementation().createDocument(null, "root", null);
+		domDocument.removeChild(domDocument.getDocumentElement());
 	}
     
     
