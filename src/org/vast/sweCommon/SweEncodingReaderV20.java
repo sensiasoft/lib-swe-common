@@ -98,11 +98,7 @@ public class SweEncodingReaderV20 implements DataEncodingReader
     
     private XmlEncoding readXmlEncodingOptions(DOMHelper dom, Element xmlEncodingElt) throws CDMException
     {
-    	XmlEncoding encoding = new XmlEncoding();
-    	
-    	String namespace = dom.getAttributeValue(xmlEncodingElt, "defaultNamespace");
-    	encoding.namespace = namespace;
-    	
+    	XmlEncoding encoding = new XmlEncoding();    	
     	return encoding;
     }
     

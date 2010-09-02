@@ -92,11 +92,7 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
     
     private Element writeXmlEncodingOptions(DOMHelper dom, XmlEncoding xmlEncoding) throws CDMException
     {
-        Element dataEncElt = dom.createElement("swe:XMLEncoding");
-        
-        if (xmlEncoding.namespace != null)
-        	dataEncElt.setAttribute("defaultNamespace", xmlEncoding.namespace);
-        
+        Element dataEncElt = dom.createElement("swe:XMLEncoding");       
     	return dataEncElt;
     }
     

@@ -42,7 +42,7 @@ import org.vast.xml.QName;
 
 /**
  * <p><b>Title:</b><br/>
- * SWE Data Component Writer v1.1
+ * SWE Data Component Writer v2.0
  * </p>
  *
  * <p><b>Description:</b><br/>
@@ -86,40 +86,25 @@ public class SweComponentWriterV20 implements DataComponentWriter
         // soft or hard typed record component
         if (dataComponent instanceof DataGroup)
         {
-        	QName recordQName = new QName(SWE_NS, "DataRecord");
-        	boolean hardTyped = (compQName != null) && !compQName.equals(recordQName);
-        	
-        	if (hardTyped)
-            {
-	        	if (compQName.getNsUri().equals(SWE_NS) && compQName.getLocalName().endsWith("Range"))
-	            	newElt = writeDataRange(dom, (DataGroup)dataComponent, compQName);
-	            else
-	            	newElt = writeDerivedRecord(dom, (DataGroup)dataComponent, compQName);
-            }
-            else
-            	newElt = writeDataRecord(dom, (DataGroup)dataComponent);
+        	if (compQName.getLocalName().endsWith("Range"))
+        		newElt = writeDataRange(dom, (DataGroup)dataComponent, compQName);
+        	if (compQName.getLocalName().equals("Vector"))
+        		newElt = writeVector(dom, (DataGroup)dataComponent);
+        	else
+        		newElt = writeDataRecord(dom, (DataGroup)dataComponent);
         }
         
         // soft or hard typed choice component
         else if (dataComponent instanceof DataChoice)
         {
-        	QName choiceQName = new QName(SWE_NS, "DataChoice");
-        	boolean hardTyped = (compQName != null) && !compQName.equals(choiceQName);
-        	
-        	if (hardTyped)
-        		newElt = writeDerivedChoice(dom, (DataChoice)dataComponent, compQName);
-            else
-            	newElt = writeDataChoice(dom, (DataChoice)dataComponent);
+        	newElt = writeDataChoice(dom, (DataChoice)dataComponent);
         }
         
         // soft or hard typed array component
         else if (dataComponent instanceof DataArray)
         {
-        	QName arrayQName = new QName(SWE_NS, "DataArray");
-        	boolean hardTyped = (compQName != null) && !compQName.equals(arrayQName);
-        	
-        	if (hardTyped)
-        		newElt = writeDerivedArray(dom, (DataArray)dataComponent, compQName);
+        	if (compQName.getLocalName().equals("Matrix"))
+        		newElt = writeMatrix(dom, (DataArray)dataComponent);
             else
             	newElt = writeDataArray(dom, (DataArray)dataComponent);
         }
@@ -148,7 +133,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	Element dataGroupElt = dom.createElement("swe:DataRecord");
         
     	// write common stuffs
-        writeGmlProperties(dom, dataGroup, dataGroupElt);
+        writeBaseProperties(dom, dataGroup, dataGroupElt);
         writeCommonAttributes(dom, dataGroup, dataGroupElt);
         
         // write each field
@@ -159,13 +144,13 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	Element fieldElt = dom.addElement(dataGroupElt, "+swe:field");
         	fieldElt.setAttribute("name", component.getName());
     		
-        	// write optional flag
+        	Element componentElt = writeComponent(dom, component, writeInlineData);
+            fieldElt.appendChild(componentElt);
+            
+            // write optional flag
         	Boolean optional = (Boolean)component.getProperty(SweConstants.OPTIONAL);
         	if (optional != null)
-        		fieldElt.setAttribute("optional", (optional ? "true" : "false"));
-    		
-            Element componentElt = writeComponent(dom, component, writeInlineData);
-            fieldElt.appendChild(componentElt);
+        		componentElt.setAttribute("optional", (optional ? "true" : "false"));
         }
 
         return dataGroupElt;
@@ -173,50 +158,29 @@ public class SweComponentWriterV20 implements DataComponentWriter
     
     
     /**
-     * Write derived (hard-typed) Record structure and all fields
+     * Writes a Vector structure and all its coordinates
      * @param dom
      * @param dataGroup
-     * @param recordQName
      * @return
      * @throws CDMException
      */
-    private Element writeDerivedRecord(DOMHelper dom, DataGroup dataGroup, QName recordQName) throws CDMException
+    private Element writeVector(DOMHelper dom, DataGroup dataGroup) throws CDMException
     {
-    	// create element with the right QName
-    	dom.addUserPrefix(recordQName.getPrefix(), recordQName.getNsUri());
-    	Element dataGroupElt = dom.createElement(recordQName.getFullName());
-		dom.setAttributeValue(dataGroupElt, "@is", "Record");
+    	Element dataGroupElt = dom.createElement("swe:Vector");
         
-        // write common stuffs
-        writeGmlProperties(dom, dataGroup, dataGroupElt);
+    	// write common stuffs
+        writeBaseProperties(dom, dataGroup, dataGroupElt);
         writeCommonAttributes(dom, dataGroup, dataGroupElt);
         
-        // write each field
+        // write each coordinate
         int groupSize = dataGroup.getComponentCount();
         for (int i=0; i<groupSize; i++)
         {
         	DataComponent component = dataGroup.getComponent(i);
-        	
-        	// use the right QName
-        	QName fieldQName = (QName)component.getProperty(SweConstants.FIELD_QNAME);
-        	Element fieldElt;
-        	
-        	//TODO if (fieldQName != null)
-        	dom.addUserPrefix(fieldQName.getPrefix(), fieldQName.getNsUri());
-        	fieldElt = dom.addElement(dataGroupElt, "+" + fieldQName.getFullName());
-        	dom.setAttributeValue(fieldElt, "@is", "field");
-        	
-        	// add name attribute if different from QName
-        	String fieldName = component.getName();
-        	if (!fieldName.equals(fieldQName.getLocalName()))
-        		fieldElt.setAttribute("name", fieldName);
-        	
-        	// write optional flag
-        	Boolean optional = (Boolean)component.getProperty(SweConstants.OPTIONAL);
-        	if (optional != null)
-        		fieldElt.setAttribute("optional", (optional ? "true" : "false"));
-        	
-            Element componentElt = writeComponent(dom, component, writeInlineData);
+        	Element fieldElt = dom.addElement(dataGroupElt, "+swe:coordinate");
+        	fieldElt.setAttribute("name", component.getName());
+    		
+        	Element componentElt = writeComponent(dom, component, writeInlineData);
             fieldElt.appendChild(componentElt);
         }
 
@@ -236,7 +200,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         Element dataChoiceElt = dom.createElement("swe:DataChoice");
         
         // write common stuffs
-        writeGmlProperties(dom, dataChoice, dataChoiceElt);
+        writeBaseProperties(dom, dataChoice, dataChoiceElt);
         writeCommonAttributes(dom, dataChoice, dataChoiceElt);
         
         // write each choice item
@@ -254,47 +218,8 @@ public class SweComponentWriterV20 implements DataComponentWriter
 
         return dataChoiceElt;
     }
-    
-    
-    /**
-     * Writes derived (hard-typed) Choice structure and all items
-     * @param dom
-     * @param dataChoice
-     * @param choiceQName
-     * @return
-     * @throws CDMException
-     */
-    private Element writeDerivedChoice(DOMHelper dom, DataChoice dataChoice, QName choiceQName) throws CDMException
-    {
-    	// create element with the right QName
-    	dom.addUserPrefix(choiceQName.getPrefix(), choiceQName.getNsUri());
-    	Element dataChoiceElt = dom.createElement(choiceQName.getFullName());
-		dom.setAttributeValue(dataChoiceElt, "@is", "Choice");
         
-        // write common stuffs
-        writeGmlProperties(dom, dataChoice, dataChoiceElt);
-        writeCommonAttributes(dom, dataChoice, dataChoiceElt);
-        
-        // write each field
-        int groupSize = dataChoice.getComponentCount();
-        for (int i=0; i<groupSize; i++)
-        {
-        	DataComponent component = dataChoice.getComponent(i);
-        	
-        	// use the right QName
-        	QName fieldQName = (QName)component.getProperty(SweConstants.FIELD_QNAME);
-        	dom.addUserPrefix(fieldQName.getPrefix(), fieldQName.getNsUri());
-        	Element fieldElt = dom.addElement(dataChoiceElt, fieldQName.getFullName());
-        	dom.setAttributeValue(fieldElt, "@is", "item");
-        	
-            Element componentElt = writeComponent(dom, component, writeInlineData);
-            fieldElt.appendChild(componentElt);
-        }
-
-        return dataChoiceElt;
-    }
-
-
+    
     /**
      * Writes generic (soft-typed) DataArray structure 
      * @param dom
@@ -311,31 +236,24 @@ public class SweComponentWriterV20 implements DataComponentWriter
     
     
     /**
-     * Writes derived (hard-typed) Array structure
+     * Writes a Matrix structure 
      * @param dom
      * @param dataArray
-     * @param arrayQName
      * @return
      * @throws CDMException
      */
-    private Element writeDerivedArray(DOMHelper dom, DataArray dataArray, QName arrayQName) throws CDMException
+    private Element writeMatrix(DOMHelper dom, DataArray dataArray) throws CDMException
     {
-    	// create element with the right QName
-    	dom.addUserPrefix(arrayQName.getPrefix(), arrayQName.getNsUri());
-    	Element arrayElt = dom.createElement(arrayQName.getFullName());
-		dom.setAttributeValue(arrayElt, "@is", "Array");
-		
-		// append array content
-		writeArrayContent(dom, dataArray, arrayElt);
-    	
-    	return arrayElt;
+        Element dataArrayElt = dom.createElement("swe:Matrix");
+		writeArrayContent(dom, dataArray, dataArrayElt);
+        return dataArrayElt;
     }
     
     
     private void writeArrayContent(DOMHelper dom, DataArray dataArray, Element arrayElt) throws CDMException
     {
     	// write common stuffs
-        writeGmlProperties(dom, dataArray, arrayElt);
+        writeBaseProperties(dom, dataArray, arrayElt);
     	writeCommonAttributes(dom, dataArray, arrayElt);
     	
     	// make sure we disable writing data inline
@@ -362,7 +280,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	{
 	        	String sizeCompID = (String)sizeData.getProperty(SweConstants.ID);
 	        	if (sizeCompID != null)
-	        		dom.setAttributeValue(eltCountElt, "ref", sizeCompID);
+	        		dom.setAttributeValue(eltCountElt, "xlink:href", sizeCompID);
 	        	else
 	        		throw new CDMException("Component used for storing variable array size MUST have an ID");
         	}
@@ -423,7 +341,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         
         // write all properties
         writeCommonAttributes(dom, dataValue, dataValueElt);
-        writeGmlProperties(dom, dataValue, dataValueElt);    	
+        writeBaseProperties(dom, dataValue, dataValueElt);    	
     	writeUom(dom, dataValue, dataValueElt);
     	writeCodeSpace(dom, dataValue, dataValueElt);
     	writeConstraints(dom, dataValue, dataValueElt);
@@ -455,7 +373,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         
         // write group properties
         writeCommonAttributes(dom, dataGroup, rangeElt);
-        writeGmlProperties(dom, dataGroup, rangeElt);
+        writeBaseProperties(dom, dataGroup, rangeElt);
         
         // extracted some from min component and not from DataGroup!!
         writeUom(dom, min, rangeElt);
@@ -509,26 +427,22 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeGmlProperties(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws CDMException
+    private void writeBaseProperties(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws CDMException
     {
-    	dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML, "3.2.1"));
-    	
-    	// gml:id
+    	// id
     	String id = (String)dataComponent.getProperty(SweConstants.ID);
     	if (id != null)
-    		dom.setAttributeValue(dataComponentElt, "@gml:id", id);
+    		dom.setAttributeValue(dataComponentElt, "@id", id);
     	
-    	// gml metadata?
+    	// label
+    	String name = (String)dataComponent.getProperty(SweConstants.NAME);
+    	if (name != null)
+    		dom.setElementValue(dataComponentElt, "swe:label", name);
     	
     	// description
     	String description = (String)dataComponent.getProperty(SweConstants.DESC);
     	if (description != null)
-    		dom.setElementValue(dataComponentElt, "gml:description", description);
-    	
-    	// name
-    	String name = (String)dataComponent.getProperty(SweConstants.NAME);
-    	if (name != null)
-    		dom.setElementValue(dataComponentElt, "gml:name", name);
+    		dom.setElementValue(dataComponentElt, "swe:description", description);
     }
     
     

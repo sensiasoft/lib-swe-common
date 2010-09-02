@@ -58,6 +58,7 @@
       <src>
       	<dirset dir="${src.dir}"/>
       </src>
+    	<exclude name="**/MPEG2StreamDecoder.java"/>
       <classpath>
         <fileset dir="${lib.dir}">
           <include name="*.jar"/>

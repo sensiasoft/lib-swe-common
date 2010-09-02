@@ -42,8 +42,7 @@ public class SweConstants
 	public final static String MAX_VALUE_NAME = "max";
 	
 	/* property names used to hold soft-typed information in DataComponents */ 
-	public final static String COMP_QNAME = "obj_qname"; // Hard Typed Component QName
-	public final static String FIELD_QNAME = "field_qname"; // Hard Typed Field QName
+	public final static String COMP_QNAME = "obj_qname"; // Component Elt QName
 	public final static String ID = "id"; // String
 	public final static String META = "meta"; // Object
 	public final static String DESC = "desc"; // String

@@ -20,6 +20,7 @@
 
 package org.vast.ogc.gml;
 
+import java.util.UUID;
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
@@ -42,15 +43,23 @@ import org.w3c.dom.Element;
  */
 public class GMLEnvelopeWriter
 {
+    private String version = null;
+    
     
     public GMLEnvelopeWriter()
-    {
+    {    	
+    }
+    
+    
+    public GMLEnvelopeWriter(String version)
+    {    	
+    	this.version = version;
     }
     
         
     public Element writeEnvelope(DOMHelper dom, Bbox bbox)
     {
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML, version));
         
         Element envelopeElt = dom.createElement("gml:Envelope");
     	
@@ -61,6 +70,10 @@ public class GMLEnvelopeWriter
 		dom.setElementValue(envelopeElt, "gml:lowerCorner", lowerCorner);
 		String upperCorner = bbox.getMaxX() + " " + bbox.getMaxY();
 		dom.setElementValue(envelopeElt, "gml:upperCorner", upperCorner);
+        
+		// assign random ID
+        String randomId = "T" + Integer.toString(UUID.randomUUID().hashCode());
+        envelopeElt.setAttribute("gml:id", randomId);
         
         return envelopeElt;
     }
@@ -98,6 +111,6 @@ public class GMLEnvelopeWriter
 		String upperCorner = bbox.getMaxX() + " " + bbox.getMaxY();
 		dom.setElementValue(envelopeElt, "gml:high", upperCorner);
         
-        return envelopeElt;
+		return envelopeElt;
     }
 }

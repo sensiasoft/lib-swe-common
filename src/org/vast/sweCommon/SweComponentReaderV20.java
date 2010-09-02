@@ -57,7 +57,6 @@ import org.vast.util.DateTimeFormat;
 public class SweComponentReaderV20 implements DataComponentReader
 {
 	public static Hashtable<QName, SweCustomReader> customReaders;
-	protected final static String GML_NS = OGCRegistry.getNamespaceURI(OGCRegistry.GML);
 	protected final static String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
 	protected Hashtable<String, AbstractDataComponent> componentIds;
     protected AsciiDataParser asciiParser;
@@ -160,7 +159,7 @@ public class SweComponentReaderV20 implements DataComponentReader
             throw new CDMException("Invalid DataRecord: Must have AT LEAST ONE field");
 
         // read common stuffs
-        readGmlProperties(dataGroup, dom, recordElt);
+        readBaseProperties(dataGroup, dom, recordElt);
         readCommonAttributes(dataGroup, dom, recordElt);
 
         return dataGroup;
@@ -195,7 +194,7 @@ public class SweComponentReaderV20 implements DataComponentReader
             throw new CDMException("Invalid Vector: Must have AT LEAST ONE coordinate");
 
         // read common stuffs
-        readGmlProperties(dataGroup, dom, vectorElt);
+        readBaseProperties(dataGroup, dom, vectorElt);
         readCommonAttributes(dataGroup, dom, vectorElt);
 
         return dataGroup;
@@ -227,7 +226,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         }
         
         // read common stuffs
-        readGmlProperties(dataChoice, dom, choiceElt);
+        readBaseProperties(dataChoice, dom, choiceElt);
         readCommonAttributes(dataChoice, dom, choiceElt);
         
     	return dataChoice;
@@ -245,7 +244,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         DataArray dataArray = null;
         
         // case of elementCount referencing another component
-        String countId = dom.getAttributeValue(arrayElt, "elementCount/@ref");
+        String countId = dom.getAttributeValue(arrayElt, "elementCount/@href");
         if (countId != null)
         {
             DataComponent sizeComponent = componentIds.get(countId);
@@ -283,7 +282,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         dataArray.addComponent(dataComponent);
         
         // read common stuffs
-        readGmlProperties(dataArray, dom, arrayElt);
+        readBaseProperties(dataArray, dom, arrayElt);
         readCommonAttributes(dataArray, dom, arrayElt);
         
         // read encoding and parse values (if both present) using the appropriate parser
@@ -332,7 +331,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     	dataValue.setProperty(SweConstants.COMP_QNAME, componentQName);
     	
     	// read common stuffs        
-        readGmlProperties(dataValue, dom, scalarElt);
+        readBaseProperties(dataValue, dom, scalarElt);
     	readCommonAttributes(dataValue, dom, scalarElt);
         readUom(dataValue, dom, scalarElt);
         readCodeSpace(dataValue, dom, scalarElt);
@@ -384,7 +383,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         paramVal.setProperty(SweConstants.COMP_QNAME, newQName);
         
         // read group attributes
-        readGmlProperties(range, dom, rangeElt);
+        readBaseProperties(range, dom, rangeElt);
         readCommonAttributes(range, dom, rangeElt);
         
         // also assign attributes to scalar value
@@ -441,21 +440,17 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @param componentElt
      * @throws CDMException
      */
-    private void readGmlProperties(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws CDMException
+    private void readBaseProperties(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws CDMException
     {
-        dom.addUserPrefix("gml", GML_NS);
-        
-        // gml metadata?
-        
-        // gml description
-        String description = dom.getElementValue(componentElt, "gml:description");
-        if (description != null)
-            dataComponent.setProperty(SweConstants.DESC, description);
-        
-        // gml name
-        String name = dom.getElementValue(componentElt, "gml:name");
+        // label
+        String name = dom.getElementValue(componentElt, "swe:label");
         if (name != null)
             dataComponent.setProperty(SweConstants.NAME, name);
+        
+        // description
+        String description = dom.getElementValue(componentElt, "swe:description");
+        if (description != null)
+            dataComponent.setProperty(SweConstants.DESC, description);
     }
     
     

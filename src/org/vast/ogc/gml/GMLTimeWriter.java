@@ -20,6 +20,7 @@
 
 package org.vast.ogc.gml;
 
+import java.util.UUID;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
 import org.vast.util.DateTimeFormat;
@@ -44,6 +45,7 @@ import org.w3c.dom.Element;
 public class GMLTimeWriter
 {
     protected double now;
+    private String version = null;
     
     
     public GMLTimeWriter()
@@ -51,10 +53,16 @@ public class GMLTimeWriter
         now = System.currentTimeMillis() / 1000;
     }
     
+    
+    public GMLTimeWriter(String version)
+    {    	
+    	this.version = version;
+    }
+    
         
     public Element writeTime(DOMHelper dom, TimeInfo timeInfo) throws GMLException
     {
-    	dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+    	dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML, version));
     	
     	Element timeElt;
         int zone = timeInfo.getTimeZone();
@@ -114,6 +122,10 @@ public class GMLTimeWriter
                 dom.setElementValue(timeElt, "gml:timeStep", DateTimeFormat.formatIsoPeriod(timeInfo.getTimeStep()));
             }
         }
+        
+        // assign random ID
+        String randomId = "T" + Integer.toString(UUID.randomUUID().hashCode());
+        timeElt.setAttribute("gml:id", randomId);
         
         return timeElt;
     }
