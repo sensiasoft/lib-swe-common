@@ -22,7 +22,6 @@ package org.vast.sweCommon;
 
 import java.io.*;
 import org.vast.data.*;
-import org.vast.decompression.CompressedStreamParser;
 import org.vast.decompression.DecompressionRegistry;
 import org.vast.cdm.common.*;
 
