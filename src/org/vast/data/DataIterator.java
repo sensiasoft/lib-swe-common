@@ -118,8 +118,12 @@ public class DataIterator implements Iterator<DataComponent>
 	
 	public void skipChildren()
 	{
-	    // pop last component from stack
+	    // skip to parent component in stack
 	    componentStack.pop();
+	    
+	    // keep poping if ancestors are done as well
+	    while (!componentStack.isEmpty() && componentStack.peek().index >= componentStack.peek().count)
+            componentStack.pop();
 	}
 
 

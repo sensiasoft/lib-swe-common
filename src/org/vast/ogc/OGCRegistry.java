@@ -412,6 +412,7 @@ public class OGCRegistry
                 {
                     //ExceptionSystem.display(e);
                 	// don't display exception at this point
+                	e.printStackTrace();
                 }
             }
 

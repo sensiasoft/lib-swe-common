@@ -219,7 +219,9 @@ public class DataList extends AbstractDataComponent
     @Override
     public void removeAllComponents()
     {
-        this.dataBlock = new DataBlockList();
+        this.clearData();
+    	this.dataBlock = new DataBlockList();
+    	this.component.parent = null;
         this.component = null;
         this.size = 0;
     }
@@ -228,7 +230,7 @@ public class DataList extends AbstractDataComponent
     @Override
     public void removeComponent(int index)
     {
-    	removeAllComponents();
+    	throw new UnsupportedOperationException();
     }
     
     

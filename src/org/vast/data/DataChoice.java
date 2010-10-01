@@ -158,14 +158,19 @@ public class DataChoice extends AbstractDataComponent
     @Override
     public void removeComponent(int index)
     {
-        itemList.remove(index);
+    	this.clearData();
+    	AbstractDataComponent component = itemList.remove(index);
+        component.parent = null;
     }
 
 
     @Override
     public void removeAllComponents()
     {
-        itemList.clear();
+    	this.clearData();
+    	for (AbstractDataComponent component: itemList)
+        	component.parent = null;
+    	itemList.clear();
         this.dataBlock = null;
     }
     

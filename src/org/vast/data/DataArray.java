@@ -573,15 +573,16 @@ public class DataArray extends AbstractDataComponent
     @Override
     public void removeAllComponents()
     {
-        this.component = null;
-        this.dataBlock = null;
+    	this.clearData();
+    	this.component.parent = null;
+    	this.component = null;    	        
     }
     
     
     @Override
     public void removeComponent(int index)
     {
-        removeAllComponents();
+    	throw new UnsupportedOperationException();
     }
 
 

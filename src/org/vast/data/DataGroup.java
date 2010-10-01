@@ -178,14 +178,19 @@ public class DataGroup extends AbstractDataComponent
     @Override
     public void removeComponent(int index)
     {
-        componentList.remove(index);
+    	this.clearData();
+    	AbstractDataComponent component = componentList.remove(index);
+        component.parent = null;
     }
 
 
     @Override
     public void removeAllComponents()
     {
-        componentList.clear();
+    	this.clearData();
+    	for (AbstractDataComponent component: componentList)
+        	component.parent = null;
+    	componentList.clear();
         this.dataBlock = null;
     }
     
