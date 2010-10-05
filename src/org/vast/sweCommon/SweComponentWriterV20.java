@@ -88,7 +88,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         {
         	if (compQName.getLocalName().endsWith("Range"))
         		newElt = writeDataRange(dom, (DataGroup)dataComponent, compQName);
-        	if (compQName.getLocalName().equals("Vector"))
+        	else if (compQName.getLocalName().equals("Vector"))
         		newElt = writeVector(dom, (DataGroup)dataComponent);
         	else
         		newElt = writeDataRecord(dom, (DataGroup)dataComponent);
