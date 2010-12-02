@@ -155,7 +155,13 @@ public abstract class DataTreeVisitor
 		    		
 		    		// select first child of aggregate
 	    			if (next instanceof DataChoice)
-	    				next = ((DataChoice)next).getSelectedComponent();
+	    			{
+	    				DataComponent selectedComponent = ((DataChoice)next).getSelectedComponent();
+	    				if (selectedComponent != null)
+	    					next = selectedComponent;
+	    				else
+	    					next = next.getComponent(0);
+	    			}
 	    			else
 	    				next = next.getComponent(0);
 	        	
