@@ -11,13 +11,8 @@
    <Namespace type="SWE" version="1.0" uri="http://www.opengis.net/swe/1.0"/>
    <Namespace type="SWE" version="1.0.1" uri="http://www.opengis.net/swe/1.0.1"/>
    <Namespace type="SWE" version="2.0" uri="http://www.opengis.net/swe/2.0"/>
-   <Namespace type="SML" version="0.0" uri="http://www.opengis.net/sensorML/0"/>
-   <Namespace type="SML" version="1.0" uri="http://www.opengis.net/sensorML/1.0"/>
-   <Namespace type="SML" version="1.0.1" uri="http://www.opengis.net/sensorML/1.0.1"/>
-   <Namespace type="SML" version="1.1" uri="http://www.opengis.net/sensorML/1.1"/>
    <Namespace type="OM" version="0.0" uri="http://www.opengis.net/om/0.0"/>
    <Namespace type="OM" version="1.0" uri="http://www.opengis.net/om/1.0"/>
-   <Namespace type="IC" uri="urn:us:gov:ic:ism:v2"/>
 	 <!-- -->
    <Reader type="SWECommon" subType="DataComponent" version="0.0" class="org.vast.sweCommon.SweComponentReaderV0"/>
    <Reader type="SWECommon" subType="DataEncoding" version="0.0" class="org.vast.sweCommon.SweEncodingReaderV0"/>
@@ -39,13 +34,5 @@
    <Reader type="OM" subType="ObservationStream" version="0.0" class="org.vast.ogc.om.ObservationStreamReaderV0"/>
    <Reader type="OM" subType="ObservationStream" version="1.0" class="org.vast.ogc.om.ObservationStreamReaderV10"/>
    <Writer type="OM" subType="Observation" version="0.0" class="org.vast.ogc.om.ObservationWriterV01"/>
-   <!-- -->
-   <Reader type="SensorML" subType="Metadata" version="0.0" class="org.vast.sensorML.MetadataReaderV0"/>
-   <Reader type="SensorML" subType="Process" version="0.0" class="org.vast.sensorML.ProcessReaderV0"/>
-   <Reader type="SensorML" subType="System" version="0.0" class="org.vast.sensorML.SystemReaderV0"/>
-   <Reader type="SensorML" subType="Metadata" version="1.0" class="org.vast.sensorML.MetadataReaderV1"/>
-   <Reader type="SensorML" subType="Process" version="1.0" class="org.vast.sensorML.ProcessReaderV1"/>
-   <Reader type="SensorML" subType="Process" version="1.0.1" class="org.vast.sensorML.ProcessReaderV1"/>
-   <Reader type="SensorML" subType="System" version="1.0" class="org.vast.sensorML.SystemReaderV1"/>
    <!-- -->
 </Map>
