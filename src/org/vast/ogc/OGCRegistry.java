@@ -52,12 +52,15 @@ public class OGCRegistry
     protected static Hashtable<String, Class<?>> readerClasses;
     protected static Hashtable<String, Class<?>> writerClasses;
     protected static Hashtable<String, String> namespaces;
+    protected static Hashtable<String, String> owsVersions;
+    
 
     static
     {
         readerClasses = new Hashtable<String, Class<?>>();
         writerClasses = new Hashtable<String, Class<?>>();
         namespaces = new Hashtable<String, String>();
+        owsVersions = new Hashtable<String, String>();
         String mapFileUrl = OGCRegistry.class.getResource("OGCRegistry.xml").toString();
         loadMaps(mapFileUrl, false);
     }
@@ -93,6 +96,23 @@ public class OGCRegistry
     public static String getNamespaceURI(String spec)
     {
         return getNamespaceURI(spec, null);
+    }
+    
+    
+    /**
+     * Retrieves OWS version for given OGC spec
+     * @param spec
+     * @param version
+     * @return
+     */
+    public static String getOWSVersion(String spec, String version)
+    {
+    	String owsVersion = owsVersions.get(spec + "_" + normalizeVersionString(version));
+    	
+    	if (owsVersion == null)
+        	throw new IllegalStateException("Unsupported Specification: " + spec + " v" + version);
+    	
+    	return owsVersion;
     }
 
 
@@ -387,12 +407,19 @@ public class OGCRegistry
                 String version = dom.getAttributeValue(nsElt, "version");
                 version = normalizeVersionString(version);
                 String uri = dom.getAttributeValue(nsElt, "uri");
+                String owsVersion = dom.getAttributeValue(nsElt, "ows");
                 
+                String spec;
                 if (version != null)
-                	namespaces.put(type + "_" + version, uri);
+                	spec = type + "_" + version;
                 else
-                	namespaces.put(type, uri);
-            }
+                	spec = type;
+                
+                namespaces.put(spec, uri);
+                
+                if (owsVersion != null)
+                	owsVersions.put(spec, owsVersion);
+            }            
 
             // add reader hashtable entries
             NodeList readerElts = dom.getElements("Reader");
@@ -435,7 +462,7 @@ public class OGCRegistry
                     //ExceptionSystem.display(e);
                     // don't display exception at this point
                 }
-            }
+            }            
         }
         catch (DOMHelperException e)
         {

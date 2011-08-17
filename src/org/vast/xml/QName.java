@@ -138,7 +138,10 @@ public class QName
     	if (other instanceof QName)
     	{
 	    	QName qname = (QName)other;
-	    	return nsUri.equals(qname.nsUri) && localName.equals(qname.localName);
+	    	if (nsUri == null)
+	    		return qname.nsUri == null && localName.equals(qname.localName);
+	    	else
+	    		return nsUri.equals(qname.nsUri) && localName.equals(qname.localName);
     	}
     	else
     		return false;
