@@ -13,6 +13,7 @@
    <Namespace type="SWE" version="2.0" uri="http://www.opengis.net/swe/2.0"/>
    <Namespace type="OM" version="0.0" uri="http://www.opengis.net/om/0.0"/>
    <Namespace type="OM" version="1.0" uri="http://www.opengis.net/om/1.0"/>
+   <Namespace type="OM" version="2.0" uri="http://www.opengis.net/om/2.0"/>
 	 <!-- -->
    <Reader type="SWECommon" subType="DataComponent" version="0.0" class="org.vast.sweCommon.SweComponentReaderV0"/>
    <Reader type="SWECommon" subType="DataEncoding" version="0.0" class="org.vast.sweCommon.SweEncodingReaderV0"/>

@@ -87,7 +87,7 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
             GMLGeometryReader geometryReader = new GMLGeometryReader();
             Element pointElt = dom.getElement(obsElt, "featureOfInterest/*/location/Point");
             if (pointElt != null)
-                foiLocation = geometryReader.readPoint(dom, pointElt);
+                foiLocation = geometryReader.readVector(dom, pointElt);
             
             // read procedure ID and observation name
             procedure = dom.getAttributeValue(obsElt, "procedure/@href");

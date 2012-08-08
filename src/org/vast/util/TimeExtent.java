@@ -421,7 +421,7 @@ public class TimeExtent
      */
     public boolean isNull()
     {
-        return (baseTime == Double.NaN && !baseAtNow);
+        return (Double.isNaN(baseTime) && !baseAtNow);
     }
     
     

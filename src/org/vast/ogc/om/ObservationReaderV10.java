@@ -244,7 +244,7 @@ public class ObservationReaderV10 implements ObservationReader
             try
             {
                 GMLGeometryReader geometryReader = new GMLGeometryReader();
-                Vector3d location = geometryReader.readPoint(dom, pointElt);
+                Vector3d location = geometryReader.readVector(dom, pointElt);
                 feature.setLocation(location);
             }
             catch (GMLException e)
