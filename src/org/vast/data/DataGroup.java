@@ -71,8 +71,8 @@ public class DataGroup extends AbstractDataComponent
     	int groupSize = componentList.size();    	
     	DataGroup newGroup = new DataGroup(groupSize);
     	newGroup.name = this.name;
-    	newGroup.properties = this.properties;    	
-    	
+    	newGroup.properties = copyProperties();
+    	    
     	for (int i=0; i<groupSize; i++)
     	{
     		AbstractDataComponent child = componentList.get(i);

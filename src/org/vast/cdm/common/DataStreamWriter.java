@@ -20,6 +20,7 @@
 
 package org.vast.cdm.common;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 
@@ -67,22 +68,23 @@ public interface DataStreamWriter
 
 
     public void setDataEncoding(DataEncoding encoding);
+    
+    
+    public void setOutput(OutputStream outputStream) throws IOException;
 
 
-    public void write(OutputStream outputStream) throws CDMException;
+    public void write(OutputStream outputStream) throws IOException;
     
     
-    public void write(DataBlock data) throws CDMException;
+    public void write(DataBlock data) throws IOException;
     
     
-    public void setOutput(OutputStream outputStream) throws CDMException;
+    public void flush() throws IOException;
     
     
-    public void reset() throws CDMException;
+    public void reset();
 
 
 	public void stop();
-	
-	
-	public void flush() throws CDMException;
+
 }

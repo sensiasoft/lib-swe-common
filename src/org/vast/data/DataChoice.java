@@ -74,7 +74,7 @@ public class DataChoice extends AbstractDataComponent
     	DataChoice newChoice = new DataChoice(groupSize);
     	newChoice.selected = this.selected;
     	newChoice.name = this.name;
-    	newChoice.properties = this.properties;
+    	newChoice.properties = copyProperties();
     	
     	for (int i=0; i<groupSize; i++)
     	{
@@ -224,21 +224,22 @@ public class DataChoice extends AbstractDataComponent
     	DataBlockMixed newBlock = new DataBlockMixed(2);
     	newBlock.blockArray[0] = new DataBlockInt(1);
 
-    	// create data blocks for all children
-    	int childNumber = itemList.size();
-        for (int i=0; i<childNumber; i++)
-        {
-        	AbstractDataComponent nextComponent = itemList.get(i);
-            nextComponent.assignNewDataBlock(); // HACK should only call createDataBlock
-        }
-        
-        // if one item is selected, set data
+    	// if one item is selected, create data block for it
     	if (selected >= 0)
     	{
-    		newBlock.blockArray[0].setIntValue(selected);
-    		newBlock.blockArray[1] = (AbstractDataBlock)itemList.get(selected).getData();
-    		newBlock.atomCount = newBlock.blockArray[1].atomCount + 1;
+    	    // generate selected component data block
+    	    DataComponent component = itemList.get(selected);
+            component.assignNewDataBlock();
+            AbstractDataBlock childData = (AbstractDataBlock)component.getData();
+            
+            // assign it to the new block array
+            newBlock.blockArray[0].setIntValue(selected);
+            newBlock.blockArray[1] = childData;
+            newBlock.atomCount = childData.atomCount + 1;
     	}
+    	
+    	// otherwise keep things undefined
+    	// selection will have to be done before the data is valid for processing or writing
     	else
     	{
     		newBlock.blockArray[0].setIntValue(UNSELECTED);
@@ -293,9 +294,14 @@ public class DataChoice extends AbstractDataComponent
 		if (this.dataBlock != null)
 		{
 			int prevAtomCount = dataBlock.atomCount;
-				
+			
+			// generate selected component data block
+			DataComponent selectedComponent = itemList.get(index);
+            selectedComponent.assignNewDataBlock();
+            AbstractDataBlock childData = (AbstractDataBlock)selectedComponent.getData();
+            
+            // assign it to the choice data block
 			((DataBlockMixed)dataBlock).blockArray[0].setIntValue(index);
-			AbstractDataBlock childData = (AbstractDataBlock)itemList.get(selected).getData();
 			((DataBlockMixed)dataBlock).blockArray[1] = childData;
 			dataBlock.atomCount = childData.atomCount + 1;
 			

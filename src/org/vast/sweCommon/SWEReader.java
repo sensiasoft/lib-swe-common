@@ -55,8 +55,10 @@ public abstract class SWEReader implements InputStreamProvider
 	protected String valuesUri;
 	
 
-	public abstract void parse(InputStream inputStream, DataHandler handler) throws CDMException;
-	public abstract InputStream getDataStream() throws CDMException;
+	public abstract void parse(InputStream inputStream, DataHandler handler) throws IOException;
+	
+	
+	public abstract InputStream getDataStream() throws IOException;
 
 	
 	public void setDataComponents(DataComponent dataComponents)
@@ -71,7 +73,7 @@ public abstract class SWEReader implements InputStreamProvider
 	}
 	
 	
-	public void parse(InputStream inputStream) throws CDMException
+	public void parse(InputStream inputStream) throws IOException
     {
 	    parse(inputStream, null);
     }
@@ -95,7 +97,7 @@ public abstract class SWEReader implements InputStreamProvider
     }
 	
 	
-	protected DataStreamParser createDataParser() throws CDMException
+	protected DataStreamParser createDataParser() throws IOException
 	{
 	    DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
 	    parser.setDataComponents(this.dataComponents);

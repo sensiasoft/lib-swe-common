@@ -20,9 +20,19 @@
 
 package org.vast.sweCommon;
 
-import org.w3c.dom.*;
-import org.vast.cdm.common.*;
+import org.vast.cdm.common.AsciiEncoding;
+import org.vast.cdm.common.BinaryBlock;
+import org.vast.cdm.common.BinaryComponent;
+import org.vast.cdm.common.BinaryEncoding;
+import org.vast.cdm.common.BinaryOptions;
+import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataEncodingReader;
+import org.vast.cdm.common.DataType;
+import org.vast.cdm.common.StandardFormatEncoding;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 
 /**
@@ -48,7 +58,7 @@ public class SweEncodingReaderV1 implements DataEncodingReader
     }
  
 
-    public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws CDMException
+    public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException
     {
     	Element encodingElement = dom.getFirstChildElement(propertyElement);
     	DataEncoding encoding = readEncoding(dom, encodingElement);        
@@ -56,30 +66,31 @@ public class SweEncodingReaderV1 implements DataEncodingReader
     }
     
     
-    public DataEncoding readEncoding(DOMHelper dom, Element encodingElement) throws CDMException
+    public DataEncoding readEncoding(DOMHelper dom, Element encodingElement) throws XMLReaderException
     {
     	DataEncoding encoding = null;
+    	String encodingName = encodingElement.getLocalName();
         
-        if (encodingElement.getLocalName().equals("TextBlock"))
+        if (encodingName.equals("TextBlock"))
         {
         	encoding = readAsciiBlock(dom, encodingElement);
         }
-        else if (encodingElement.getLocalName().equals("BinaryBlock"))
+        else if (encodingName.equals("BinaryBlock"))
         {
         	encoding = readBinaryBlock(dom, encodingElement);
         }
-        else if (encodingElement.getLocalName().equals("StandardFormat"))
+        else if (encodingName.equals("StandardFormat"))
         {
         	encoding = readStandardFormat(dom, encodingElement);
         }
         else
-        	throw new CDMException("Encoding not supported");
+        	throw new XMLReaderException("Encoding not supported: " + encodingName, encodingElement);
 
         return encoding;
     }
     
     
-    private AsciiEncoding readAsciiBlock(DOMHelper dom, Element asciiBlockElement) throws CDMException
+    private AsciiEncoding readAsciiBlock(DOMHelper dom, Element asciiBlockElement) throws XMLReaderException
     {
     	AsciiEncoding encoding = new AsciiEncoding();
     	
@@ -91,18 +102,18 @@ public class SweEncodingReaderV1 implements DataEncodingReader
     }
     
     
-    private StandardFormatEncoding readStandardFormat(DOMHelper dom, Element formatElt) throws CDMException
+    private StandardFormatEncoding readStandardFormat(DOMHelper dom, Element formatElt) throws XMLReaderException
     {
     	String mimeType = dom.getAttributeValue(formatElt, "mimeType");
     	if (mimeType == null)
-    		throw new CDMException("The MIME type must be specified");
+    		throw new XMLReaderException("The MIME type must be specified", formatElt);
     	
     	StandardFormatEncoding encoding = new StandardFormatEncoding(mimeType);    	
     	return encoding;
     }
     
     
-    private BinaryEncoding readBinaryBlock(DOMHelper dom, Element binaryBlockElement) throws CDMException
+    private BinaryEncoding readBinaryBlock(DOMHelper dom, Element binaryBlockElement) throws XMLReaderException
     {
     	BinaryEncoding encoding = new BinaryEncoding();
     	
@@ -162,7 +173,7 @@ public class SweEncodingReaderV1 implements DataEncodingReader
     }
     
 
-    private BinaryComponent readComponent(DOMHelper dom, Element componentElement) throws CDMException
+    private BinaryComponent readComponent(DOMHelper dom, Element componentElement) throws XMLReaderException
     {
         BinaryComponent binaryValue = new BinaryComponent();
         
@@ -236,7 +247,7 @@ public class SweEncodingReaderV1 implements DataEncodingReader
         return binaryValue;
     }
     
-    private BinaryBlock readBlock(DOMHelper dom, Element blockElt) throws CDMException
+    private BinaryBlock readBlock(DOMHelper dom, Element blockElt) throws XMLReaderException
     {
         BinaryBlock binaryBlock = new BinaryBlock();
 

@@ -22,8 +22,9 @@ package org.vast.ogc.gml;
 
 import java.text.ParseException;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 import org.vast.util.DateTimeFormat;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.w3c.dom.Element;
 
 
@@ -60,7 +61,7 @@ public class GMLTimeReader
      * @return
      * @throws GMLException
      */
-    public TimeInfo readTimePrimitive(DOMHelper dom, Element timeElt) throws GMLException
+    public TimeExtent readTimePrimitive(DOMHelper dom, Element timeElt) throws XMLReaderException
     {
         String eltName = timeElt.getLocalName();
         
@@ -71,7 +72,7 @@ public class GMLTimeReader
         else if (eltName.equals("TimeGrid"))
             return readTimeGrid(dom, timeElt);
         
-        throw new GMLException("Unsupported Time Primitive: " + eltName);
+        throw new XMLReaderException("Unsupported Time Primitive: " + eltName, timeElt);
     }
     
     
@@ -82,9 +83,9 @@ public class GMLTimeReader
      * @return
      * @throws GMLException
      */
-    public TimeInfo readTimeInstant(DOMHelper dom, Element timeElt) throws GMLException
+    public TimeExtent readTimeInstant(DOMHelper dom, Element timeElt) throws XMLReaderException
     {
-        TimeInfo time = new TimeInfo();
+        TimeExtent time = new TimeExtent();
         
         String att = dom.getAttributeValue(timeElt, "timePosition/indeterminatePosition");
         String isoTime = dom.getElementValue(timeElt, "timePosition");
@@ -101,7 +102,7 @@ public class GMLTimeReader
             }
             catch (ParseException e)
             {
-                throw new GMLException(invalidISO + isoTime, e);
+                throw new XMLReaderException(invalidISO + isoTime, timeElt);
             }
         }
         
@@ -116,9 +117,9 @@ public class GMLTimeReader
      * @return
      * @throws GMLException
      */
-    public TimeInfo readTimePeriod(DOMHelper dom, Element timePeriodElt) throws GMLException
+    public TimeExtent readTimePeriod(DOMHelper dom, Element timePeriodElt) throws XMLReaderException
     {
-        TimeInfo timeInfo = new TimeInfo();
+        TimeExtent timeInfo = new TimeExtent();
         
         String startAtt = dom.getAttributeValue(timePeriodElt, "beginPosition/@indeterminatePosition");
         String isoStartTime = dom.getElementValue(timePeriodElt, "beginPosition");
@@ -176,7 +177,7 @@ public class GMLTimeReader
             String message = "Invalid Time Period: " + start + "/" + stop;
             if (duration != null)
                 message = message + "/" + duration;
-            throw new GMLException(message);
+            throw new XMLReaderException(message, timePeriodElt);
         }
         
         return timeInfo;
@@ -190,7 +191,7 @@ public class GMLTimeReader
      * @return
      * @throws GMLException
      */
-    public TimeInfo readTimeGrid(DOMHelper dom, Element timeGridElt) throws GMLException
+    public TimeExtent readTimeGrid(DOMHelper dom, Element timeGridElt) throws XMLReaderException
     {
         return null;
     }

@@ -96,7 +96,7 @@ public class DataArray extends AbstractDataComponent
     {
     	DataArray newArray = new DataArray();
     	newArray.name = this.name;
-    	newArray.properties = this.properties;
+    	newArray.properties = copyProperties();
     	newArray.variableSize = this.variableSize;
     	newArray.implicitSize = this.implicitSize;
     	newArray.currentSize = this.currentSize;
@@ -256,7 +256,7 @@ public class DataArray extends AbstractDataComponent
         this.dataBlock = (AbstractDataBlock)dataBlock;
     	
     	// update size component if variable size
-        if (variableSize && implicitSize)
+        if (variableSize)// && implicitSize)
         {
         	int newSize = 0;
         	
@@ -268,16 +268,24 @@ public class DataArray extends AbstractDataComponent
         	{
 	        	// TODO should infer array size differently (keep size int in data block??)
 	        	// TODO potential bug here with nested variable size arrays
-	        	newSize = dataBlock.getAtomCount() / component.scalarCount;	        	
+	        	newSize = dataBlock.getAtomCount() / component.scalarCount;
         	}
         	
         	updateSizeComponent(newSize);
         }
         
 		// also assign dataBlock to child
-    	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
-		childBlock.atomCount = component.scalarCount;
-		component.setData(childBlock);
+        if (dataBlock instanceof DataBlockList)
+        {
+            if (((DataBlockList)dataBlock).getListSize() > 0)
+                component.setData(((DataBlockList)dataBlock).get(0));
+        }
+        else
+        {
+        	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
+    		childBlock.atomCount = component.scalarCount;
+    		component.setData(childBlock);
+        }
     }
     
     
@@ -516,7 +524,7 @@ public class DataArray extends AbstractDataComponent
      * Simply update value in size data component w/o resizing datablock
      * @param newSize
      */
-    public void updateSizeComponent(int newSize)
+    protected void updateSizeComponent(int newSize)
     {
     	// update value of size data
     	DataBlock data = getSizeComponent().getData();

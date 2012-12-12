@@ -26,6 +26,7 @@ import java.text.ParseException;
 import org.vast.cdm.common.*;
 import org.vast.data.*;
 import org.vast.util.DateTimeFormat;
+import org.vast.util.ReaderException;
 
 
 public class AsciiDataParser extends AbstractDataParser
@@ -39,12 +40,13 @@ public class AsciiDataParser extends AbstractDataParser
 	protected InputStream reader;
     boolean consecutiveTokenSep = false;
     
+    
 	public AsciiDataParser()
 	{
 	}
 	
 	
-	public void setInput(InputStream inputStream) throws CDMException
+	public void setInput(InputStream inputStream) throws IOException
 	{
 		//reader = new BufferedReader(new InputStreamReader(inputStream));
 	    reader = new BufferedInputStream(inputStream);
@@ -57,7 +59,7 @@ public class AsciiDataParser extends AbstractDataParser
 	/**
 	 * Start parsing data coming from the given stream
 	 */
-	public void parse(InputStream inputStream) throws CDMException
+	public void parse(InputStream inputStream) throws IOException
 	{
         stopParsing = false;
         
@@ -75,6 +77,10 @@ public class AsciiDataParser extends AbstractDataParser
 			}
 			while(!stopParsing && !endOfArray);
 		}
+        catch (Exception e)
+        {
+            throw new ReaderException(STREAM_ERROR, e);
+        }
 		finally
 		{
 			try
@@ -84,7 +90,6 @@ public class AsciiDataParser extends AbstractDataParser
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
 			}
 		}
 	}
@@ -97,7 +102,7 @@ public class AsciiDataParser extends AbstractDataParser
 	 * @return next token as a String
 	 * @throws IOException
 	 */
-	private String readToken() throws CDMException
+	private String readToken() throws IOException
 	{
 		int tokenSepIndex = 0;
 		int blockSepIndex = 0;
@@ -203,13 +208,13 @@ public class AsciiDataParser extends AbstractDataParser
 		}
 		catch (IOException e)
 		{
-			throw new CDMException(STREAM_ERROR, e);
+			throw new ReaderException(STREAM_ERROR, e);
 		}
 	}
 	
 	
     @Override
-	protected void processAtom(DataValue scalarInfo) throws CDMException
+	protected void processAtom(DataValue scalarInfo) throws IOException
 	{
 		char decimalSep = ((AsciiEncoding)dataEncoding).decimalSeparator;
 		String token = readToken();
@@ -221,7 +226,7 @@ public class AsciiDataParser extends AbstractDataParser
 	 * Checks if more data is available from the stream
 	 * @return true if more data needs to be parsed, false otherwise
 	 */
-	protected boolean moreData() throws CDMException
+	protected boolean moreData() throws IOException
 	{
 	    lastToken = readToken();
         return !(lastToken == null);
@@ -237,7 +242,7 @@ public class AsciiDataParser extends AbstractDataParser
      * @throws CDMException
      * @throws NumberFormatException
      */
-    protected DataBlock parseToken(DataValue scalarInfo, String token, char decimalSep) throws CDMException, NumberFormatException
+    protected DataBlock parseToken(DataValue scalarInfo, String token, char decimalSep) throws IOException
     {
         // get data block and its data type
         DataBlock data = scalarInfo.getData();
@@ -325,9 +330,9 @@ public class AsciiDataParser extends AbstractDataParser
         catch (Exception e)
         {
             if ((e instanceof NumberFormatException) || (e instanceof ParseException))
-            	throw new CDMException("Invalid data '" + token + "' for component '" + scalarInfo.getName() + "'", e);
+            	throw new ReaderException("Invalid data '" + token + "' for component '" + scalarInfo.getName() + "'", e);
             else
-            	throw new CDMException(STREAM_ERROR, e);
+            	throw new ReaderException(STREAM_ERROR, e);
         }
         
         return data;
@@ -335,7 +340,7 @@ public class AsciiDataParser extends AbstractDataParser
 
 
 	@Override
-	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	protected boolean processBlock(DataComponent blockInfo) throws IOException
 	{
 		if (blockInfo instanceof DataChoice)
 		{
@@ -349,10 +354,17 @@ public class AsciiDataParser extends AbstractDataParser
 			}
 			catch (IllegalStateException e)
 			{
-				throw new CDMException(CHOICE_ERROR + token);
+				throw new ReaderException(CHOICE_ERROR + token);
 			}
 		}
 		
 		return true;
-	}
+	}		
+   
+    
+    @Override
+    public void close() throws IOException
+    {
+        reader.close();
+    }
 }

@@ -20,8 +20,8 @@
 
 package org.vast.sweCommon;
 
+import java.io.IOException;
 import java.io.InputStream;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataSource;
 
 
@@ -36,7 +36,7 @@ public class DataSourceURI implements DataSource
     }
     
     
-    public InputStream getDataStream() throws CDMException
+    public InputStream getDataStream() throws IOException
     {
         return URIStreamHandler.openStream(streamUri);
     }

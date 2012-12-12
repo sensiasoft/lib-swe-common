@@ -23,6 +23,7 @@ package org.vast.sweCommon;
 import java.io.*;
 import org.vast.cdm.common.*;
 import org.vast.data.*;
+import org.vast.util.WriterException;
 
 
 /**
@@ -54,7 +55,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 	
 	
 	@Override
-    public void setOutput(OutputStream outputStream) throws CDMException
+    public void setOutput(OutputStream outputStream) throws IOException
     {
 	    outputWriter = new OutputStreamWriter(outputStream);
         tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
@@ -65,7 +66,7 @@ public class AsciiDataWriter extends AbstractDataWriter
     
     
 	@Override
-    public void reset() throws CDMException
+    public void reset()
     {
         super.reset();
         appendBlockSeparator = true;
@@ -73,73 +74,60 @@ public class AsciiDataWriter extends AbstractDataWriter
 	
 	
 	@Override
-    public void close() throws CDMException
+    public void close() throws IOException
     {
-        try
-        {
-            outputWriter.flush();
-            outputWriter.close();
-        }
-        catch (IOException e)
-        {
-            throw new CDMException(STREAM_ERROR, e);
-        }
+	    outputWriter.flush();
+        outputWriter.close();
     }
 	
 	
 	@Override
-    public void flush() throws CDMException
+    public void flush() throws IOException
     {
-        try
-        {
-            outputWriter.flush();
-        }
-        catch (IOException e)
-        {
-            throw new CDMException(STREAM_ERROR, e);
-        }       
+	    outputWriter.flush();      
     }
 	
 	
     @Override
-	protected void processAtom(DataValue scalarInfo) throws CDMException
+	protected void processAtom(DataValue scalarInfo) throws IOException
 	{
     	String val = getStringValue(scalarInfo);
         //System.out.println(scalarInfo.getName() + ": " + val);
     	
-        writeToken(val);
+        try
+        {
+            writeToken(val);
+        }
+        catch (IOException e)
+        {
+            throw new WriterException("Error writing value for scalar component " + scalarInfo.getName(), e);
+        }
 	}
     
     
-    protected void writeToken(String token) throws CDMException
+    protected void writeToken(String token) throws IOException
     {
-    	try
-		{
-			if (!firstToken)
-			{
-			    // write a block separator if this is a new block
-				if (appendBlockSeparator)
-			    {
-			        outputWriter.write(blockSep);
-			        appendBlockSeparator = false;
-			    }
-			    else
-			        outputWriter.write(tokenSep);
-			}
-			else
-				firstToken = appendBlockSeparator = false;
-			
-			outputWriter.write(token);
-		}
-		catch (IOException e)
-		{
-			throw new CDMException(STREAM_ERROR, e);
-		}
+        if (!firstToken)
+        {
+            // write a block separator if this is a new block
+            if (appendBlockSeparator)
+            {
+                outputWriter.write(blockSep);
+                appendBlockSeparator = false;
+            }
+            else
+                outputWriter.write(tokenSep);
+        }
+        else
+            firstToken = appendBlockSeparator = false;
+        
+        if (token != null)
+            outputWriter.write(token);
     }
 
 
     @Override
-	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	protected boolean processBlock(DataComponent blockInfo) throws IOException
 	{
 		if (blockInfo instanceof DataChoice)
 		{
@@ -153,7 +141,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 			}
 			catch (IllegalStateException e)
 			{
-				throw new CDMException(CHOICE_ERROR);
+				throw new WriterException(CHOICE_ERROR, e);
 			}
 		}
 		

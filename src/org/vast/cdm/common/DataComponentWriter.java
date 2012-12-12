@@ -21,6 +21,7 @@
 package org.vast.cdm.common;
 
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 import org.w3c.dom.*;
 
 
@@ -50,7 +51,7 @@ public interface DataComponentWriter
      * @return
      * @throws CDMException
 	 */
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException;
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws XMLWriterException;
     
     
     /**
@@ -62,5 +63,5 @@ public interface DataComponentWriter
      * @return
      * @throws CDMException
      */
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponents, boolean writeInlineData) throws CDMException;
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents, boolean writeInlineData) throws XMLWriterException;
 }

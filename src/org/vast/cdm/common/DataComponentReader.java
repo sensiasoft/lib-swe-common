@@ -21,6 +21,7 @@
 package org.vast.cdm.common;
 
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 import org.w3c.dom.*;
 
 
@@ -51,7 +52,7 @@ public interface DataComponentReader
      * @return
      * @throws CDMException
      */
-    public DataComponent readComponent(DOMHelper dom, Element componentElement) throws CDMException;
+    public DataComponent readComponent(DOMHelper dom, Element componentElement) throws XMLReaderException;
     
     
     /**
@@ -61,5 +62,5 @@ public interface DataComponentReader
      * @return
      * @throws CDMException
      */
-    public DataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws CDMException;
+    public DataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException;
 }

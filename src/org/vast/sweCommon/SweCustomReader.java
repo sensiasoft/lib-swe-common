@@ -24,9 +24,9 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.CDMException;
 import org.vast.data.AbstractDataComponent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
 
 
@@ -47,5 +47,5 @@ import org.w3c.dom.Element;
  */
 public interface SweCustomReader
 {
-	public AbstractDataComponent readComponent(DOMHelper dom, Element componentElt) throws CDMException;
+	public AbstractDataComponent readComponent(DOMHelper dom, Element componentElt) throws XMLReaderException;
 }

@@ -22,8 +22,8 @@
 package org.vast.sweCommon;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataSink;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -69,7 +69,7 @@ public class DataSinkDOM implements DataSink
 	}
 
 
-	public OutputStream getDataStream() throws CDMException
+	public OutputStream getDataStream() throws IOException
 	{
 		this.textData = new ByteArrayOutputStream(1024);
 		return this.textData;

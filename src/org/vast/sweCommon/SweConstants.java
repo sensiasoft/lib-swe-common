@@ -64,4 +64,7 @@ public class SweConstants
 	public final static String OPTIONAL = "optional"; // Boolean
 	public final static String NIL_VALUES = "nil_values"; // NilValues object
 	public static final String ENCODING_TYPE = "encoding"; // DataEncoding object for DataArray
+	
+	/* property values defined in SWE Common standards */
+	public static final String ISO_TIME_DEF = "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian";
 }

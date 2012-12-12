@@ -20,11 +20,12 @@
 
 package org.vast.ogc.gml;
 
-import java.util.UUID;
+import java.text.NumberFormat;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.util.DateTimeFormat;
-import org.vast.util.TimeInfo;
+import org.vast.util.TimeExtent;
 import org.w3c.dom.Element;
 
 
@@ -44,25 +45,38 @@ import org.w3c.dom.Element;
  */
 public class GMLTimeWriter
 {
-    protected double now;
-    private String version = null;
+    private double now;
+    private String gmlNsUri;
+    private int currentId;
+    private NumberFormat idFormatter;
     
     
     public GMLTimeWriter()
     {
-        now = System.currentTimeMillis() / 1000;
+        this(1);
     }
     
     
-    public GMLTimeWriter(String version)
-    {    	
-    	this.version = version;
+    public GMLTimeWriter(int firstId)
+    {
+        now = System.currentTimeMillis() / 1000;
+        
+        currentId = firstId;
+        idFormatter = NumberFormat.getNumberInstance();
+        idFormatter.setMinimumIntegerDigits(3);
+        idFormatter.setGroupingUsed(false);
+    }
+    
+    
+    public void setGmlVersion(String gmlVersion)
+    {       
+        gmlNsUri = OGCRegistry.getNamespaceURI(OGCRegistry.GML, gmlVersion);
     }
     
         
-    public Element writeTime(DOMHelper dom, TimeInfo timeInfo) throws GMLException
+    public Element writeTime(DOMHelper dom, TimeExtent timeInfo) throws XMLWriterException
     {
-    	dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML, version));
+    	dom.addUserPrefix("gml", gmlNsUri);
     	
     	Element timeElt;
         int zone = timeInfo.getTimeZone();
@@ -123,9 +137,9 @@ public class GMLTimeWriter
             }
         }
         
-        // assign random ID
-        String randomId = "T" + Integer.toString(UUID.randomUUID().hashCode());
-        timeElt.setAttribute("gml:id", randomId);
+        // assign ID
+        String nextId = "T" + idFormatter.format(currentId++);
+        timeElt.setAttribute("gml:id", nextId);
         
         return timeElt;
     }

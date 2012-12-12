@@ -98,7 +98,10 @@ public class DataBlockMixed extends AbstractDataBlock
         
         // fully copy (clone) all blocks in the array
         for (int i=0; i<blockArray.length; i++)
-            newBlock.blockArray[i] = this.blockArray[i].clone();
+        {
+            if (this.blockArray[i] != null)
+                newBlock.blockArray[i] = this.blockArray[i].clone();
+        }
         
         newBlock.atomCount = this.atomCount;
         return newBlock;

@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataType;
 
 
@@ -45,7 +46,7 @@ import org.vast.cdm.common.DataType;
 public class DataBlockList extends AbstractDataBlock
 {
     private static final long serialVersionUID = -9032080133600839734L;
-    protected List<AbstractDataBlock> blockList;
+    protected List<DataBlock> blockList;
 	protected int blockAtomCount = -1;
 	protected int blockIndex;
 	protected int localIndex;
@@ -61,9 +62,9 @@ public class DataBlockList extends AbstractDataBlock
     public DataBlockList(boolean useArrayList)
     {
     	if (useArrayList)
-    		this.blockList = new ArrayList<AbstractDataBlock>();
+    		this.blockList = new ArrayList<DataBlock>();
     	else
-    		this.blockList = new LinkedList<AbstractDataBlock>();
+    		this.blockList = new LinkedList<DataBlock>();
     	
     	this.equalBlockSize = true;
     }
@@ -86,10 +87,10 @@ public class DataBlockList extends AbstractDataBlock
         newBlock.startIndex = this.startIndex;
         newBlock.blockAtomCount = this.blockAtomCount;
         newBlock.equalBlockSize = this.equalBlockSize;
-        newBlock.blockList = new LinkedList<AbstractDataBlock>();
+        newBlock.blockList = new LinkedList<DataBlock>();
         
         // renew all blocks in the list
-        Iterator<AbstractDataBlock> it = this.blockList.iterator();
+        Iterator<DataBlock> it = this.blockList.iterator();
         while (it.hasNext())
             newBlock.add(it.next().renew());
         
@@ -103,10 +104,10 @@ public class DataBlockList extends AbstractDataBlock
         newBlock.startIndex = this.startIndex;
         newBlock.blockAtomCount = this.blockAtomCount;
         newBlock.equalBlockSize = this.equalBlockSize;
-        newBlock.blockList = new LinkedList<AbstractDataBlock>();
+        newBlock.blockList = new LinkedList<DataBlock>();
         
         // fully copy (clone) all blocks in the list
-        Iterator<AbstractDataBlock> it = this.blockList.iterator();
+        Iterator<DataBlock> it = this.blockList.iterator();
         while (it.hasNext())
             newBlock.add(it.next().clone());
             
@@ -114,13 +115,13 @@ public class DataBlockList extends AbstractDataBlock
     }
     
     
-    public List<AbstractDataBlock> getUnderlyingObject()
+    public List<DataBlock> getUnderlyingObject()
     {
         return blockList;
     }
     
     
-    public void setUnderlyingObject(List<AbstractDataBlock> blockList)
+    public void setUnderlyingObject(List<DataBlock> blockList)
     {
         this.blockList = blockList;
     }
@@ -128,7 +129,7 @@ public class DataBlockList extends AbstractDataBlock
     
     public void setUnderlyingObject(Object obj)
     {
-    	this.blockList = (LinkedList<AbstractDataBlock>)obj;
+    	this.blockList = (LinkedList<DataBlock>)obj;
     }
     
     
@@ -147,8 +148,8 @@ public class DataBlockList extends AbstractDataBlock
 	
 	public void resize(int size)
 	{
-		AbstractDataBlock childBlock = get(0);
-        atomCount = childBlock.atomCount * size;
+		DataBlock childBlock = get(0);
+        atomCount = childBlock.getAtomCount() * size;
 		blockList.clear();
         
         if (childBlock != null)
@@ -176,7 +177,7 @@ public class DataBlockList extends AbstractDataBlock
 	
 			do
 			{
-				size = blockList.get(i).atomCount;
+				size = blockList.get(i).getAtomCount();
 				cumul += size;
 				i++;
 			}
@@ -188,7 +189,7 @@ public class DataBlockList extends AbstractDataBlock
 	}
     
     
-    public ListIterator<AbstractDataBlock> blockIterator()
+    public ListIterator<DataBlock> blockIterator()
     {
         return this.blockList.listIterator();
     }
@@ -200,16 +201,16 @@ public class DataBlockList extends AbstractDataBlock
     }
     
     
-    public void add(AbstractDataBlock block)
+    public void add(DataBlock block)
     {
     	if (blockAtomCount < 0)
-    		blockAtomCount = block.atomCount;
+    		blockAtomCount = block.getAtomCount();
     	
-    	else if (block.atomCount != blockAtomCount)
+    	else if (block.getAtomCount() != blockAtomCount)
     		equalBlockSize = false;
 
         blockList.add(block);
-    	atomCount += block.atomCount;
+    	atomCount += block.getAtomCount();
     }
     
     
@@ -219,15 +220,15 @@ public class DataBlockList extends AbstractDataBlock
     }
     
     
-    public void set(int blockIndex, AbstractDataBlock block)
+    public void set(int blockIndex, DataBlock block)
     {
-    	AbstractDataBlock oldBlock = blockList.set(blockIndex, block);
-    	atomCount -= oldBlock.atomCount;
-    	atomCount += block.atomCount;
+    	DataBlock oldBlock = blockList.set(blockIndex, block);
+    	atomCount -= oldBlock.getAtomCount();
+    	atomCount += block.getAtomCount();
     }
     
     
-    public AbstractDataBlock get(int blockIndex)
+    public DataBlock get(int blockIndex)
     {
         return blockList.get(blockIndex);
     }
@@ -242,8 +243,8 @@ public class DataBlockList extends AbstractDataBlock
     
     public void remove(int blockIndex)
     {
-    	AbstractDataBlock oldBlock = blockList.remove(blockIndex);
-    	atomCount -= oldBlock.atomCount;
+    	DataBlock oldBlock = blockList.remove(blockIndex);
+    	atomCount -= oldBlock.getAtomCount();
     }
 	
 	

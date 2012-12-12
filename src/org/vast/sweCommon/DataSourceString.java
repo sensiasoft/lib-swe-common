@@ -22,7 +22,6 @@ package org.vast.sweCommon;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataSource;
 
 
@@ -37,7 +36,7 @@ public class DataSourceString implements DataSource
     }
     
     
-    public InputStream getDataStream() throws CDMException
+    public InputStream getDataStream()
     {
         return this.textData;
     }

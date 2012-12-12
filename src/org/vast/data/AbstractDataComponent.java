@@ -336,4 +336,13 @@ public abstract class AbstractDataComponent implements DataComponent, Serializab
     {
         this.encodingInfo = encodingInfo;
     }
+    
+    
+    protected HashMap<String, Object> copyProperties()
+    {
+        if (properties == null)
+            return null;
+        else
+            return (HashMap<String, Object>)this.properties.clone();
+    }
 }

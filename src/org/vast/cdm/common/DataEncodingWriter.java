@@ -21,6 +21,7 @@
 package org.vast.cdm.common;
 
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 import org.w3c.dom.*;
 
 
@@ -49,5 +50,5 @@ public interface DataEncodingWriter
      * @return
      * @throws CDMException
 	 */
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws CDMException;
+    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws XMLWriterException;
 }

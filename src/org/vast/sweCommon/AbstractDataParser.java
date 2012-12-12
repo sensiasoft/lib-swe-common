@@ -23,6 +23,8 @@ package org.vast.sweCommon;
 import java.io.*;
 import java.net.URI;
 import org.vast.cdm.common.*;
+import org.vast.data.AbstractDataComponent;
+import org.vast.util.ReaderException;
 
 
 /**
@@ -41,7 +43,7 @@ import org.vast.cdm.common.*;
  */
 public abstract class AbstractDataParser extends DataTreeVisitor implements DataStreamParser
 {
-	protected final static String STREAM_ERROR = "IO Error while parsing data stream";
+	protected final static String STREAM_ERROR = "Error while parsing data stream";
 	protected final static String CHOICE_ERROR = "Invalid choice selection: ";
 	protected boolean stopParsing = false;
 		
@@ -50,6 +52,9 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	{
 		super(true);
 	}
+	
+	
+	protected abstract boolean moreData() throws IOException;
 	
 	
 	/**
@@ -62,7 +67,7 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	
 	
 	@Override
-	public void reset() throws CDMException
+	public void reset()
     {
 	    super.reset();
 	    
@@ -75,7 +80,7 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	/**
 	 * Default parse method from a URI string
 	 */
-	public void parse(String uri) throws CDMException
+	public void parse(String uri) throws IOException
 	{
 		InputStream in = URIStreamHandler.openStream(uri);
 		this.parse(in);
@@ -85,7 +90,7 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	/**
 	 * Default parse method from a URI object
 	 */
-	public void parse(URI uri) throws CDMException
+	public void parse(URI uri) throws IOException
 	{
 		InputStream in = URIStreamHandler.openStream(uri);
 		this.parse(in);
@@ -95,8 +100,31 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	/**
 	 * Parse next atom from stream
 	 */
-	public void parseNextElement() throws CDMException
+	public DataBlock parseNextBlock() throws IOException
 	{
-		this.processNextElement();
+		try
+        {
+            do
+            {
+                if (!moreData())
+                    return null;
+                
+                this.processNextElement();
+            }
+            while (!componentStack.isEmpty());
+            
+            return this.dataComponents.getData();
+        }
+        catch (Exception e)
+        {
+            throw new ReaderException(e);
+        }
 	}
+	
+	
+	@Override
+    public void setDataComponents(DataComponent dataInfo)
+    {
+        this.dataComponents = (AbstractDataComponent)dataInfo.copy();
+    }
 }

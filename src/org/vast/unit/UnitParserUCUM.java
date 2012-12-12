@@ -140,7 +140,7 @@ public class UnitParserUCUM implements UnitParser
             if (token.matches(intRegex))
                 parseNumber(token, uom);
             
-            else if (token.contains("10*"))
+            else if (token.contains("10*") || token.contains("10^"))
                 parsePower10(token, uom);
             
             else
@@ -253,7 +253,11 @@ public class UnitParserUCUM implements UnitParser
     
     private void parsePower10(String token, Unit uom)
     {
-        String powString = token.substring(token.indexOf('*')+1); 
+        int powerCharPos = token.indexOf('*');
+        if (powerCharPos < 0)
+            powerCharPos = token.indexOf('^');
+        
+        String powString = token.substring(powerCharPos+1);
         double power = Double.parseDouble(powString);
         
         if (token.charAt(0) == '/')

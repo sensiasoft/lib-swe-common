@@ -30,7 +30,7 @@ import org.vast.util.URIResolver;
 public class URIStreamHandler
 {
 	
-	public static synchronized InputStream openStream(String uri) throws CDMException
+	public static synchronized InputStream openStream(String uri) throws IOException
 	{
 		try
 		{
@@ -39,12 +39,12 @@ public class URIStreamHandler
 		}
 		catch (URISyntaxException e)
 		{
-			throw new CDMException("Invalid URI syntax");
+			throw new IOException("Invalid URI syntax");
 		}	
 	}
 
 	
-	public static synchronized InputStream openStream(URI uri) throws CDMException
+	public static synchronized InputStream openStream(URI uri) throws IOException
 	{
 		try
 		{
@@ -53,7 +53,7 @@ public class URIStreamHandler
 		}
 		catch (IOException e)
 		{
-			throw new CDMException("Error while connecting to the data stream");
+			throw new IOException("Error while connecting to the data stream " + uri);
 		}
 	}
 }

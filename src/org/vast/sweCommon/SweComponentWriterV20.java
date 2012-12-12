@@ -22,22 +22,32 @@
 
 package org.vast.sweCommon;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Hashtable;
-import org.w3c.dom.*;
 import org.vast.cdm.common.AsciiEncoding;
-import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.BinaryEncoding;
+import org.vast.cdm.common.BinaryEncoding.ByteEncoding;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentWriter;
 import org.vast.cdm.common.DataConstraint;
 import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataStreamWriter;
 import org.vast.cdm.common.DataType;
-import org.vast.data.*;
+import org.vast.data.ConstraintList;
+import org.vast.data.DataArray;
+import org.vast.data.DataChoice;
+import org.vast.data.DataGroup;
+import org.vast.data.DataList;
+import org.vast.data.DataValue;
 import org.vast.ogc.OGCRegistry;
 import org.vast.unit.Unit;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.QName;
+import org.vast.xml.XMLWriterException;
+import org.w3c.dom.Element;
 
 
 /**
@@ -67,14 +77,20 @@ public class SweComponentWriterV20 implements DataComponentWriter
     {
     }
     
+    
+    public SweComponentWriterV20(boolean writeInlineData)
+    {
+        this.writeInlineData = writeInlineData;
+    }
+    
         
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws XMLWriterException
     {
     	return writeComponent(dom, dataComponents, false);
     }
     
     
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponent, boolean writeInlineData) throws CDMException
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponent, boolean writeInlineData) throws XMLWriterException
     {
         dom.addUserPrefix("swe", SWE_NS);
         dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
@@ -82,14 +98,15 @@ public class SweComponentWriterV20 implements DataComponentWriter
         
         Element newElt = null;
         QName compQName = (QName)dataComponent.getProperty(SweConstants.COMP_QNAME);
-        
+        Object refFrame = dataComponent.getProperty(SweConstants.REF_FRAME);
+            
         // soft or hard typed record component
         if (dataComponent instanceof DataGroup)
         {
-        	if (compQName.getLocalName().endsWith("Range"))
-        		newElt = writeDataRange(dom, (DataGroup)dataComponent, compQName);
-        	else if (compQName.getLocalName().equals("Vector"))
-        		newElt = writeVector(dom, (DataGroup)dataComponent);
+            if (refFrame != null || (compQName != null && compQName.getLocalName().equals("Vector")))
+                newElt = writeVector(dom, (DataGroup)dataComponent);
+            else if (compQName != null && compQName.getLocalName().endsWith("Range"))
+                newElt = writeDataRange(dom, (DataGroup)dataComponent, compQName);        	
         	else
         		newElt = writeDataRecord(dom, (DataGroup)dataComponent);
         }
@@ -103,7 +120,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         // soft or hard typed array component
         else if (dataComponent instanceof DataArray)
         {
-        	if (compQName.getLocalName().equals("Matrix"))
+        	if (refFrame != null || (compQName != null && compQName.getLocalName().equals("Matrix")))
         		newElt = writeMatrix(dom, (DataArray)dataComponent);
             else
             	newElt = writeDataArray(dom, (DataArray)dataComponent);
@@ -128,7 +145,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataRecord(DOMHelper dom, DataGroup dataGroup) throws CDMException
+    private Element writeDataRecord(DOMHelper dom, DataGroup dataGroup) throws XMLWriterException
     {
     	Element dataGroupElt = dom.createElement("swe:DataRecord");
         
@@ -164,7 +181,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeVector(DOMHelper dom, DataGroup dataGroup) throws CDMException
+    private Element writeVector(DOMHelper dom, DataGroup dataGroup) throws XMLWriterException
     {
     	Element dataGroupElt = dom.createElement("swe:Vector");
         
@@ -195,7 +212,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataChoice(DOMHelper dom, DataChoice dataChoice) throws CDMException
+    private Element writeDataChoice(DOMHelper dom, DataChoice dataChoice) throws XMLWriterException
     {
         Element dataChoiceElt = dom.createElement("swe:DataChoice");
         
@@ -227,7 +244,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataArray(DOMHelper dom, DataArray dataArray) throws CDMException
+    private Element writeDataArray(DOMHelper dom, DataArray dataArray) throws XMLWriterException
     {
         Element dataArrayElt = dom.createElement("swe:DataArray");
 		writeArrayContent(dom, dataArray, dataArrayElt);
@@ -242,7 +259,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeMatrix(DOMHelper dom, DataArray dataArray) throws CDMException
+    private Element writeMatrix(DOMHelper dom, DataArray dataArray) throws XMLWriterException
     {
         Element dataArrayElt = dom.createElement("swe:Matrix");
 		writeArrayContent(dom, dataArray, dataArrayElt);
@@ -250,7 +267,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeArrayContent(DOMHelper dom, DataArray dataArray, Element arrayElt) throws CDMException
+    private void writeArrayContent(DOMHelper dom, DataArray dataArray, Element arrayElt) throws XMLWriterException
     {
     	// write common stuffs
         writeBaseProperties(dom, dataArray, arrayElt);
@@ -280,9 +297,9 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	{
 	        	String sizeCompID = (String)sizeData.getProperty(SweConstants.ID);
 	        	if (sizeCompID != null)
-	        		dom.setAttributeValue(eltCountElt, "xlink:href", sizeCompID);
+	        		dom.setAttributeValue(eltCountElt, "xlink:href", "#" + sizeCompID);
 	        	else
-	        		throw new CDMException("Component used for storing variable array size MUST have an ID");
+	        		throw new XMLWriterException("Component used for storing variable array size MUST have an ID");
         	}
         }
         
@@ -300,7 +317,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         
         // add name attribute if different from 'elementType'
     	String fieldName = component.getName();
-    	if (!fieldName.equals("elementType"))
+    	if (fieldName != null && !fieldName.equals("elementType"))
     		propElt.setAttribute("name", fieldName);
     	
     	Element componentElt = writeComponent(dom, component, writeInlineData);
@@ -320,7 +337,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	Element encElt = encodingWriter.writeEncoding(dom, dataEncoding);
         	encPropElt.appendChild(encElt);
         	
-        	Element tupleValuesElt = writeArrayValues(dom, dataArray);
+        	Element tupleValuesElt = writeArrayValues(dom, dataArray, dataEncoding);
         	arrayElt.appendChild(tupleValuesElt);
         }
     }
@@ -333,7 +350,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataValue(DOMHelper dom, DataValue dataValue) throws CDMException
+    private Element writeDataValue(DOMHelper dom, DataValue dataValue) throws XMLWriterException
     {
         // create right element
         String eltName = getElementName(dataValue);
@@ -341,7 +358,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         
         // write all properties
         writeCommonAttributes(dom, dataValue, dataValueElt);
-        writeBaseProperties(dom, dataValue, dataValueElt);    	
+        writeBaseProperties(dom, dataValue, dataValueElt);
     	writeUom(dom, dataValue, dataValueElt);
     	writeCodeSpace(dom, dataValue, dataValueElt);
     	writeConstraints(dom, dataValue, dataValueElt);
@@ -350,8 +367,16 @@ public class SweComponentWriterV20 implements DataComponentWriter
         // write value if necessary
     	DataBlock data = dataValue.getData();
     	if (writeInlineData && data != null)
-            dom.setElementValue(dataValueElt, "swe:value", data.getStringValue());
-        
+    	{
+            String val;
+            String uomUri = (String)dataValue.getProperty(SweConstants.UOM_URI);
+    	    if (uomUri != null && uomUri.equals(SweConstants.ISO_TIME_DEF))
+    	        val = DateTimeFormat.formatIso(data.getDoubleValue(), 0);
+    	    else
+    	        val = data.getStringValue();    	    
+    	    dom.setElementValue(dataValueElt, "swe:value", val);
+    	}
+    	
         return dataValueElt;
     }
     
@@ -363,7 +388,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataRange(DOMHelper dom, DataGroup dataGroup, QName rangeQName) throws CDMException
+    private Element writeDataRange(DOMHelper dom, DataGroup dataGroup, QName rangeQName) throws XMLWriterException
     {
     	DataValue min = (DataValue)dataGroup.getComponent(0);
     	DataValue max = (DataValue)dataGroup.getComponent(1);
@@ -427,7 +452,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeBaseProperties(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws CDMException
+    private void writeBaseProperties(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws XMLWriterException
     {
     	// id
     	String id = (String)dataComponent.getProperty(SweConstants.ID);
@@ -446,7 +471,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeCommonAttributes(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws CDMException
+    private void writeCommonAttributes(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws XMLWriterException
     {
     	// definition URI
         Object defUri = dataComponent.getProperty(SweConstants.DEF_URI);
@@ -485,29 +510,43 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private Element writeArrayValues(DOMHelper dom, DataComponent arrayStructure) throws CDMException
+    private Element writeArrayValues(DOMHelper dom, DataArray array, DataEncoding encoding) throws XMLWriterException
     {
-        // TODO write values using SWE writers depending on encoding!
-    	Element tupleValuesElement = dom.createElement("swe:values");       
-        DataBlock data = arrayStructure.getData();
-        StringBuffer buffer = new StringBuffer();
-       
-        for (int i=0; i<data.getAtomCount(); i++)
+        Element tupleValuesElement = dom.createElement("swe:values");       
+        ByteArrayOutputStream os = new ByteArrayOutputStream(array.getData().getAtomCount()*10);
+        
+        // force base64 if byte encoding is raw
+        if (encoding instanceof BinaryEncoding)
+            if (((BinaryEncoding) encoding).byteEncoding == ByteEncoding.RAW)
+                ((BinaryEncoding) encoding).byteEncoding = ByteEncoding.BASE64;
+        
+        // write values with proper encoding to byte array
+        try
         {
-            if (i != 0)
-                buffer.append(" ");
+            DataStreamWriter writer = SWEFactory.createDataWriter(encoding);
+            writer.setDataComponents(array.getArrayComponent().copy());
+            writer.setOutput(os);
             
-            String text = data.getStringValue(i);
-            buffer.append(text);
+            for (int i = 0; i < array.getComponentCount(); i++)
+            {
+                DataBlock nextBlock = array.getComponent(i).getData();
+                writer.write(nextBlock);
+            }
+            
+            writer.flush();
+        }
+        catch (IOException e)
+        {
+            throw new XMLWriterException("Error while writing array values", e);
         }
         
-        tupleValuesElement.setTextContent(buffer.toString());
-        
+        // copy byte array into element text
+        tupleValuesElement.setTextContent(os.toString());        
         return tupleValuesElement;
     }
     
     
-    private void writeUom(DOMHelper dom, DataValue dataValue, Element dataValueElt) throws CDMException
+    private void writeUom(DOMHelper dom, DataValue dataValue, Element dataValueElt) throws XMLWriterException
     {
         String uomCode = (String)dataValue.getProperty(SweConstants.UOM_CODE);
         String uomUri = (String)dataValue.getProperty(SweConstants.UOM_URI);
@@ -522,7 +561,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeCodeSpace(DOMHelper dom, DataValue dataValue, Element categoryElt) throws CDMException
+    private void writeCodeSpace(DOMHelper dom, DataValue dataValue, Element categoryElt) throws XMLWriterException
     {
         String codeSpace = (String)dataValue.getProperty(SweConstants.DIC_URI);
     	
@@ -531,7 +570,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeConstraints(DOMHelper dom, DataValue dataValue, Element dataValueElt) throws CDMException
+    private void writeConstraints(DOMHelper dom, DataValue dataValue, Element dataValueElt) throws XMLWriterException
     {
     	ConstraintList constraints = dataValue.getConstraints();
     	
@@ -573,7 +612,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeIntervalConstraint(DOMHelper dom, IntervalConstraint constraint, Element constraintElt) throws CDMException
+    private void writeIntervalConstraint(DOMHelper dom, IntervalConstraint constraint, Element constraintElt) throws XMLWriterException
     {
     	Element intervalElt = dom.addElement(constraintElt, "+swe:interval");
     	String text = constraint.getMin() + " " + constraint.getMax();
@@ -581,7 +620,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeNumberEnumConstraint(DOMHelper dom, EnumNumberConstraint constraint, Element constraintElt) throws CDMException
+    private void writeNumberEnumConstraint(DOMHelper dom, EnumNumberConstraint constraint, Element constraintElt) throws XMLWriterException
     {
     	double[] valueList = constraint.getValueList();    	
     	for (int i=0; i<valueList.length; i++)
@@ -589,7 +628,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeTokenEnumConstraint(DOMHelper dom, EnumTokenConstraint constraint, Element constraintElt) throws CDMException
+    private void writeTokenEnumConstraint(DOMHelper dom, EnumTokenConstraint constraint, Element constraintElt) throws XMLWriterException
     {
     	String[] valueList = constraint.getValueList();    	
     	for (int i=0; i<valueList.length; i++)
@@ -597,14 +636,14 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writePatternConstraint(DOMHelper dom, PatternConstraint constraint, Element constraintElt) throws CDMException
+    private void writePatternConstraint(DOMHelper dom, PatternConstraint constraint, Element constraintElt) throws XMLWriterException
     {
     	Element patternElt = dom.addElement(constraintElt, "+swe:pattern");
     	dom.setElementValue(patternElt, constraint.getPattern());
     }
     
     
-    private void writeQuality(DOMHelper dom, DataValue dataValue, Element dataValueElt) throws CDMException
+    private void writeQuality(DOMHelper dom, DataValue dataValue, Element dataValueElt) throws XMLWriterException
     {
     	// TODO write Quality 
     }

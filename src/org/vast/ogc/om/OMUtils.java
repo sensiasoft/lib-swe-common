@@ -20,14 +20,21 @@
 
 package org.vast.ogc.om;
 
-import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.vast.ogc.OGCException;
+import org.vast.ogc.OGCExceptionReader;
 import org.vast.ogc.OGCRegistry;
+import org.vast.sweCommon.SWEFilter;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.DOMHelperException;
+import org.vast.xml.IXMLReaderDOM;
+import org.vast.xml.IXMLWriterDOM;
+import org.vast.xml.XMLReaderException;
+import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
 
 
@@ -50,125 +57,117 @@ public class OMUtils
 {
     public final static String OM = "OM";
     public final static String OBSERVATION = "Observation";
-    protected final static int NS_CHARS = 500;
-    protected final static String versionRegex = "^\\d+(\\.\\d+)?(\\.\\d+)?$";
-    protected final static String namespaceRegex = "=\"http://www\\.opengis\\.net/om/[\\d\\.]*\\d?";
-    protected final static String defaultVersion = "0.0.1";
+    protected final static Pattern versionRegex = Pattern.compile("^\\d+(\\.\\d+)?(\\.\\d+)?$");
+    protected final static String defaultVersion = "1.0";
     
     
     /**
      * Read an O&M observation object from a DOM element 
-     * @param dom
-     * @param obsElt
-     * @return
-     * @throws OMException
+     * @param dom DOMHelper to use to read the element content
+     * @param obsElt DOM element corresponding to the Observation
+     * @return Concrete instance of IObservation containing information parsed from the DOM tree
+     * @throws XMLReaderException
      */
-    public AbstractObservation readObservation(DOMHelper dom, Element obsElt) throws OMException
+    public static IObservation readObservation(DOMHelper dom, Element obsElt) throws XMLReaderException
     {
         String version = getVersion(dom, obsElt);
-        ObservationReader reader = (ObservationReader)OGCRegistry.createReader(OM, OBSERVATION, version);
-        return reader.readObservation(dom, obsElt);
+        IXMLReaderDOM<IObservation> reader = (IXMLReaderDOM<IObservation>)OGCRegistry.createReader(OM, OBSERVATION, version);
+        return reader.read(dom, obsElt);
     }
     
     
     /**
      * Reads an O&M observation object from an InputStream
-     * @param is
-     * @param version
-     * @return
-     * @throws OMException
+     * @param Concrete instance of IObservation containing information parsed from XML
+     * @throws XMLReaderException
      */
-    public AbstractObservation readObservation(InputStream inputStream) throws OMException
+    public static IObservation readObservation(InputStream inputStream) throws XMLReaderException
     {
         try
         {
-            String version = defaultVersion;           
-            
-            // buffer the stream with a buffer size of NS_CHARS+2 and mark beginning
-            BufferedInputStream bufferedInput = new BufferedInputStream(inputStream, NS_CHARS+2);
-            bufferedInput.mark(NS_CHARS+1);
-                        
-            // read first characters
-            StringBuilder buf = new StringBuilder(NS_CHARS);
-            for (int i=0; i<NS_CHARS; i++)
-                buf.append((char)bufferedInput.read());
-            
-            // look for O&M namespace
-            String text = buf.toString();
-            Pattern pattern = Pattern.compile(namespaceRegex);
-            Matcher matcher = pattern.matcher(text);
-            
-            // extract version from namespace
-            if (matcher.find())
-            {
-                String match = matcher.group();
-                version = match.substring(match.lastIndexOf('/') + 1);
-                
-                // check if version is a valid version number otherwise defaults to 0
-                if (!version.matches(versionRegex))
-                    version = defaultVersion;
-            }
-            
-            // reset to mark for further processing
-            bufferedInput.reset();
-            
-            // parse observation using appropariate reader for this version
-            ObservationReader reader = (ObservationReader)OGCRegistry.createReader(OM, OBSERVATION, version);
-            return reader.readObservation(bufferedInput);
-            
-            //DOMHelper dom = new DOMHelper (inputStream, false);
-            //return readObservation(dom, dom.getBaseElement());
+            DOMHelper dom = new DOMHelper(inputStream, false);
+            return readObservation(dom, dom.getBaseElement());
+        }
+        catch (XMLReaderException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {
-            throw new OMException("Error while accessing inputstream", e);
+            throw new XMLReaderException("Error while reading inputstream", e);
+        }
+    }
+    
+    
+    public static IObservation readObservationSeries(InputStream inputStream) throws XMLReaderException
+    {
+        try
+        {
+            // install SWE Filter to skip inline data
+            SWEFilter streamFilter = new SWEFilter(inputStream);
+            streamFilter.setDataElementName("values");
+            
+            // parse xml header using DOMReader
+            DOMHelper dom = new DOMHelper(streamFilter, false);
+            OGCExceptionReader.checkException(dom);
+            
+            // TODO read obs series
+            return null;//this.read(dom, dom.getRootElement());
+        }
+        catch (DOMHelperException e)
+        {
+            throw new XMLReaderException("Error while parsing XML document", e);
+        }
+        catch (OGCException e)
+        {
+            throw new XMLReaderException(e.getMessage());
         }
     }
     
     
     /**
-     * Builds a DOM Element for the Observation and selected version
-     * @param dom
-     * @param observation
-     * @param version
+     * Builds a DOM Element from the content of the IObservation object
+     * @param dom DOMHelper used to generate the element
+     * @param obs Observation instance whose content will be serialized
+     * @param version Version of O&M schema to use
      * @return
-     * @throws OMException
+     * @throws XMLWriterException
      */
-    public Element writeObservation(DOMHelper dom, AbstractObservation observation, String version) throws OMException
+    public static Element writeObservation(DOMHelper dom, IObservation obs, String version) throws XMLWriterException
     {
-        ObservationWriter writer = (ObservationWriter)OGCRegistry.createWriter(OM, OBSERVATION, version);
-        return writer.writeObservation(dom, observation);
+        IXMLWriterDOM<IObservation> writer = (IXMLWriterDOM<IObservation>)OGCRegistry.createWriter(OM, OBSERVATION, version);
+        return writer.write(dom, obs);
     }
     
     
     /**
-     * Writes XML for an Observation of selected version in the OutputStream
-     * @param outputStream
-     * @param observation
-     * @param version
-     * @throws OMException
+     * Writes XML for an Observation of selected version in the specified OutputStream
+     * @param outputStream Outputstream to write the XML into
+     * @param obs Observation instance whose content will be serialized
+     * @param version Version of O&M schema to use
+     * @throws XMLWriterException
      */
-    public void writeObservation(OutputStream outputStream, AbstractObservation observation, String version) throws OMException
+    public static void writeObservation(OutputStream outputStream, IObservation obs, String version) throws XMLWriterException, IOException
     {
-        ObservationWriter writer = (ObservationWriter)OGCRegistry.createWriter(OM, OBSERVATION, version);
-        writer.writeObservation(outputStream, observation);
+        DOMHelper dom = new DOMHelper("obs");
+        Element obsElt = writeObservation(dom, obs, version);
+        dom.serialize(obsElt, outputStream, true);
     }
 
     
     /**
-     * Logic to guess SWE version from namespace
+     * Logic to guess O&M version from namespace
      * @param dom
      * @return
      */
-    public String getVersion(DOMHelper dom, Element omElt)
+    public static String getVersion(DOMHelper dom, Element omElt)
     {
         // get version from the last part of namespace URI
-        //String sweUri = dom.getXmlDocument().getNSUri("swe");
-        String sweUri = omElt.getNamespaceURI();
-        String version = sweUri.substring(sweUri.lastIndexOf('/') + 1);
+        String omUri = omElt.getNamespaceURI();
+        String version = omUri.substring(omUri.lastIndexOf('/') + 1);
         
-        // check if version is a valid version number otherwise defaults to 0
-        if (!version.matches(versionRegex))
+        // check if version is a valid version number otherwise use default
+        if (!versionRegex.matcher(version).matches())
             version = defaultVersion;
         
         return version;

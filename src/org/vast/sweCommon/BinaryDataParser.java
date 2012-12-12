@@ -23,6 +23,7 @@ package org.vast.sweCommon;
 import java.io.*;
 import org.vast.data.*;
 import org.vast.decompression.DecompressionRegistry;
+import org.vast.util.ReaderException;
 import org.vast.cdm.common.*;
 
 
@@ -45,6 +46,7 @@ public class BinaryDataParser extends AbstractDataParser
 {
 	protected static String BLOCK_READER = "BLOCK_READER";
     protected DataInputExt dataInput;
+    protected InputStream input;
 	protected boolean componentEncodingResolved = false;
 	
 	
@@ -53,7 +55,7 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 	
 	
-	public void setInput(InputStream inputStream) throws CDMException
+	public void setInput(InputStream inputStream) throws IOException
 	{
 		InputStream dataIn = null;
 		
@@ -69,18 +71,20 @@ public class BinaryDataParser extends AbstractDataParser
 				break;
 				
 			default:
-				throw new CDMException("Unsupported byte encoding");
+				throw new ReaderException("Unsupported byte encoding");
 		}
 		
 		// create data input stream
 		if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.BIG_ENDIAN)
-		    dataInput = new DataInputStreamBI(new BufferedInputStream(dataIn));
+		    input = new DataInputStreamBI(new BufferedInputStream(dataIn));
         else if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.LITTLE_ENDIAN)
-            dataInput = new DataInputStreamLI(new BufferedInputStream(dataIn));
+            input = new DataInputStreamLI(new BufferedInputStream(dataIn));
+		
+		dataInput = (DataInputExt)input;
 	}
 
 	
-	public void parse(InputStream inputStream) throws CDMException
+	public void parse(InputStream inputStream) throws IOException
 	{
 		stopParsing = false;
 		
@@ -130,9 +134,9 @@ public class BinaryDataParser extends AbstractDataParser
 				while(!stopParsing);
 			}
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			throw new CDMException(STREAM_ERROR, e);
+			throw new ReaderException(STREAM_ERROR, e);
 		}
 		finally
 		{
@@ -143,27 +147,40 @@ public class BinaryDataParser extends AbstractDataParser
 			}
 			catch (IOException e)
 			{
-				throw new CDMException(STREAM_ERROR, e);
 			}
 		}
 	}
 	
 	
 	//@Override
-	public DataBlock parse() throws CDMException
+	public DataBlock parse() throws IOException
 	{
-	    do processNextElement();
-        while(!isEndOfDataBlock());
+	    try
+        {
+            do processNextElement();
+            while(!isEndOfDataBlock());
+        }
+        catch (Exception e)
+        {
+            throw new ReaderException(STREAM_ERROR, e);
+        }
 	    
 	    return dataComponents.getData();
 	}
 	
 	
 	@Override
-	public void reset() throws CDMException
+	public void reset()
 	{
-		if (!componentEncodingResolved)
-		    resolveComponentEncodings();
+		try
+        {
+            if (!componentEncodingResolved)
+                resolveComponentEncodings();
+        }
+        catch (CDMException e)
+        {
+            throw new IllegalStateException("Invalid binary encoding mapping", e);
+        }
 		
 		super.reset();
 	}
@@ -281,7 +298,7 @@ public class BinaryDataParser extends AbstractDataParser
 	 * Checks if more data is available from the stream
 	 * @return true if more data needs to be parsed, false otherwise
 	 */
-	public boolean moreData() throws CDMException
+	public boolean moreData() throws IOException
 	{
 		try
 		{
@@ -300,7 +317,7 @@ public class BinaryDataParser extends AbstractDataParser
 		}
 		catch (IOException e)
 		{
-			throw new CDMException(STREAM_ERROR, e);
+			throw new ReaderException(STREAM_ERROR, e);
 		}
 	}
 	
@@ -408,5 +425,11 @@ public class BinaryDataParser extends AbstractDataParser
 	    CompressedStreamParser reader = (CompressedStreamParser)blockInfo.getProperty(BLOCK_READER);
 		reader.decode(dataInput, blockInfo);					
 	}
-
+	
+	
+    @Override
+    public void close() throws IOException
+    {
+        input.close();
+    }
 }

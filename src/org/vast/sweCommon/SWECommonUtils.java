@@ -20,7 +20,6 @@
 
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentReader;
 import org.vast.cdm.common.DataComponentWriter;
@@ -29,6 +28,8 @@ import org.vast.cdm.common.DataEncodingReader;
 import org.vast.cdm.common.DataEncodingWriter;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
+import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
 
 
@@ -63,14 +64,14 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     private DataEncodingWriter encodingWriter = null;
 	    
     
-    public DataComponent readComponent(DOMHelper dom, Element componentElement) throws CDMException
+    public DataComponent readComponent(DOMHelper dom, Element componentElement) throws XMLReaderException
     {
         DataComponentReader reader = getDataComponentReader(dom, componentElement);
         return reader.readComponent(dom, componentElement);
     }
 
 
-    public DataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws CDMException
+    public DataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException
     {
         Element componentElement = dom.getFirstChildElement(propertyElement);
         DataComponentReader reader = getDataComponentReader(dom, componentElement);
@@ -78,14 +79,14 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     }
     
     
-    public DataEncoding readEncoding(DOMHelper dom, Element encodingElement) throws CDMException
+    public DataEncoding readEncoding(DOMHelper dom, Element encodingElement) throws XMLReaderException
     {
         DataEncodingReader reader = getDataEncodingReader(dom, encodingElement);
         return reader.readEncoding(dom, encodingElement);
     }
 
 
-    public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws CDMException
+    public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException
     {
         Element componentElement = dom.getFirstChildElement(propertyElement);
         DataEncodingReader reader = getDataEncodingReader(dom, componentElement);
@@ -93,21 +94,21 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     }
 
 
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws CDMException
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws XMLWriterException
     {
         DataComponentWriter writer = getDataComponentWriter();
         return writer.writeComponent(dom, dataComponents);
     }
     
     
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponents, boolean writeInlineData) throws CDMException
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponents, boolean writeInlineData) throws XMLWriterException
     {
         DataComponentWriter writer = getDataComponentWriter();
         return writer.writeComponent(dom, dataComponents, writeInlineData);
     }
 
 
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws CDMException
+    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws XMLWriterException
     {
         DataEncodingWriter writer = getDataEncodingWriter();
         return writer.writeEncoding(dom, dataEncoding);
@@ -129,10 +130,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         }
         else
         {
-            DataComponentReader reader = (DataComponentReader)OGCRegistry.createReader(
-                                                              SWECOMMON,
-                                                              DATACOMPONENT,
-                                                              getVersion(dom, componentElt));
+            DataComponentReader reader = 
+                (DataComponentReader)OGCRegistry.createReader(SWECOMMON, DATACOMPONENT, getVersion(dom, componentElt));
             componentReader = reader;
             return reader;
         }
@@ -154,10 +153,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         }
         else
         {
-            DataEncodingReader reader = (DataEncodingReader)OGCRegistry.createReader(
-                                                            SWECOMMON,
-                                                            DATAENCODING,
-                                                            getVersion(dom, componentElt));
+            DataEncodingReader reader =
+                (DataEncodingReader)OGCRegistry.createReader(SWECOMMON, DATAENCODING, getVersion(dom, componentElt));
             encodingReader = reader;
             return reader;
         }
@@ -177,10 +174,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         }
         else
         {
-            DataComponentWriter writer = (DataComponentWriter)OGCRegistry.createWriter(
-                                                              SWECOMMON,
-                                                              DATACOMPONENT,
-                                                              this.version);
+            DataComponentWriter writer =
+                (DataComponentWriter)OGCRegistry.createWriter(SWECOMMON, DATACOMPONENT, this.version);
             componentWriter = writer;
             versionChanged = false;
             return writer;
@@ -201,10 +196,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         }
         else
         {
-            DataEncodingWriter writer = (DataEncodingWriter)OGCRegistry.createWriter(
-                                                            SWECOMMON,
-                                                            DATACOMPONENT,
-                                                            this.version);
+            DataEncodingWriter writer = 
+                (DataEncodingWriter)OGCRegistry.createWriter(SWECOMMON, DATACOMPONENT, this.version);
             encodingWriter = writer;
             versionChanged = false;
             return writer;

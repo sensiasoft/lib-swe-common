@@ -20,8 +20,8 @@
 
 package org.vast.ogc.om;
 
+import java.io.IOException;
 import java.io.InputStream;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataHandler;
 import org.vast.math.Vector3d;
 import org.vast.sweCommon.SWEReader;
@@ -51,16 +51,9 @@ public abstract class ObservationStreamReader extends SWEReader
      * @return
      * @throws OMException
      */
-    public void readObservationStream(InputStream inputStream, DataHandler handler) throws OMException
+    public void readObservationStream(InputStream inputStream, DataHandler handler) throws IOException
     {
-        try
-        {
-            parse(inputStream, handler);
-        }
-        catch (CDMException e)
-        {
-            throw new OMException(e.getMessage(), (Exception)e.getCause());
-        }
+        parse(inputStream, handler);
     }
 
     

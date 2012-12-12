@@ -24,8 +24,10 @@ package org.vast.sweCommon;
 
 import java.io.*;
 import org.vast.data.*;
+import org.vast.util.ReaderException;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
+import org.vast.xml.XMLReaderException;
 import org.vast.cdm.common.*;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -64,7 +66,7 @@ public class XmlDataParserDOM extends AbstractDataParser
 	}
 	
 	
-	public void setInput(InputStream inputStream) throws CDMException
+	public void setInput(InputStream inputStream) throws IOException
 	{
 		try
 		{
@@ -72,19 +74,19 @@ public class XmlDataParserDOM extends AbstractDataParser
 		}
 		catch (DOMHelperException e)
 		{
-			throw new CDMException("Error while parsing XML stream", e);
+			throw new XMLReaderException("Error while parsing XML stream", e);
 		}
 	}
 	
 	
-	public void parse(InputStream inputStream) throws CDMException
+	public void parse(InputStream inputStream) throws IOException
 	{
 		setInput(inputStream);
 		read(dom, dom.getRootElement());
 	}
 	
 	
-	public void read(DOMHelper dom, Element parentElt) throws CDMException
+	public void read(DOMHelper dom, Element parentElt) throws IOException
 	{
 		this.dom = dom;
 		
@@ -97,15 +99,22 @@ public class XmlDataParserDOM extends AbstractDataParser
 		currentParentElt = parentElt;
 		numRecord = dom.getChildElements(parentElt).getLength(); 
 			
-		do
-		{
-			// stop if end of stream
-			if (!moreData())
-				break;
-			
-			processNextElement();
-		}
-		while(!stopParsing && !endOfArray);
+		try
+        {
+            do
+            {
+            	// stop if end of stream
+            	if (!moreData())
+            		break;
+            	
+            	processNextElement();
+            }
+            while(!stopParsing && !endOfArray);
+        }
+        catch (Exception e)
+        {
+            throw new ReaderException(STREAM_ERROR, e);
+        }
 		
 		//dataComponents.clearData();
 	}
@@ -125,7 +134,7 @@ public class XmlDataParserDOM extends AbstractDataParser
 	
 	
 	@Override
-	public void reset() throws CDMException
+	public void reset()
 	{
 		super.reset();
 	}
@@ -163,13 +172,13 @@ public class XmlDataParserDOM extends AbstractDataParser
 	}
 	
 	
-	protected Element getCurrentElement(DataComponent componentInfo) throws CDMException
+	protected Element getCurrentElement(DataComponent componentInfo) throws IOException
 	{
 		setCurrentParent();
 		String eltName = getElementName(componentInfo);
 		
 		if (!dom.existElement(currentParentElt, eltName))
-			throw new CDMException("Missing XML element: " + eltName);
+			throw new XMLReaderException("Missing XML element: " + eltName);
 		
 		// case of element at root of block
 		if (componentStack.isEmpty())
@@ -196,7 +205,7 @@ public class XmlDataParserDOM extends AbstractDataParser
 	
 	
 	@Override
-	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	protected boolean processBlock(DataComponent blockInfo) throws IOException
 	{
 		currentParentElt = getCurrentElement(blockInfo);
 		
@@ -225,7 +234,7 @@ public class XmlDataParserDOM extends AbstractDataParser
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarInfo) throws CDMException
+	protected void processAtom(DataValue scalarInfo) throws IOException
 	{
 		setCurrentParent();
 		String localName = scalarInfo.getName();
@@ -247,4 +256,10 @@ public class XmlDataParserDOM extends AbstractDataParser
 		//System.out.println(scalarInfo.getName());
 		tokenParser.parseToken(scalarInfo, val, (char)0);
 	}
+	
+	
+    @Override
+    public void close() throws IOException
+    {        
+    }
 }

@@ -21,6 +21,7 @@
 package org.vast.ogc.gml;
 
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 import org.vast.unit.Unit;
 import org.w3c.dom.Element;
 
@@ -49,52 +50,52 @@ public class GMLUnitReader
     }
     
     
-    public Unit readUnit(DOMHelper dom, Element timeElt) throws GMLException
+    public Unit readUnit(DOMHelper dom, Element unitElt) throws XMLReaderException
     {
-        String eltName = timeElt.getLocalName();
+        String eltName = unitElt.getLocalName();
         
         if (eltName.equals("UnitDefinition"))
-            return readUnitDefinition(dom, timeElt);
+            return readUnitDefinition(dom, unitElt);
         else if (eltName.equals("BaseUnit"))
-            return readBaseUnit(dom, timeElt);
+            return readBaseUnit(dom, unitElt);
         else if (eltName.equals("DerivedUnit"))
-            return readDerivedUnit(dom, timeElt);
+            return readDerivedUnit(dom, unitElt);
         else if (eltName.equals("ConventionalUnit"))
-            return readDerivedUnit(dom, timeElt);
+            return readDerivedUnit(dom, unitElt);
         
-        throw new GMLException("Unsupported Unit Type: " + eltName);
+        throw new XMLReaderException("Unsupported Unit Type: " + eltName, unitElt);
     }
     
     
-    public Unit readUnitDefinition(DOMHelper dom, Element timeElt) throws GMLException
+    public Unit readUnitDefinition(DOMHelper dom, Element timeElt) throws XMLReaderException
     {
         readCommons(null, dom, timeElt);
         return null;
     }
     
     
-    public Unit readBaseUnit(DOMHelper dom, Element timeElt) throws GMLException
+    public Unit readBaseUnit(DOMHelper dom, Element timeElt) throws XMLReaderException
     {
         readCommons(null, dom, timeElt);
         return null;
     }
     
     
-    public Unit readDerivedUnit(DOMHelper dom, Element timeElt) throws GMLException
+    public Unit readDerivedUnit(DOMHelper dom, Element timeElt) throws XMLReaderException
     {
         readCommons(null, dom, timeElt);
         return null;
     }
     
     
-    public Unit readConventionalUnit(DOMHelper dom, Element timeElt) throws GMLException
+    public Unit readConventionalUnit(DOMHelper dom, Element timeElt) throws XMLReaderException
     {
         readCommons(null, dom, timeElt);
         return null;
     }
     
     
-    private void readCommons(Unit unit, DOMHelper dom, Element timeElt) throws GMLException
+    private void readCommons(Unit unit, DOMHelper dom, Element timeElt) throws XMLReaderException
     {
         
     }

@@ -75,7 +75,7 @@ public abstract class DataTreeVisitor
 	}
 	
 	
-	protected abstract void processAtom(DataValue scalarInfo) throws CDMException;
+	protected abstract void processAtom(DataValue scalarInfo) throws Exception;
 	
 	
 	/**
@@ -84,14 +84,14 @@ public abstract class DataTreeVisitor
 	 * @return true if children should be processed, false otherwise
 	 * @throws CDMException
 	 */
-	protected abstract boolean processBlock(DataComponent blockInfo) throws CDMException;
+	protected abstract boolean processBlock(DataComponent blockInfo) throws Exception;
 	
 	
 	/**
 	 * TODO nextInfo method description
 	 * @return
 	 */
-	public void processNextElement() throws CDMException
+	public void processNextElement() throws Exception
 	{
         // reset iterator if new block is starting
 		if (newBlock)
@@ -242,7 +242,7 @@ public abstract class DataTreeVisitor
 	/**
 	 * Reset the parser before parsing a new tuple
 	 */
-	public void reset() throws CDMException
+	public void reset()
 	{
 		// prepare next array element
 		if (parentArray != null)

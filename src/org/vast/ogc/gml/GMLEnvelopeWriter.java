@@ -20,7 +20,7 @@
 
 package org.vast.ogc.gml;
 
-import java.util.UUID;
+import java.text.NumberFormat;
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
 import org.vast.ogc.OGCRegistry;
@@ -43,7 +43,9 @@ import org.w3c.dom.Element;
  */
 public class GMLEnvelopeWriter
 {
-    private String version = null;
+    private String gmlNsUri;
+    private int currentId;
+    private NumberFormat idFormatter;
     
     
     public GMLEnvelopeWriter()
@@ -51,15 +53,23 @@ public class GMLEnvelopeWriter
     }
     
     
-    public GMLEnvelopeWriter(String version)
+    public GMLEnvelopeWriter(int firstId)
+    {
+        currentId = firstId;
+        idFormatter = NumberFormat.getNumberInstance();
+        idFormatter.setMinimumIntegerDigits(3);
+    }
+    
+    
+    public void setGmlVersion(String gmlVersion)
     {    	
-    	this.version = version;
+        gmlNsUri = OGCRegistry.getNamespaceURI(OGCRegistry.GML, gmlVersion);
     }
     
         
     public Element writeEnvelope(DOMHelper dom, Bbox bbox)
     {
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML, version));
+        dom.addUserPrefix("gml", gmlNsUri);
         
         Element envelopeElt = dom.createElement("gml:Envelope");
     	
@@ -72,8 +82,8 @@ public class GMLEnvelopeWriter
 		dom.setElementValue(envelopeElt, "gml:upperCorner", upperCorner);
         
 		// assign random ID
-        String randomId = "T" + Integer.toString(UUID.randomUUID().hashCode());
-        envelopeElt.setAttribute("gml:id", randomId);
+		String nextId = "E" + idFormatter.format(currentId++);
+        envelopeElt.setAttribute("gml:id", nextId);
         
         return envelopeElt;
     }

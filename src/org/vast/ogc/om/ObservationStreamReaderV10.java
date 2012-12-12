@@ -22,7 +22,10 @@ package org.vast.ogc.om;
 
 import java.io.*;
 import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataHandler;
+import org.vast.cdm.common.DataSource;
 import org.vast.math.Vector3d;
 import org.vast.ogc.gml.GMLGeometryReader;
 import org.vast.ogc.OGCException;
@@ -30,6 +33,7 @@ import org.vast.ogc.OGCExceptionReader;
 import org.vast.sweCommon.SWEFilter;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.URIStreamHandler;
+import org.vast.util.ReaderException;
 import org.vast.xml.*;
 import org.w3c.dom.*;
 
@@ -64,7 +68,7 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
     
     
     @Override
-    public void parse(InputStream inputStream, DataHandler handler) throws CDMException
+    public void parse(InputStream inputStream, DataHandler handler) throws ReaderException
     {
 		try
 		{
@@ -81,7 +85,7 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
 			NodeList elts = rootElement.getOwnerDocument().getElementsByTagNameNS("http://www.opengis.net/om/1.0", "Observation");
 			Element obsElt = (Element)elts.item(0);	
 			if (obsElt == null)
-				throw new CDMException("XML Response doesn't contain any Observation");
+				throw new XMLReaderException("XML Response doesn't contain any Observation");
 			
             // read FOI location
             GMLGeometryReader geometryReader = new GMLGeometryReader();
@@ -140,6 +144,43 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
 			throw new CDMException(e.getMessage());
 		}
 	}
+    
+    
+    /**
+     * Reads an Observation with a stream of values as a result
+     * @param dom
+     * @param obsElt
+     * @return
+     * @throws OMException
+     */
+    /*protected BufferedObservationSeries readObsStream(DOMHelper dom, Element obsElt) throws XMLReaderException
+    {
+        BufferedObservationSeries observationSeries = new BufferedObservationSeries();
+        Element resElt = dom.getElement(obsElt, "result/DataArray");
+        
+        // read result definition
+        try
+        {
+            Element defElt = dom.getElement(resElt, "elementType");
+            Element encElt = dom.getElement(resElt, "encoding");
+            SWECommonUtils sweUtils = new SWECommonUtils();
+            DataComponent dataComponents = sweUtils.readComponentProperty(dom, defElt);
+            DataEncoding dataEncoding = sweUtils.readEncodingProperty(dom, encElt);
+            observationSeries.setElementType(dataComponents);
+            observationSeries.setEncoding(dataEncoding);
+        }
+        catch (XMLReaderException e)
+        {
+            throw new XMLReaderException("Error while parsing data definition", e);
+        }
+        
+        // read result values
+        Element resultElt = dom.getElement(resElt, "values");
+        DataSource dataSrc = readResultSource(dom, resultElt);
+        observationSeries.setDataSource(dataSrc);
+    
+        return observationSeries;
+    }*/
 	
 	
 	public InputStream getDataStream() throws CDMException

@@ -20,10 +20,12 @@
 
 package org.vast.sweCommon;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataSink;
@@ -40,9 +42,8 @@ import org.vast.data.DataList;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Implementation of SWE data including component definition,
- * data encoding, and data source as well as method to parse the 
- * corresponding incoming data.
+ * Implementation of SWE input/output data stream storing data in memory,
+ * This class also contains methods for parsing/writing the stored data.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -50,9 +51,9 @@ import org.vast.data.DataList;
  * @date Feb 21, 2007
  * @version 1.0
  */
-public class SWEData
+public class SWEData implements ISweInputDataStream, ISweOutputDataStream
 {
-    protected DataEncoding dataEncoding;
+    protected DataEncoding encoding;
     protected DataSource dataSource;
     protected DataList dataList;
 
@@ -63,27 +64,59 @@ public class SWEData
     }
     
     
-    public DataComponent getDataComponents()
+    @Override
+    public int getElementCount()
+    {
+        return dataList.getComponentCount();
+    }
+    
+    
+    @Override
+    public DataComponent getElementType()
     {
         return dataList.getListComponent();
     }
 
 
-    public void setDataComponents(DataComponent dataComponents)
+    @Override
+    public void setElementType(DataComponent elementType)
     {
-        dataList.addComponent(dataComponents);
+        dataList.addComponent(elementType);
     }
 
 
-    public DataEncoding getDataEncoding()
+    @Override
+    public DataEncoding getEncoding()
     {
-        return dataEncoding;
+        return encoding;
     }
 
 
-    public void setDataEncoding(DataEncoding dataEncoding)
+    @Override
+    public void setEncoding(DataEncoding dataEncoding)
     {
-        this.dataEncoding = dataEncoding;
+        this.encoding = dataEncoding;
+    }
+    
+    
+    @Override
+    public DataComponent getNextElement()
+    {
+        return dataList.nextComponent();
+    }
+    
+    
+    @Override
+    public DataBlock getNextDataBlock()
+    {
+        return dataList.nextDataBlock();
+    }
+    
+    
+    @Override
+    public void pushNextDataBlock(DataBlock dataBlock)
+    {
+        dataList.addData(dataBlock);
     }
 
 
@@ -118,8 +151,8 @@ public class SWEData
      */
     public DataStreamParser getDataParser()
     {
-        DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
-        parser.setDataComponents(getDataComponents());
+        DataStreamParser parser = SWEFactory.createDataParser(encoding);
+        parser.setDataComponents(getElementType());
         return parser;
     }
     
@@ -131,8 +164,8 @@ public class SWEData
      */
     public DataStreamWriter getDataWriter()
     {
-        DataStreamWriter writer = SWEFactory.createDataWriter(dataEncoding);
-        writer.setDataComponents(getDataComponents());
+        DataStreamWriter writer = SWEFactory.createDataWriter(encoding);
+        writer.setDataComponents(getElementType());
         return writer;
     }
     
@@ -142,7 +175,7 @@ public class SWEData
      * and stores data blocks in a DataList 
      * @throws CDMException
      */
-    public void parseData() throws CDMException
+    public void parseData() throws IOException
     {
     	assert(this.dataSource != null);
     	parseData(this.dataSource);
@@ -155,15 +188,15 @@ public class SWEData
      * @param dataSource
      * @throws CDMException
      */
-    public void parseData(DataSource dataSource) throws CDMException
+    public void parseData(DataSource dataSource) throws IOException
     {
     	// special case for reading XML encoded stream from a DOM
-        if (dataSource instanceof DataSourceDOM && dataEncoding instanceof XmlEncoding)
+        if (dataSource instanceof DataSourceDOM && encoding instanceof XmlEncoding)
         {
         	DataSourceDOM domSrc = (DataSourceDOM)dataSource;
         	XmlDataParserDOM parser = new XmlDataParserDOM();
-        	parser.setDataEncoding(dataEncoding);
-        	parser.setDataComponents(getDataComponents());
+        	parser.setDataEncoding(encoding);
+        	parser.setDataComponents(getElementType());
         	parser.setDataHandler(new DefaultParserHandler(this));
         	parser.read(domSrc.getDom(), domSrc.getParentElt());
         }
@@ -193,15 +226,15 @@ public class SWEData
      * @param buffer
      * @throws CDMException
      */
-    public void writeData(DataSink dataSink) throws CDMException
+    public void writeData(DataSink dataSink) throws IOException
     {
         // special case for writing XML encoded stream in a DOM
-        if (dataSink instanceof DataSinkDOM && dataEncoding instanceof XmlEncoding)
+        if (dataSink instanceof DataSinkDOM && encoding instanceof XmlEncoding)
         {
         	DataSinkDOM domSink = (DataSinkDOM)dataSink;
         	XmlDataWriterDOM writer = new XmlDataWriterDOM();
-        	writer.setDataEncoding(dataEncoding);
-        	writer.setDataComponents(getDataComponents());
+        	writer.setDataEncoding(encoding);
+        	writer.setDataComponents(getElementType());
         	writer.setDataHandler(new DefaultWriterHandler(this, writer));
         	writer.write(domSink.getDom(), domSink.getParentElt());
         }

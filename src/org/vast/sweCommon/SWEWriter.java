@@ -56,8 +56,9 @@ public abstract class SWEWriter implements OutputStreamProvider
 	protected DataComponent dataComponents;
 		
 
-	public abstract void write(OutputStream inputStream) throws CDMException;
-	public abstract OutputStream getDataStream() throws CDMException;
+	public abstract void write(OutputStream inputStream) throws IOException;
+	
+	public abstract OutputStream getDataStream() throws IOException;
 	
 	
 	public DataStreamWriter getDataWriter() throws CDMException

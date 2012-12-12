@@ -222,7 +222,7 @@ public class DataArrayIndexer extends DataIndexer
                 DataIndexer indexer = indexerList[i];
                 int nextIndex = data.startIndex + currentIndex;
                 indexer.updateStartIndex(0);
-                indexer.setData(((DataBlockList)data).get(nextIndex));
+                indexer.setData((AbstractDataBlock)((DataBlockList)data).get(nextIndex));
                 indexer.getData(indexList);
             }
         }
@@ -291,7 +291,7 @@ public class DataArrayIndexer extends DataIndexer
                 {
                     int nextIndex = data.startIndex + currentIndex;
                     indexer.updateStartIndex(0);
-                    indexer.setData(((DataBlockList)data).get(nextIndex));
+                    indexer.setData((AbstractDataBlock)((DataBlockList)data).get(nextIndex));
                     indexer.next();
                     if (indexer.hasNext)
                         childDone = false;

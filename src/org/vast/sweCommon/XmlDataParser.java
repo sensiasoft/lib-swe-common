@@ -22,10 +22,11 @@
 
 package org.vast.sweCommon;
 
+import java.io.IOException;
 import java.io.InputStream;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.data.DataValue;
+
 
 /**
  * <p><b>Title:</b><br/>
@@ -44,14 +45,14 @@ import org.vast.data.DataValue;
 public class XmlDataParser extends AbstractDataParser
 {
 
-	public void setInput(InputStream inputStream) throws CDMException
+	public void setInput(InputStream inputStream) throws IOException
 	{
 		// TODO Auto-generated method stub
 		
 	}
 	
 	
-	public void parse(InputStream inputStream) throws CDMException
+	public void parse(InputStream inputStream) throws IOException
 	{
 		// TODO Auto-generated method stub
 		
@@ -59,7 +60,7 @@ public class XmlDataParser extends AbstractDataParser
 
 	
 	@Override
-	protected void processAtom(DataValue scalarInfo) throws CDMException
+	protected void processAtom(DataValue scalarInfo) throws IOException
 	{
 		// TODO Auto-generated method stub
 		
@@ -67,8 +68,25 @@ public class XmlDataParser extends AbstractDataParser
 
 
 	@Override
-	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	protected boolean processBlock(DataComponent blockInfo) throws IOException
 	{
-		return true;
+	    // TODO Auto-generated method stub
+	    return true;
 	}
+
+
+    @Override
+    protected boolean moreData() throws IOException
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    
+    
+    @Override
+    public void close() throws IOException
+    {
+        // TODO Auto-generated method stub
+        
+    }
 }

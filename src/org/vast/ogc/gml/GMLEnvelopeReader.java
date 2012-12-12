@@ -22,6 +22,7 @@ package org.vast.ogc.gml;
 
 import org.vast.util.Bbox;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -50,7 +51,7 @@ public class GMLEnvelopeReader
     }
     
         
-    public Bbox readEnvelope(DOMHelper dom, Element envelopeElt) throws GMLException
+    public Bbox readEnvelope(DOMHelper dom, Element envelopeElt) throws XMLReaderException
     {
     	Bbox bbox = new Bbox();
         String coordsText = "";
@@ -91,7 +92,7 @@ public class GMLEnvelopeReader
         }
         catch (Exception e)
         {
-            throw new GMLException(invalidCoordinates + coordsText, e);
+            throw new XMLReaderException(invalidCoordinates + coordsText, envelopeElt, e);
         }
         
         return bbox;

@@ -21,6 +21,7 @@
 package org.vast.ogc.gml;
 
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 import org.vast.math.Vector3d;
 import org.w3c.dom.Element;
 import com.vividsolutions.jts.geom.Geometry;
@@ -50,13 +51,13 @@ public class GMLGeometryReader
     }
     
     
-    public Geometry readGeometry(DOMHelper dom, Element geomElt) throws GMLException
+    public Geometry readGeometry(DOMHelper dom, Element geomElt) throws XMLReaderException
     {
         return null;
     }
     
         
-    public Vector3d readVector(DOMHelper dom, Element pointElt) throws GMLException
+    public Vector3d readVector(DOMHelper dom, Element pointElt) throws XMLReaderException
     {
         Vector3d point = new Vector3d();
         String coordsText = "";
@@ -88,7 +89,7 @@ public class GMLGeometryReader
         }
         catch (Exception e)
         {
-            throw new GMLException(invalidCoordinates + coordsText, e);
+            throw new XMLReaderException(invalidCoordinates + coordsText, pointElt, e);
         }
         
         return point;

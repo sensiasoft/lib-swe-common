@@ -21,9 +21,16 @@
 package org.vast.sweCommon;
 
 import org.w3c.dom.Element;
-import org.vast.cdm.common.*;
+import org.vast.cdm.common.AsciiEncoding;
+import org.vast.cdm.common.BinaryBlock;
+import org.vast.cdm.common.BinaryComponent;
+import org.vast.cdm.common.BinaryEncoding;
+import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataEncodingWriter;
+import org.vast.cdm.common.StandardFormatEncoding;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
 
 
 /**
@@ -55,7 +62,7 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
     }
     
     
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws CDMException
+    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws XMLWriterException
     {
         Element dataEncElt = null;
         enforceNS(dom);
@@ -73,13 +80,13 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
             dataEncElt = writeStandardFormat(dom, (StandardFormatEncoding)dataEncoding);
         }
         else
-            throw new CDMException("Encoding not supported");
+            throw new XMLWriterException("Encoding not supported: " + dataEncoding.getClass().getCanonicalName());
         
         return dataEncElt;
     }
     
     
-    private Element writeAsciiBlock(DOMHelper dom, AsciiEncoding asciiEncoding) throws CDMException
+    private Element writeAsciiBlock(DOMHelper dom, AsciiEncoding asciiEncoding) throws XMLWriterException
     {
         Element dataEncElt = dom.createElement("swe:TextBlock");
     	
@@ -91,7 +98,7 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
     }
     
     
-    private Element writeStandardFormat(DOMHelper dom, StandardFormatEncoding formatEncoding) throws CDMException
+    private Element writeStandardFormat(DOMHelper dom, StandardFormatEncoding formatEncoding) throws XMLWriterException
     {
         Element dataEncElt = dom.createElement("swe:StandardFormat");    	
         dataEncElt.setAttribute("mimeType", formatEncoding.getMimeType());        
@@ -99,7 +106,7 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
     }
     
     
-    private Element writeBinaryBlock(DOMHelper dom, BinaryEncoding binaryEncoding) throws CDMException
+    private Element writeBinaryBlock(DOMHelper dom, BinaryEncoding binaryEncoding) throws XMLWriterException
     {
     	Element binaryEncElt = dom.createElement("swe:BinaryBlock");
         
@@ -137,7 +144,7 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
     }
     
 
-    private Element writeBinaryValue(DOMHelper dom, BinaryComponent binaryOptions) throws CDMException
+    private Element writeBinaryValue(DOMHelper dom, BinaryComponent binaryOptions) throws XMLWriterException
     {
         Element binaryEncElt = dom.createElement("swe:Component");
         
@@ -229,7 +236,7 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
         return binaryEncElt;
     }
     
-    private Element writeBinaryBlock(DOMHelper dom, BinaryBlock binaryOptions) throws CDMException
+    private Element writeBinaryBlock(DOMHelper dom, BinaryBlock binaryOptions) throws XMLWriterException
     {
         Element binaryEncElt = dom.createElement("swe:Block");
         

@@ -33,7 +33,7 @@ import org.vast.cdm.common.DataComponent;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Growable List of identical DataContainers.
+ * Growable List of identical DataComponents.
  * Each new cluster of data must comply to the DataList component
  * structure. Data clusters are stored using a DataBlockList so
  * that data can be added and removed in real time.
@@ -46,9 +46,9 @@ import org.vast.cdm.common.DataComponent;
 public class DataList extends AbstractDataComponent
 {
     private static final long serialVersionUID = 3525149069812989611L;
-    protected ListIterator<AbstractDataBlock> blockIterator;
+    protected ListIterator<DataBlock> blockIterator;
     protected AbstractDataComponent component = null;
-    protected int size = 0;
+    protected AbstractDataComponent tempComponent = null;
         
 
     public DataList()
@@ -84,12 +84,6 @@ public class DataList extends AbstractDataComponent
     }
     
     
-    public void resetIterator()
-    {
-        blockIterator = ((DataBlockList)dataBlock).blockIterator();
-    }
-
-
     @Override
     public void addComponent(DataComponent component)
     {
@@ -102,6 +96,8 @@ public class DataList extends AbstractDataComponent
             AbstractDataComponent container = (AbstractDataComponent)component;
     		this.component = container;
         	this.component.parent = this;
+        	
+        	this.tempComponent = (AbstractDataComponent)component.copy();
         }
     }
     
@@ -110,8 +106,8 @@ public class DataList extends AbstractDataComponent
     public AbstractDataComponent getComponent(int index)
     {
         checkIndex(index);
-        component.setData(((DataBlockList)dataBlock).blockList.get(index));        
-        return component;
+        tempComponent.setData(((DataBlockList)dataBlock).blockList.get(index));        
+        return tempComponent;
     }
     
     
@@ -121,16 +117,31 @@ public class DataList extends AbstractDataComponent
     }
     
     
-    public AbstractDataComponent nextComponent()
+    public void resetIterator()
     {
-        component.setData(blockIterator.next());        
-        return component;
+        blockIterator = ((DataBlockList)dataBlock).blockIterator();
     }
     
     
     public boolean hasNext()
     {
         return blockIterator.hasNext();
+    }
+    
+    
+    public AbstractDataComponent nextComponent()
+    {
+        if (blockIterator == null)
+            resetIterator();
+        
+        tempComponent.setData(blockIterator.next());        
+        return tempComponent;
+    }
+    
+    
+    public DataBlock nextDataBlock()
+    {
+        return blockIterator.next();
     }
     
     
@@ -145,7 +156,7 @@ public class DataList extends AbstractDataComponent
     public void clearData()
     {
     	this.dataBlock = new DataBlockList();
-        component.clearData();
+    	tempComponent.clearData();
     }
     
     
@@ -172,7 +183,6 @@ public class DataList extends AbstractDataComponent
     public void addData(DataBlock dataBlock)
     {
     	((DataBlockList)this.dataBlock).add((AbstractDataBlock)dataBlock);
-    	this.size++;
     }
     
     
@@ -192,7 +202,7 @@ public class DataList extends AbstractDataComponent
     protected void checkIndex(int index)
     {
         // error if index is out of range
-        if ((index >= size) || (index < 0))
+        if ((index >= getComponentCount()) || (index < 0))
             throw new IndexOutOfBoundsException("Index " + index + " is out of bounds");
     }
     
@@ -200,7 +210,7 @@ public class DataList extends AbstractDataComponent
     @Override
     public int getComponentCount()
     {
-    	return this.size;
+    	return ((DataBlockList)this.dataBlock).getListSize();
     }
 
 
@@ -208,7 +218,7 @@ public class DataList extends AbstractDataComponent
     {
         StringBuffer text = new StringBuffer();
 
-        text.append("DataList[" + size + "] of:\n");
+        text.append("DataList[" + getComponentCount() + "] of:\n");
         text.append(indent + "  ");
         text.append(getComponent(0).toString(indent + "  "));
 
@@ -223,7 +233,6 @@ public class DataList extends AbstractDataComponent
     	this.dataBlock = new DataBlockList();
     	this.component.parent = null;
         this.component = null;
-        this.size = 0;
     }
     
     

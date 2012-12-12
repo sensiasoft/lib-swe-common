@@ -75,6 +75,7 @@ public abstract class AbstractDataBlock implements DataBlock, Serializable
 	{
 		return atomCount;
 	}
+	
 
 	public String toString()
 	{

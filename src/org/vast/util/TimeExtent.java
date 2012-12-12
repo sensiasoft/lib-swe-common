@@ -58,6 +58,13 @@ public class TimeExtent
     }
     
     
+    public TimeExtent(double startTime, double stopTime)
+    {
+        setStartTime(startTime);
+        setStopTime(stopTime);
+    }
+    
+    
     public TimeExtent copy()
     {
         TimeExtent timeExtent = new TimeExtent();

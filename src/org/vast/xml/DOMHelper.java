@@ -49,7 +49,8 @@ import java.util.*;
  */
 public class DOMHelper
 {
-    static protected final String PATH_SEPARATOR = "/";
+    public final static String XSI_NS_URI = "http://www.w3.org/2001/XMLSchema-instance";
+    protected final static String PATH_SEPARATOR = "/";
     
     /** User prefix to domain map **/
     protected Hashtable<String, String> userPrefixTable = new Hashtable<String, String>();
@@ -783,6 +784,18 @@ public class DOMHelper
         Element elt = getElement(eltPath);
         setAttributeValue(nodePath, text);
         getXmlDocument().addId(text, elt);
+    }
+    
+    
+    /**
+     * Adds the xsi:nil="true" attribute to the specified element
+     * @param startElement
+     * @param nodePath must point to an element
+     */
+    public void setXsiNil(Element startElement, String nodePath)
+    {
+        addUserPrefix("xsi", DOMHelper.XSI_NS_URI);
+        setAttributeValue(startElement, nodePath + "/@xsi:nil", "true");
     }
     
     

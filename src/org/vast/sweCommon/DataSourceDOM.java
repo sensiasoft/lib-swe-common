@@ -21,6 +21,7 @@
 package org.vast.sweCommon;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataSource;
@@ -75,7 +76,7 @@ public class DataSourceDOM implements DataSource
      * @return input stream to read data from
      * @throws CDMException
      */
-    public InputStream getDataStream() throws CDMException
+    public InputStream getDataStream() throws IOException
     {
     	String xlinkUri = OGCRegistry.getNamespaceURI(OGCRegistry.XLINK);
     	String href = parentElt.getAttributeNS(xlinkUri, "href");

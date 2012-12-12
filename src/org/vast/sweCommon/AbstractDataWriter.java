@@ -20,13 +20,15 @@
 
 package org.vast.sweCommon;
 
+import java.io.IOException;
 import java.io.OutputStream;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataStreamWriter;
+import org.vast.data.AbstractDataComponent;
 import org.vast.data.DataValue;
 import org.vast.util.DateTimeFormat;
+import org.vast.util.WriterException;
 
 
 /**
@@ -45,7 +47,7 @@ import org.vast.util.DateTimeFormat;
  */
 public abstract class AbstractDataWriter extends DataTreeVisitor implements DataStreamWriter
 {
-	protected final static String STREAM_ERROR = "IO Error while writing data stream";
+	protected final static String STREAM_ERROR = "Error while writing data stream";
 	protected final static String CHOICE_ERROR = "Invalid choice selection: ";
 	protected final static String NO_HANDLER_ERROR = "A DataHandler must be registered";
 	
@@ -58,18 +60,18 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	}
 
 
-	public abstract void setOutput(OutputStream os) throws CDMException;
+	public abstract void setOutput(OutputStream os) throws IOException;
 	
-	public abstract void close() throws CDMException;
+	public abstract void close() throws IOException;
 	
-    public abstract void flush() throws CDMException;
+    public abstract void flush() throws IOException;
                 
-    protected abstract void processAtom(DataValue scalarInfo) throws CDMException;
+    protected abstract void processAtom(DataValue scalarInfo) throws IOException;
 
-    protected abstract boolean processBlock(DataComponent blockInfo) throws CDMException;
+    protected abstract boolean processBlock(DataComponent blockInfo) throws IOException;
     
     
-    public void write(OutputStream outputStream) throws CDMException
+    public void write(OutputStream outputStream) throws IOException
     {
         // error if no dataHandler is registered
         if (dataHandler == null)
@@ -85,6 +87,10 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
             do processNextElement();
             while(!stopWriting);
         }
+        catch (Exception e)
+        {
+            throw new WriterException(STREAM_ERROR, e);
+        }
         finally
         {
             dataComponents.clearData();
@@ -92,7 +98,7 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
     }
     
     
-    public void write(DataBlock dataBlock) throws CDMException
+    public void write(DataBlock dataBlock) throws IOException
     {
         dataComponents.setData(dataBlock);
         
@@ -100,6 +106,10 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
         {
             do processNextElement();
             while(!isEndOfDataBlock());
+        }
+        catch (Exception e)
+        {
+            throw new WriterException(STREAM_ERROR, e);
         }
         finally
         {
@@ -132,4 +142,11 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 		
 		return val;
 	}
+	
+	
+	@Override
+	public void setDataComponents(DataComponent dataInfo)
+    {
+        this.dataComponents = (AbstractDataComponent)dataInfo.copy();
+    }
 }

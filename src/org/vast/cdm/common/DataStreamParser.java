@@ -20,9 +20,9 @@
 
 package org.vast.cdm.common;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-
 import org.vast.data.DataArray;
 
 
@@ -76,24 +76,27 @@ public interface DataStreamParser
     
     
     public void setParentArray(DataArray parentArray);
+    
+    
+    public void setInput(InputStream inputStream) throws IOException; 
 	
 	
-	public void parse(String uri) throws CDMException;
+	public void parse(String uri) throws IOException;
 
 
-	public void parse(URI uri) throws CDMException;
+	public void parse(URI uri) throws IOException;
 
 
-	public void parse(InputStream inputStream) throws CDMException;
+	public void parse(InputStream inputStream) throws IOException;
 	
 	
-	public void setInput(InputStream inputStream) throws CDMException; 
+	public DataBlock parseNextBlock() throws IOException;
 	
 	
-	public void parseNextElement() throws CDMException;
+	public void close() throws IOException;
 	
 	
-	public void reset() throws CDMException;
+	public void reset();
 	
 	
 	public void stop();

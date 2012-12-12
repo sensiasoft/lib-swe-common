@@ -22,7 +22,9 @@ package org.vast.sweCommon;
 
 import java.io.*;
 import org.vast.data.*;
+import org.vast.util.WriterException;
 import org.vast.cdm.common.*;
+import org.vast.cdm.common.BinaryEncoding.ByteEncoding;
 
 
 /**
@@ -53,12 +55,14 @@ public class BinaryDataWriter extends AbstractDataWriter
 
 	
 	@Override
-	public void setOutput(OutputStream outputStream) throws CDMException
+	public void setOutput(OutputStream outputStream) throws IOException
 	{
-	    // use Base64 converter
-        switch (((BinaryEncoding)dataEncoding).byteEncoding)
+	    ByteEncoding byteEnc = ((BinaryEncoding)dataEncoding).byteEncoding;
+	    
+	    switch (byteEnc)
         {
             case BASE64:
+                // use streaming Base64 converter
                 outputStream = new Base64Encoder(outputStream);
                 break;
                 
@@ -66,7 +70,7 @@ public class BinaryDataWriter extends AbstractDataWriter
                 break;
                 
             default:
-                throw new CDMException("Unsupported byte encoding");
+                throw new WriterException("Unsupported byte encoding: " + byteEnc);
         }
         
         // create right data output stream
@@ -78,7 +82,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	
 		
 	@Override
-	public void reset() throws CDMException
+	public void reset()
 	{
 		if (!componentEncodingResolved)
 			resolveComponentEncodings();
@@ -88,31 +92,17 @@ public class BinaryDataWriter extends AbstractDataWriter
 	
 	
 	@Override
-	public void close() throws CDMException
+	public void close() throws IOException
 	{
-	    try
-        {
-	        dataOutput.flush();
-	        dataOutput.close();
-        }
-        catch (IOException e)
-        {
-            throw new CDMException(STREAM_ERROR, e);
-        }
+	    dataOutput.flush();
+        dataOutput.close();
 	}
 	
 	
 	@Override
-	public void flush() throws CDMException
+	public void flush() throws IOException
     {
-        try
-        {
-            dataOutput.flush();
-        }
-        catch (IOException e)
-        {
-            throw new CDMException(STREAM_ERROR, e);
-        }
+	    dataOutput.flush();
     }
 	
 	
@@ -158,7 +148,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarInfo) throws CDMException
+	protected void processAtom(DataValue scalarInfo) throws IOException
 	{
 		// get encoding info for component
 		BinaryComponent binaryComponent = (BinaryComponent)scalarInfo.getEncodingInfo();
@@ -175,7 +165,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void writeBinaryAtom(DataValue scalarInfo, BinaryComponent binaryInfo) throws CDMException
+	private void writeBinaryAtom(DataValue scalarInfo, BinaryComponent binaryInfo) throws IOException
 	{
 		try
 		{
@@ -247,36 +237,20 @@ public class BinaryDataWriter extends AbstractDataWriter
 					break;
 			}
 		}
-		catch (RuntimeException e)
+		catch (Exception e)
 		{
-			throw new CDMException("Error while writing component " + scalarInfo.getName(), e);
-		}
-		catch (IOException e)
-		{
-			throw new CDMException(STREAM_ERROR, e);
+			throw new WriterException("Error while writing scalar component " + scalarInfo.getName() + " as " + binaryInfo.type, e);
 		}
 	}
 	
 	
 	@Override
-	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	protected boolean processBlock(DataComponent blockInfo) throws IOException
 	{		
 		if (blockInfo instanceof DataChoice)
 		{
-			// write implicit choice index
-			try
-			{
-				int selected = ((DataChoice)blockInfo).getSelected();
-				dataOutput.writeByte(selected);
-			}
-			catch (IllegalStateException e)
-			{
-				throw new CDMException(CHOICE_ERROR);
-			}
-			catch (IOException e)
-			{
-				throw new CDMException(STREAM_ERROR);
-			}
+		    int selected = ((DataChoice)blockInfo).getSelected();
+            dataOutput.writeByte(selected);
 		}
 		else
 		{
@@ -295,8 +269,15 @@ public class BinaryDataWriter extends AbstractDataWriter
 	}
 
 	
-	private void writeBinaryBlock(DataComponent scalarInfo,	BinaryBlock binaryBlock)  throws CDMException
+	private void writeBinaryBlock(DataComponent blockInfo, BinaryBlock binaryBlock)  throws IOException
 	{
-		// TODO implement writeBinaryBlock: call special compressed writer
+	    try
+        {
+	        // TODO implement writeBinaryBlock: call special compressed writer
+        }
+        catch (Exception e)
+        {
+            throw new WriterException("Error while writing block component " + blockInfo.getName() + " as " + binaryBlock.compression, e);
+        }
 	}
 }

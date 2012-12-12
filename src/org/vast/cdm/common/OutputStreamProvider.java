@@ -20,6 +20,7 @@
 
 package org.vast.cdm.common;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 
@@ -41,5 +42,5 @@ import java.io.OutputStream;
  */
 public interface OutputStreamProvider
 {
-	public OutputStream getDataStream() throws CDMException;
+	public OutputStream getDataStream() throws IOException;
 }

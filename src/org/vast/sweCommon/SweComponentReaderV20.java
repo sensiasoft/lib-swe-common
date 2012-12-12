@@ -22,6 +22,7 @@
 
 package org.vast.sweCommon;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Hashtable;
@@ -30,7 +31,6 @@ import org.vast.cdm.common.*;
 import org.vast.data.*;
 import org.vast.xml.*;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.gml.GMLException;
 import org.vast.ogc.gml.GMLUnitReader;
 import org.vast.sweCommon.IntervalConstraint;
 import org.vast.unit.Unit;
@@ -57,7 +57,7 @@ import org.vast.util.DateTimeFormat;
 public class SweComponentReaderV20 implements DataComponentReader
 {
 	public static Hashtable<QName, SweCustomReader> customReaders;
-	protected final static String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
+	public final static String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
 	protected Hashtable<String, AbstractDataComponent> componentIds;
     protected AsciiDataParser asciiParser;
     
@@ -70,7 +70,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     }
 
 
-    public AbstractDataComponent readComponentProperty(DOMHelper dom, Element propertyElt) throws CDMException
+    public AbstractDataComponent readComponentProperty(DOMHelper dom, Element propertyElt) throws XMLReaderException
     {
         Element dataElement = dom.getFirstChildElement(propertyElt);
         String name = readPropertyName(dom, propertyElt);
@@ -80,7 +80,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     }
     
     
-    public AbstractDataComponent readComponent(DOMHelper dom, Element componentElt) throws CDMException
+    public AbstractDataComponent readComponent(DOMHelper dom, Element componentElt) throws XMLReaderException
     {
         dom.addUserPrefix("swe", SWE_NS);
     	
@@ -132,7 +132,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @throws CDMException
      * @return DataGroup
      */
-    private DataGroup readDataRecord(DOMHelper dom, Element recordElt) throws CDMException
+    private DataGroup readDataRecord(DOMHelper dom, Element recordElt) throws XMLReaderException
     {
        // parse all fields elements
 		NodeList fieldList = dom.getElements(recordElt, "swe:field");
@@ -156,7 +156,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     	
         // error if no field present
         if (dataGroup.getComponentCount() == 0)
-            throw new CDMException("Invalid DataRecord: Must have AT LEAST ONE field");
+            throw new XMLReaderException("Invalid DataRecord: Must have AT LEAST ONE field", recordElt);
 
         // read common stuffs
         readBaseProperties(dataGroup, dom, recordElt);
@@ -172,7 +172,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @throws CDMException
      * @return DataGroup
      */
-    private DataGroup readVector(DOMHelper dom, Element vectorElt) throws CDMException
+    private DataGroup readVector(DOMHelper dom, Element vectorElt) throws XMLReaderException
     {
        // parse all fields elements
 		NodeList coordList = dom.getElements(vectorElt, "swe:coordinate");
@@ -191,7 +191,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     	
         // error if no field present
         if (dataGroup.getComponentCount() == 0)
-            throw new CDMException("Invalid Vector: Must have AT LEAST ONE coordinate");
+            throw new XMLReaderException("Invalid Vector: Must have AT LEAST ONE coordinate", vectorElt);
 
         // read common stuffs
         readBaseProperties(dataGroup, dom, vectorElt);
@@ -208,7 +208,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @return
      * @throws CDMException
      */
-    private DataChoice readDataChoice(DOMHelper dom, Element choiceElt) throws CDMException
+    private DataChoice readDataChoice(DOMHelper dom, Element choiceElt) throws XMLReaderException
     {
     	// parse all items elements
 		NodeList itemList = dom.getElements(choiceElt, "swe:item");
@@ -239,7 +239,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @throws CDMException
      * @return DataArray
      */
-    private DataArray readDataArray(DOMHelper dom, Element arrayElt) throws CDMException
+    private DataArray readDataArray(DOMHelper dom, Element arrayElt) throws XMLReaderException
     {
         DataArray dataArray = null;
         
@@ -247,9 +247,9 @@ public class SweComponentReaderV20 implements DataComponentReader
         String countId = dom.getAttributeValue(arrayElt, "elementCount/@href");
         if (countId != null)
         {
-            DataComponent sizeComponent = componentIds.get(countId);
+            DataComponent sizeComponent = componentIds.get(countId.replace("#", ""));
             if (sizeComponent == null)
-                throw new CDMException("Invalid elementCount: The elementCount property must reference an existing Count component");
+                throw new XMLReaderException("Invalid elementCount: The elementCount property must reference an existing Count component", arrayElt);
             dataArray = new DataArray((DataValue)sizeComponent, true);
         }
         
@@ -272,7 +272,7 @@ public class SweComponentReaderV20 implements DataComponentReader
             }
             catch (Exception e)
             {
-                throw new CDMException("Invalid elementCount: The elementCount must specify a positive integer value");
+                throw new XMLReaderException("Invalid elementCount: The elementCount must specify a positive integer value", arrayElt);
             }
         }
                         
@@ -290,13 +290,20 @@ public class SweComponentReaderV20 implements DataComponentReader
         Element valuesElt = dom.getElement(arrayElt, "values");
         if (encodingElt != null && valuesElt != null)
         {
-            SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
-            DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
-            DataStreamParser parser = SWEFactory.createDataParser(encoding);
-            parser.setParentArray(dataArray);
-            parser.reset();
-            InputStream is = new DataSourceDOM(dom, valuesElt).getDataStream();
-            parser.parse(is);
+            try
+            {
+                SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
+                DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
+                DataStreamParser parser = SWEFactory.createDataParser(encoding);
+                parser.setParentArray(dataArray);
+                parser.reset();
+                InputStream is = new DataSourceDOM(dom, valuesElt).getDataStream();
+                parser.parse(is);
+            }
+            catch (IOException e)
+            {
+                throw new XMLReaderException("Error while parsing array values", arrayElt, e);
+            }
         }
         
         return dataArray;
@@ -309,7 +316,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @return DataValue encapsulating the value
      * @throws SMLReaderException
      */
-    private DataValue readScalar(DOMHelper dom, Element scalarElt) throws CDMException
+    private DataValue readScalar(DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
         DataValue dataValue = null;              
         String eltName = scalarElt.getLocalName();
@@ -324,7 +331,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         else if (eltName.equals("Category") || eltName.equals("Text"))
         	dataValue = new DataValue(DataType.UTF_STRING);
         else
-            throw new CDMException("Invalid component: " + eltName);
+            throw new XMLReaderException("Invalid scalar component: " + eltName, scalarElt);
         
     	// save param QName
     	QName componentQName = new QName(scalarElt.getNamespaceURI(), scalarElt.getTagName());
@@ -343,7 +350,14 @@ public class SweComponentReaderV20 implements DataComponentReader
         if (value != null)
         {
         	dataValue.assignNewDataBlock();
-            asciiParser.parseToken(dataValue, value, '\0');
+        	try
+            {
+                asciiParser.parseToken(dataValue, value, '\0');
+            }
+            catch (IOException e)
+            {
+                throw new XMLReaderException(e.getMessage(), scalarElt);
+            }
         }
         
         return dataValue;
@@ -357,7 +371,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @return
      * @throws CDMException
      */
-    private DataGroup readRange(DOMHelper dom, Element rangeElt) throws CDMException
+    private DataGroup readRange(DOMHelper dom, Element rangeElt) throws XMLReaderException
     {
         DataValue paramVal = null;
         DataGroup range = new DataGroup(2);
@@ -375,7 +389,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         else if (eltName.startsWith("Time"))
             paramVal = new DataValue(DataType.DOUBLE);
         else
-            throw new CDMException("Only Quantity, Time and Count ranges are allowed");
+            throw new XMLReaderException("Only Quantity, Time and Count ranges are allowed", rangeElt);
         
         // generate fake QName for min/max components
         String localName = eltName.substring(0, eltName.indexOf("Range"));
@@ -409,7 +423,7 @@ public class SweComponentReaderV20 implements DataComponentReader
             }
             catch (Exception e)
             {
-                throw new CDMException("Error while parsing range values", e);
+                throw new XMLReaderException("Error while parsing range values", rangeElt, e);
             }
         }
         
@@ -440,7 +454,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @param componentElt
      * @throws CDMException
      */
-    private void readBaseProperties(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws CDMException
+    private void readBaseProperties(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws XMLReaderException
     {
         // label
         String name = dom.getElementValue(componentElt, "swe:label");
@@ -460,7 +474,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @param dataComponent DataContainer
      * @param dataElement Element
      */
-    private void readCommonAttributes(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws CDMException
+    private void readCommonAttributes(DataComponent dataComponent, DOMHelper dom, Element componentElt) throws XMLReaderException
     {
     	// id
     	String id = dom.getAttributeValue(componentElt, "@id");
@@ -491,7 +505,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         }
         catch (ParseException e)
         {
-            throw new CDMException("Invalid reference time", e);
+            throw new XMLReaderException("Invalid reference time", componentElt, e);
         }
         
         // local frame
@@ -523,7 +537,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @param componentElement
      * @throws SMLReaderException
      */
-    private String readComponentDefinition(DOMHelper dom, Element componentElement) throws CDMException
+    private String readComponentDefinition(DOMHelper dom, Element componentElement) throws XMLReaderException
     {
         String defUri = dom.getAttributeValue(componentElement, "definition");
         return defUri;
@@ -536,7 +550,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @param dom
      * @param componentElt
      */
-    private void readUom(DataComponent dataComponent, DOMHelper dom, Element scalarElt) throws CDMException
+    private void readUom(DataComponent dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
         if (!dom.existElement(scalarElt, "uom"))
             return;
@@ -567,18 +581,10 @@ public class SweComponentReaderV20 implements DataComponentReader
         {
             Element unitElt = dom.getElement(scalarElt, "uom/*");
             GMLUnitReader unitReader = new GMLUnitReader();
-            try
-            {
-                Unit unit = unitReader.readUnit(dom, unitElt);
-                if (unit != null)
-                    dataComponent.setProperty(SweConstants.UOM_OBJ, unit);
-                
-                dataComponent.setProperty(SweConstants.UOM_CODE, unit.getCode());
-            }
-            catch (GMLException e)
-            {
-                throw new CDMException("Invalid Inline Unit", e);
-            }
+            Unit unit = unitReader.readUnit(dom, unitElt);
+            if (unit != null)
+                dataComponent.setProperty(SweConstants.UOM_OBJ, unit);            
+            dataComponent.setProperty(SweConstants.UOM_CODE, unit.getCode());
         }
     }
     
@@ -590,7 +596,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @param scalarElt
      * @throws CDMException
      */
-    private void readCodeSpace(DataComponent dataComponent, DOMHelper dom, Element scalarElt) throws CDMException
+    private void readCodeSpace(DataComponent dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
         // codeSpace URI
         String codeSpaceUri = dom.getAttributeValue(scalarElt, "codeSpace/@href");
@@ -605,7 +611,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @param scalarElement
      * @throws CDMException
      */
-    private void readQuality(DataComponent dataComponent, DOMHelper dom, Element scalarElt) throws CDMException
+    private void readQuality(DataComponent dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
         if (!dom.existElement(scalarElt, "quality"))
             return;
@@ -625,9 +631,9 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @return
      * @throws CDMException
      */
-    private void readConstraints(DataValue dataValue, DOMHelper dom, Element scalarElement) throws CDMException
+    private void readConstraints(DataValue dataValue, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
-    	Element constraintElt = dom.getElement(scalarElement, "constraint/*");
+    	Element constraintElt = dom.getElement(scalarElt, "constraint/*");
     	if (constraintElt == null)
     		return;
     	
@@ -676,7 +682,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 		    		}
 					catch (ParseException e)
 					{
-						throw new CDMException("Invalid Time Enumeration constraint: " + val);
+						throw new XMLReaderException("Invalid time enumeration constraint: " + val, scalarElt);
 					}
 	    		}
 	    		constraintList.add(new EnumNumberConstraint(values));
@@ -704,7 +710,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 		    		}
 					catch (Exception e)
 					{
-						throw new CDMException("Invalid Number Enumeration constraint: " + val);
+						throw new XMLReaderException("Invalid number enumeration constraint: " + val, scalarElt);
 					}
 	    		}
 	    		constraintList.add(new EnumNumberConstraint(values));
@@ -724,9 +730,9 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @param constraintElement
      * @return
      */
-    private IntervalConstraint readIntervalConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    private IntervalConstraint readIntervalConstraint(DOMHelper dom, Element constraintElt) throws XMLReaderException
     {
-    	String rangeText = dom.getElementValue(constraintElement);
+    	String rangeText = dom.getElementValue(constraintElt);
     	
 		try
 		{
@@ -737,7 +743,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 		}
 		catch (Exception e)
 		{
-			throw new CDMException("Invalid Interval Constraint: " + rangeText);
+			throw new XMLReaderException("Invalid Interval Constraint: " + rangeText, constraintElt);
 		}
     }
     
@@ -748,9 +754,9 @@ public class SweComponentReaderV20 implements DataComponentReader
      * @param constraintElement
      * @return
      */
-    private IntervalConstraint readTimeIntervalConstraint(DOMHelper dom, Element constraintElement) throws CDMException
+    private IntervalConstraint readTimeIntervalConstraint(DOMHelper dom, Element constraintElt) throws XMLReaderException
     {
-    	String rangeText = dom.getElementValue(constraintElement);
+    	String rangeText = dom.getElementValue(constraintElt);
     	
 		try
 		{
@@ -761,7 +767,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 		}
 		catch (Exception e)
 		{
-			throw new CDMException("Invalid Time Interval Constraint: " + rangeText);
+			throw new XMLReaderException("Invalid Time Interval Constraint: " + rangeText, constraintElt);
 		}
     }
 }

@@ -20,16 +20,19 @@
 
 package org.vast.sweCommon;
 
-import org.w3c.dom.*;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentWriter;
 import org.vast.cdm.common.DataType;
-import org.vast.data.*;
+import org.vast.data.DataArray;
+import org.vast.data.DataGroup;
+import org.vast.data.DataList;
+import org.vast.data.DataValue;
 import org.vast.ogc.OGCRegistry;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLWriterException;
+import org.w3c.dom.Element;
 
 
 /**
@@ -58,13 +61,13 @@ public class SweComponentWriterV1 implements DataComponentWriter
     }
     
     
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponent) throws CDMException
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponent) throws XMLWriterException
     {
     	return writeComponent(dom, dataComponent, false);
     }
     
     
-    public Element writeComponent(DOMHelper dom, DataComponent dataComponent, boolean writeInlineData) throws CDMException
+    public Element writeComponent(DOMHelper dom, DataComponent dataComponent, boolean writeInlineData) throws XMLWriterException
     {
         dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "1.0"));
         this.writeInlineData = writeInlineData;        
@@ -91,7 +94,7 @@ public class SweComponentWriterV1 implements DataComponentWriter
     }
     
     
-    private Element writeComponentProperty(DOMHelper dom, DataComponent dataComponents) throws CDMException
+    private Element writeComponentProperty(DOMHelper dom, DataComponent dataComponents) throws XMLWriterException
     {
         Element propElt = dom.createElement("swe:component");
         writeName(propElt, dataComponents.getName());        
@@ -101,7 +104,7 @@ public class SweComponentWriterV1 implements DataComponentWriter
     }
 
 
-    private Element writeDataRecord(DOMHelper dom, DataGroup dataGroup) throws CDMException
+    private Element writeDataRecord(DOMHelper dom, DataGroup dataGroup) throws XMLWriterException
     {
         Element dataGroupElt = dom.createElement("swe:DataRecord");
                 
@@ -120,7 +123,7 @@ public class SweComponentWriterV1 implements DataComponentWriter
     }
 
 
-    private Element writeDataArray(DOMHelper dom, DataComponent dataArray) throws CDMException
+    private Element writeDataArray(DOMHelper dom, DataComponent dataArray) throws XMLWriterException
     {
         Element dataArrayElt = dom.createElement("swe:DataArray");
         
@@ -151,7 +154,7 @@ public class SweComponentWriterV1 implements DataComponentWriter
     }
 
 
-    private Element writeDataValue(DOMHelper dom, DataValue dataValue) throws CDMException
+    private Element writeDataValue(DOMHelper dom, DataValue dataValue) throws XMLWriterException
     {
         Object def = dataValue.getProperty("definition");
         String eltName = "swe:Parameter";
@@ -198,7 +201,7 @@ public class SweComponentWriterV1 implements DataComponentWriter
     }
     
     
-    private void writeAttributes(DOMHelper dom, DataComponent dataComponent, Element dataValueElt) throws CDMException
+    private void writeAttributes(DOMHelper dom, DataComponent dataComponent, Element dataValueElt) throws XMLWriterException
     {
         // definition URI
         Object defUri = dataComponent.getProperty(SweConstants.DEF_URI);
@@ -232,7 +235,7 @@ public class SweComponentWriterV1 implements DataComponentWriter
     }
     
     
-    private Element writeArrayValues(DOMHelper dom, DataComponent arrayStructure) throws CDMException
+    private Element writeArrayValues(DOMHelper dom, DataComponent arrayStructure) throws XMLWriterException
     {
         Element tupleValuesElement = dom.createElement("swe:tupleValues");       
         DataBlock data = arrayStructure.getData();

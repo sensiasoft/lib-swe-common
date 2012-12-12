@@ -78,7 +78,7 @@ public class DataValue extends AbstractDataComponent
     public DataValue copy()
     {
     	DataValue newVal = new DataValue(name, dataType);
-    	newVal.properties = this.properties;
+    	newVal.properties = copyProperties();
     	newVal.constraints = this.constraints;
     	return newVal;
     }
