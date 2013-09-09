@@ -13,8 +13,6 @@
 
 package org.vast.util;
 
-import org.vast.math.Vector3d;
-
 
 /**
  * <p><b>Title:</b><br/>
@@ -67,12 +65,12 @@ public class SpatialExtent
     }
     
     
-    public Vector3d getCenter()
+    public double[] getCenter()
     {
-        Vector3d center = new Vector3d();
-        center.x = (minX + maxX) / 2;
-        center.y = (minY + maxY) / 2;
-        center.z = (minZ + maxZ) / 2;
+        double[] center = new double[3];
+        center[0] = (minX + maxX) / 2;
+        center[0] = (minY + maxY) / 2;
+        center[0] = (minZ + maxZ) / 2;
         return center;
     }
     
