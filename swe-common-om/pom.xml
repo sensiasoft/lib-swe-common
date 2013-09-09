@@ -7,4 +7,11 @@
   </parent>
   <artifactId>swe-common-om</artifactId>
   <description>Implementation of O&amp;M standard using SWE Common as result format</description>
+  <dependencies>
+     <dependency>
+        <groupId>org.vast.opengis</groupId>
+        <artifactId>swe-common-core</artifactId>
+        <version>1.0</version>
+     </dependency>
+  </dependencies>
 </project>
