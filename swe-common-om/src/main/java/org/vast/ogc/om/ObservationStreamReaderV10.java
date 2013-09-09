@@ -133,16 +133,20 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
 		}
         catch (IllegalStateException e)
         {
-            throw new CDMException("No reader found for SWECommon", e);
+            throw new ReaderException("No reader found for SWECommon", e);
         }
 		catch (DOMHelperException e)
 		{
-			throw new CDMException("Error while parsing Observation XML", e);
+			throw new ReaderException("Error while parsing observation XML", e);
 		}		
 		catch (OGCException e)
 		{
-			throw new CDMException(e.getMessage());
+			throw new ReaderException(e.getMessage());
 		}
+		catch (IOException e)
+        {
+            throw new ReaderException("Error while parsing observation result data", e);
+        }
 	}
     
     
@@ -183,19 +187,12 @@ public class ObservationStreamReaderV10 extends ObservationStreamReader
     }*/
 	
 	
-	public InputStream getDataStream() throws CDMException
+	public InputStream getDataStream() throws IOException
 	{
 		if (valuesUri != null && valuesUri.length()>0)
 		{
-			try
-			{
-				streamFilter.startReadingData();
-				streamFilter.close();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
+		    streamFilter.startReadingData();
+            streamFilter.close();
 			
 			return URIStreamHandler.openStream(valuesUri);
 		}
