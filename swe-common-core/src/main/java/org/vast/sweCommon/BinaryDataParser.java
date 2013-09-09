@@ -22,7 +22,6 @@ package org.vast.sweCommon;
 
 import java.io.*;
 import org.vast.data.*;
-import org.vast.decompression.DecompressionRegistry;
 import org.vast.util.ReaderException;
 import org.vast.cdm.common.*;
 
@@ -228,7 +227,7 @@ public class BinaryDataParser extends AbstractDataParser
             else if(binaryOpts instanceof BinaryBlock)
             {
                 dataComponent.setEncodingInfo(binaryOpts);
-                initReader(dataComponent, (BinaryBlock)binaryOpts);
+                initBlockReader(dataComponent, (BinaryBlock)binaryOpts);
             }
 		}
 		
@@ -236,9 +235,9 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 	
 	
-	protected void initReader(DataComponent blockComponent, BinaryBlock binaryOpts) throws CDMException
+	protected void initBlockReader(DataComponent blockComponent, BinaryBlock binaryOpts) throws CDMException
     {
-	    CompressedStreamParser reader = (CompressedStreamParser)DecompressionRegistry.createReader(binaryOpts.compression);
+	    CompressedStreamParser reader = CodecLookup.getInstance().createDecoder(binaryOpts.compression);
         reader.init(blockComponent, binaryOpts);
         blockComponent.setProperty(BLOCK_READER, reader);
     }

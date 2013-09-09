@@ -1,0 +1,46 @@
+/***************************** BEGIN LICENSE BLOCK ***************************
+
+ The contents of this file are Copyright (C) 2013 Sensia Software LLC.
+ All Rights Reserved.
+ 
+ Contributor(s): 
+    Alexandre Robin <alex.robin@sensiasoftware.com>
+ 
+******************************* END LICENSE BLOCK ***************************/
+
+package org.vast.sweCommon;
+
+import java.util.Map;
+import org.vast.cdm.common.CompressedStreamParser;
+import org.vast.cdm.common.CompressedStreamWriter;
+
+
+/**
+ * <p><b>Title:</b>
+ * ICodecFactory
+ * </p>
+ *
+ * <p><b>Description:</b><br/>
+ * Interface for SWE Common codec factories.
+ * These factories are meant to be discovered via the java services mechanism
+ * </p>
+ *
+ * <p>Copyright (c) 2013</p>
+ * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @date Sep 9, 2013
+ */
+public interface ICodecFactory
+{
+    
+    public Map<String, Class<?>> getAvailableDecoders();
+    
+    
+    public Map<String, Class<?>> getAvailableEncoders();
+    
+    
+    public CompressedStreamParser createDecoder(String compressionType);
+    
+    
+    public CompressedStreamWriter createEncoder(String compressionType);    
+    
+}

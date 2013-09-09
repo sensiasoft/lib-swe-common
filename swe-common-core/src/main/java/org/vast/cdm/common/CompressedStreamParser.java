@@ -30,7 +30,7 @@ package org.vast.cdm.common;
  * </p>
  *
  * <p><b>Description:</b><br/>
- * Interface for all compressed block decoder
+ * Interface for all SWE compressed block decoders
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -42,20 +42,20 @@ public interface CompressedStreamParser
 {
 
     /**
-     * Reads compressed data from input stream and assigns result to the component data block
-     * @param inputStream
-     * @param blockComponent
-     * @throws CDMException
-     */
-    public abstract void decode(DataInputExt inputStream, DataComponent blockComponent) throws CDMException;
-
-
-    /**
      * Initializes decoder with block data component and its binary encoding info
      * @param binaryBlock
      * @param blockComponent
      * @throws CDMException
      */
     public abstract void init(DataComponent blockComponent, BinaryBlock binaryBlock) throws CDMException;
+    
+    
+    /**
+     * Reads compressed data from input stream and assigns result to the component data block
+     * @param inputStream
+     * @param blockComponent
+     * @throws CDMException
+     */
+    public abstract void decode(DataInputExt inputStream, DataComponent blockComponent) throws CDMException;
 
 }
