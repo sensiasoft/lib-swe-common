@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.vast.opengis</groupId>
+  <artifactId>sensorml-all</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+  <name>SensorML Library</name>
+  <url>http://code.google.com/p/sensorml-data-processing/</url>
+  <description>Java bindings and associated data processing framework for the SensorML language</description>
+  <organization>
+     <name>VAST Team / Sensia Software LLC</name>
+     <url>http://www.sensiasoftware.com</url>
+  </organization>
+  <scm>
+     <url>http://sensorml-data-processing.googlecode.com/svn/</url>
+     <connection>SVN DAV</connection>
+     <developerConnection>Alexandre Robin</developerConnection>
+  </scm>
+  <issueManagement>
+     <url>http://code.google.com/p/sensorml-data-processing/issues/list</url>
+     <system>Google Code</system>
+  </issueManagement>
+  <modules>
+     <module>../sensorml-core</module>
+  </modules>
+  <dependencies>
+     <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+     </dependency>
+     <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.3</version>
+     </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
