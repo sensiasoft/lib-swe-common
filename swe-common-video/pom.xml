@@ -6,4 +6,30 @@
     <version>1.0</version>
   </parent>
   <artifactId>swe-common-video</artifactId>
+  <dependencies>
+     <dependency>
+        <groupId>org.vast.opengis</groupId>
+        <artifactId>swe-common-core</artifactId>
+        <version>1.0</version>
+     </dependency>
+     <dependency>
+        <groupId>org.jj2000</groupId>
+        <artifactId>jj2000</artifactId>
+        <version>5.1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/jj2000-5.1.jar</systemPath>
+     </dependency>
+     <dependency>
+        <groupId>net.jffmpeg</groupId>
+        <artifactId>jffmpeg</artifactId>
+        <version>1.1.0</version>
+        <scope>system</scope>
+        <systemPath>${project.basedir}/lib/jffmpeg-1.1.0.jar</systemPath>
+     </dependency>
+     <dependency>
+        <groupId>javax.media</groupId>
+        <artifactId>jmf</artifactId>
+        <version>2.1.1e</version>
+     </dependency>
+  </dependencies>
 </project>
