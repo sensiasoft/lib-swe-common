@@ -65,7 +65,7 @@ public class TestDecompression
     }
     
     
-    @Test
+    //@Test
     public void testJP2KDecompression() throws Exception {
     	InputStream is = getClass().getResourceAsStream("/file1.jp2");
     	RandomAccessIO raio = new ISRandomAccessIO(is);

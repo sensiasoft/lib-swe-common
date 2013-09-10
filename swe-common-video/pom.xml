@@ -4,6 +4,7 @@
     <groupId>org.vast.opengis</groupId>
     <artifactId>swe-common-all</artifactId>
     <version>1.0</version>
+    <relativePath>../swe-common-all/pom.xml</relativePath>
   </parent>
   <artifactId>swe-common-video</artifactId>
   <dependencies>

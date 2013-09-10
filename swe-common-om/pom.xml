@@ -4,6 +4,7 @@
     <groupId>org.vast.opengis</groupId>
     <artifactId>swe-common-all</artifactId>
     <version>1.0</version>
+    <relativePath>../swe-common-all/pom.xml</relativePath>
   </parent>
   <artifactId>swe-common-om</artifactId>
   <description>Implementation of O&amp;M standard using SWE Common as result format</description>
@@ -17,6 +18,11 @@
         <groupId>com.vividsolutions</groupId>
         <artifactId>jts</artifactId>
         <version>1.13</version>
+     </dependency>
+     <dependency>
+        <groupId>java3d</groupId>
+        <artifactId>vecmath</artifactId>
+        <version>1.3.1</version>
      </dependency>
   </dependencies>
 </project>
