@@ -4,6 +4,37 @@
   <artifactId>swe-common-all</artifactId>
   <version>1.0</version>
   <packaging>pom</packaging>
+  <name>SWE Common Data Framework</name>
+  <url>http://code.google.com/p/swe-common-data-framework/</url>
+  <description>Java bindings and associated data components for the SWE Common Data Model language</description>
+  <licenses>
+    <license>
+      <name>Mozilla Public License Version 1.1</name>
+      <url>http://www.mozilla.org/MPL/1.1/</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <organization>
+     <name>VAST Team / Sensia Software LLC</name>
+     <url>http://www.sensiasoftware.com</url>
+  </organization>
+  <developers>
+    <developer>
+      <id>alex.robin</id>
+      <name>Alexandre Robin</name>
+      <email>nospam@mydomain.com</email>
+    </developer>
+  </developers>
+  <scm>
+     <url>http://code.google.com/p/swe-common-data-framework/source/browse/</url>
+     <connection>scm:svn:http://swe-common-data-framework.googlecode.com/svn/</connection>
+     <tag>HEAD</tag>
+     <developerConnection>scm:svn:https://swe-common-data-framework.googlecode.com/svn/</developerConnection>
+  </scm>
+  <issueManagement>
+     <system>Google Code</system>
+     <url>http://code.google.com/p/swe-common-data-framework/issues/list</url>
+  </issueManagement>
   <modules>
      <module>../swe-common-core</module>
      <module>../swe-common-om</module>
@@ -33,22 +64,14 @@
           <target>1.6</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <configuration>
+            <show>public</show>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-  <name>SWE Common Data Framework</name>
-  <url>http://code.google.com/p/swe-common-data-framework/</url>
-  <scm>
-     <url>http://swe-common-data-framework.googlecode.com/svn/</url>
-     <connection>SVN DAV</connection>
-     <developerConnection>Alexandre Robin</developerConnection>
-  </scm>
-  <issueManagement>
-     <system>Google Code</system>
-     <url>http://code.google.com/p/swe-common-data-framework/issues/list</url>
-  </issueManagement>
-  <description>Java bindings and associated data components for the SWE Common Data Model language</description>
-  <organization>
-     <name>VAST Team / Sensia Software LLC</name>
-     <url>http://www.sensiasoftware.com</url>
-  </organization>
 </project>
