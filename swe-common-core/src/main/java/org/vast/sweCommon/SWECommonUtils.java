@@ -55,7 +55,7 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
 	public final static String SWECOMMON = "SWECommon";
     public final static String DATACOMPONENT = "DataComponent";
     public final static String DATAENCODING = "DataEncoding";
-    private String version = "1.0";
+    private String version = "2.0";
     private boolean versionChanged;
     private DOMHelper previousDom;
     private DataComponentReader componentReader = null;

@@ -434,7 +434,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
             eltName = "swe:Time";
         else if (dataValue.getDataType() == DataType.BOOLEAN)
             eltName = "swe:Boolean";
-        else if (dataValue.getDataType() == DataType.DOUBLE || dataValue.getDataType() == DataType.FLOAT)
+        else if (dataValue.getDataType() == DataType.DOUBLE || dataValue.getDataType() == DataType.FLOAT || hasUom(dataValue))
             eltName = "swe:Quantity";
         else if (dataValue.getDataType() == DataType.ASCII_STRING || dataValue.getDataType() == DataType.UTF_STRING)
             eltName = "swe:Category";
@@ -442,6 +442,21 @@ public class SweComponentWriterV20 implements DataComponentWriter
             eltName = "swe:Count";
         
         return eltName;
+    }
+    
+    
+    private boolean hasUom(DataValue dataValue)
+    {
+        if (dataValue.getProperty(SweConstants.UOM_CODE) != null)
+            return true;
+        
+        if (dataValue.getProperty(SweConstants.UOM_URI) != null)
+            return true;
+        
+        if (dataValue.getProperty(SweConstants.UOM_OBJ) != null)
+            return true;
+        
+        return false;
     }
     
     
