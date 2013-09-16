@@ -28,18 +28,14 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b>
- * Decompression Registry
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This class allows to keep track of what classes to use
  * to decompress streams, e.g. JPEG, JPEG2K... 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
- * @date Sep 15, 2008
+ * @since Sep 15, 2008
  * @version 1.0
  */
 public class DecompressionRegistry

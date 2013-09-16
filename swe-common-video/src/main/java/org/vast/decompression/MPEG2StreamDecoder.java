@@ -41,17 +41,13 @@ import org.vast.data.DataValue;
 
 
 /**
- * <p><b>Title:</b>
- * MPEG2 Stream Decoder
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Decoder used by the BinaryDataParser to decode a binary block compressed in MPEG2.
  * </p>
  *
  * <p>Copyright (c) 2010</p>
  * @author Alexandre Robin
- * @date Oct 16, 2009
+ * @since Oct 16, 2009
  * @version 1.0
  */
 public class MPEG2StreamDecoder implements CompressedStreamParser

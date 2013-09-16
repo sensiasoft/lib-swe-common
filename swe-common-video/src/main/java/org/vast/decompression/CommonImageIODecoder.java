@@ -23,18 +23,14 @@ import org.vast.data.DataValue;
 
 
 /**
- * <p><b>Title:</b>
- * CommonImageDecoder
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * decoder to be used by the BinaryDataParser to decode a binary block 
  * that is compressed in JPEG and TIFF, PNG, ... 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
- * @date Jul 16, 2008
+ * @since Jul 16, 2008
  * @version 1.0
  */
 public class CommonImageIODecoder implements CompressedStreamParser
