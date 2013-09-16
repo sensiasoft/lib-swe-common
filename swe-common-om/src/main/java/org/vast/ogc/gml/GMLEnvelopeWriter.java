@@ -44,22 +44,18 @@ public class GMLEnvelopeWriter
     private NumberFormat idFormatter;
     
     
-    public GMLEnvelopeWriter()
-    {    	
+    public GMLEnvelopeWriter(String version)
+    {
+        this(version, 1);
     }
     
     
-    public GMLEnvelopeWriter(int firstId)
+    public GMLEnvelopeWriter(String version, int firstId)
     {
+        gmlNsUri = OGCRegistry.getNamespaceURI(OGCRegistry.GML, version);
         currentId = firstId;
         idFormatter = NumberFormat.getNumberInstance();
         idFormatter.setMinimumIntegerDigits(3);
-    }
-    
-    
-    public void setGmlVersion(String gmlVersion)
-    {    	
-        gmlNsUri = OGCRegistry.getNamespaceURI(OGCRegistry.GML, gmlVersion);
     }
     
         

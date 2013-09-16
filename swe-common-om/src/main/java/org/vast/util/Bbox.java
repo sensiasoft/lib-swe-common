@@ -64,6 +64,20 @@ public class Bbox extends SpatialExtent
     }
 	
 	
+	public Bbox(double minX, double minY, double maxX, double maxY, String crs)
+    {
+        this(minX, minY, maxX, maxY);
+        this.crs = crs;
+    }
+    
+    
+    public Bbox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, String crs)
+    {
+        this(minX, minY, minZ, maxX, maxY, maxZ);
+        this.crs = crs;
+    }
+	
+	
 	@Override
     public Bbox copy()
     {
@@ -75,5 +89,12 @@ public class Bbox extends SpatialExtent
         bbox.setMaxY(this.maxY);
         bbox.setMaxZ(this.maxZ);
         return bbox;
+    }
+
+
+	@Override
+    public boolean equals(Object obj)
+    {
+	    return super.equals(obj);
     }
 }

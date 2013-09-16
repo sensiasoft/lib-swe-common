@@ -64,8 +64,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     
     public ObservationWriterV20()
     {
-        timeWriter = new GMLTimeWriter();
-        timeWriter.setGmlVersion(GML_VERSION);
+        timeWriter = new GMLTimeWriter(GML_VERSION);
         featureWriter = new GMLFeatureWriter();
         featureWriter.setGmlVersion(GML_VERSION);
         sweWriter = new SweComponentWriterV20(true);

@@ -22,7 +22,6 @@ package org.vast.ogc.gml;
 
 import java.text.NumberFormat;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.XMLWriterException;
 import org.vast.ogc.OGCRegistry;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.TimeExtent;
@@ -47,15 +46,16 @@ public class GMLTimeWriter
     private NumberFormat idFormatter;
     
     
-    public GMLTimeWriter()
+    public GMLTimeWriter(String gmlVersion)
     {
-        this(1);
+        this(gmlVersion, 1);        
     }
     
     
-    public GMLTimeWriter(int firstId)
+    public GMLTimeWriter(String gmlVersion, int firstId)
     {
         now = System.currentTimeMillis() / 1000;
+        gmlNsUri = OGCRegistry.getNamespaceURI(OGCRegistry.GML, gmlVersion);
         
         currentId = firstId;
         idFormatter = NumberFormat.getNumberInstance();
@@ -63,14 +63,8 @@ public class GMLTimeWriter
         idFormatter.setGroupingUsed(false);
     }
     
-    
-    public void setGmlVersion(String gmlVersion)
-    {       
-        gmlNsUri = OGCRegistry.getNamespaceURI(OGCRegistry.GML, gmlVersion);
-    }
-    
         
-    public Element writeTime(DOMHelper dom, TimeExtent timeInfo) throws XMLWriterException
+    public Element writeTime(DOMHelper dom, TimeExtent timeInfo)
     {
     	dom.addUserPrefix("gml", gmlNsUri);
     	

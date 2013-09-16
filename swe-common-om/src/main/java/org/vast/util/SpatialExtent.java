@@ -218,6 +218,8 @@ public class SpatialExtent
      */
     public boolean intersects(SpatialExtent bbox)
     {
+        checkCrs(bbox);
+        
         double bboxX1 = bbox.getMinX();
         double bboxX2 = bbox.getMaxX();
         double bboxY1 = bbox.getMinY();
@@ -248,6 +250,8 @@ public class SpatialExtent
      */
     public boolean contains(SpatialExtent bbox)
     {
+        checkCrs(bbox);
+        
         double bboxX1 = bbox.getMinX();
         double bboxX2 = bbox.getMaxX();
         double bboxY1 = bbox.getMinY();
@@ -294,6 +298,32 @@ public class SpatialExtent
         if (crs != null && bbox.crs != null)
             if (!crs.equals(bbox.crs))
                 throw new IllegalStateException("CRS must match");
+    }
+    
+    
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof SpatialExtent))
+            return false;
+        
+        SpatialExtent otherBbox = (SpatialExtent)obj;
+        if  ((crs != null && otherBbox.crs == null) || (crs == null && otherBbox.crs != null))
+            return false;
+            
+        if  (crs != null && otherBbox.crs != null && !crs.equals(otherBbox.crs))
+            return false;
+        
+        if  (minX != otherBbox.minX || maxX != otherBbox.maxX)
+            return false;
+        
+        if  (minY != otherBbox.minY || maxY != otherBbox.maxY)
+            return false;
+        
+        if  (minZ != otherBbox.minZ || maxZ != otherBbox.maxZ)
+            return false;
+        
+        return true;
     }
     
     
@@ -381,8 +411,25 @@ public class SpatialExtent
 	}
 	
 	
-	public String toString()
+	@Override
+    public String toString()
 	{
-		return minX + "," + minY + " - " + maxX + "," + maxY;
+		StringBuilder buf = new StringBuilder();
+		buf.append(minX);
+		buf.append(',');
+		buf.append(minY);
+        buf.append(" - ");
+        buf.append(maxX);
+        buf.append(',');
+        buf.append(maxY);
+        
+        if (crs != null)
+        {
+            buf.append(" (");
+            buf.append(crs);
+            buf.append(')');
+        }
+        
+        return buf.toString();
 	}
 }
