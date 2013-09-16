@@ -16,18 +16,14 @@ import org.vast.cdm.common.CompressedStreamWriter;
 
 
 /**
- * <p><b>Title:</b>
- * ICodecFactory
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for SWE Common codec factories.
  * These factories are meant to be discovered via the java services mechanism
  * </p>
  *
  * <p>Copyright (c) 2013</p>
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
- * @date Sep 9, 2013
+ * @since Sep 9, 2013
  */
 public interface ICodecFactory
 {

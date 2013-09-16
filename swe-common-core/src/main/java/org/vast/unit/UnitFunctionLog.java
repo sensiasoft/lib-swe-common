@@ -22,18 +22,14 @@ package org.vast.unit;
 
 
 /**
- * <p><b>Title:</b>
- * Log Unit Function
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Implementation of the base 10 logarithm function for special units
  * such as B, B[SPL], B[V], etc...
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 10, 2007
+ * @since Feb 10, 2007
  * @version 1.0
  */
 public class UnitFunctionLog extends UnitFunction

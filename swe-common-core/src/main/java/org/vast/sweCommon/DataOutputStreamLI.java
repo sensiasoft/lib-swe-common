@@ -27,18 +27,14 @@ import org.vast.cdm.common.DataOutputExt;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Output Stream for Little Endian
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Equivalent of DataOutputStream to write in little endian order
  * (i.e Least Significant Byte first)
  * </p>
  *
  * <p>Copyright (c) 2009</p>
  * @author Alexandre Robin
- * @date Jan 10, 2009
+ * @since Jan 10, 2009
  * @version 1.0
  */
 public class DataOutputStreamLI extends FilterOutputStream implements DataOutputExt

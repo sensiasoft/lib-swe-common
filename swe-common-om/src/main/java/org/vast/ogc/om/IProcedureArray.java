@@ -25,17 +25,13 @@ package org.vast.ogc.om;
 
 
 /**
- * <p><b>Title:</b>
- * IProcedureArray
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for arrays of procedures (homogeneous or not)
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 30, 2012
+ * @since Sep 30, 2012
  * @version 1.0
  */
 public interface IProcedureArray extends IProcedure

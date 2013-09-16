@@ -27,17 +27,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * GML Unit Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO GMLUnitReader type description
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 9, 2007
+ * @since Feb 9, 2007
  * @version 1.0
  */
 public class GMLUnitReader

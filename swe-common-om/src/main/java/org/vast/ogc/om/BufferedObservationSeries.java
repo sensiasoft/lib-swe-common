@@ -36,18 +36,14 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b>
- * Buffered Observation Series
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Implementation of IObservationSeries whose data is stored entirely in memory
  * and is fully mutable. Data is stored internally using a DataList object.
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Aug 20, 2012
+ * @since Aug 20, 2012
  * @version 1.0
  */
 public class BufferedObservationSeries extends FeatureImpl implements IObservationSeries

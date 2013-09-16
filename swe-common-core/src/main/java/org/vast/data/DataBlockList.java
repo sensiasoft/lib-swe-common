@@ -30,11 +30,7 @@ import org.vast.cdm.common.DataType;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Block List
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Uses the composite pattern to hold a list of child DataBlocks.
  * This class also implements the DataBlock interface. 
  * </p>

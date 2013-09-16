@@ -26,17 +26,13 @@ import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataConstraint;
 
 /**
- * <p><b>Title:</b><br/>
- * EnumNumberConstraint
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 3 janv. 08
+ * @since 3 janv. 08
  * @version 1.0
  */
 public class EnumNumberConstraint implements DataConstraint

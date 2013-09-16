@@ -32,17 +32,13 @@ import org.vast.cdm.common.DataComponent;
 
 
 /**
- * <p><b>Title:</b>
- * IDataConsumer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for consuming a stream of CDM data objects.
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface IDataConsumer

@@ -28,17 +28,13 @@ import org.vast.sweCommon.SWEReader;
 
 
 /**
- * <p><b>Title:</b>
- * Observation Stream Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Base interface for Streaming Observation Readers of all versions
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date May 22, 2008
+ * @since May 22, 2008
  * @version 1.0
  */
 public abstract class ObservationStreamReader extends SWEReader

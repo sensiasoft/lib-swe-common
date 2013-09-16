@@ -22,17 +22,13 @@ package org.vast.util;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Message System
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO MessageHandler type description
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Apr 28, 2006
+ * @since Apr 28, 2006
  * @version 1.0
  */
 public class ExceptionSystem

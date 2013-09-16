@@ -22,11 +22,7 @@ package org.vast.math;
 
 
 /**
- * <p><b>Title:</b>
- * Matrix4d
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Matrix specialization for a 4d homogeneous matrix.
  * Extends from javax.vecmath.Matrix4d and adds additional optimized
  * math routines for 3D transformations.
@@ -34,7 +30,7 @@ package org.vast.math;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Jul 19, 2006
+ * @since Jul 19, 2006
  * @version 1.0
  */
 public class Matrix4d extends javax.vecmath.Matrix4d

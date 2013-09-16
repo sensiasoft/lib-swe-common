@@ -27,11 +27,7 @@ import org.vast.cdm.common.DataInputExt;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Input Stream for Big Endian
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Extension of DataInputStream to support reading unsigned int and long
  * values as well as ASCII (0 terminated) strings from byte stream.
  * This is for big endian order (i.e. Most Significant Byte first)
@@ -39,7 +35,7 @@ import org.vast.cdm.common.DataInputExt;
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 28, 2005
+ * @since Nov 28, 2005
  * @version 1.0
  */
 public class DataInputStreamBI extends DataInputStream implements DataInputExt

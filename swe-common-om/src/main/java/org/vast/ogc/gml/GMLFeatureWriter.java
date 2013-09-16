@@ -36,18 +36,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * GMLFeatureWriter
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer for generic feature.
  * This class can serialize simple properties of type Boolean, Number, String or Date.
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Nov 18, 2012
+ * @since Nov 18, 2012
  * @version 1.0
  */
 public class GMLFeatureWriter implements IXMLWriterDOM<IFeature>

@@ -27,18 +27,14 @@ import org.vast.ogc.gml.FeatureRef;
 
 
 /**
- * <p><b>Title:</b>
- * ProcedureRef
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Wrapper class for use when an IProcedure object is or can be included by reference.
  * This enables fetching and instantiating the target object lazily.
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public class ProcedureRef extends FeatureRef implements IProcedure

@@ -22,17 +22,13 @@ package org.vast.data;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Indexer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Abstract base class for all Data Indexers
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Apr 4, 2006
+ * @since Apr 4, 2006
  * @version 1.0
  */
 public abstract class DataIndexer

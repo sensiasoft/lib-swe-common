@@ -25,11 +25,7 @@ import org.vast.cdm.common.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SWE Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Abstract class for all CDM readers.
  * This class provides methods to parse any XML document
  * containing CDM data structure, encoding and stream sections.
@@ -43,7 +39,7 @@ import org.vast.cdm.common.*;
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
- * @date Aug 16, 2005
+ * @since Aug 16, 2005
  * @version 1.0
  */
 public abstract class SWEReader implements InputStreamProvider

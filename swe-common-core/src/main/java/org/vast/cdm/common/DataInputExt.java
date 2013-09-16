@@ -25,18 +25,14 @@ import java.io.IOException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Input Interface Extension
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Extension of DataInputStream to support reading unsigned int and long
  * values as well as ASCII (0 terminated) strings from byte stream.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 28, 2005
+ * @since Nov 28, 2005
  * @version 1.0
  */
 public interface DataInputExt extends DataInput

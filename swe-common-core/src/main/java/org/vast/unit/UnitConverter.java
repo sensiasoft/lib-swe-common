@@ -22,17 +22,13 @@ package org.vast.unit;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Unit Converter Interface
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  * 
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Sep 19, 2005
+ * @since Sep 19, 2005
  * @version 1.0
  */
 public interface UnitConverter

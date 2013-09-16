@@ -32,17 +32,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * GMLGeometryWriter
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writer for GML geometries
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Nov 26, 2012
+ * @since Nov 26, 2012
  * @version 1.0
  */
 public class GMLGeometryWriter

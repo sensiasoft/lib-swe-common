@@ -24,11 +24,7 @@ import org.vast.cdm.common.DataType;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Block Tuple
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Uses the composite pattern to carry a fixed size array
  * of mixed types DataBlocks. If dynamic size is needed, use DataBlockList.
  * Children datablocks will be read in parallel. Designed specifically for

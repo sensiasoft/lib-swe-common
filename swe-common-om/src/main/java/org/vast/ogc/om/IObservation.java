@@ -33,17 +33,13 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b>
- * IObservation
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for an Observation as defined by the O&M standard
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface IObservation extends IFeature

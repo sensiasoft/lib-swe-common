@@ -22,11 +22,7 @@ package org.vast.cdm.common;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Stream Demultiplexer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Concrete implementations of this interface are responsible for
  * registering a DataStreamParser for each type of cluster. Thus
  * a given parser will be used for a given cluster ID.

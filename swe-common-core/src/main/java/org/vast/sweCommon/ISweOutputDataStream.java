@@ -31,18 +31,14 @@ import org.vast.cdm.common.IDataConsumer;
 
 
 /**
- * <p><b>Title:</b>
- * ISweOutputDataStream
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for writing data to a SWE Common encoded data stream.
  * Implementations of this class can buffer or write directly to live streams.
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface ISweOutputDataStream extends IDataConsumer

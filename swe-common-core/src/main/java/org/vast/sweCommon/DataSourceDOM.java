@@ -31,11 +31,7 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DataSourceXML
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This DataSource allows to extract data from an XML DOM tree and
  * simulate an inputstream so that a low level parser can parse the
  * content using the common DataStreamParser interface.
@@ -43,7 +39,7 @@ import org.w3c.dom.Element;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Feb, 28 2008
+ * @since Feb, 28 2008
  * @version 1.0
  */
 public class DataSourceDOM implements DataSource

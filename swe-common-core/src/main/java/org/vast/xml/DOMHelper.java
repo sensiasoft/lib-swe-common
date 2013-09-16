@@ -33,18 +33,14 @@ import java.util.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DOM Helper
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO DOMHelper description
  * TODO try to avoid calls to xerces specific classes
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 3, 2005
+ * @since Nov 3, 2005
  * @version 1.0
  */
 public class DOMHelper

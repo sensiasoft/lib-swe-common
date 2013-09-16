@@ -25,18 +25,14 @@ import java.util.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Date Time Formater
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Formatter for Date and Time quantities.
  * Contains helper routines to convert to and from ISO8601
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 29, 2005
+ * @since Nov 29, 2005
  * @version 1.0
  */
 public class DateTimeFormat extends SimpleDateFormat

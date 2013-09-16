@@ -28,11 +28,7 @@ import org.vast.cdm.common.DataComponent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data List
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Growable List of identical DataComponents.
  * Each new cluster of data must comply to the DataList component
  * structure. Data clusters are stored using a DataBlockList so

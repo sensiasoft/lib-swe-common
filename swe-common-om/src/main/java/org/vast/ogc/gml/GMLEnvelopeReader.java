@@ -28,17 +28,13 @@ import org.w3c.dom.NodeList;
 
 
 /**
- *  * <p><b>Title:</b>
- * GML Envelope Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ *  * <p>
  * Reads GML envelope (coords + CRS)
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 25, 2006
+ * @since Oct 25, 2006
  * @version 1.0
  */
 public class GMLEnvelopeReader

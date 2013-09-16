@@ -22,17 +22,13 @@ package org.vast.ogc;
 
 
 /**
- * <p><b>Title:</b>
- * Request Type
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Enumeration for different OGC request types
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 2, 2007
+ * @since Feb 2, 2007
  * @version 1.0
  */
 public enum RequestType

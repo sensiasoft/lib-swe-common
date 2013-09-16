@@ -26,17 +26,13 @@ import java.util.Hashtable;
 
 
 /**
- * <p><b>Title:</b><br/>
- * NilValues
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 12 Dec. 08
+ * @since 12 Dec. 08
  * @version 1.0
  */
 public class NilValues

@@ -25,11 +25,7 @@ import java.net.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * URI Resolver
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * URI Resolver uses local mapping file or DNS servers
  * to resolve a URI to a URL, or simply uses the URL
  * class if the URI is already a URL.
@@ -37,7 +33,7 @@ import java.net.*;
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Aug 19, 2005
+ * @since Aug 19, 2005
  * @version 1.0
  */
 public class URIResolver

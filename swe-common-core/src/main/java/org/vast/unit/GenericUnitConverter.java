@@ -22,18 +22,14 @@ package org.vast.unit;
 
 
 /**
- *  * <p><b>Title:</b><br/>
- * Scale Unit Converter
- * </p>
- *
- * <p><b>Description:</b><br/>
+ *  * <p>
  * Can convert anyone unit to another by using a single scale factor
  * and custom functions.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date May 4, 2006
+ * @since May 4, 2006
  * @version 1.0
  */
 public class GenericUnitConverter extends AbstractUnitConverter

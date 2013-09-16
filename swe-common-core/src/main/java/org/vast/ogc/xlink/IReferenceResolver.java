@@ -25,18 +25,14 @@ package org.vast.ogc.xlink;
 
 
 /**
- * <p><b>Title:</b>
- * IReferenceResolver
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for resolving a URI to an object instance obtained from data
  * referenced from an XlinkReference object.
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface IReferenceResolver<TargetType>

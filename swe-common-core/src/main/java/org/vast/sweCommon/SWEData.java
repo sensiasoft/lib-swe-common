@@ -37,18 +37,14 @@ import org.vast.data.DataList;
 
 
 /**
- * <p><b>Title:</b>
- * SWE Data
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Implementation of SWE input/output data stream storing data in memory,
  * This class also contains methods for parsing/writing the stored data.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 21, 2007
+ * @since Feb 21, 2007
  * @version 1.0
  */
 public class SWEData implements ISweInputDataStream, ISweOutputDataStream

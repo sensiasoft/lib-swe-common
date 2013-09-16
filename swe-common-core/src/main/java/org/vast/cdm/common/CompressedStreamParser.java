@@ -25,17 +25,13 @@ package org.vast.cdm.common;
 
 
 /**
- * <p><b>Title:</b>
- * Compressed Stream Parser
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for all SWE compressed block decoders
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
- * @date Oct 17, 2009
+ * @since Oct 17, 2009
  * @version 1.0
  */
 public interface CompressedStreamParser

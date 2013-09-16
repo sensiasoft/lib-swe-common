@@ -26,11 +26,7 @@ import org.w3c.dom.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Encoding XML Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Concrete implementations of this interface are responsible for
  * parsing an XML element containing data encoding parameters
  * as specified in the schema and create the appropriate DataEncoding

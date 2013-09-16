@@ -30,17 +30,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
 /**
- * <p><b>Title:</b><br/>
- * DataSink DOM
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 6 oct. 2008
+ * @since 6 oct. 2008
  * @version 1.0
  */
 public class DataSinkDOM implements DataSink

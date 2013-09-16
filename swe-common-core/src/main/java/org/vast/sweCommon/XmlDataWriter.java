@@ -32,18 +32,14 @@ import org.vast.cdm.common.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * XML Data Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writes CDM XML data stream using the given data components
  * structure and encoding information.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
- * @date Feb 29, 2008
+ * @since Feb 29, 2008
  * @version 1.0
  */
 public class XmlDataWriter extends AbstractDataWriter

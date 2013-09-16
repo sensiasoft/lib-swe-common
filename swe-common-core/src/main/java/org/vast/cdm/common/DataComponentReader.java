@@ -26,11 +26,7 @@ import org.w3c.dom.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Components XML Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Concrete implementations of this interface are responsible for
  * parsing an XML element containing data components description
  * as specified in the schema and create the appropriate DataComponents

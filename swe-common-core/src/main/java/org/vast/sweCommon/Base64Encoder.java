@@ -24,11 +24,7 @@ import java.io.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Base64 Encoder
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Filter Stream used to encode binary data from output stream
  * to a base64 stream. This is inspired from Apache Jakarta
  * Commons Base64 encoder/decoder class.  
@@ -36,7 +32,7 @@ import java.io.*;
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 14, 2006
+ * @since Feb 14, 2006
  * @version 1.0
  */
 public class Base64Encoder extends FilterOutputStream

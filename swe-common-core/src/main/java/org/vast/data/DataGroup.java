@@ -28,11 +28,7 @@ import org.vast.cdm.common.DataType;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DataGroup Component
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Heterogeneous list of DataComponents (DataGroup)
  * </p>
  *

@@ -29,11 +29,7 @@ import org.vast.cdm.common.EncodingInfo;
 
 
 /**
- * <p><b>Title:</b><br/>
- * AbstractDataComponent
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Abstract DataComponent base
  * </p>
  *

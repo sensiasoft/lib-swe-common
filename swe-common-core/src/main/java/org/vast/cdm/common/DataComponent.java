@@ -24,11 +24,7 @@ import java.util.List;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Component
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Implementation of this class should store information relative
  * to the component structure of the data. (see swe:dataComponents).
  * It should give access to information such as component names, units,
@@ -37,7 +33,7 @@ import java.util.List;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 30, 2005
+ * @since Nov 30, 2005
  * @version 1.0
  */
 public interface DataComponent extends Cloneable

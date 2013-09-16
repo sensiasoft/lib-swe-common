@@ -29,18 +29,14 @@ import org.vast.sweCommon.SweConstants;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Param Helper
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides helper methods to access components by name,
  * definition, full path, etc...
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Mar, 11 2008
+ * @since Mar, 11 2008
  * @version 1.0
  */
 public class ParamHelper

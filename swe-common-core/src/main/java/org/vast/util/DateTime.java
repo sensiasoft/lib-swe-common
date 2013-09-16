@@ -25,17 +25,13 @@ import java.util.Date;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Date Time
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Extension of java Date to provide julian time output as a double.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 29, 2005
+ * @since Nov 29, 2005
  * @version 1.0
  */
 public class DateTime extends Date

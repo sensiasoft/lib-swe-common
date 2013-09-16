@@ -43,17 +43,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * Observation Writer V2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Observation Writer for O&M version 2.0
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Sep 30, 2012
+ * @since Sep 30, 2012
  * @version 1.0
  */
 public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>

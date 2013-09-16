@@ -24,18 +24,14 @@ import org.vast.cdm.common.DataType;
 
 
 /**
- * <p><b>Title:</b><br/>
- * String Data Block
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Carries an array of String objects.
  * All data is casted to other types when requested.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 23, 2005
+ * @since Nov 23, 2005
  * @version 1.0
  */
 public class DataBlockString extends AbstractDataBlock

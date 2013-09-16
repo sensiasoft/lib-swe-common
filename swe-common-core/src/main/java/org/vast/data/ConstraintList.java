@@ -26,17 +26,13 @@ import org.vast.cdm.common.DataConstraint;
 
 
 /**
- * <p><b>Title:</b>
- * ConstraintList
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * List of constraints for a given field in SWE Common
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 7, 2007
+ * @since Feb 7, 2007
  * @version 1.0
  */
 public class ConstraintList extends ArrayList<DataConstraint> implements DataConstraint

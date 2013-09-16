@@ -36,18 +36,14 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SWE Encoding Reader v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reads SWE Encoding definition for ASCIIBlock and BinaryBlock.
  * This is for version 1 of the SWECommon standard.
  * </p>
  *
  * <p>Copyright (c) 2006</p>
  * @author Alexandre Robin
- * @date Dec 19, 2006
+ * @since Dec 19, 2006
  * @version 1.0
  */
 public class SweEncodingReaderV1 implements DataEncodingReader

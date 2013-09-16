@@ -39,18 +39,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * OM Utils
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provides Helper methods to read and write O&M observations
  * in a version agnostic manner.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 22, 2007
+ * @since Feb 22, 2007
  * @version 1.0
  */
 public class OMUtils

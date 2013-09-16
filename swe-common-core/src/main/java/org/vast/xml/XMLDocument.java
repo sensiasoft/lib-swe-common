@@ -37,17 +37,13 @@ import java.net.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * XML Document
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO XMLDocument type description
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 3, 2005
+ * @since Nov 3, 2005
  * @version 1.0
  */
 public class XMLDocument
@@ -367,7 +363,7 @@ public class XMLDocument
         }
         catch (Exception e)
         {
-            throw new IllegalStateException("Impossible to initilize DOM implementation for serialization");
+            throw new IllegalStateException("Impossible to initilize DOM implementation for serialization", e);
         }
     }
     

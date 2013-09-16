@@ -24,11 +24,7 @@ import org.vast.cdm.common.DataType;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Unsigned Byte Data Block
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Carries an array of byte primitives.
  * All data is casted to other types when requested and in a way
  * that returns unsigned values even for values > 2^7
@@ -36,7 +32,7 @@ import org.vast.cdm.common.DataType;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 23, 2005
+ * @since Nov 23, 2005
  * @version 1.0
  */
 public class DataBlockUByte extends AbstractDataBlock

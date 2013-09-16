@@ -29,17 +29,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * GML Time Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reads GML Time Primitive structures.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Sep 01, 2006
+ * @since Sep 01, 2006
  * @version 1.0
  */
 public class GMLTimeReader

@@ -25,18 +25,14 @@ import java.io.IOException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Output Interface Extension
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Extension of DataOutputStream to support writing unsigned byte,
  * short, int and long values as well as ASCII (0 terminated) strings.
  * </p>
  *
  * <p>Copyright (c) 2009</p>
  * @author Alexandre Robin
- * @date Jan 10, 2009
+ * @since Jan 10, 2009
  * @version 1.0
  */
 public interface DataOutputExt extends DataOutput

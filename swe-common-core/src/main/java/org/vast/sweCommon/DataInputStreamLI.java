@@ -29,18 +29,14 @@ import org.vast.cdm.common.DataInputExt;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Input Stream for Little Endian
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Equivalent of DataInputStream to read little endian ordered streams
  * (i.e. Lower Significant Byte first)
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 28, 2005
+ * @since Nov 28, 2005
  * @version 1.0
  */
 public class DataInputStreamLI extends FilterInputStream implements DataInputExt

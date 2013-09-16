@@ -25,18 +25,14 @@ package org.vast.cdm.common;
 
 
 /**
- * <p><b>Title:</b>
- * EncodingInfo
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Tagging interface for all types of encoding info
  * that can be associated to a data component
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
- * @date Jan 16, 2009
+ * @since Jan 16, 2009
  * @version 1.0
  */
 public interface EncodingInfo

@@ -36,18 +36,14 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SWE Data Component Writer v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writes CDM Components structures including DataValue,
  * DataGroup, DataArray to an XML DOM tree. 
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 10, 2006
+ * @since Feb 10, 2006
  * @version 1.0
  */
 public class SweComponentWriterV1 implements DataComponentWriter

@@ -22,11 +22,7 @@ package org.vast.cdm.common;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Block
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Implementations of this class should be able to carry data
  * for any part of the data cluster defined in the DataDefinition
  * part of the Common Data Model. It should provide access to any
@@ -41,7 +37,7 @@ package org.vast.cdm.common;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Aug 14, 2005
+ * @since Aug 14, 2005
  * @version 1.0
  */
 public interface DataBlock extends Cloneable

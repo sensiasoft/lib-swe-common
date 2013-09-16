@@ -27,17 +27,13 @@ import org.vast.data.ScalarIterator;
 
 
 /**
- * <p><b>Title:</b>
- * BinaryEncoding
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO BinaryEncoding type description
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Dec 20, 2006
+ * @since Dec 20, 2006
  * @version 1.0
  */
 public class BinaryEncoding implements DataEncoding, Serializable

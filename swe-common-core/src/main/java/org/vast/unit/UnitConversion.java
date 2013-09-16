@@ -22,18 +22,14 @@ package org.vast.unit;
 
 
 /**
- * <p><b>Title:</b>
- * Unit Conversion Routines
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This object contains routines to create UnitConverters and
  * manage a local dictionary of units.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date May 4, 2006
+ * @since May 4, 2006
  * @version 1.0
  */
 public class UnitConversion

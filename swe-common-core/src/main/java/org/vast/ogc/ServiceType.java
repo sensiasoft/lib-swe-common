@@ -22,17 +22,13 @@ package org.vast.ogc;
 
 
 /**
- * <p><b>Title:</b>
- * Service Type
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Enumeration for all supported OGC service types
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 2, 2007
+ * @since Feb 2, 2007
  * @version 1.0
  */
 public enum ServiceType

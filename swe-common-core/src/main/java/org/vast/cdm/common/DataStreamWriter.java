@@ -25,9 +25,7 @@ import java.io.OutputStream;
 
 
 /**
- * <p><b>Title:</b><br/> DataWriter</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Concrete implementations of this interface are responsible for
  * writing data using the specified encoding format and data components.
  * Result data should be written in the outputStream.

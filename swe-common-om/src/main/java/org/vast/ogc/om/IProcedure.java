@@ -27,17 +27,13 @@ import org.vast.ogc.gml.IFeature;
 
 
 /**
- * <p><b>Title:</b>
- * IProcedure
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for all procedure implementations
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface IProcedure extends IFeature

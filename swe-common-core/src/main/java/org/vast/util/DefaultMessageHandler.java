@@ -22,18 +22,14 @@ package org.vast.util;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Default Message Handler
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Default message handler prints messages to System.out
  * or System.err if error is true.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Apr 29, 2006
+ * @since Apr 29, 2006
  * @version 1.0
  */
 public class DefaultMessageHandler implements MessageHandler

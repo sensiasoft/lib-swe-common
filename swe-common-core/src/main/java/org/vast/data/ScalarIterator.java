@@ -26,18 +26,14 @@ import org.vast.cdm.common.DataComponent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * ScalarIterator
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Iterates through scalar component definitions only.
  * This does not iterate through each array value.
  * </p>
  *
  * <p>Copyright (c) 2010</p>
  * @author Alexandre Robin
- * @date Apr 21, 2010
+ * @since Apr 21, 2010
  * @version 1.0
  */
 public class ScalarIterator extends DataIterator

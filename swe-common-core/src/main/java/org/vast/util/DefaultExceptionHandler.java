@@ -21,17 +21,13 @@
 package org.vast.util;
 
 /**
- * <p><b>Title:</b><br/>
- * Default Exception Handler
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Default exception handler prints exception stack to System.err 
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Apr 29, 2006
+ * @since Apr 29, 2006
  * @version 1.0
  */
 public class DefaultExceptionHandler implements ExceptionHandler

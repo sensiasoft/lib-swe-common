@@ -25,11 +25,7 @@ import java.io.OutputStream;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Stream Provider
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provide a direct access to an output stream for writing CDM data.
  * It can typically be an out of band stream, a URI stream, a string
  * buffer or an XML element.

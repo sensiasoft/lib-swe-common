@@ -39,18 +39,14 @@ import org.w3c.dom.*;
 
 
 /**
- * <p><b>Title:</b>
- * SOSResponseReaderV10
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Streaming reader for OM V1.0 responses with a result expressed in SWE Common.
  * This won't deal with Observation Collections properly.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
- * @date May 22, 2008
+ * @since May 22, 2008
  * @version 1.0
  */
 public class ObservationStreamReaderV10 extends ObservationStreamReader

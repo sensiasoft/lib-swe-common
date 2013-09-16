@@ -28,11 +28,7 @@ import org.vast.cdm.common.BinaryEncoding.ByteEncoding;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Binary Data Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writes CDM binary data stream using the given data components
  * structure and binary encoding information. This supports raw
  * binary and base64 for now.
@@ -40,7 +36,7 @@ import org.vast.cdm.common.BinaryEncoding.ByteEncoding;
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin & Gregoire Berthiau
- * @date Feb 10, 2006
+ * @since Feb 10, 2006
  * @version 1.0
  */
 public class BinaryDataWriter extends AbstractDataWriter

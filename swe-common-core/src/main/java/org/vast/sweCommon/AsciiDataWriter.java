@@ -27,17 +27,13 @@ import org.vast.util.WriterException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Ascii Data Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO AsciiDataWriter type description
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 10, 2006
+ * @since Feb 10, 2006
  * @version 1.0
  */
 public class AsciiDataWriter extends AbstractDataWriter

@@ -22,17 +22,13 @@ package org.vast.xml;
 
 
 /**
- * <p><b>Title:</b>
- * QName
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Utility class to store element name with namespace prefix and URI.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Dec 15, 2006
+ * @since Dec 15, 2006
  * @version 1.0
  */
 public class QName

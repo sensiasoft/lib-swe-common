@@ -22,9 +22,7 @@ package org.vast.cdm.semantics;
 
 
 /**
- * <p><b>Title:</b><br/> DictionaryURN</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO DictionaryURN type description
  * </p>
  *

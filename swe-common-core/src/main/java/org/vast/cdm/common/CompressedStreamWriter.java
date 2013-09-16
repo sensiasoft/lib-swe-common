@@ -12,17 +12,13 @@ package org.vast.cdm.common;
 
 
 /**
- * <p><b>Title:</b>
- * Compressed Stream Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for all SWE compressed block encoders
  * </p>
  *
  * <p>Copyright (c) 2013</p>
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
- * @date Sep 9, 2013
+ * @since Sep 9, 2013
  */
 public interface CompressedStreamWriter
 {

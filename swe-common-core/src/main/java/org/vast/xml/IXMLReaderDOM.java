@@ -27,17 +27,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * IXmlReaderDOM
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for XML readers converting a DOM tree to Java objects
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 30, 2012
+ * @since Sep 30, 2012
  * @version 1.0
  */
 public interface IXMLReaderDOM<ObjectType>

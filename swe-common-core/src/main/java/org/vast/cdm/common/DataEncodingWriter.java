@@ -26,11 +26,7 @@ import org.w3c.dom.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Encoding XML Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Concrete implementations of this interface are responsible for
  * creating an XML element containing the data encoding structure
  * corresponding to the specified DataEncoding object.  

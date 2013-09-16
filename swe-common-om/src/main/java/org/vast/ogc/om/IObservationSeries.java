@@ -31,11 +31,7 @@ import org.vast.util.TimeExtent;
 
 
 /**
- * <p><b>Title:</b>
- * IObservationStream
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for a time series of observations.
  * Such a time series contain observations made by a single procedure
  * but can target several features of interest.
@@ -44,7 +40,7 @@ import org.vast.util.TimeExtent;
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface IObservationSeries extends IFeature, ISweInputDataStream, ISweOutputDataStream

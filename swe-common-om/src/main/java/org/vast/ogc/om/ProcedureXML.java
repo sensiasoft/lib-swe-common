@@ -30,11 +30,7 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * ProcedureXML
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Wrapper class to store procedure info as XML DOM. It can temporary hold a DOM
  * Node until it is parsed by an adequate reader into a fully functional Procedure
  * object.
@@ -42,7 +38,7 @@ import org.w3c.dom.Element;
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 30, 2012
+ * @since Sep 30, 2012
  * @version 1.0
  */
 public class ProcedureXML implements IProcedure

@@ -25,11 +25,7 @@ import java.util.Stack;
 
 
 /**
- * <p><b>Title:</b><br/>
- * CDMFilter
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Simple filter to be able to parse the DataDefinition
  * using DOM before the end of the XML document is reached
  * and start processing inline data as it comes.<br/>
@@ -43,7 +39,7 @@ import java.util.Stack;
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Aug 19, 2005
+ * @since Aug 19, 2005
  * @version 1.0
  */
 public class SWEFilter extends InputStream

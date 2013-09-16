@@ -39,18 +39,14 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SWE Encoding Reader v2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reads SWE Encoding definition for TextBlock, XMLBlock and BinaryBlock.
  * This is for version 2.0 of the SWECommon standard.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin (Spot Image)
- * @date Feb 1, 2008
+ * @since Feb 1, 2008
  * @version 1.0
  */
 public class SweEncodingReaderV20 implements DataEncodingReader

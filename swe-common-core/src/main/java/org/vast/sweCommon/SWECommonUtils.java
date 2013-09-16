@@ -34,11 +34,7 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * SWE Utils
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Helper class providing a version agnostic access to SWE component
  * structure and encoding readers and writers. This class delegates
  * to version specific readers/writers.
@@ -46,7 +42,7 @@ import org.w3c.dom.Element;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 2, 2007
+ * @since Feb 2, 2007
  * @version 1.0
  */
 public class SWECommonUtils implements DataComponentReader, DataComponentWriter, DataEncodingReader, DataEncodingWriter

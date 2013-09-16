@@ -22,17 +22,13 @@ package org.vast.unit;
 
 
 /**
- * <p><b>Title:</b>
- * UnitParser
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO UnitParser type description
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date May 4, 2006
+ * @since May 4, 2006
  * @version 1.0
  */
 public interface UnitParser

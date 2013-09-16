@@ -34,18 +34,14 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b><br/>
- * XML Data Writer DOM
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writes CDM XML data stream using the given data components
  * structure directly inside a DOM.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
- * @date Feb 29, 2008
+ * @since Feb 29, 2008
  * @version 1.0
  */
 public class XmlDataParserDOM extends AbstractDataParser

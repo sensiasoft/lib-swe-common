@@ -24,17 +24,13 @@ import org.vast.cdm.common.DataComponent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Selector
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Helper class to access a given component using a path like descriptor
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Dec 18, 2005
+ * @since Dec 18, 2005
  * @version 1.0
  */
 public class DataSelector

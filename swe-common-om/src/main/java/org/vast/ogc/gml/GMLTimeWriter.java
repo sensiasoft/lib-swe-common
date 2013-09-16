@@ -30,17 +30,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * GML Time Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Used to serialize TimeInfo object to GML. 
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 25, 2006
+ * @since Oct 25, 2006
  * @version 1.0
  */
 public class GMLTimeWriter

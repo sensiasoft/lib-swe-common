@@ -22,17 +22,13 @@ package org.vast.unit;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Unit
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Unit object containing relationship to SI base units.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date May 4, 2006
+ * @since May 4, 2006
  * @version 1.0
  */
 public class Unit
@@ -252,7 +248,7 @@ public class Unit
 				printSymbol = "GB";
 		
 			else if (code.equals("Cel"))
-				printSymbol = "°C";
+				printSymbol = "ï¿½C";
 		}
         
 		// try to use expression

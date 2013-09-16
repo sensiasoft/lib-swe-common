@@ -23,11 +23,7 @@ package org.vast.cdm.common;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DataHandler
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Implement this interface to catch events coming from a DataParser
  * and sort, archive, display or process the decoded data.
  * </p>

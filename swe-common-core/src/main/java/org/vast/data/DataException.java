@@ -22,9 +22,7 @@ package org.vast.data;
 
 
 /**
- * <p><b>Title:</b><br/> DataException</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO DataException type description
  * </p>
  *

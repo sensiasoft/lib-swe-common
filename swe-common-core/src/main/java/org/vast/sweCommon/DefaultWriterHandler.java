@@ -27,18 +27,14 @@ import org.vast.cdm.common.DataStreamWriter;
 
 
 /**
- * <p><b>Title:</b>
- * Default Writer Handler
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Default handler used by SWE Data to write all values
  * from the data list within the SWE Data.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 23, 2007
+ * @since Feb 23, 2007
  * @version 1.0
  */
 public class DefaultWriterHandler implements DataHandler

@@ -24,11 +24,7 @@ import org.vast.cdm.common.DataType;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Block Parallel
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Uses the composite pattern to carry a fixed size array
  * of parallel array DataBlocks.  Children datablocks will
  * thus be read in parallel.

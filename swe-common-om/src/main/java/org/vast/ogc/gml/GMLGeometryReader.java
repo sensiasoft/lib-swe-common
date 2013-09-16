@@ -28,17 +28,13 @@ import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
- *  * <p><b>Title:</b>
- * GML Geometry Reader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ *  * <p>
  * Reads different GML geometry objects (coords + CRS)
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Oct 25, 2006
+ * @since Oct 25, 2006
  * @version 1.0
  */
 public class GMLGeometryReader

@@ -30,17 +30,13 @@ import java.io.IOException;
 
 
 /**
- * <p><b>Title:</b>
- * IDataProvider
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for providing data as a stream of CDM data objects.
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface IDataProvider

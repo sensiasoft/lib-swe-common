@@ -25,11 +25,7 @@
 package org.vast.math;
 
 /**
- * <p><b>Title:</b><br/>
- * Vector3D
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Vector specialization for a 3 dimensions vector [x,y,z].
  * Extends from javax.vecmath.Vector3d and adds additional optimized
  * math routines for 3D transformations.
@@ -37,7 +33,7 @@ package org.vast.math;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 29, 2005
+ * @since Nov 29, 2005
  * @version 1.0
  */
 public class Vector3d extends javax.vecmath.Vector3d

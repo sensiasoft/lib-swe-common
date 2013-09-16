@@ -25,11 +25,7 @@ package org.vast.ogc.xlink;
 
 
 /**
- * <p><b>Title:</b>
- * CachedReference
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Implementation of Xlink Reference that keeps a cached version of the target.
  * Object is cached on the first call to getTarget().
  * Reloading the target object can be enforced by calling refresh().
@@ -37,7 +33,7 @@ package org.vast.ogc.xlink;
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public class CachedReference<TargetType> implements IXlinkReference<TargetType>

@@ -24,17 +24,13 @@ import org.vast.cdm.common.DataBlock;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Mapper
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Common interface for all mappers
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Apr 4, 2006
+ * @since Apr 4, 2006
  * @version 1.0
  */
 public interface DataVisitor

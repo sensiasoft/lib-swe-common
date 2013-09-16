@@ -27,17 +27,13 @@ import javax.xml.stream.XMLStreamReader;
 
 
 /**
- * <p><b>Title:</b>
- * IXmlReaderStAX
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for all XML readers implemented using StAX
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 30, 2012
+ * @since Sep 30, 2012
  * @version 1.0
  */
 public interface IXMLReaderStAX<ObjectType>

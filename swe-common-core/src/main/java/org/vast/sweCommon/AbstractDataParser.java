@@ -28,17 +28,13 @@ import org.vast.util.ReaderException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Parser
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Abstract class for parsing a CDM data stream
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Aug 16, 2005
+ * @since Aug 16, 2005
  * @version 1.0
  */
 public abstract class AbstractDataParser extends DataTreeVisitor implements DataStreamParser

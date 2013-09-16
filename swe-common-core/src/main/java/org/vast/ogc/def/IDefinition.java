@@ -27,17 +27,13 @@ import java.util.List;
 
 
 /**
- * <p><b>Title:</b>
- * IDefinition
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for basic term definitions
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface IDefinition

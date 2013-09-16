@@ -34,18 +34,14 @@ import org.vast.xml.XMLWriterException;
 
 
 /**
- * <p><b>Title:</b><br/>
- * SWE Encoding Writer v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Writes the encoding section of the SWE DataDefinition element.
  * This class handles ASCIIBlock and BinaryBlock.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 10, 2006
+ * @since Feb 10, 2006
  * @version 1.0
  */
 public class SweEncodingWriterV1 implements DataEncodingWriter

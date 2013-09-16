@@ -22,17 +22,13 @@ package org.vast.data;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Group Indexer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO DataGroupIndexer type description
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Aug 15, 2005
+ * @since Aug 15, 2005
  * @version 1.0
  */
 public class DataGroupIndexer extends DataIndexer

@@ -21,18 +21,14 @@
 package org.vast.unit;
 
 /**
- * <p><b>Title:</b>
- * Unit Parser URN
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Uses a URN to lookup for a unit definition and create
  * the corresponding Unit object ready for conversion.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date May 4, 2006
+ * @since May 4, 2006
  * @version 1.0
  */
 public class UnitParserURI implements UnitParser

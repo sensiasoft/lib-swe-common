@@ -29,17 +29,13 @@ import org.vast.cdm.common.DataType;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DataBlockFactory
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Helper to create DataBlocks using existing arrays of data.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Jan 27, 2006
+ * @since Jan 27, 2006
  * @version 1.0
  */
 public class DataBlockFactory

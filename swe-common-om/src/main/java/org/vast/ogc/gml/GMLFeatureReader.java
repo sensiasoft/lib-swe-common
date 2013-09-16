@@ -35,17 +35,13 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b>
- * GMLFeatureReader
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reader for generic GML features
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Nov 18, 2012
+ * @since Nov 18, 2012
  * @version 1.0
  */
 public class GMLFeatureReader implements IXMLReaderDOM<IFeature>

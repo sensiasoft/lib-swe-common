@@ -27,11 +27,7 @@ import org.vast.data.DataArray;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Stream Parser
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Concrete implementations of this interface are responsible for
  * parsing data with the given encoding format, decoding this data
  * into DataInfo and DecodedData objects if a DataHandler is 

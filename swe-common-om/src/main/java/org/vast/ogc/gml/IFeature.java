@@ -29,17 +29,13 @@ import javax.xml.namespace.QName;
 
 
 /**
- * <p><b>Title:</b>
- * IFeature
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Basic interface for a feature object
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface IFeature

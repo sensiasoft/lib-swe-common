@@ -28,11 +28,7 @@ import org.vast.cdm.common.DataType;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Atomic Data Value
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Atomic (no children) DataContainer usually containing a scalar value 
  * </p>
  *

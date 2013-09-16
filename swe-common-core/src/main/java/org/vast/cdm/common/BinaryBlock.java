@@ -22,11 +22,7 @@ package org.vast.cdm.common;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Binary Block
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Binary Block holds the attributes of Swe Common Binary Block encodings.
  * It extends Binary Options.
  * </p>

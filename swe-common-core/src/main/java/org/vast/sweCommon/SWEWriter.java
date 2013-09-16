@@ -29,11 +29,7 @@ import org.vast.cdm.common.OutputStreamProvider;
 
 
 /**
- * <p><b>Title:</b><br/>
- * CDM Writer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Abstract class for all CDM writers.
  * This class provides methods to write an XML document
  * containing CDM data structure, encoding and stream sections.
@@ -47,7 +43,7 @@ import org.vast.cdm.common.OutputStreamProvider;
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 10, 2006
+ * @since Feb 10, 2006
  * @version 1.0
  */
 public abstract class SWEWriter implements OutputStreamProvider

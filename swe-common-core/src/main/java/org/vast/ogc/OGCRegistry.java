@@ -27,11 +27,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * <p><b>Title:</b>
- * OGC Registry
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * This class allows to keep track of what classes to use
  * to read/write different versions of service requests as well
  * as other (mostly xml) messages and documents. This class
@@ -40,7 +36,7 @@ import org.w3c.dom.NodeList;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Jan 16, 2007
+ * @since Jan 16, 2007
  * @version 1.0
  */
 public class OGCRegistry

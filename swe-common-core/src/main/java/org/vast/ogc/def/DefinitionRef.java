@@ -28,17 +28,13 @@ import org.vast.ogc.xlink.CachedReference;
 
 
 /**
- * <p><b>Title:</b>
- * DefinitionRef
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO DefinitionRef type description
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 29, 2012
+ * @since Sep 29, 2012
  * @version 1.0
  */
 public class DefinitionRef extends CachedReference<IDefinition> implements IDefinition

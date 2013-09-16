@@ -28,11 +28,7 @@ package org.vast.cdm.common;
 import java.io.Serializable;
 
 /**
- * <p><b>Title:</b><br/>
- * Binary Options
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Binary Options is the abstract class that hold the common binary ecoding attributes.
  * </p>
  *

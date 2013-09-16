@@ -27,11 +27,7 @@ import org.vast.cdm.common.DataComponent;
 
 
 /**
- * <p><b>Title:</b><br/>
- * DataChoice Component
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Exclusive list of DataComponents (Choice)
  * </p>
  *

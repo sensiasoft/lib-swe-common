@@ -29,17 +29,13 @@ import org.vast.math.Vector3d;
 
 
 /**
- * <p><b>Title:</b>
- * Feature
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Generic implementation of a GML feature.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 20, 2007
+ * @since Feb 20, 2007
  * @version 1.0
  */
 public class FeatureImpl implements IGeoFeature

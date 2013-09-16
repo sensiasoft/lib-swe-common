@@ -29,17 +29,13 @@ import org.vast.data.DataValue;
 
 
 /**
- * <p><b>Title:</b><br/>
- * XmlDataParser
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Parser for data streams written using SWE Common XML encoding
  * </p>
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date Feb, 28 2008
+ * @since Feb, 28 2008
  * @version 1.0
  */
 public class XmlDataParser extends AbstractDataParser

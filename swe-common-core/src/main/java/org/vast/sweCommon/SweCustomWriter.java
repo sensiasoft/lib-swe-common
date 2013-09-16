@@ -30,18 +30,14 @@ import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
 /**
- * <p><b>Title:</b><br/>
- * SweCustomWriter
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Implement this interface to create a writer customized for the needs 
  * of a hard typed object (i.e. geometries...)
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 3 mars 08
+ * @since 3 mars 08
  * @version 1.0
  */
 public interface SweCustomWriter

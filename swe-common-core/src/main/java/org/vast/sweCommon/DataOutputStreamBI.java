@@ -27,11 +27,7 @@ import org.vast.cdm.common.DataOutputExt;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Output Stream for Big Endian
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Extension of DataOutputStream to support writing unsigned int and long
  * values as well as ASCII (0 terminated) strings as byte sequence. This
  * is for big endian order (i.e. Most Significant Byte first)
@@ -39,7 +35,7 @@ import org.vast.cdm.common.DataOutputExt;
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 10, 2006
+ * @since Feb 10, 2006
  * @version 1.0
  */
 public class DataOutputStreamBI extends DataOutputStream implements DataOutputExt

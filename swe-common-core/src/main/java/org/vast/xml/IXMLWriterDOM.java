@@ -27,17 +27,13 @@ import org.w3c.dom.Element;
 
 
 /**
- * <p><b>Title:</b>
- * IXmlWriterDOM
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for XML writer converting Java objects to a DOM element
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 30, 2012
+ * @since Sep 30, 2012
  * @version 1.0
  */
 public interface IXMLWriterDOM<ObjectType>

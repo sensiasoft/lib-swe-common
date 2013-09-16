@@ -39,11 +39,7 @@ import org.vast.util.DateTimeFormat;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Swe Component Reader V2.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reads SWE Components structures made of Scalar Parameters,
  * DataRecord, DataArray, and hard typed derived structures.
  * This is for version 2.0 of the SWE Common specification.
@@ -51,7 +47,7 @@ import org.vast.util.DateTimeFormat;
  *
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin (Spot Image)
- * @date Feb 1, 2008
+ * @since Feb 1, 2008
  * @version 1.0
  */
 public class SweComponentReaderV20 implements DataComponentReader

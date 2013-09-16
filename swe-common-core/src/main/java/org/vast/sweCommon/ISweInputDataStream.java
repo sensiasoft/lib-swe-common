@@ -31,18 +31,14 @@ import org.vast.cdm.common.IDataProvider;
 
 
 /**
- * <p><b>Title:</b>
- * ISweInputDataStream
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for reading data from SWE Common encoded data stream.
  * Implementations of this class can buffer or provide live access to the stream.
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface ISweInputDataStream extends IDataProvider

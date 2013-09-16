@@ -34,18 +34,14 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * <p><b>Title:</b>
- * Unit Parser UCUM
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Parses a string containing a UCUM unit definition and create
  * a Unit object with the right scale factors and powers.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date May 4, 2006
+ * @since May 4, 2006
  * @version 1.0
  */
 public class UnitParserUCUM implements UnitParser

@@ -28,9 +28,7 @@ import org.vast.cdm.common.DataType;
 
 
 /**
- * <p><b>Title:</b><br/> DataArray</p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Array of identical DataContainers. Can be of variable size.
  * In the case of a variable size array, size is actually given
  * by another component: sizeComponent which should be a DataValue

@@ -22,17 +22,13 @@ package org.vast.data;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Array Indexer
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * TODO DataArrayIndexer type description
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Aug 15, 2005
+ * @since Aug 15, 2005
  * @version 1.0
  */
 public class DataArrayIndexer extends DataIndexer

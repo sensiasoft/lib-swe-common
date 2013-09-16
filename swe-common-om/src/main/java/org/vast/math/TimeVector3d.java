@@ -26,17 +26,13 @@
 package org.vast.math;
 
 /**
- * <p><b>Title:</b><br/>
- * TimeVector3d
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Extension of Vector3d to add a time coordinate
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @date 28 août 08
+ * @since 28 aoï¿½t 08
  * @version 1.0
  */
 public class TimeVector3d extends Vector3d

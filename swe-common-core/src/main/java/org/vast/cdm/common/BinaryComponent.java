@@ -22,11 +22,7 @@ package org.vast.cdm.common;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Binary Component
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Binary Component holds the attributes of Swe Common Binary Component encodings.
  * It extends Binary Options.  
  * </p>

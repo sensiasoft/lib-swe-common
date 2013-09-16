@@ -22,18 +22,14 @@ package org.vast.math;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Quat4d
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Extends from javax.vecmath.Quat4d and adds additional transformation 
  * routines.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Nov 29, 2005
+ * @since Nov 29, 2005
  * @version 1.0
  */
 public class Quat4d extends javax.vecmath.Quat4d

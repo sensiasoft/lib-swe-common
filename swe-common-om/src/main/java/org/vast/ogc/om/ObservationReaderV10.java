@@ -36,17 +36,13 @@ import org.w3c.dom.*;
 
 
 /**
- * <p><b>Title:</b>
- * Observation Reader v1.0
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Reader for O&M observations v1.0
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Feb 23, 2007
+ * @since Feb 23, 2007
  * @version 1.0
  */
 public class ObservationReaderV10 implements IXMLReaderDOM<IObservation>

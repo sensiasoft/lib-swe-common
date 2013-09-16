@@ -24,18 +24,14 @@ import org.w3c.dom.*;
 
 
 /**
- * <p><b>Title:</b><br/>
- * XML Fragment
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Identifies an XML fragment with a parent document
  * and a base element node
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 3, 2005
+ * @since Nov 3, 2005
  * @version 1.0
  */
 public class XMLFragment

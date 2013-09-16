@@ -25,11 +25,7 @@ import java.io.InputStream;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Data Stream Provider
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Provide a direct access to the input stream from which to
  * read the CDM data according to the previously obtained description.
  * </p>

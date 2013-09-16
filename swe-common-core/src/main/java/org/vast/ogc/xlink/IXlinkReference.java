@@ -25,17 +25,13 @@ package org.vast.ogc.xlink;
 
 
 /**
- * <p><b>Title:</b>
- * IXlinkReference
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Interface for an xlink reference
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
- * @date Sep 28, 2012
+ * @since Sep 28, 2012
  * @version 1.0
  */
 public interface IXlinkReference<TargetType>

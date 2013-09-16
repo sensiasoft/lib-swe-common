@@ -21,11 +21,7 @@
 package org.vast.math;
 
 /**
- * <p><b>Title:</b>
- * Matrix3d
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Matrix specialization for a 3d rotation matrix.
  * Extends from javax.vecmath.Matrix3d and adds additional optimized
  * math routines for 3D transformations.
@@ -33,7 +29,7 @@ package org.vast.math;
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @date Jul 19, 2006
+ * @since Jul 19, 2006
  * @version 1.0
  */
 public class Matrix3d extends javax.vecmath.Matrix3d
