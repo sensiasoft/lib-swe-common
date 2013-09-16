@@ -21,17 +21,13 @@
 package org.vast.util;
 
 /**
- * <p><b>Title:</b><br/>
- * Contact
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * SensorML Contact
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Feb 16, 2006
+ * @since Feb 16, 2006
  * @version 1.0
  */
 public abstract class Contact

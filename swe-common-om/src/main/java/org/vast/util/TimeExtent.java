@@ -15,11 +15,7 @@ package org.vast.util;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Time Extent
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Class for storing the definition of a temporal domain.
  * This can include a base time, time bias (deviation from base time),
  * time step, and lead/lag time deltas.
@@ -27,7 +23,7 @@ package org.vast.util;
  *
  * <p>Copyright (c) 2005</p>
  * @author Tony Cook, Mike Botts, Alexandre Robin
- * @date Nov 15, 2005
+ * @since Nov 15, 2005
  * @version 1.0
  */
 public class TimeExtent

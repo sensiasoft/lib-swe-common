@@ -15,18 +15,14 @@ package org.vast.util;
 
 
 /**
- * <p><b>Title:</b><br/>
- * Spatial Extent
- * </p>
- *
- * <p><b>Description:</b><br/>
+ * <p>
  * Class for storing the definition of a spatial domain.
  * This mainly includes enveloppe coordinates and a crs.
  * </p>
  *
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
- * @date Nov 15, 2005
+ * @since Nov 15, 2005
  * @version 1.0
  */
 public class SpatialExtent
