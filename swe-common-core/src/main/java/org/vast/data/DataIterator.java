@@ -28,6 +28,16 @@ import org.vast.data.DataArray;
 import org.vast.data.DataValue;
 
 
+/**
+ * <p>
+ * This iterator will go through all components recursively.
+ * This does not iterate through each array value.
+ * </p>
+ *
+ * <p>Copyright (c) 2013</p>
+ * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @since Sep 19, 2013
+ */
 public class DataIterator implements Iterator<DataComponent>
 {
 	protected DataComponent rootComponent;

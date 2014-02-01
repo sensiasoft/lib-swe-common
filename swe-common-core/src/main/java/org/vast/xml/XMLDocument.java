@@ -21,6 +21,7 @@
 package org.vast.xml;
 
 import java.util.*;
+import java.util.Map.Entry;
 import org.w3c.dom.*;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
@@ -50,7 +51,7 @@ public class XMLDocument
 {
     protected static DOMImplementation domImpl;
     
-    /** document uri */
+    /** document URI */
 	protected URI uri = null;
 
 	/** w3c.Document object */
@@ -102,13 +103,19 @@ public class XMLDocument
 
 	public XMLDocument(Document doc)
 	{
-		domDocument = doc;
+	    this.domDocument = doc;
 	}
     
     
-    public XMLDocument(InputStream inputStream, boolean validate) throws DOMHelperException
+	public XMLDocument(InputStream inputStream, boolean validate) throws DOMHelperException
     {
-        domDocument = parseDOM(inputStream, validate);
+        this(inputStream, validate, null);
+    }
+	
+	
+    public XMLDocument(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws DOMHelperException
+    {
+        this.domDocument = parseDOM(inputStream, validate, schemaLocations);
     }
 
 
@@ -223,8 +230,8 @@ public class XMLDocument
 	{
 		this.uri = uri;
 	}
-        
-    
+
+
     /**
      * Launch the W3C Xerces DOM Parser
      * @param inputSource Stream containing XML file we want to parse
@@ -232,7 +239,7 @@ public class XMLDocument
      * @return The XMLDocument object created
      * @throws DOMHelperException if a problem occur during parsing
      */
-    protected Document parseDOM(InputStream inputStream, boolean validate) throws DOMHelperException
+    protected Document parseDOM(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws DOMHelperException
     {
         DOMImplementationLS impl = ((DOMImplementationLS)getDOMImplementation());
         
@@ -274,10 +281,39 @@ public class XMLDocument
         DOMConfiguration config = parser.getDomConfig();
         config.setParameter("namespace-declarations", true);
         
+        final StringBuilder errors = new StringBuilder();
         if (validate)
         {
             config.setParameter("schema-type", "http://www.w3.org/2001/XMLSchema");
-            config.setParameter("validate-if-schema", true);
+            config.setParameter("validate", true);
+            
+            // set override schema locations if specified
+            if (schemaLocations != null && !schemaLocations.isEmpty())
+            {
+                StringBuilder schemaLocText = new StringBuilder();
+                for (Entry<String,String> schemaLoc: schemaLocations.entrySet())
+                {
+                    if (!schemaLoc.getKey().equals(QName.DEFAULT_PREFIX))
+                    {
+                        schemaLocText.append(schemaLoc.getKey());
+                        schemaLocText.append(' ');
+                    }
+                    schemaLocText.append(schemaLoc.getValue());
+                    schemaLocText.append(' ');
+                }
+                
+                config.setParameter("schema-location", schemaLocText.toString());
+            }
+            
+            config.setParameter("error-handler", new DOMErrorHandler() {
+                @Override
+                public boolean handleError(DOMError e)
+                {
+                    errors.append("Line " + e.getLocation().getLineNumber() + ": " + e.getMessage());
+                    errors.append('\n');
+                    return false;
+                }                
+            });
         }
         
         // don't use defered nodes
@@ -287,10 +323,18 @@ public class XMLDocument
         try
         {
             Document document = parser.parse(input);
+            
+            if (errors.length() > 0)
+                throw new DOMHelperException("Validation errors detected while parsing XML document:\n" + errors.toString());
+            
             readIdentifiers(document.getDocumentElement(), false);
             readNamespaces(document.getDocumentElement(), false);
             inputStream.close();
             return document;
+        }
+        catch (DOMHelperException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {

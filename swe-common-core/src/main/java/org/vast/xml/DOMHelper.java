@@ -97,9 +97,21 @@ public class DOMHelper
      */
     public DOMHelper(InputStream inputStream, boolean validation) throws DOMHelperException
     {
+        this(inputStream, validation, null);
+    }
+    
+    
+    /**
+     * Loads an existing XML document from the given InputStream
+     * @param inputStream
+     * @param validation
+     * @throws DOMHelperException
+     */
+    public DOMHelper(InputStream inputStream, boolean validation, Map<String, String> schemaLocations) throws DOMHelperException
+    {
         this.validation = validation;
         try {
-			mainFragment = parseStream(inputStream, true);
+			mainFragment = parseStream(inputStream, true, schemaLocations);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -242,6 +254,26 @@ public class DOMHelper
     public void addUserPrefix(String prefix, String nsDomain)
     {
         userPrefixTable.put(prefix, nsDomain);
+    }
+    
+    
+    /**
+     * Add a schema location entry (xsi:schemaLocation attribute)
+     * @param nsUri namespace URI or null is this schema is associated to the default NS
+     * @param schemaUrl URL of the schema to use for validation
+     */
+    public void addSchemaLocation(String nsUri, String schemaUrl)
+    {
+        if (nsUri == null)
+            nsUri = "";
+        else
+            nsUri += " ";
+        
+        Attr schemaLocAtt = getRootElement().getAttributeNodeNS(XSI_NS_URI, "schemaLocation");
+        if (schemaLocAtt == null)
+            getRootElement().setAttributeNS(XSI_NS_URI, "schemaLocation", nsUri + schemaUrl);
+        else
+            schemaLocAtt.setValue(schemaLocAtt.getValue() + " " + nsUri + schemaUrl);
     }
     
     
@@ -1031,7 +1063,7 @@ public class DOMHelper
      * @throws DOMHelperException
      * @throws IOException 
      */
-    protected XMLFragment parseStream(InputStream inputStream, boolean addToTable) throws DOMHelperException, IOException
+    protected XMLFragment parseStream(InputStream inputStream, boolean addToTable, Map<String, String> schemaLocations) throws DOMHelperException, IOException
     {
         XMLDocument newDocument;
         
@@ -1039,7 +1071,7 @@ public class DOMHelper
             throw new IllegalArgumentException("inputStream can't be null");
 
         // parse xml stream
-        newDocument = new XMLDocument(inputStream, validation);
+        newDocument = new XMLDocument(inputStream, validation, schemaLocations);
         
         // add entry to loadedDocuments
         if (addToTable)
@@ -1096,7 +1128,7 @@ public class DOMHelper
             try
             {
                 // parses the xml stream !!
-                xmlFragment = parseStream(uriResolver.openStream(), false);
+                xmlFragment = parseStream(uriResolver.openStream(), false, null);
             }
             catch (IOException e)
             {
