@@ -25,7 +25,7 @@ package org.vast.ogc.om;
 
 import javax.xml.namespace.QName;
 import org.vast.cdm.common.DataComponent;
-import org.vast.ogc.def.IDefinition;
+import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLFeatureReader;
 import org.vast.ogc.gml.GMLTimeReader;
@@ -134,17 +134,22 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         }
         
         // procedure
-        String href = dom.getAttributeValue(obsElt, "procedure/@href");
-        if (href != null)
+        Element procPropElt = dom.getElement(obsElt, "procedure");
+        if (procPropElt != null && !dom.existAttribute(procPropElt, "nil"))
         {
-            obs.setProcedure(new ProcedureRef(href));
-        }
-        else
-        {
-            // read procedure as raw XML
-            Element procXML = dom.getElement(obsElt, "procedure/*");
-            if (procXML != null)
-                obs.setProcedure(new ProcedureXML((Element)procXML.cloneNode(true)));
+            if (dom.existAttribute(procPropElt, "href"))
+            {
+                ProcedureRef ref = new ProcedureRef();
+                XlinkUtils.readXlinkAttributes(procPropElt, ref);
+                obs.setProcedure(ref);
+            }
+            else
+            {
+                // read procedure as raw XML
+                Element procXML = dom.getFirstChildElement(procPropElt);
+                if (procXML != null)
+                    obs.setProcedure(new ProcedureXML((Element)procXML.cloneNode(true)));
+            }
         }
         
         // parameters
@@ -172,20 +177,32 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         }
         
         // observed property
-        String propRef = dom.getAttributeValue(obsElt, "observedProperty");
-        obs.setObservedProperty(new CachedReference<IDefinition>(propRef));
+        Element obsPropElt = dom.getElement(obsElt, "observedProperty");
+        if (obsPropElt != null && !obsPropElt.hasAttribute("nil"))
+        {
+            DefinitionRef ref = new DefinitionRef();
+            XlinkUtils.readXlinkAttributes(obsPropElt, ref);
+            obs.setObservedProperty(ref);
+        }
         
         // read foi
-        href = dom.getAttributeValue(obsElt, "featureOfInterest/@href");
-        if (href != null)
-            obs.setFeatureOfInterest(new FeatureRef(href));
-        else
+        Element foiPropElt = dom.getElement(obsElt, "featureOfInterest");
+        if (foiPropElt != null && !dom.existAttribute(foiPropElt, "nil"))
         {
-            Element foiElt = dom.getElement(obsElt, "featureOfInterest/*");
-            if (foiElt != null)
+            if (dom.existAttribute(foiPropElt, "href"))
             {
-                IFeature foi = readFOI(dom, foiElt);
-                obs.setFeatureOfInterest(foi);
+                FeatureRef ref = new FeatureRef();
+                XlinkUtils.readXlinkAttributes(foiPropElt, ref);
+                obs.setFeatureOfInterest(ref);
+            }
+            else
+            {
+                Element foiElt = dom.getFirstChildElement(foiPropElt);
+                if (foiElt != null)
+                {
+                    IFeature foi = readFOI(dom, foiElt);
+                    obs.setFeatureOfInterest(foi);
+                }
             }
         }
         
@@ -195,12 +212,12 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
             obs.addResultQuality(qualityElts.item(i).cloneNode(true));
              
         // result
-        Element resultElt = dom.getElement(obsElt, "result");
-        if (resultElt != null || dom.existAttribute(resultElt, "nil"))
+        Element resultElt = dom.getElement(obsElt, "result/*");
+        if (resultElt != null)
         {
             try
             {
-                DataComponent result = sweReader.readComponentProperty(dom, resultElt);
+                DataComponent result = sweReader.readComponent(dom, resultElt);
                 obs.setResult(result);
             }
             catch (XMLReaderException e)

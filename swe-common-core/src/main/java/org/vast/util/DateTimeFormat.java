@@ -39,7 +39,8 @@ public class DateTimeFormat extends SimpleDateFormat
 {
 	public static final int LOCAL = 255;
 	static final long serialVersionUID = 0;	
-	
+	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    
 	
 	public DateTimeFormat()
 	{
@@ -241,10 +242,8 @@ public class DateTimeFormat extends SimpleDateFormat
      * @param timeZone
      * @return
      */
-	static public String formatIso(double julianTime, int timeZone)
+    static synchronized public String formatIso(double julianTime, int timeZone)
 	{
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		
 		if (timeZone != LOCAL)
 		{
 			if (timeZone >= 0)

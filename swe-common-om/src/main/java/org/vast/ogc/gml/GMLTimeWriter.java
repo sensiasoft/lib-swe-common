@@ -71,7 +71,12 @@ public class GMLTimeWriter
     	Element timeElt;
         int zone = timeInfo.getTimeZone();
         
-        if (timeInfo.isTimeInstant())
+        if (timeInfo.isNull())
+        {
+            timeElt = dom.createElement("gml:TimeInstant");
+            dom.setAttributeValue(timeElt, "gml:timePosition/@indeterminatePosition", "unknown");
+        }
+        else if(timeInfo.isTimeInstant())
         {
             timeElt = dom.createElement("gml:TimeInstant");
             

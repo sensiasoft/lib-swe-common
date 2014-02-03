@@ -90,6 +90,10 @@ public class GMLTimeReader
         {
             time.setBaseAtNow(true);
         }
+        else if (att != null && att.equals("unknown"))
+        {
+            time.nullify();
+        }
         else
         {
             try

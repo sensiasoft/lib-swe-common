@@ -193,7 +193,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         
         // observedProperty
         if (obs.getObservedProperty() != null)
-            dom.setElementValue(obsElt, "om:observedProperty", obs.getObservedProperty().getHref());
+            dom.setAttributeValue(obsElt, "om:observedProperty/xlink:href", obs.getObservedProperty().getHref());
         else
             dom.setXsiNil(obsElt, "om:observedProperty");
         
