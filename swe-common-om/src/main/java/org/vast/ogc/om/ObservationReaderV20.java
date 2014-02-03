@@ -196,14 +196,17 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
              
         // result
         Element resultElt = dom.getElement(obsElt, "result");
-        try
+        if (resultElt != null || dom.existAttribute(resultElt, "nil"))
         {
-            DataComponent result = sweReader.readComponentProperty(dom, resultElt);
-            obs.setResult(result);
-        }
-        catch (XMLReaderException e)
-        {
-            throw new XMLReaderException("Error while parsing observation result", resultElt, e);
+            try
+            {
+                DataComponent result = sweReader.readComponentProperty(dom, resultElt);
+                obs.setResult(result);
+            }
+            catch (XMLReaderException e)
+            {
+                throw new XMLReaderException("Error while parsing observation result", resultElt, e);
+            }
         }
         
         return obs;

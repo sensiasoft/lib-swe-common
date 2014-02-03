@@ -212,15 +212,18 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         // TODO write ISO quality
         
         // result
-        Element resultElt = dom.addElement(obsElt, "swe:result");
-        try
+        if (obs.getResult() != null)
         {
-            Element componentElt = sweWriter.writeComponent(dom, obs.getResult(), true);
-            resultElt.appendChild(componentElt);
-        }
-        catch (XMLWriterException e)
-        {
-            throw new XMLWriterException("Error while writing observation result", resultElt, e);
+            Element resultElt = dom.addElement(obsElt, "swe:result");
+            try
+            {
+                Element componentElt = sweWriter.writeComponent(dom, obs.getResult(), true);
+                resultElt.appendChild(componentElt);
+            }
+            catch (XMLWriterException e)
+            {
+                throw new XMLWriterException("Error while writing observation result", resultElt, e);
+            }
         }
         
         return obsElt;
