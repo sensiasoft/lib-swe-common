@@ -50,11 +50,12 @@ import org.vast.util.DateTimeFormat;
  */
 public class SweComponentReaderV1 implements DataComponentReader
 {
-	protected final static String GML_NS = OGCRegistry.getNamespaceURI(OGCRegistry.GML);
+	protected final static String GML_NS = OGCRegistry.getNamespaceURI("GML");
 	protected final static String tupleSeparator = " ";
 	protected final static String tokenSeparator = ",";
     protected Hashtable<String, AbstractDataComponent> componentIds;
     protected AsciiDataParser asciiParser;
+    protected GMLUnitReader unitReader = new GMLUnitReader();
     
     
     public SweComponentReaderV1()
@@ -473,8 +474,7 @@ public class SweComponentReaderV1 implements DataComponentReader
         // inline unit
         else
         {
-            Element unitElt = dom.getElement(scalarElt, "uom/*");
-            GMLUnitReader unitReader = new GMLUnitReader();
+            Element unitElt = dom.getElement(scalarElt, "uom/*");            
             unit = unitReader.readUnit(dom, unitElt);
         }
         

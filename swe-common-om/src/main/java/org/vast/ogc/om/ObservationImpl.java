@@ -11,9 +11,8 @@
  
  The Original Code is the "OGC Service Framework".
  
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
- Portions created by the Initial Developer are Copyright (C) 2007
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
  the Initial Developer. All Rights Reserved.
  Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
@@ -50,7 +49,6 @@ import org.vast.util.TimeExtent;
  */
 public class ObservationImpl extends FeatureImpl implements IObservation
 {
-    protected String type;
     protected List<IXlinkReference<IObservation>> relatedObservations;
     protected TimeExtent phenomenonTime;
     protected TimeExtent resultTime;
@@ -65,21 +63,8 @@ public class ObservationImpl extends FeatureImpl implements IObservation
 
     public ObservationImpl()
     {
-        super(new QName(OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"), "Observation"));
+        super(new QName(OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"), "OM_Observation"));
         phenomenonTime = new TimeExtent();
-    }
-    
-    
-    @Override
-    public String getType()
-    {
-        return type;
-    }
-
-
-    public void setType(String type)
-    {
-        this.type = type;
     }
 
 

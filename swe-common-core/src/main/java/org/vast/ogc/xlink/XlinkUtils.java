@@ -47,13 +47,13 @@ public class XlinkUtils
     
     public static void writeXlinkAttributes(Element propertyElt, IXlinkReference<?> refObj)
     {
-        if (refObj.getHref() != null)
+        if (refObj.getHref() != null && !refObj.getHref().isEmpty())
             propertyElt.setAttributeNS(NS_URI, "href", refObj.getHref());
         
-        if (refObj.getRole() != null)
+        if (refObj.getRole() != null && !refObj.getRole().isEmpty())
             propertyElt.setAttributeNS(NS_URI, "role", refObj.getRole());
         
-        if (refObj.getArcRole() != null)
+        if (refObj.getArcRole() != null && !refObj.getArcRole().isEmpty())
             propertyElt.setAttributeNS(NS_URI, "arcrole", refObj.getArcRole());
     }
 }

@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.regex.Pattern;
-
 import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.sweCommon.SWEFilter;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
@@ -49,12 +49,19 @@ import org.w3c.dom.Element;
  * @since Feb 22, 2007
  * @version 1.0
  */
-public class OMUtils
+public class OMUtils extends GMLUtils
 {
-    public final static String OM = "OM";
+    public final static String OM;
     public final static String OBSERVATION = "Observation";
     protected final static Pattern versionRegex = Pattern.compile("^\\d+(\\.\\d+)?(\\.\\d+)?$");
     protected final static String defaultVersion = "1.0";
+
+    
+    static 
+    {
+        OM = "OM";
+        loadRegistry();
+    }
     
     
     /**

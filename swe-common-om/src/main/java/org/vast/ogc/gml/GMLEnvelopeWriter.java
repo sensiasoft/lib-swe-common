@@ -43,7 +43,7 @@ public class GMLEnvelopeWriter
     
     public GMLEnvelopeWriter(String version)
     {
-        gmlNsUri = OGCRegistry.getNamespaceURI(OGCRegistry.GML, version);
+        gmlNsUri = OGCRegistry.getNamespaceURI(GMLUtils.GML, version);
     }
     
         
@@ -67,7 +67,7 @@ public class GMLEnvelopeWriter
     
     public Element writeEnvelopeWithPos(DOMHelper dom, Bbox bbox)
     {
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML));
         
         Element envelopeElt = dom.createElement("gml:Envelope");
     	
@@ -85,7 +85,7 @@ public class GMLEnvelopeWriter
     
     public Element writeGridEnvelope(DOMHelper dom, Bbox bbox)
     {
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML));
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML));
         
         Element envelopeElt = dom.createElement("gml:GridEnvelope");
     	

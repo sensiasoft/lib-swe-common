@@ -41,10 +41,7 @@ import org.w3c.dom.NodeList;
  */
 public class OGCRegistry
 {
-    public final static String OGC = "OGC";
-    public final static String GML = "GML";
     public final static String XLINK = "XLINK";
-    public final static String SLD = "SLD";
     protected static Hashtable<String, Class<?>> readerClasses;
     protected static Hashtable<String, Class<?>> writerClasses;
     protected static Hashtable<String, String> namespaces;
@@ -433,9 +430,7 @@ public class OGCRegistry
                 }
                 catch (IllegalStateException e)
                 {
-                    //ExceptionSystem.display(e);
-                	// don't display exception at this point
-                	e.printStackTrace();
+                    System.err.println(e.getLocalizedMessage());
                 }
             }
 
@@ -455,8 +450,7 @@ public class OGCRegistry
                 }
                 catch (IllegalStateException e)
                 {
-                    //ExceptionSystem.display(e);
-                    // don't display exception at this point
+                    System.err.println(e.getLocalizedMessage());
                 }
             }            
         }

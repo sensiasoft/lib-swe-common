@@ -24,6 +24,8 @@
 package org.vast.xml;
 
 import org.vast.util.ReaderException;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 
@@ -100,14 +102,23 @@ public class XMLReaderException extends ReaderException
             Node currentNode = nodeWithError;
             while (currentNode != null)
             {
-                nodePath.append('/');
-                nodePath.append(currentNode.getNodeName());
-                currentNode = currentNode.getParentNode();
+                if (currentNode instanceof Attr)
+                {
+                    nodePath.insert(0, '@' + currentNode.getNodeName());
+                    currentNode = ((Attr)currentNode).getOwnerElement();                    
+                }
+                else
+                {
+                    if (currentNode instanceof Element && ((Element)currentNode).hasAttribute("name"))
+                        nodePath.insert(0, "[name=" + ((Element)currentNode).getAttribute("name") + ']');
+                    nodePath.insert(0, currentNode.getNodeName());
+                    currentNode = currentNode.getParentNode();
+                }
+                
+                if (currentNode != null)
+                    nodePath.insert(0, '/');
             }
-        }
-        
-        if (nodeWithError != null)
-        {
+
             if (msg == null)
                 return "Error while reading node " + nodePath.toString();
             else

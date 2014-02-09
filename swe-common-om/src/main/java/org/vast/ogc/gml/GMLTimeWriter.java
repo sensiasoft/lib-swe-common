@@ -55,7 +55,7 @@ public class GMLTimeWriter
     public GMLTimeWriter(String gmlVersion, int firstId)
     {
         now = System.currentTimeMillis() / 1000;
-        gmlNsUri = OGCRegistry.getNamespaceURI(OGCRegistry.GML, gmlVersion);
+        gmlNsUri = OGCRegistry.getNamespaceURI(GMLUtils.GML, gmlVersion);
         
         currentId = firstId;
         idFormatter = NumberFormat.getNumberInstance();

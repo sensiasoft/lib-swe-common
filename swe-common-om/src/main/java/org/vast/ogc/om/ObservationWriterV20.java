@@ -9,12 +9,12 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Initial Developer of the Original Code is SENSIA SOFTWARE LLC.
- Portions created by the Initial Developer are Copyright (C) 2012
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
  the Initial Developer. All Rights Reserved.
 
- Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> for more
- information.
+ Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or 
+ Mike Botts <mike.botts@botts-inc.net for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -31,11 +31,13 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLFeatureWriter;
 import org.vast.ogc.gml.GMLTimeWriter;
+import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.gml.IFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.SweComponentWriterV20;
+import org.vast.sweCommon.SweConstants;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLWriterDOM;
 import org.vast.xml.XMLWriterException;
@@ -80,10 +82,10 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     {
         dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
         dom.addUserPrefix("om", OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"));
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(OGCRegistry.GML, GML_VERSION));
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML, GML_VERSION));
         dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
         
-        Element obsElt = dom.createElement("om:Observation");
+        Element obsElt = dom.createElement("om:" + obs.getQName().getLocalPart());
                 
         // gml:id
         String id = obs.getLocalId();
@@ -110,14 +112,14 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
             QName name = obs.getNames().get(i);
             Element nameElt = dom.addElement(obsElt, "+gml:name");
             dom.setElementValue(nameElt, name.getLocalPart());
-            if (name.getNamespaceURI() != null)
+            if (name.getNamespaceURI() != null && name.getNamespaceURI().length() > 0)
                 dom.setAttributeValue(nameElt, "@codeSpace", name.getNamespaceURI());
         }
         
         // type
         String obsType = obs.getType();
         if (obsType != null)
-            dom.setElementValue(obsElt, "om:type", obsType);
+            dom.setAttributeValue(obsElt, "om:type/xlink:href", obsType);
         
         // TODO write ISO metadata
         
@@ -162,32 +164,39 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
             dom.setXsiNil(obsElt, "om:procedure");
         
         // parameters
-        // TODO support for parameters referenced through hyperlinks ?
+        // TODO add support for parameters referenced through hyperlinks?
         if (obs.getParameters() != null)
         {
             for (Entry<String, Object> param: obs.getParameters().entrySet())
             {
                 Object value = param.getValue();
                 Element nvElt = dom.addElement(obsElt, "+om:parameter/om:NamedValue");
-                dom.setElementValue(nvElt, "om:name", param.getKey());
-                dom.addElement(nvElt, "om:value");
+                dom.setAttributeValue(nvElt, "om:name/xlink:href", param.getKey());
+                Element valueElt = dom.addElement(nvElt, "om:value");
                 
                 if (value instanceof DataComponent)
                 {
                     try
                     {
                         Element componentElt = sweWriter.writeComponent(dom, (DataComponent)value, true);
-                        nvElt.appendChild(componentElt);
+                        valueElt.appendChild(componentElt);
                     }
                     catch (XMLWriterException e)
                     {
                         throw new XMLWriterException("Error while writing observation parameter " + param.getKey(), nvElt, e);
                     }
                 }
-                else
+                else if (value instanceof String || value instanceof Number || value instanceof Boolean)
                 {
                     dom.setElementValue(nvElt, value.toString());
                 }
+                else if (value instanceof Element)
+                {
+                    Element importedElt = (Element)nvElt.getOwnerDocument().importNode((Element)value, true);
+                    valueElt.appendChild(importedElt);
+                }
+                else
+                    throw new RuntimeException("Unsupported parameter type: " + value.getClass());
             }
         }
         
@@ -197,28 +206,34 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         else
             dom.setXsiNil(obsElt, "om:observedProperty");
         
-        // write foi
+        // foi
+        Element foiPropElt = dom.addElement(obsElt, "+om:featureOfInterest");
         IFeature foi = obs.getFeatureOfInterest();
         if (foi != null)
         {
-            if (foi instanceof FeatureRef)
-                dom.setAttributeValue(obsElt, "om:featureOfInterest/xlink:href", ((FeatureRef)foi).getHref());
+            if (foi instanceof FeatureRef) {
+                XlinkUtils.writeXlinkAttributes(foiPropElt, (FeatureRef)foi);
+            }
             else
                 writeFOI(dom, obsElt, foi);
         }
         else
-            dom.setXsiNil(obsElt, "om:featureOfInterest");
+            dom.setXsiNil(foiPropElt, "");
         
         // TODO write ISO quality
         
         // result
+        Element resultElt = dom.addElement(obsElt, "om:result");
         if (obs.getResult() != null)
-        {
-            Element resultElt = dom.addElement(obsElt, "swe:result");
+        {            
             try
             {
                 Element componentElt = sweWriter.writeComponent(dom, obs.getResult(), true);
                 resultElt.appendChild(componentElt);
+                
+                QName sweQName = (QName)obs.getResult().getProperty(SweConstants.COMP_QNAME);
+                if (sweQName != null)
+                    resultElt.setAttributeNS(DOMHelper.XSI_NS_URI, "xsi:type", "swe:" + sweQName.getLocalPart() + "PropertyType");
             }
             catch (XMLWriterException e)
             {
@@ -230,10 +245,8 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     }
     
     
-    protected void writeFOI(DOMHelper dom, Element obsElt, IFeature foi) throws XMLWriterException
+    protected void writeFOI(DOMHelper dom, Element foiPropElt, IFeature foi) throws XMLWriterException
     {
-        Element foiPropElt = dom.addElement(obsElt, "+om:featureOfInterest");
-        
         if (foi instanceof FeatureRef)
         {
             XlinkUtils.writeXlinkAttributes(foiPropElt, (FeatureRef)foi);

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+   <!-- -->
+   <Namespace type="GML" version="*" uri="http://www.opengis.net/gml"/>
+   <Namespace type="GML" version="3.1.1" uri="http://www.opengis.net/gml"/>
+   <Namespace type="GML" version="3.2" uri="http://www.opengis.net/gml/3.2"/>
+   <Namespace type="GML" version="3.2.1" uri="http://www.opengis.net/gml/3.2"/>
+   <Namespace type="OM" version="1.0" uri="http://www.opengis.net/om/1.0"/>
+   <Namespace type="OM" version="2.0" uri="http://www.opengis.net/om/2.0"/>
+   <!-- -->
+   <Reader type="OM" subType="Observation" version="1.0" class="org.vast.ogc.om.ObservationReaderV10"/>
+   <Reader type="OM" subType="Observation" version="2.0" class="org.vast.ogc.om.ObservationReaderV20"/>
+   <Reader type="OM" subType="ObservationStream" version="1.0" class="org.vast.ogc.om.ObservationStreamReaderV10"/>
+   <!-- -->
+   <Writer type="OM" subType="Observation" version="2.0" class="org.vast.ogc.om.ObservationWriterV20"/>
+   <!-- -->
+</Map>

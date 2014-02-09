@@ -1313,4 +1313,13 @@ public class DOMHelper
         
         return eltQName;
     }
+    
+    
+    public Node getLastAccessedNode()
+    {
+        if (matchingNodes.getLength() > 0)
+            return matchingNodes.item(0);
+        else
+            return null;
+    }
 }

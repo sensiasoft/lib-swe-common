@@ -9,12 +9,12 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Initial Developer of the Original Code is SENSIA SOFTWARE LLC.
- Portions created by the Initial Developer are Copyright (C) 2012
+ The Initial Developer of the Original Code is Sensia Software LLC.
+ Portions created by the Initial Developer are Copyright (C) 2014
  the Initial Developer. All Rights Reserved.
 
- Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> for more
- information.
+ Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or 
+ Mike Botts <mike.botts@botts-inc.net for more information.
  
  Contributor(s): 
     Alexandre Robin <alex.robin@sensiasoftware.com>
@@ -69,8 +69,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
     
     
     public IObservation read(DOMHelper dom, Element obsElt) throws XMLReaderException
-    {
-        
+    {        
         IObservation obs = new ObservationImpl();
         
         // local ID
@@ -94,7 +93,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         }
         
         // type
-        obs.setType(dom.getElementValue(obsElt, "type"));
+        obs.setType(dom.getAttributeValue(obsElt, "type/href"));
         
         // metadata as raw XML
         Element metadata = dom.getElement(obsElt, "metadata/*");
@@ -123,7 +122,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         // result time
         timeElt = dom.getElement(obsElt, "resultTime/*");
         time = timeReader.readTimePrimitive(dom, timeElt);
-        obs.setPhenomenonTime(time);
+        obs.setResultTime(time);
         
         // optional valid time
         timeElt = dom.getElement(obsElt, "validTime/*");
@@ -153,11 +152,11 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         }
         
         // parameters
-        NodeList paramElts = dom.getElements(obsElt, "parameter");
+        NodeList paramElts = dom.getElements(obsElt, "parameter/*");
         for (int i = 0; i < paramElts.getLength(); i++)
         {
             Element paramElt = (Element)paramElts.item(i);
-            String paramName = dom.getElementValue(paramElt, "name");
+            String paramName = dom.getAttributeValue(paramElt, "name/href");
             Element valueElt = dom.getElement(paramElt, "value/*");
             Object paramValue;
             
@@ -166,7 +165,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
                 if (valueElt.getNamespaceURI().equals(SweComponentReaderV20.SWE_NS))
                     paramValue = sweReader.readComponent(dom, valueElt);
                 else
-                    paramValue = valueElt.cloneNode(true);//valueElt.getParentNode().removeChild(valueElt);
+                    paramValue = valueElt.cloneNode(true);
             }
             catch (XMLReaderException e)
             {

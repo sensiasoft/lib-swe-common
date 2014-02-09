@@ -59,7 +59,7 @@ public class GMLGeometryWriter
     
     public void setGmlVersion(String gmlVersion)
     {       
-        gmlNsUri = OGCRegistry.getNamespaceURI(OGCRegistry.GML, gmlVersion);
+        gmlNsUri = OGCRegistry.getNamespaceURI(GMLUtils.GML, gmlVersion);
     }
     
     

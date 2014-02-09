@@ -25,6 +25,7 @@ package org.vast.sweCommon;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
+import javax.xml.namespace.QName;
 import org.vast.cdm.common.AsciiEncoding;
 import org.vast.cdm.common.BinaryEncoding;
 import org.vast.cdm.common.BinaryEncoding.ByteEncoding;
@@ -45,7 +46,6 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.unit.Unit;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
 
@@ -99,9 +99,9 @@ public class SweComponentWriterV20 implements DataComponentWriter
         // soft or hard typed record component
         if (dataComponent instanceof DataGroup)
         {
-            if (refFrame != null || (compQName != null && compQName.getLocalName().equals("Vector")))
+            if (refFrame != null || (compQName != null && compQName.getLocalPart().equals("Vector")))
                 newElt = writeVector(dom, (DataGroup)dataComponent);
-            else if (compQName != null && compQName.getLocalName().endsWith("Range"))
+            else if (compQName != null && compQName.getLocalPart().endsWith("Range"))
                 newElt = writeDataRange(dom, (DataGroup)dataComponent, compQName);        	
         	else
         		newElt = writeDataRecord(dom, (DataGroup)dataComponent);
@@ -116,7 +116,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         // soft or hard typed array component
         else if (dataComponent instanceof DataArray)
         {
-        	if (refFrame != null || (compQName != null && compQName.getLocalName().equals("Matrix")))
+        	if (refFrame != null || (compQName != null && compQName.getLocalPart().equals("Matrix")))
         		newElt = writeMatrix(dom, (DataArray)dataComponent);
             else
             	newElt = writeDataArray(dom, (DataArray)dataComponent);
@@ -390,7 +390,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	DataValue max = (DataValue)dataGroup.getComponent(1);
     	
     	// create right range element
-        Element rangeElt = dom.createElement(rangeQName.getFullName());
+        Element rangeElt = dom.createElement("swe:" + rangeQName.getLocalPart());
         
         // write group properties
         writeCommonAttributes(dom, dataGroup, rangeElt);
@@ -421,7 +421,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	    	
     	// return QName if specified
         if (valueQName != null)
-	        return valueQName.getFullName();
+	        return "swe:" + valueQName.getLocalPart();
         
         Object def = dataValue.getProperty("definition");
     	String eltName;

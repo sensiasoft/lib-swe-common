@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<om:OM_Observation gml:id="O35235" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:om="http://www.opengis.net/om/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <gml:name>Weather Data</gml:name>
+   <om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_SWEObservation" />
+   <om:phenomenonTime>
+      <gml:TimePeriod gml:id="T001">
+         <gml:beginPosition>2007-04-01T00:00:00Z</gml:beginPosition>
+         <gml:endPosition>2007-04-01T03:40:00Z</gml:endPosition>
+      </gml:TimePeriod>
+   </om:phenomenonTime>
+   <om:resultTime>
+      <gml:TimeInstant gml:id="T002">
+         <gml:timePosition>2007-04-01T03:40:00.230Z</gml:timePosition>
+      </gml:TimeInstant>
+   </om:resultTime>
+   <om:procedure xlink:href="urn:vast:sensor:weatherStation" />
+   <om:observedProperty xlink:href="weather1.xml" />
+   <om:featureOfInterest xlink:href="http://www.ga.gov.au/bin/gazd01?rec=293604" xlink:role="urn:ogc:def:featuretype:SEEGRID:locality" />
+   <om:result xsi:type="swe:DataArrayPropertyType">
+      <swe:DataArray>
+         <swe:elementCount>
+            <swe:Count>
+               <swe:value>23</swe:value>
+            </swe:Count>
+         </swe:elementCount>
+         <swe:elementType name="WeatherRecordType">
+            <swe:DataRecord>
+               <swe:field name="time">
+                  <swe:Time definition="http://www.opengis.net/def/property/OGC/0/SamplingTime">
+                     <swe:uom xlink:href="urn:ogc:def:unit:OGC::ISO-8601" />
+                  </swe:Time>
+               </swe:field>
+               <swe:field name="AirTemperature">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/physThermo.owl#Temperature">
+                     <swe:uom code="Cel" />
+                  </swe:Quantity>
+               </swe:field>
+               <swe:field name="WindSpeed">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/atmoWind.owl#WindSpeed">
+                     <swe:uom code="m/s" />
+                  </swe:Quantity>
+               </swe:field>
+               <swe:field name="WindDirection">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/atmoWind.owl#WindDirectionToNorth">
+                     <swe:uom code="deg" />
+                  </swe:Quantity>
+               </swe:field>
+               <swe:field name="AtmosphericPressure">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/atmoPressure.owl#BarometricPressure">
+                     <swe:uom code="hPa" />
+                  </swe:Quantity>
+               </swe:field>
+               <swe:field name="RelativeHumidity">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/ontology/property.owl#RelativeHumidity">
+                     <swe:uom code="%" />
+                  </swe:Quantity>
+               </swe:field>
+               <swe:field name="Visibility">
+                  <swe:Category definition="http://sweet.jpl.nasa.gov/ontology/property.owl#Visibility">
+                     <swe:codeSpace xlink:href="http://www.csd.abdn.ac.uk/research/AgentCities/WeatherAgent/weather-ont.daml#ObscurationEvent" />
+                  </swe:Category>
+               </swe:field>
+            </swe:DataRecord>
+         </swe:elementType>
+         <swe:encoding>
+            <swe:TextEncoding decimalSeparator="." tokenSeparator="," blockSeparator=" " collapseWhiteSpaces="true"/>
+         </swe:encoding>
+         <swe:values> 2007-04-01T00:00:00Z,30.4,28.8,155.8,1055.32,55.0,haze
+            2007-04-01T00:00:10Z,30.4,28.8,155.8,1055.4,59.0,haze
+            2007-04-01T00:00:20Z,30.4,28.8,155.7,1055.47,65.0,haze
+            2007-04-01T00:00:30Z,30.3,28.9,155.7,1055.55,66.0,haze
+            2007-04-01T00:00:40Z,30.3,28.9,155.6,1055.62,61.0,haze
+            2007-04-01T00:00:50Z,30.3,28.9,155.6,1055.69,55.0,haze
+            2007-04-01T00:01:00Z,30.3,28.9,155.5,1055.77,51.0,haze
+            2007-04-01T00:01:10Z,30.2,28.9,155.5,1055.84,48.0,haze
+            2007-04-01T00:01:20Z,30.2,28.9,155.4,1055.91,43.0,haze
+            2007-04-01T00:01:30Z,30.2,28.9,155.4,1055.99,44.0,haze
+            2007-04-01T00:01:40Z,30.2,29.0,155.3,1056.06,46.0,haze
+            2007-04-01T00:01:50Z,30.1,29.0,155.3,1056.13,48.0,haze
+            2007-04-01T00:02:00Z,30.1,29.0,155.2,1056.2,44.0,haze
+            2007-04-01T00:02:10Z,30.1,29.0,155.2,1056.27,41.0,haze
+            2007-04-01T00:02:20Z,30.1,29.0,155.1,1056.34,40.0,haze
+            2007-04-01T00:02:30Z,30.0,29.0,155.1,1056.41,36.0,clear
+            2007-04-01T00:02:40Z,30.0,29.0,155.0,1056.48,39.0,clear
+            2007-04-01T00:02:50Z,30.0,29.1,155.0,1056.55,50.0,haze
+            2007-04-01T00:03:00Z,30.0,29.1,155.0,1056.62,65.0,haze
+            2007-04-01T00:03:10Z,30.0,29.1,154.9,1056.69,70.0,haze
+            2007-04-01T00:03:20Z,29.9,29.1,154.9,1056.76,71.0,haze
+            2007-04-01T00:03:30Z,29.9,29.1,154.8,1056.83,75.0,haze
+            2007-04-01T00:03:40Z,29.9,29.1,154.8,1056.89,75.0,haze
+         </swe:values>
+      </swe:DataArray>
+   </om:result>
+</om:OM_Observation>

@@ -26,16 +26,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Hashtable;
+import javax.xml.namespace.QName;
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
 import org.vast.data.*;
-import org.vast.xml.*;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLUnitReader;
 import org.vast.sweCommon.IntervalConstraint;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
 import org.vast.util.DateTimeFormat;
+import org.vast.xml.DOMHelper;
+import org.vast.xml.XMLReaderException;
 
 
 /**
@@ -56,6 +58,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 	public final static String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
 	protected Hashtable<String, AbstractDataComponent> componentIds;
     protected AsciiDataParser asciiParser;
+    protected SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
     
     
     public SweComponentReaderV20()
@@ -82,7 +85,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     	
     	AbstractDataComponent container = null;
     	String nsUri = componentElt.lookupNamespaceURI(componentElt.getPrefix());
-        QName objectType = new QName(nsUri, componentElt.getNodeName());
+        QName objectType = new QName(nsUri, componentElt.getLocalName(), componentElt.getPrefix());
         
         // try to call a custom reader for this particular object type
         SweCustomReader customReader = customReaders.get(objectType);
@@ -230,7 +233,8 @@ public class SweComponentReaderV20 implements DataComponentReader
     
     
     /**
-     * Reads a generic (soft-typed) DataArray structure the unique member
+     * Reads a generic (soft-typed) DataArray structure
+     * @param dom
      * @param arrayElt Element
      * @throws CDMException
      * @return DataArray
@@ -285,24 +289,35 @@ public class SweComponentReaderV20 implements DataComponentReader
         Element encodingElt = dom.getElement(arrayElt, "encoding");
         Element valuesElt = dom.getElement(arrayElt, "values");
         if (encodingElt != null && valuesElt != null)
-        {
-            try
-            {
-                SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
-                DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
-                DataStreamParser parser = SWEFactory.createDataParser(encoding);
-                parser.setParentArray(dataArray);
-                parser.reset();
-                InputStream is = new DataSourceDOM(dom, valuesElt).getDataStream();
-                parser.parse(is);
-            }
-            catch (IOException e)
-            {
-                throw new XMLReaderException("Error while parsing array values", arrayElt, e);
-            }
-        }
+            readArrayValues(dom, encodingElt, valuesElt, dataArray);
         
         return dataArray;
+    }
+    
+    
+    /**
+     * Reads array values and fill up the data array
+     * @param dom
+     * @param encodingElt XML element containing encoding definition
+     * @param valuesElt XML element containing the inline values
+     * @param arrayObj DataArray object to fill with values (the component structure is obtained from the array definition)
+     * @throws XMLReaderException
+     */
+    public void readArrayValues(DOMHelper dom, Element encodingElt, Element valuesElt, DataArray arrayObj) throws XMLReaderException
+    {
+        try
+        {
+            DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
+            DataStreamParser parser = SWEFactory.createDataParser(encoding);
+            parser.setParentArray(arrayObj);
+            InputStream is = new DataSourceDOM(dom, valuesElt).getDataStream();
+            parser.parse(is);
+            arrayObj.setProperty(SweConstants.ENCODING_TYPE, encoding);
+        }
+        catch (IOException e)
+        {
+            throw new XMLReaderException("Error while parsing array values", valuesElt, e);
+        }
     }
     
     
@@ -318,7 +333,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         String eltName = scalarElt.getLocalName();
         
         // Create DataValue Object with appropriate type
-    	if (eltName.equals("Quantity") || eltName.equals("Time"))
+    	if (eltName.equals("Quantity") || eltName.equals("Time") || eltName.equals("ObservableProperty"))
     	    dataValue = new DataValue(DataType.DOUBLE);
         else if (eltName.equals("Count"))
             dataValue = new DataValue(DataType.INT);
@@ -328,10 +343,6 @@ public class SweComponentReaderV20 implements DataComponentReader
         	dataValue = new DataValue(DataType.UTF_STRING);
         else
             throw new XMLReaderException("Invalid scalar component: " + eltName, scalarElt);
-        
-    	// save param QName
-    	QName componentQName = new QName(scalarElt.getNamespaceURI(), scalarElt.getTagName());
-    	dataValue.setProperty(SweConstants.COMP_QNAME, componentQName);
     	
     	// read common stuffs        
         readBaseProperties(dataValue, dom, scalarElt);
@@ -551,19 +562,26 @@ public class SweComponentReaderV20 implements DataComponentReader
         if (!dom.existElement(scalarElt, "uom"))
             return;
         
-        String ucumCode = dom.getAttributeValue(scalarElt, "uom/@code");
-        String href = dom.getAttributeValue(scalarElt, "uom/@href");           
-                
+        String ucumCode = dom.getAttributeValue(scalarElt, "uom/@code");                   
+        String href = dom.getAttributeValue(scalarElt, "uom/@href");
+        
         // uom code        
         if (ucumCode != null)
         {
-            dataComponent.setProperty(SweConstants.UOM_CODE, ucumCode);
-            
-            // also create unit object
-            UnitParserUCUM ucumParser = new UnitParserUCUM();
-            Unit unit = ucumParser.getUnit(ucumCode);
-            if (unit != null)
-                dataComponent.setProperty(SweConstants.UOM_OBJ, unit);
+            try
+            {
+                dataComponent.setProperty(SweConstants.UOM_CODE, ucumCode);
+                
+                // also create unit object
+                UnitParserUCUM ucumParser = new UnitParserUCUM();
+                Unit unit = ucumParser.getUnit(ucumCode);
+                if (unit != null)
+                    dataComponent.setProperty(SweConstants.UOM_OBJ, unit);
+            }
+            catch (Exception e)
+            {
+                throw new XMLReaderException("Error reading UCUM unit code", scalarElt, e);
+            }
         }
         
         // if no code, read href
@@ -575,12 +593,19 @@ public class SweComponentReaderV20 implements DataComponentReader
         // inline unit
         else
         {
-            Element unitElt = dom.getElement(scalarElt, "uom/*");
-            GMLUnitReader unitReader = new GMLUnitReader();
-            Unit unit = unitReader.readUnit(dom, unitElt);
-            if (unit != null)
-                dataComponent.setProperty(SweConstants.UOM_OBJ, unit);            
-            dataComponent.setProperty(SweConstants.UOM_CODE, unit.getCode());
+            try
+            {
+                Element unitElt = dom.getElement(scalarElt, "uom/*");
+                GMLUnitReader unitReader = new GMLUnitReader();
+                Unit unit = unitReader.readUnit(dom, unitElt);
+                if (unit != null)
+                    dataComponent.setProperty(SweConstants.UOM_OBJ, unit);            
+                dataComponent.setProperty(SweConstants.UOM_CODE, unit.getCode());
+            }
+            catch (Exception e)
+            {
+                throw new XMLReaderException("Error reading inline unit", scalarElt, e);
+            }
         }
     }
     
@@ -633,9 +658,17 @@ public class SweComponentReaderV20 implements DataComponentReader
     	if (constraintElt == null)
     		return;
     	
+    	ConstraintList constraintList = readConstraintList(dom, constraintElt);
+        if (!constraintList.isEmpty())
+            dataValue.setConstraints(constraintList);	
+    }
+    
+    
+    public ConstraintList readConstraintList(DOMHelper dom, Element constraintElt) throws XMLReaderException
+    {    	
     	boolean tokenConstraints = dom.hasQName(constraintElt, "swe:AllowedTokens");
     	boolean timeConstraints = dom.hasQName(constraintElt, "swe:AllowedTimes");
-    	ConstraintList constraintList = new ConstraintList();  
+    	ConstraintList constraintList = new ConstraintList();
     	DataConstraint constraint = null;
     	
     	if (tokenConstraints)
@@ -675,11 +708,11 @@ public class SweComponentReaderV20 implements DataComponentReader
     				try
 		        	{
 		    			values[i] = DateTimeFormat.parseIso(val);
-		    		}
-					catch (ParseException e)
-					{
-						throw new XMLReaderException("Invalid time enumeration constraint: " + val, scalarElt);
-					}
+		        	}
+                    catch (Exception e)
+                    {
+                        throw new XMLReaderException("Invalid time enumeration constraint: " + val, constraintElt);
+                    }
 	    		}
 	    		constraintList.add(new EnumNumberConstraint(values));
     		}
@@ -706,7 +739,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 		    		}
 					catch (Exception e)
 					{
-						throw new XMLReaderException("Invalid number enumeration constraint: " + val, scalarElt);
+						throw new XMLReaderException("Invalid number enumeration constraint: " + val, constraintElt);
 					}
 	    		}
 	    		constraintList.add(new EnumNumberConstraint(values));
@@ -715,8 +748,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     		// TODO read significantFigures
 		}
     	
-    	if (!constraintList.isEmpty())
-    	    dataValue.setConstraints(constraintList);
+    	return constraintList;
     }
     
     
@@ -739,7 +771,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 		}
 		catch (Exception e)
 		{
-			throw new XMLReaderException("Invalid Interval Constraint: " + rangeText, constraintElt);
+			throw new XMLReaderException("Invalid interval constraint: " + rangeText, constraintElt);
 		}
     }
     
@@ -763,7 +795,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 		}
 		catch (Exception e)
 		{
-			throw new XMLReaderException("Invalid Time Interval Constraint: " + rangeText, constraintElt);
+			throw new XMLReaderException("Invalid time interval constraint: " + rangeText, constraintElt);
 		}
     }
 }

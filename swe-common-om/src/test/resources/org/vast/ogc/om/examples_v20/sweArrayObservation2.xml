@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<om:OM_Observation
+	gml:id="SAO1"
+	xmlns:om="http://www.opengis.net/om/2.0"
+	xmlns:swe="http://www.opengis.net/swe/2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:gml="http://www.opengis.net/gml/3.2">
+	<!-- -->
+	<gml:description>Array of CTD profiles taken at different times and locations</gml:description>
+	<gml:name>CTD Profiles</gml:name>
+	<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation"/>
+	<!-- -->
+	<om:phenomenonTime>
+		<gml:TimePeriod gml:id="T001">
+			<gml:beginPosition>2005-01-11T17:22:25Z</gml:beginPosition>
+			<gml:endPosition>2005-01-11T18:22:25Z</gml:endPosition>
+		</gml:TimePeriod>
+	</om:phenomenonTime>
+	<om:resultTime>
+        <gml:TimePeriod gml:id="T002">
+            <gml:beginPosition>2005-01-11T17:22:25Z</gml:beginPosition>
+            <gml:endPosition>2005-01-11T18:22:25Z</gml:endPosition>
+        </gml:TimePeriod>
+    </om:resultTime>
+	<!-- -->
+	<om:procedure xlink:href="http://www.example.org/register/process/ctd3"/>
+	<om:observedProperty xlink:href="http://sweet.jpl.nasa.gov/2.0/ocean.owl#OceanPhenomena"/>
+	<om:featureOfInterest xlink:href="http://www.example.org/register/platform/argo-float-3"/>
+	<!-- -->
+	<om:result xsi:type="swe:DataArrayPropertyType">
+		<swe:DataArray>
+			<swe:elementCount>
+				<swe:Count>
+					<swe:value>4</swe:value>
+				</swe:Count>
+			</swe:elementCount>
+			<swe:elementType name="profileData">
+				<swe:DataRecord>
+					<swe:field name="time">
+						<swe:Time definition="http://www.opengis.net/def/property/OGC/0/SamplingTime">
+							<swe:label>Sampling Time</swe:label>
+							<swe:uom xlink:href="http://www.opengis.net/def/uom/ISO-8601/0/Gregorian"/>
+						</swe:Time>
+					</swe:field>
+					<swe:field name="location">
+						<swe:Vector definition="http://sweet.jpl.nasa.gov/2.0/space.owl#Location" referenceFrame="http://www.opengis.net/def/crs/EPSG/0/4326">
+							<swe:label>Sampling Location</swe:label>
+							<swe:coordinate name="lat">
+								<swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Latitude" axisID="Lat">
+									<swe:label>Latitude</swe:label>
+									<swe:uom xlink:href="deg"/>
+								</swe:Quantity>
+							</swe:coordinate>
+							<swe:coordinate name="lon">
+								<swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Longitude" axisID="Long">
+									<swe:label>Longitude</swe:label>
+									<swe:uom code="deg"/>
+								</swe:Quantity>
+							</swe:coordinate>
+						</swe:Vector>
+					</swe:field>
+					<swe:field name="profilePoints">
+						<swe:DataArray definition="http://sweet.jpl.nasa.gov/2.0/info.owl#Profile">
+							<swe:label>Profile Data</swe:label>
+							<swe:elementCount>
+								<swe:Count definition="http://www.opengis.net/def/property/OGC/0/NumberOfPoints"/>
+							</swe:elementCount>
+							<swe:elementType name="point">
+								<swe:DataRecord>
+									<swe:field name="depth">
+										<swe:Quantity definition="http://mmisw.org/ont/cf/parameter/depth">
+											<swe:label>Depth</swe:label>
+											<swe:uom code="m"/>
+										</swe:Quantity>
+									</swe:field>
+									<swe:field name="temperature">
+									  <swe:Quantity definition="http://mmisw.org/ont/cf/parameter/sea_water_temperature">
+											<swe:label>Temperature</swe:label>
+											<swe:uom code="Cel"/>
+										</swe:Quantity>
+									</swe:field>
+									<swe:field name="salinity">
+									  <swe:Quantity definition="http://mmisw.org/ont/cf/parameter/sea_water_salinity">
+											<swe:label>Salinity</swe:label>
+											<swe:uom code="[ppth]"/>
+										</swe:Quantity>
+									</swe:field>
+								</swe:DataRecord>
+							</swe:elementType>
+						</swe:DataArray>
+					</swe:field>
+				</swe:DataRecord>
+			</swe:elementType>
+			<swe:encoding>
+				<swe:TextEncoding blockSeparator="&#10;" tokenSeparator="," collapseWhiteSpaces="true" decimalSeparator="." />
+			</swe:encoding>
+			<swe:values>
+			2005-05-16T21:47:12Z,35.36,-35.2,5,0.0,12.0,45.0,10.0,13.0,20.0,20.0,8.0,30.0,30.0,7.0,35.0,40.0,5.0,40.0
+			2005-05-16T22:43:05Z,35.56,-35.0,4,0.0,13.0,45.0,10.0,13.0,20.0,20.0,9.0,30.0,30.0,6.0,35.0
+			2005-05-16T23:40:52Z,35.76,-34.7,5,0.0,13.0,45.0,10.0,15.0,20.0,20.0,6.0,30.0,30.0,7.0,35.0,40.0,5.0,40.0
+			2005-05-17T00:45:22Z,35.96,-34.3,6,0.0,16.0,45.0,10.0,12.0,20.0,20.0,8.0,30.0,30.0,6.0,35.0,40.0,5.0,40.0,50.0,5.0,45.0
+		  </swe:values>
+		</swe:DataArray>
+	</om:result>
+</om:OM_Observation>
