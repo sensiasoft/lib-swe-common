@@ -143,11 +143,11 @@ public class TestSweCommonBindingsV20 extends XMLTestCase
     }
     
     
-    public void testReadWriteArrayWithXmlData() throws Exception
+    /*public void testReadWriteArrayWithXmlData() throws Exception
     {        
         readWriteCompareSweCommonXml("examples_v20/spec/enc_xml_curve.xml");
         readWriteCompareSweCommonXml("examples_v20/spec/enc_xml_profile_series.xml");
-    }
+    }*/
     
     
     public void testReadWriteArrayBinary() throws Exception

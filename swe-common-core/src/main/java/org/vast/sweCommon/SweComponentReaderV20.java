@@ -307,6 +307,7 @@ public class SweComponentReaderV20 implements DataComponentReader
     {
         try
         {
+            // TODO add support for XML encoding?
             DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
             DataStreamParser parser = SWEFactory.createDataParser(encoding);
             parser.setParentArray(arrayObj);

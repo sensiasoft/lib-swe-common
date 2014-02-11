@@ -621,6 +621,16 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
+    /**
+     * Writes encoded array values to the values element
+     * TODO add support for XML encoding
+     * @param dom
+     * @param array
+     * @param elementType
+     * @param encoding
+     * @return
+     * @throws XMLWriterException
+     */
     private Element writeArrayValues(DOMHelper dom, DataComponent array, DataComponent elementType, DataEncoding encoding) throws XMLWriterException
     {
         Element tupleValuesElement = dom.createElement("swe:values");       
@@ -628,8 +638,10 @@ public class SweComponentWriterV20 implements DataComponentWriter
         
         // force base64 if byte encoding is raw
         if (encoding instanceof BinaryEncoding)
+        {
             if (((BinaryEncoding) encoding).byteEncoding == ByteEncoding.RAW)
                 ((BinaryEncoding) encoding).byteEncoding = ByteEncoding.BASE64;
+        }
         
         // write values with proper encoding to byte array
         try
