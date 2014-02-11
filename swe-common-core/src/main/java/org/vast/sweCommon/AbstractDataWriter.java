@@ -25,6 +25,7 @@ import java.io.OutputStream;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataStreamWriter;
+import org.vast.cdm.common.DataType;
 import org.vast.data.AbstractDataComponent;
 import org.vast.data.DataValue;
 import org.vast.util.DateTimeFormat;
@@ -129,12 +130,16 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	protected String getStringValue(DataValue scalarInfo)
 	{
 		String def = (String)scalarInfo.getProperty(SweConstants.UOM_URI);
+		DataType dataType = scalarInfo.getDataType();
+		DataBlock data = scalarInfo.getData();
 		String val;
 		
 		if (def != null && def.contains("8601"))
-			val = DateTimeFormat.formatIso(scalarInfo.getData().getDoubleValue(), 0);
+			val = getDoubleAsString(data.getDoubleValue(), true);
+		else if (dataType == DataType.DOUBLE || dataType == DataType.FLOAT)
+		    val = getDoubleAsString(data.getDoubleValue(), false);
 		else
-			val = scalarInfo.getData().getStringValue();
+			val = data.getStringValue();
 		
 		return val;
 	}
@@ -145,4 +150,15 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
     {
         this.dataComponents = (AbstractDataComponent)dataInfo.copy();
     }
+	
+	
+	public static String getDoubleAsString(double doubleVal, boolean useIso)
+	{
+	    if (Double.isInfinite(doubleVal))
+            return (doubleVal == Double.POSITIVE_INFINITY) ? "+INF" : "-INF";
+	    else if (useIso)
+            return DateTimeFormat.formatIso(doubleVal, 0);
+        else
+            return Double.toString(doubleVal);
+	}
 }

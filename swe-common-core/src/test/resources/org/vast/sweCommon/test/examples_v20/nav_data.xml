@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swe:DataStream id="EXAMPLE_02" 
+   xmlns:swe="http://www.opengis.net/swe/2.0"
+   xmlns:gml="http://www.opengis.net/gml/3.2"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xsi:schemaLocation="http://www.opengis.net/swe/2.0 http://schemas.opengis.net/sweCommon/2.0/swe.xsd">
+   <swe:elementCount>
+        <swe:Count>
+            <swe:value>10</swe:value>
+        </swe:Count>
+    </swe:elementCount>
+    <swe:elementType name="navData">
+      <swe:DataRecord>
+         <swe:field name="time">
+            <swe:Time definition="http://www.opengis.net/def/property/OGC/0/SamplingTime" referenceTime="1999-01-01T00:00:00Z">
+               <swe:uom code="s"/>
+            </swe:Time>
+         </swe:field>
+         <swe:field name="location">
+            <swe:Vector definition="http://www.opengis.net/def/property/OGC/0/PlatformLocation" referenceFrame="http://www.opengis.net/def/crs/EPSG/0/4979">
+               <swe:coordinate name="lat">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Latitude" axisID="Lat">
+                     <swe:uom code="deg"/>
+                  </swe:Quantity>
+               </swe:coordinate>
+               <swe:coordinate name="lon">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Longitude" axisID="Long">
+                     <swe:uom code="deg"/>
+                  </swe:Quantity>
+               </swe:coordinate>
+               <swe:coordinate name="alt">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceExtent.owl#Altitude" axisID="h">
+                     <swe:uom code="m"/>
+                  </swe:Quantity>
+               </swe:coordinate>
+            </swe:Vector>
+         </swe:field>
+         <swe:field name="attitude">
+            <swe:Vector definition="http://www.opengis.net/def/property/OGC/0/PlatformOrientation" referenceFrame="#PLATFORM_FRAME">
+               <swe:coordinate name="trueHeading">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Yaw" axisID="Z">
+                     <swe:uom code="deg"/>
+                  </swe:Quantity>
+               </swe:coordinate>
+               <swe:coordinate name="pitch">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Pitch" axisID="X">
+                     <swe:uom code="deg"/>
+                  </swe:Quantity>
+               </swe:coordinate>
+               <swe:coordinate name="roll">
+                  <swe:Quantity definition="http://sweet.jpl.nasa.gov/2.0/spaceCoordinates.owl#Roll" axisID="Y">
+                     <swe:uom code="deg"/>
+                  </swe:Quantity>
+               </swe:coordinate>
+            </swe:Vector>
+         </swe:field>         
+      </swe:DataRecord>
+   </swe:elementType>
+   <!-- -->
+   <swe:encoding>
+      <swe:TextEncoding tokenSeparator="," blockSeparator="&#10;" decimalSeparator="." collapseWhiteSpaces="true"/>
+   </swe:encoding>
+   <!-- -->
+   <swe:values>
+      0.0,43.604,1.444,650.0,12.0,1.4,0.2
+      1.0,43.6041,1.4441,651.0,12.1,1.41,0.21
+      2.0,43.6042,1.4442,652.0,12.2,1.42,0.22
+      3.0,43.6043,1.4443,653.0,12.3,1.43,0.23
+      4.0,43.6044,1.4444,654.0,12.4,1.44,0.24
+      5.0,43.6045,1.4445,655.0,12.5,1.45,0.25
+      6.0,43.6046,1.4446,656.0,12.6,1.46,0.26
+      7.0,43.6047,1.4447,657.0,12.7,1.47,0.27
+      8.0,43.6048,1.4448,658.0,12.8,1.48,0.28
+      9.0,43.6049,1.4449,659.0,12.9,1.49,0.29
+   </swe:values>
+</swe:DataStream>

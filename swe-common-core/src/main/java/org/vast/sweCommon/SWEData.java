@@ -23,7 +23,6 @@ package org.vast.sweCommon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
@@ -47,72 +46,70 @@ import org.vast.data.DataList;
  * @since Feb 21, 2007
  * @version 1.0
  */
-public class SWEData implements ISweInputDataStream, ISweOutputDataStream
+public class SWEData extends DataList implements ISweInputDataStream, ISweOutputDataStream
 {
-    protected DataEncoding encoding;
+    private static final long serialVersionUID = 3128971142750657973L;
     protected DataSource dataSource;
-    protected DataList dataList;
 
 
     public SWEData()
     {
-        dataList = new DataList();
     }
     
     
     @Override
     public int getElementCount()
     {
-        return dataList.getComponentCount();
+        return getComponentCount();
     }
     
     
     @Override
     public DataComponent getElementType()
     {
-        return dataList.getListComponent();
+        return getListComponent();
     }
 
 
     @Override
     public void setElementType(DataComponent elementType)
     {
-        dataList.addComponent(elementType);
+        addComponent(elementType);
     }
 
 
     @Override
     public DataEncoding getEncoding()
     {
-        return encoding;
+        return (DataEncoding)getProperty(SweConstants.ENCODING_TYPE);
     }
 
 
     @Override
     public void setEncoding(DataEncoding dataEncoding)
     {
-        this.encoding = dataEncoding;
+        setProperty(SweConstants.ENCODING_TYPE, dataEncoding);
     }
     
     
     @Override
     public DataComponent getNextElement()
     {
-        return dataList.nextComponent();
+        return nextComponent();
     }
     
     
     @Override
     public DataBlock getNextDataBlock()
     {
-        return dataList.nextDataBlock();
+        return nextDataBlock();
     }
     
     
     @Override
     public void pushNextDataBlock(DataBlock dataBlock)
     {
-        dataList.addData(dataBlock);
+        addData(dataBlock);
     }
 
 
@@ -128,18 +125,6 @@ public class SWEData implements ISweInputDataStream, ISweOutputDataStream
     }
     
     
-    public DataList getDataList()
-    {
-        return dataList;
-    }
-
-
-    public void setDataList(DataList dataList)
-    {
-        this.dataList = dataList;
-    }
-    
-    
     /**
      * Retrieves parser created for this SWE structure/encoding pair
      * Allows the use of the parser on a separate input streams w/ same structure
@@ -147,7 +132,7 @@ public class SWEData implements ISweInputDataStream, ISweOutputDataStream
      */
     public DataStreamParser getDataParser()
     {
-        DataStreamParser parser = SWEFactory.createDataParser(encoding);
+        DataStreamParser parser = SWEFactory.createDataParser(getEncoding());
         parser.setDataComponents(getElementType());
         return parser;
     }
@@ -160,7 +145,7 @@ public class SWEData implements ISweInputDataStream, ISweOutputDataStream
      */
     public DataStreamWriter getDataWriter()
     {
-        DataStreamWriter writer = SWEFactory.createDataWriter(encoding);
+        DataStreamWriter writer = SWEFactory.createDataWriter(getEncoding());
         writer.setDataComponents(getElementType());
         return writer;
     }
@@ -186,7 +171,9 @@ public class SWEData implements ISweInputDataStream, ISweOutputDataStream
      */
     public void parseData(DataSource dataSource) throws IOException
     {
-    	// special case for reading XML encoded stream from a DOM
+    	DataEncoding encoding = getEncoding();
+    	
+        // special case for reading XML encoded stream from a DOM
         if (dataSource instanceof DataSourceDOM && encoding instanceof XmlEncoding)
         {
         	DataSourceDOM domSrc = (DataSourceDOM)dataSource;
@@ -207,23 +194,14 @@ public class SWEData implements ISweInputDataStream, ISweOutputDataStream
     
     
     /**
-     * Validates all data against constraints specified in
-     * the data components definition
-     * @throws CDMException
-     */
-    public void validateData(List<CDMException> errorList)
-    {
-    	dataList.validateData(errorList);
-    }
-    
-    
-    /**
      * Writes data blocks to the data stream specified
      * @param buffer
      * @throws CDMException
      */
     public void writeData(DataSink dataSink) throws IOException
     {
+        DataEncoding encoding = getEncoding();
+        
         // special case for writing XML encoded stream in a DOM
         if (dataSink instanceof DataSinkDOM && encoding instanceof XmlEncoding)
         {
@@ -244,5 +222,11 @@ public class SWEData implements ISweInputDataStream, ISweOutputDataStream
             dataSink.flush();
         }
     }
-    
+
+
+    @Override
+    public SWEData clone()
+    {
+        return (SWEData)super.clone();
+    }    
 }

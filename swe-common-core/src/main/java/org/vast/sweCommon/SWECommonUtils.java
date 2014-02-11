@@ -20,6 +20,8 @@
 
 package org.vast.sweCommon;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentReader;
 import org.vast.cdm.common.DataComponentWriter;
@@ -101,6 +103,14 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     {
         DataComponentWriter writer = getDataComponentWriter();
         return writer.writeComponent(dom, dataComponents, writeInlineData);
+    }
+    
+    
+    public void writeComponent(OutputStream outputStream, DataComponent dataComponents, boolean writeInlineData) throws XMLWriterException, IOException
+    {
+        DOMHelper dom = new DOMHelper("swe");
+        Element compElt = writeComponent(dom, dataComponents, writeInlineData);
+        dom.serialize(compElt, outputStream, true);
     }
 
 

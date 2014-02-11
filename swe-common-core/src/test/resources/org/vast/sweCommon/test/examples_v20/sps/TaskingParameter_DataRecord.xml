@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swe:DataRecord definition="urn:foo:def:CameraTaskingParameters" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <swe:description>Tasking Parameters description used to task a web cam</swe:description>
+    <!---->
+	<swe:field name="f_length">
+		<swe:Quantity updatable="true" definition="urn:x-ogc:def:property:OGC::FocalLength">
+			<swe:description>Focal length of camera</swe:description>
+			<swe:uom xlink:href="mm"/>
+			<swe:constraint>
+				<swe:AllowedValues>
+					<swe:interval>18.0 180.0</swe:interval>
+				</swe:AllowedValues>
+			</swe:constraint>
+			<swe:value>65.0</swe:value>
+		</swe:Quantity>
+	</swe:field>
+	<!---->
+	<swe:field name="infrared_mode">
+		<swe:Boolean definition="urn:x-ogc:def:property:OGC::NightMode" updatable="true" optional="true">
+			<swe:value>false</swe:value>
+		</swe:Boolean>
+	</swe:field>
+</swe:DataRecord>

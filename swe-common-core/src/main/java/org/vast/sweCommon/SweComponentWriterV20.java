@@ -24,7 +24,10 @@ package org.vast.sweCommon;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import org.vast.cdm.common.AsciiEncoding;
 import org.vast.cdm.common.BinaryEncoding;
@@ -34,6 +37,7 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentWriter;
 import org.vast.cdm.common.DataConstraint;
 import org.vast.cdm.common.DataEncoding;
+import org.vast.cdm.common.DataSource;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.cdm.common.DataType;
 import org.vast.data.ConstraintList;
@@ -43,6 +47,8 @@ import org.vast.data.DataGroup;
 import org.vast.data.DataList;
 import org.vast.data.DataValue;
 import org.vast.ogc.OGCRegistry;
+import org.vast.ogc.xlink.CachedReference;
+import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.unit.Unit;
 import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
@@ -53,7 +59,8 @@ import org.w3c.dom.Element;
 /**
  * <p>
  * Writes CDM Components structures including DataValue,
- * DataGroup, DataArray, DataChoice to an XML DOM tree. 
+ * DataGroup, DataArray, DataChoice to an XML DOM tree.
+ * This class is not thread-safe.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -63,26 +70,21 @@ import org.w3c.dom.Element;
  */
 public class SweComponentWriterV20 implements DataComponentWriter
 {
-	public static Hashtable<QName, SweCustomWriter> customWriters;
 	protected String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
-    protected boolean writeInlineData = false;
     protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();
+    protected Map<String, Object> objectIds;
+    protected boolean keepHref = true;
     
     
     public SweComponentWriterV20()
     {
-    }
-    
-    
-    public SweComponentWriterV20(boolean writeInlineData)
-    {
-        this.writeInlineData = writeInlineData;
+        objectIds = new HashMap<String, Object>();
     }
     
         
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws XMLWriterException
     {
-    	return writeComponent(dom, dataComponents, false);
+    	return writeComponent(dom, dataComponents, true);
     }
     
     
@@ -90,7 +92,6 @@ public class SweComponentWriterV20 implements DataComponentWriter
     {
         dom.addUserPrefix("swe", SWE_NS);
         dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
-        this.writeInlineData = writeInlineData;
         
         Element newElt = null;
         QName compQName = (QName)dataComponent.getProperty(SweConstants.COMP_QNAME);
@@ -100,37 +101,65 @@ public class SweComponentWriterV20 implements DataComponentWriter
         if (dataComponent instanceof DataGroup)
         {
             if (refFrame != null || (compQName != null && compQName.getLocalPart().equals("Vector")))
-                newElt = writeVector(dom, (DataGroup)dataComponent);
+                newElt = writeVector(dom, (DataGroup)dataComponent, writeInlineData);
             else if (compQName != null && compQName.getLocalPart().endsWith("Range"))
-                newElt = writeDataRange(dom, (DataGroup)dataComponent, compQName);        	
+                newElt = writeDataRange(dom, (DataGroup)dataComponent, compQName, writeInlineData);        	
         	else
-        		newElt = writeDataRecord(dom, (DataGroup)dataComponent);
+        		newElt = writeDataRecord(dom, (DataGroup)dataComponent, writeInlineData);
         }
         
         // soft or hard typed choice component
         else if (dataComponent instanceof DataChoice)
         {
-        	newElt = writeDataChoice(dom, (DataChoice)dataComponent);
+        	newElt = writeDataChoice(dom, (DataChoice)dataComponent, writeInlineData);
         }
         
         // soft or hard typed array component
         else if (dataComponent instanceof DataArray)
         {
         	if (refFrame != null || (compQName != null && compQName.getLocalPart().equals("Matrix")))
-        		newElt = writeMatrix(dom, (DataArray)dataComponent);
+        		newElt = writeMatrix(dom, (DataArray)dataComponent, writeInlineData);
             else
-            	newElt = writeDataArray(dom, (DataArray)dataComponent);
+            	newElt = writeDataArray(dom, (DataArray)dataComponent, writeInlineData);
         }
         else if (dataComponent instanceof DataList)
         {
-            // TODO write DataList
+            newElt = writeDataList(dom, (DataList)dataComponent, writeInlineData);
         }
         else if (dataComponent instanceof DataValue)
         {
-            newElt = writeDataValue(dom, (DataValue)dataComponent);
+            newElt = writeDataValue(dom, (DataValue)dataComponent, writeInlineData);
         }
 
         return newElt;
+    }
+    
+    
+    /**
+     * Write a property containing a component properly handling xlink
+     * @param dom
+     * @param dataComponent
+     * @param propQname
+     * @param writeInlineData
+     * @return
+     * @throws XMLWriterException
+     */
+    public Element addComponentProperty(DOMHelper dom, Element parentElt, String propEltPath, DataComponent dataComponent, boolean writeInlineData) throws XMLWriterException
+    {
+        Element propElt = dom.addElement(parentElt, propEltPath);
+        CachedReference<?> xlinkOptions = (CachedReference<?>)dataComponent.getProperty(SweConstants.COMP_XLINK);
+        
+        if (xlinkOptions != null && keepHref)
+        {
+            XlinkUtils.writeXlinkAttributes(propElt, xlinkOptions);
+        }
+        else
+        {
+            Element qualElt = writeComponent(dom, dataComponent, writeInlineData);
+            propElt.appendChild(qualElt);
+        }
+        
+        return propElt;
     }
 
 
@@ -141,7 +170,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataRecord(DOMHelper dom, DataGroup dataGroup) throws XMLWriterException
+    private Element writeDataRecord(DOMHelper dom, DataGroup dataGroup, boolean writeInlineData) throws XMLWriterException
     {
     	Element dataGroupElt = dom.createElement("swe:DataRecord");
         
@@ -154,16 +183,10 @@ public class SweComponentWriterV20 implements DataComponentWriter
         for (int i=0; i<groupSize; i++)
         {
         	DataComponent component = dataGroup.getComponent(i);
-        	Element fieldElt = dom.addElement(dataGroupElt, "+swe:field");
+        	
+        	// add field property
+        	Element fieldElt = addComponentProperty(dom, dataGroupElt, "+swe:field", component, writeInlineData);
         	fieldElt.setAttribute("name", component.getName());
-    		
-        	Element componentElt = writeComponent(dom, component, writeInlineData);
-            fieldElt.appendChild(componentElt);
-            
-            // write optional flag
-        	Boolean optional = (Boolean)component.getProperty(SweConstants.OPTIONAL);
-        	if (optional != null)
-        		componentElt.setAttribute("optional", (optional ? "true" : "false"));
         }
 
         return dataGroupElt;
@@ -177,7 +200,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeVector(DOMHelper dom, DataGroup dataGroup) throws XMLWriterException
+    private Element writeVector(DOMHelper dom, DataGroup dataGroup, boolean writeInlineData) throws XMLWriterException
     {
     	Element dataGroupElt = dom.createElement("swe:Vector");
         
@@ -208,7 +231,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataChoice(DOMHelper dom, DataChoice dataChoice) throws XMLWriterException
+    private Element writeDataChoice(DOMHelper dom, DataChoice dataChoice, boolean writeInlineData) throws XMLWriterException
     {
         Element dataChoiceElt = dom.createElement("swe:DataChoice");
         
@@ -221,12 +244,8 @@ public class SweComponentWriterV20 implements DataComponentWriter
         for (int i=0; i<listSize; i++)
         {
             DataComponent component = dataChoice.getComponent(i);            
-        	
-            Element propElt = dom.addElement(dataChoiceElt, "+swe:item");
-        	propElt.setAttribute("name", component.getName());
-        	
-            Element componentElt = writeComponent(dom, component, writeInlineData);
-            propElt.appendChild(componentElt);        
+            Element propElt = addComponentProperty(dom, dataChoiceElt, "+swe:item", component, false);
+        	propElt.setAttribute("name", component.getName());        
         }       
 
         return dataChoiceElt;
@@ -240,10 +259,10 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataArray(DOMHelper dom, DataArray dataArray) throws XMLWriterException
+    private Element writeDataArray(DOMHelper dom, DataArray dataArray, boolean writeInlineData) throws XMLWriterException
     {
         Element dataArrayElt = dom.createElement("swe:DataArray");
-		writeArrayContent(dom, dataArray, dataArrayElt);
+		writeArrayContent(dom, dataArray, dataArrayElt, writeInlineData);
         return dataArrayElt;
     }
     
@@ -255,15 +274,15 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeMatrix(DOMHelper dom, DataArray dataArray) throws XMLWriterException
+    private Element writeMatrix(DOMHelper dom, DataArray dataArray, boolean writeInlineData) throws XMLWriterException
     {
         Element dataArrayElt = dom.createElement("swe:Matrix");
-		writeArrayContent(dom, dataArray, dataArrayElt);
+		writeArrayContent(dom, dataArray, dataArrayElt, writeInlineData);
         return dataArrayElt;
     }
     
     
-    private void writeArrayContent(DOMHelper dom, DataArray dataArray, Element arrayElt) throws XMLWriterException
+    private void writeArrayContent(DOMHelper dom, DataArray dataArray, Element arrayElt, boolean writeInlineData) throws XMLWriterException
     {
     	// write common stuffs
         writeBaseProperties(dom, dataArray, arrayElt);
@@ -284,7 +303,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	// case of implicit Count field
         	if (sizeData.getParent() == null)
         	{
-        		Element countElt = writeDataValue(dom, sizeData);
+        		Element countElt = writeDataValue(dom, sizeData, false);
         		eltCountElt.appendChild(countElt);
         	}
         	
@@ -302,22 +321,19 @@ public class SweComponentWriterV20 implements DataComponentWriter
         // case of fixed size
         else
         {
-        	Element countElt = writeDataValue(dom, sizeData);
+        	Element countElt = writeDataValue(dom, sizeData, true);
     		dom.setElementValue(countElt, "swe:value", Integer.toString(arraySize));
     		eltCountElt.appendChild(countElt);
         }
                 	
         // write array component
-        Element propElt = dom.addElement(arrayElt, "swe:elementType");
-        DataComponent component = dataArray.getArrayComponent();
-        
-        // add name attribute if different from 'elementType'
-    	String fieldName = component.getName();
-    	if (fieldName != null && !fieldName.equals("elementType"))
-    		propElt.setAttribute("name", fieldName);
+        DataComponent arrayComponent = dataArray.getArrayComponent();
+        Element propElt = addComponentProperty(dom, arrayElt, "swe:elementType", arrayComponent, false);
     	
-    	Element componentElt = writeComponent(dom, component, writeInlineData);
-    	propElt.appendChild(componentElt);
+    	// add name attribute if different from 'elementType'
+        String fieldName = arrayComponent.getName();
+        if (fieldName != null && !fieldName.equals("elementType"))
+            propElt.setAttribute("name", fieldName);
     	
     	// restore state of writeInlineData
         writeInlineData = saveWriteInlineDataState;
@@ -333,9 +349,65 @@ public class SweComponentWriterV20 implements DataComponentWriter
         	Element encElt = encodingWriter.writeEncoding(dom, dataEncoding);
         	encPropElt.appendChild(encElt);
         	
-        	Element tupleValuesElt = writeArrayValues(dom, dataArray, dataEncoding);
+        	Element tupleValuesElt = writeArrayValues(dom, dataArray, arrayComponent, dataEncoding);
         	arrayElt.appendChild(tupleValuesElt);
         }
+    }
+    
+    
+    /**
+     * Writes generic (soft-typed) DataList structure 
+     * @param dom
+     * @param dataArray
+     * @return
+     * @throws CDMException
+     */
+    private Element writeDataList(DOMHelper dom, DataList dataList, boolean writeInlineData) throws XMLWriterException
+    {
+        Element streamElt = dom.createElement("swe:DataStream");
+        
+        // write common stuffs
+        writeBaseProperties(dom, dataList, streamElt);
+        writeCommonAttributes(dom, dataList, streamElt);
+                
+        // write elementCount
+        int arraySize = dataList.getComponentCount();
+        if (arraySize > 0)
+            dom.setElementValue(streamElt, "swe:elementCount/swe:Count/swe:value", Integer.toString(arraySize));        
+        
+        // write array component
+        Element propElt = dom.addElement(streamElt, "swe:elementType");
+        DataComponent listComponent = dataList.getListComponent();
+        
+        // add name attribute if different from 'elementType'
+        String fieldName = listComponent.getName();
+        if (fieldName != null && !fieldName.equals("elementType"))
+            propElt.setAttribute("name", fieldName);
+        
+        // write steam component definition
+        Element componentElt = writeComponent(dom, listComponent, false);
+        propElt.appendChild(componentElt);
+        
+        // write encoding
+        DataEncoding encoding = (DataEncoding)dataList.getProperty(SweConstants.ENCODING_TYPE);        
+        Element encPropElt = dom.addElement(streamElt, "swe:encoding");
+        Element encElt = encodingWriter.writeEncoding(dom, encoding);
+        encPropElt.appendChild(encElt);
+        
+        // write values
+        if (dataList instanceof SWEData && (((SWEData)dataList).getDataSource() instanceof DataSourceURI))
+        {
+            DataSource dataSrc = ((SWEData)dataList).getDataSource();
+            String uri = ((DataSourceURI)dataSrc).streamUri;
+            dom.setAttributeValue(streamElt, "swe:values/xlink:href", uri);
+        }        
+        else if (dataList.getData() != null && writeInlineData)
+        {   
+            Element tupleValuesElt = writeArrayValues(dom, dataList, listComponent, encoding);
+            streamElt.appendChild(tupleValuesElt);
+        }
+        
+        return streamElt;
     }
     
     
@@ -346,7 +418,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataValue(DOMHelper dom, DataValue dataValue) throws XMLWriterException
+    private Element writeDataValue(DOMHelper dom, DataValue dataValue, boolean writeInlineData) throws XMLWriterException
     {
         // create right element
         String eltName = getElementName(dataValue);
@@ -355,22 +427,18 @@ public class SweComponentWriterV20 implements DataComponentWriter
         // write all properties
         writeCommonAttributes(dom, dataValue, dataValueElt);
         writeBaseProperties(dom, dataValue, dataValueElt);
+        writeQuality(dom, dataValue, dataValueElt);
+        writeNilValues(dom, dataValue, dataValueElt);
     	writeUom(dom, dataValue, dataValueElt);
     	writeCodeSpace(dom, dataValue, dataValueElt);
     	writeConstraints(dom, dataValue, dataValueElt);
-    	writeQuality(dom, dataValue, dataValueElt);
     	
-        // write value if necessary
-    	DataBlock data = dataValue.getData();
-    	if (writeInlineData && data != null)
+        // write value if necessary    	
+    	if (writeInlineData)
     	{
-            String val;
-            String uomUri = (String)dataValue.getProperty(SweConstants.UOM_URI);
-    	    if (uomUri != null && uomUri.equals(SweConstants.ISO_TIME_DEF))
-    	        val = DateTimeFormat.formatIso(data.getDoubleValue(), 0);
-    	    else
-    	        val = data.getStringValue();    	    
-    	    dom.setElementValue(dataValueElt, "swe:value", val);
+            String val = getValueAsString(dataValue);
+            if (val != null)
+                dom.setElementValue(dataValueElt, "swe:value", val);
     	}
     	
         return dataValueElt;
@@ -384,7 +452,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
      * @return
      * @throws CDMException
      */
-    private Element writeDataRange(DOMHelper dom, DataGroup dataGroup, QName rangeQName) throws XMLWriterException
+    private Element writeDataRange(DOMHelper dom, DataGroup dataGroup, QName rangeQName, boolean writeInlineData) throws XMLWriterException
     {
     	DataValue min = (DataValue)dataGroup.getComponent(0);
     	DataValue max = (DataValue)dataGroup.getComponent(1);
@@ -398,15 +466,39 @@ public class SweComponentWriterV20 implements DataComponentWriter
         
         // extracted some from min component and not from DataGroup!!
         writeUom(dom, min, rangeElt);
+        writeCodeSpace(dom, min, rangeElt);
     	writeConstraints(dom, min, rangeElt);
     	writeQuality(dom, min, rangeElt);
         
         // write min/max values if necessary
         if (writeInlineData && min.getData() != null && max.getData() != null)
-        	dom.setElementValue(rangeElt, "swe:value", 
-        			min.getData().getStringValue() + " " + max.getData().getStringValue());
-
+        {
+            String minVal = getValueAsString(min);
+            String maxVal = getValueAsString(max);
+            if (minVal != null && maxVal != null)
+                dom.setElementValue(rangeElt, "swe:value", minVal + " " + maxVal);
+        }
+        
         return rangeElt;
+    }
+    
+    
+    private String getValueAsString(DataValue dataValue)
+    {
+        DataBlock data = dataValue.getData();
+        if (data == null)
+            return null;
+        
+        String val;
+        String uomUri = (String)dataValue.getProperty(SweConstants.UOM_URI);
+        if (uomUri != null && uomUri.equals(SweConstants.ISO_TIME_DEF))
+            val = AsciiDataWriter.getDoubleAsString(data.getDoubleValue(), true);
+        else if (dataValue.getDataType() == DataType.DOUBLE)
+            val = AsciiDataWriter.getDoubleAsString(data.getDoubleValue(), false);
+        else
+            val = data.getStringValue();
+        
+        return val;
     }
     
     
@@ -494,6 +586,14 @@ public class SweComponentWriterV20 implements DataComponentWriter
         if (updatable != null)
             dataComponentElt.setAttribute("updatable", updatable.toString());
         
+        // optional
+        if (dataComponent.getParent() instanceof DataGroup)
+        {
+            Boolean optional = (Boolean)dataComponent.getProperty(SweConstants.OPTIONAL);
+            if (optional != null)
+                dataComponentElt.setAttribute("optional", optional.toString());
+        }
+        
         // crs
         String crs = (String)dataComponent.getProperty(SweConstants.CRS);
         if (crs != null)
@@ -521,7 +621,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private Element writeArrayValues(DOMHelper dom, DataArray array, DataEncoding encoding) throws XMLWriterException
+    private Element writeArrayValues(DOMHelper dom, DataComponent array, DataComponent elementType, DataEncoding encoding) throws XMLWriterException
     {
         Element tupleValuesElement = dom.createElement("swe:values");       
         ByteArrayOutputStream os = new ByteArrayOutputStream(array.getData().getAtomCount()*10);
@@ -535,7 +635,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         try
         {
             DataStreamWriter writer = SWEFactory.createDataWriter(encoding);
-            writer.setDataComponents(array.getArrayComponent().copy());
+            writer.setDataComponents(elementType.copy());
             writer.setOutput(os);
             
             for (int i = 0; i < array.getComponentCount(); i++)
@@ -588,11 +688,19 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	if (constraints != null && !constraints.isEmpty())
     	{
     		Element constraintElt = dom.addElement(dataValueElt, "swe:constraint");
-    		Element allowedValuesElt;
+    		String uomUri = (String)dataValue.getProperty(SweConstants.UOM_URI);
+    		String compName = ((QName)dataValue.getProperty(SweConstants.COMP_QNAME)).getLocalPart();
     		
+    		boolean writeIntegers = (dataValue.getDataType() != DataType.DOUBLE && dataValue.getDataType() != DataType.FLOAT);
+    		boolean isTime = compName.startsWith("Time");
+    		boolean useIso = (uomUri != null && uomUri.equals(SweConstants.ISO_TIME_DEF));
+    		
+    		Element allowedValuesElt;
     		if (dataValue.getDataType() == DataType.ASCII_STRING ||
     			dataValue.getDataType() == DataType.UTF_STRING)
     			allowedValuesElt = dom.addElement(constraintElt, "swe:AllowedTokens");
+    		else if (isTime)
+    		    allowedValuesElt = dom.addElement(constraintElt, "swe:AllowedTimes");
     		else
     			allowedValuesElt = dom.addElement(constraintElt, "swe:AllowedValues");
     		
@@ -604,7 +712,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     			if (constraint instanceof EnumTokenConstraint)
     				writeTokenEnumConstraint(dom, (EnumTokenConstraint)constraint, allowedValuesElt);
     			else if (constraint instanceof EnumNumberConstraint)
-    				writeNumberEnumConstraint(dom, (EnumNumberConstraint)constraint, allowedValuesElt);
+    				writeNumberEnumConstraint(dom, (EnumNumberConstraint)constraint, allowedValuesElt, writeIntegers, useIso);
     		} 
     		
     		// write all other constraints
@@ -613,7 +721,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
     			DataConstraint constraint = constraints.get(c);
     			
     			if (constraint instanceof IntervalConstraint)
-    				writeIntervalConstraint(dom, (IntervalConstraint)constraint, allowedValuesElt);
+    				writeIntervalConstraint(dom, (IntervalConstraint)constraint, allowedValuesElt, writeIntegers, useIso);
     			else if (constraint instanceof PatternConstraint)
     				writePatternConstraint(dom, (PatternConstraint)constraint, allowedValuesElt);
     		}
@@ -623,19 +731,39 @@ public class SweComponentWriterV20 implements DataComponentWriter
     }
     
     
-    private void writeIntervalConstraint(DOMHelper dom, IntervalConstraint constraint, Element constraintElt) throws XMLWriterException
+    private void writeIntervalConstraint(DOMHelper dom, IntervalConstraint constraint, Element constraintElt, boolean writeIntegers, boolean useIso) throws XMLWriterException
     {
     	Element intervalElt = dom.addElement(constraintElt, "+swe:interval");
-    	String text = constraint.getMin() + " " + constraint.getMax();
-    	dom.setElementValue(intervalElt, text);
+    	
+    	String min, max;
+    	if (writeIntegers)
+    	{
+    	    min = Integer.toString((int)constraint.getMin());
+    	    max = Integer.toString((int)constraint.getMax());
+    	}
+    	else
+    	{
+    	    min = AsciiDataWriter.getDoubleAsString(constraint.getMin(), useIso);
+    	    max = AsciiDataWriter.getDoubleAsString(constraint.getMax(), useIso);
+    	}
+    	
+    	dom.setElementValue(intervalElt, min + " " + max);
     }
     
     
-    private void writeNumberEnumConstraint(DOMHelper dom, EnumNumberConstraint constraint, Element constraintElt) throws XMLWriterException
+    private void writeNumberEnumConstraint(DOMHelper dom, EnumNumberConstraint constraint, Element constraintElt, boolean writeIntegers, boolean useIso) throws XMLWriterException
     {
-    	double[] valueList = constraint.getValueList();    	
-    	for (int i=0; i<valueList.length; i++)
-    		dom.setElementValue(constraintElt, "+swe:value", Double.toString(valueList[i]));
+    	double[] valueList = constraint.getValueList();
+    	if (writeIntegers)
+    	{
+    	    for (int i=0; i<valueList.length; i++)
+                dom.setElementValue(constraintElt, "+swe:value", Integer.toString((int)valueList[i]));
+    	}
+    	else
+    	{
+    	    for (int i=0; i<valueList.length; i++)
+    	        dom.setElementValue(constraintElt, "+swe:value", AsciiDataWriter.getDoubleAsString(valueList[i], useIso));
+    	}
     }
     
     
@@ -656,6 +784,55 @@ public class SweComponentWriterV20 implements DataComponentWriter
     
     private void writeQuality(DOMHelper dom, DataValue dataValue, Element dataValueElt) throws XMLWriterException
     {
-    	// TODO write Quality 
+    	List<DataComponent> qualList = (List<DataComponent>)dataValue.getProperty(SweConstants.QUALITY);
+    	if (qualList == null)
+    	    return;
+    	
+    	for (DataComponent qualComp: qualList)
+    	    addComponentProperty(dom, dataValueElt, "+swe:quality", qualComp, true);
+    }
+    
+    
+    private void writeNilValues(DOMHelper dom, DataValue dataValue, Element dataValueElt) throws XMLWriterException
+    {
+        NilValues nilValues = (NilValues)dataValue.getProperty(SweConstants.NIL_VALUES);
+        if (nilValues == null)
+            return;
+        
+        Element nilPropElt = dom.addElement(dataValueElt, "swe:nilValues");
+        CachedReference<?> xlinkOptions = (CachedReference<?>)dataValue.getProperty(SweConstants.NIL_XLINK);
+        if (xlinkOptions != null)
+        {
+            XlinkUtils.writeXlinkAttributes(nilPropElt, xlinkOptions);
+        }
+        else
+        {
+            Element nilValuesElt = dom.addElement(nilPropElt, "swe:NilValues");
+            
+            // id
+            if (nilValues.getId() != null)
+                dom.setAttributeValue(nilValuesElt, "id", nilValues.getId());
+            
+            // reason -> reserved value mapping
+            for (Entry<String, Object> nils: nilValues.getReasonsToValues().entrySet())
+            {
+                String token = null;
+                Object nilObj = nils.getValue();
+                if (nilObj instanceof Double)
+                    token = AsciiDataWriter.getDoubleAsString((Double)nilObj, false);
+                else
+                    token = nilObj.toString();
+                
+                Element nilElt = dom.addElement(nilValuesElt, "+swe:nilValue");
+                dom.setAttributeValue(nilElt, "reason", nils.getKey());
+                dom.setElementValue(nilElt, token);
+            }
+        }
+    }
+    
+    
+    public void setExpandHref(boolean expandHref)
+    {
+        this.keepHref = !expandHref;
     }
 }

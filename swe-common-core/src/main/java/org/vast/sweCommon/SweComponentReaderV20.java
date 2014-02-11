@@ -25,13 +25,17 @@ package org.vast.sweCommon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import javax.xml.namespace.QName;
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
 import org.vast.data.*;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLUnitReader;
+import org.vast.ogc.xlink.CachedReference;
+import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.sweCommon.IntervalConstraint;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
@@ -45,6 +49,7 @@ import org.vast.xml.XMLReaderException;
  * Reads SWE Components structures made of Scalar Parameters,
  * DataRecord, DataArray, and hard typed derived structures.
  * This is for version 2.0 of the SWE Common specification.
+ * This class is not thread-safe.
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -54,64 +59,64 @@ import org.vast.xml.XMLReaderException;
  */
 public class SweComponentReaderV20 implements DataComponentReader
 {
-	public static Hashtable<QName, SweCustomReader> customReaders;
 	public final static String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
-	protected Hashtable<String, AbstractDataComponent> componentIds;
+	protected Hashtable<String, DataComponent> componentIds;
     protected AsciiDataParser asciiParser;
     protected SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
     
     
     public SweComponentReaderV20()
     {
-        componentIds = new Hashtable<String, AbstractDataComponent>();
+        componentIds = new Hashtable<String, DataComponent>();
         asciiParser = new AsciiDataParser();
-        customReaders = new Hashtable<QName, SweCustomReader>();
     }
 
 
-    public AbstractDataComponent readComponentProperty(DOMHelper dom, Element propertyElt) throws XMLReaderException
+    public DataComponent readComponentProperty(DOMHelper dom, Element propertyElt) throws XMLReaderException
     {
         Element dataElement = dom.getFirstChildElement(propertyElt);
+        DataComponent container = readComponent(dom, dataElement);
         String name = readPropertyName(dom, propertyElt);
-        AbstractDataComponent container = readComponent(dom, dataElement);
-        container.setName(name);        
+        container.setName(name);
+        
+        // if href is present also parse and save xlink attr group
+        if (dom.existAttribute(propertyElt, "href"))
+        {
+            CachedReference<?> xlinkOptions = new CachedReference<Object>();
+            XlinkUtils.readXlinkAttributes(propertyElt, xlinkOptions);
+            container.setProperty(SweConstants.COMP_XLINK, xlinkOptions);
+        }
+               
         return container;
     }
     
     
-    public AbstractDataComponent readComponent(DOMHelper dom, Element componentElt) throws XMLReaderException
+    public DataComponent readComponent(DOMHelper dom, Element componentElt) throws XMLReaderException
     {
         dom.addUserPrefix("swe", SWE_NS);
     	
-    	AbstractDataComponent container = null;
+    	DataComponent container = null;
     	String nsUri = componentElt.lookupNamespaceURI(componentElt.getPrefix());
         QName objectType = new QName(nsUri, componentElt.getLocalName(), componentElt.getPrefix());
         
-        // try to call a custom reader for this particular object type
-        SweCustomReader customReader = customReaders.get(objectType);
-        if (customReader != null)
-        {
-        	container = customReader.readComponent(dom, componentElt);
-        }
-        else // no custom reader found
-	    {
-        	// get element name
-        	String eltName = componentElt.getLocalName();
-        	
-        	// call the right default method depending on type
-        	if (eltName.equals("DataRecord"))
-	        	container = readDataRecord(dom, componentElt);
-        	else if (eltName.equals("Vector"))
-	        	container = readVector(dom, componentElt);
-	        else if (eltName.equals("DataArray") || eltName.equals("Matrix"))
-	            container = readDataArray(dom, componentElt);
-	        else if (eltName.equals("DataChoice"))
-	            container = readDataChoice(dom, componentElt);
-	        else if (eltName.endsWith("Range"))
-	            container = readRange(dom, componentElt);
-	        else // default to scalar
-	            container = readScalar(dom, componentElt);
-        }
+    	// get element name
+    	String eltName = componentElt.getLocalName();
+    	
+    	// call the right default method depending on type
+    	if (eltName.equals("DataRecord"))
+        	container = readDataRecord(dom, componentElt);
+    	else if (eltName.equals("Vector"))
+        	container = readVector(dom, componentElt);
+        else if (eltName.equals("DataArray") || eltName.equals("Matrix"))
+            container = readDataArray(dom, componentElt);
+        else if (eltName.equals("DataStream"))
+            container = readDataStream(dom, componentElt);
+        else if (eltName.equals("DataChoice"))
+            container = readDataChoice(dom, componentElt);
+        else if (eltName.endsWith("Range"))
+            container = readRange(dom, componentElt);
+        else // default to scalar
+            container = readScalar(dom, componentElt);
         
         // set type to element QName        
         container.setProperty(SweConstants.COMP_QNAME, objectType);
@@ -123,8 +128,8 @@ public class SweComponentReaderV20 implements DataComponentReader
 
         return container;
     }
-
-
+    
+    
     /**
      * Reads a generic (soft-typed) DataRecord structure and all its fields
      * @param recordElt Element
@@ -146,11 +151,6 @@ public class SweComponentReaderV20 implements DataComponentReader
             // add field components
             DataComponent dataComponent = readComponentProperty(dom, fieldElt);
             dataGroup.addComponent(readPropertyName(dom, fieldElt), dataComponent);
-
-            // optional flag
-            Boolean optional = getBooleanAttribute(dom, fieldElt, "optional");
-            if (optional != null)
-            	dataComponent.setProperty(SweConstants.OPTIONAL, optional);
         }
     	
         // error if no field present
@@ -178,17 +178,17 @@ public class SweComponentReaderV20 implements DataComponentReader
         int coordCount = coordList.getLength();
         DataGroup dataGroup = new DataGroup(coordCount);
 		
-		// loop through all fields
+		// loop through all coordinates
         for (int i = 0; i < coordCount; i++)
         {
             Element coordElt = (Element)coordList.item(i);
 
-            // add field components
+            // add coordinate components
             DataComponent dataComponent = readComponentProperty(dom, coordElt);
             dataGroup.addComponent(readPropertyName(dom, coordElt), dataComponent);
         }
     	
-        // error if no field present
+        // error if no coordinate present
         if (dataGroup.getComponentCount() == 0)
             throw new XMLReaderException("Invalid Vector: Must have AT LEAST ONE coordinate", vectorElt);
 
@@ -322,6 +322,62 @@ public class SweComponentReaderV20 implements DataComponentReader
     
     
     /**
+     * Reads a DataStream and all its content
+     * Data will be parsed only if included inline. If included through href, values are not parsed
+     * but this can be done easily on demand by calling SWEData.parseData()
+     * @param dom
+     * @param streamElt
+     * @return SWEData object containing component structure, encoding and values if included inline
+     * @throws XMLReaderException
+     */
+    protected SWEData readDataStream(DOMHelper dom, Element streamElt) throws XMLReaderException
+    {
+        SWEData sweData = new SWEData();
+        
+        // read common stuff
+        readBaseProperties(sweData, dom, streamElt);
+        readCommonAttributes(sweData, dom, streamElt);
+        
+        // read stream component
+        Element elementTypeElt = dom.getElement(streamElt, "elementType");
+        DataComponent dataComponent = readComponentProperty(dom, elementTypeElt);
+        sweData.setElementType(dataComponent);
+                
+        // read encoding
+        Element encodingElt = dom.getElement(streamElt, "encoding");
+        DataEncoding encoding = encodingReader.readEncodingProperty(dom, encodingElt);
+        sweData.setEncoding(encoding);
+        
+        // parse values
+        Element valuesElt = dom.getElement(streamElt, "values");
+        if (valuesElt != null)
+        {
+            try
+            {
+                DataSource dataSrc;
+                String href = dom.getAttributeValue(valuesElt, "href");
+                if (href != null)
+                {
+                    dataSrc = new DataSourceURI(href);
+                    sweData.setDataSource(dataSrc);
+                }
+                else
+                {
+                    dataSrc = new DataSourceDOM(dom, valuesElt);
+                    sweData.parseData(dataSrc);
+                }
+            }
+            catch (IOException e)
+            {
+                throw new XMLReaderException("Error while parsing stream values", e);
+            }
+        }
+        
+        return sweData;
+    }
+    
+    
+    /**
      * Reads a scalar value and atributes (Quantity, Count, Term...)
      * @param scalarElt
      * @return DataValue encapsulating the value
@@ -351,6 +407,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         readCodeSpace(dataValue, dom, scalarElt);
         readQuality(dataValue, dom, scalarElt);
         readConstraints(dataValue, dom, scalarElt);
+        readNilValues(dataValue, dom, scalarElt);
         
         // Parse the value
         String value = dom.getElementValue(scalarElt, "value");
@@ -395,8 +452,10 @@ public class SweComponentReaderV20 implements DataComponentReader
             paramVal = new DataValue(DataType.INT);
         else if (eltName.startsWith("Time"))
             paramVal = new DataValue(DataType.DOUBLE);
+        else if (eltName.startsWith("Category"))
+            paramVal = new DataValue(DataType.UTF_STRING);
         else
-            throw new XMLReaderException("Only Quantity, Time and Count ranges are allowed", rangeElt);
+            throw new XMLReaderException("Only Quantity, Time, Count and Category ranges are allowed", rangeElt);
         
         // generate fake QName for min/max components
         String localName = eltName.substring(0, eltName.indexOf("Range"));
@@ -410,6 +469,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         // also assign attributes to scalar value
         readCommonAttributes(paramVal, dom, rangeElt);
         readUom(paramVal, dom, rangeElt);
+        readCodeSpace(paramVal, dom, rangeElt);
         readQuality(paramVal, dom, rangeElt);
         readConstraints(paramVal, dom, rangeElt);
         
@@ -497,6 +557,11 @@ public class SweComponentReaderV20 implements DataComponentReader
         Boolean updatable = getBooleanAttribute(dom, componentElt, "updatable");
         if (updatable != null)
         	dataComponent.setProperty(SweConstants.UPDATABLE, updatable);
+        
+        // optional flag
+        Boolean optional = getBooleanAttribute(dom, componentElt, "optional");
+        if (optional != null)
+            dataComponent.setProperty(SweConstants.OPTIONAL, optional);
         
         // reference frame
         String refFrame = dom.getAttributeValue(componentElt, "referenceFrame");
@@ -637,11 +702,108 @@ public class SweComponentReaderV20 implements DataComponentReader
         if (!dom.existElement(scalarElt, "quality"))
             return;
         
-        Element qualityElt = dom.getElement(scalarElt, "quality/*");
-        DataComponent quality = readComponent(dom, qualityElt);
-        quality.setName("quality");
+        NodeList qualityElts = dom.getElements(scalarElt, "quality");
+        int numQualityElts = qualityElts.getLength();
+        List<DataComponent> qualityComponents = new ArrayList<DataComponent>(numQualityElts);        
+        for (int i=0; i<numQualityElts; i++)
+        {
+            Element qualityElt = (Element)qualityElts.item(i);
+            DataComponent quality = readComponentProperty(dom, qualityElt);
+            qualityComponents.add(quality);
+        }
         
-        dataComponent.setProperty(SweConstants.QUALITY, quality);
+        if (!qualityComponents.isEmpty())
+            dataComponent.setProperty(SweConstants.QUALITY, qualityComponents);
+    }
+    
+    
+    /**
+     * Reads the nilValues element if present
+     * @param dataComponent
+     * @param dom
+     * @param scalarElt
+     * @throws XMLReaderException
+     */
+    private void readNilValues(DataValue dataValue, DOMHelper dom, Element scalarElt) throws XMLReaderException
+    {
+        Element nilPropElt = dom.getElement(scalarElt, "nilValues");
+        if (nilPropElt == null)
+            return;
+        
+        Element nilValuesElt = dom.getElement(nilPropElt, "NilValues");
+        NilValues nilValues = new NilValues();
+        
+        // id
+        nilValues.setId(dom.getAttributeValue(nilValuesElt, "id"));
+        
+        // reason -> reserved value mapping
+        NodeList nilElts = dom.getElements(nilValuesElt, "nilValue");
+        int numNils = nilElts.getLength();
+        for (int i=0; i<numNils; i++)
+        {
+            Element nilValElt = (Element)nilElts.item(i);
+            String token = dom.getElementValue(nilValElt);
+            Object val;
+            
+            try
+            {
+                switch (dataValue.getDataType())
+                {
+                    case BYTE:
+                        val = Byte.parseByte(token);
+                        break;
+                        
+                    case SHORT:
+                    case UBYTE:
+                        val = Short.parseShort(token);;
+                        break;
+                        
+                    case INT:
+                    case USHORT:
+                        val = Integer.parseInt(token);
+                        break;
+                        
+                    case LONG:
+                    case UINT:
+                    case ULONG:
+                        val = Long.parseLong(token);
+                        break;
+                        
+                    case FLOAT:
+                        val = Float.parseFloat(token);
+                        break;
+                        
+                    case DOUBLE:
+                        val = AsciiDataParser.parseDoubleOrInfOrIsoTime(token);              
+                        break;
+                        
+                    case UTF_STRING:
+                    case ASCII_STRING:
+                        val = token;
+                        break;
+                        
+                    default:
+                        throw new RuntimeException("Unssuported NIL value datatype " + dataValue.getDataType());
+                }
+                
+                String reason = dom.getAttributeValue(nilValElt, "reason");
+                nilValues.addNilValue(reason, val);
+            }
+            catch (Exception e)
+            {
+                throw new XMLReaderException("Incorrect NIL value '" + token + "' for component " + dataValue, scalarElt, e);
+            }
+        }
+        
+        dataValue.setProperty(SweConstants.NIL_VALUES, nilValues);
+        
+        // also parse xlink attr to rewrite properly
+        if (dom.existAttribute(nilPropElt, "href"))
+        {
+            CachedReference<?> nilRef = new CachedReference<Object>();
+            XlinkUtils.readXlinkAttributes(nilPropElt, nilRef);
+            dataValue.setProperty(SweConstants.NIL_XLINK, nilRef);
+        }
     }
     
     
@@ -707,7 +869,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 	    			String val = dom.getElementValue((Element)valueElts.item(i));
     				try
 		        	{
-		    			values[i] = DateTimeFormat.parseIso(val);
+		    			values[i] = AsciiDataParser.parseDoubleOrInfOrIsoTime(val);
 		        	}
                     catch (Exception e)
                     {
@@ -735,7 +897,7 @@ public class SweComponentReaderV20 implements DataComponentReader
 	    			String val = dom.getElementValue((Element)valueElts.item(i));
     				try
 		        	{
-		    			values[i] = Double.parseDouble(val);
+		    			values[i] = AsciiDataParser.parseDoubleOrInf(val);
 		    		}
 					catch (Exception e)
 					{
@@ -765,8 +927,8 @@ public class SweComponentReaderV20 implements DataComponentReader
 		try
 		{
 			String[] rangeValues = rangeText.split(" ");
-			double min = Double.parseDouble(rangeValues[0]);
-			double max = Double.parseDouble(rangeValues[1]);
+			double min = AsciiDataParser.parseDoubleOrInf(rangeValues[0]);
+			double max = AsciiDataParser.parseDoubleOrInf(rangeValues[1]);
 			return new IntervalConstraint(min, max);
 		}
 		catch (Exception e)
@@ -789,8 +951,8 @@ public class SweComponentReaderV20 implements DataComponentReader
 		try
 		{
 			String[] rangeValues = rangeText.split(" ");
-			double min = DateTimeFormat.parseIso(rangeValues[0]);
-			double max = DateTimeFormat.parseIso(rangeValues[1]);
+			double min = AsciiDataParser.parseDoubleOrInfOrIsoTime(rangeValues[0]);
+			double max = AsciiDataParser.parseDoubleOrInfOrIsoTime(rangeValues[1]);
 			return new IntervalConstraint(min, max);
 		}
 		catch (Exception e)

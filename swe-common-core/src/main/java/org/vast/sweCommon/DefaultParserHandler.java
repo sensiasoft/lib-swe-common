@@ -49,7 +49,7 @@ public class DefaultParserHandler implements DataHandler
     
     public void endData(DataComponent info, DataBlock data)
     {
-        sweData.getDataList().addData(data);
+        sweData.addData(data);
     }
     
     

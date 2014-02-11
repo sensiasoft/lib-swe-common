@@ -155,62 +155,66 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
         binaryEncElt.setAttribute("ref", binaryOptions.componentName);
                 
         // write dataType attribute
-        String dataTypeUrn = "";
+        String dataTypeUri = "";
         switch (binaryOptions.type)
         {
             case BOOLEAN: 
-                dataTypeUrn = BinaryComponent.booleanURN;
+                dataTypeUri = BinaryComponent.booleanURI;
                 break;
             
             case DOUBLE: 
-                dataTypeUrn = BinaryComponent.doubleURN;
+                dataTypeUri = BinaryComponent.doubleURI;
                 break;
             
             case FLOAT: 
-                dataTypeUrn = BinaryComponent.floatURN;
+                dataTypeUri = BinaryComponent.floatURI;
                 break;
                 
             case BYTE: 
-                dataTypeUrn = BinaryComponent.byteURN;
+                dataTypeUri = BinaryComponent.byteURI;
                 break;
                 
             case UBYTE: 
-                dataTypeUrn = BinaryComponent.ubyteURN;
+                dataTypeUri = BinaryComponent.ubyteURI;
                 break;
                 
             case SHORT: 
-                dataTypeUrn = BinaryComponent.shortURN;
+                dataTypeUri = BinaryComponent.shortURI;
                 break;
                 
             case USHORT: 
-                dataTypeUrn = BinaryComponent.ushortURN;
+                dataTypeUri = BinaryComponent.ushortURI;
                 break;
                 
             case INT: 
-                dataTypeUrn = BinaryComponent.intURN;
+                dataTypeUri = BinaryComponent.intURI;
                 break;
                 
             case UINT: 
-                dataTypeUrn = BinaryComponent.uintURN;
+                dataTypeUri = BinaryComponent.uintURI;
                 break;
                 
             case LONG: 
-                dataTypeUrn = BinaryComponent.longURN;
+                dataTypeUri = BinaryComponent.longURI;
                 break;
                 
             case ULONG: 
-                dataTypeUrn = BinaryComponent.ulongURN;
+                dataTypeUri = BinaryComponent.ulongURI;
                 break;
                 
             case ASCII_STRING: 
-                dataTypeUrn = BinaryComponent.asciiURN;
+                dataTypeUri = BinaryComponent.asciiURI;
                 break;
                 
             case UTF_STRING: 
-                dataTypeUrn = BinaryComponent.utfURN;
+                dataTypeUri = BinaryComponent.utfURI;
                 break;
+                
+            default:
+                throw new XMLWriterException("Unsupported datatype " + binaryOptions.type + " for component " + binaryOptions.componentName);
         }
-        binaryEncElt.setAttribute("dataType", dataTypeUrn);
+        
+        binaryEncElt.setAttribute("dataType", dataTypeUri);
         
         // write block byteLength if any
         if(binaryOptions.byteLength != 0)

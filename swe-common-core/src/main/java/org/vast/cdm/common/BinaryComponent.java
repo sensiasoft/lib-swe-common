@@ -35,19 +35,19 @@ package org.vast.cdm.common;
 public class BinaryComponent extends BinaryOptions
 {
     private static final long serialVersionUID = -3816840058163340347L;
-    public final static String doubleURN = "urn:ogc:def:data:double";
-    public final static String floatURN = "urn:ogc:def:data:float";
-    public final static String booleanURN = "urn:ogc:def:data:boolean";
-    public final static String byteURN = "urn:ogc:def:data:signedByte";
-    public final static String shortURN = "urn:ogc:def:data:signedShort";
-    public final static String intURN = "urn:ogc:def:data:signedInt";
-    public final static String longURN = "urn:ogc:def:data:signedLong";
-    public final static String ubyteURN = "urn:ogc:def:data:unsignedByte";
-    public final static String ushortURN = "urn:ogc:def:data:unsignedShort";
-    public final static String uintURN = "urn:ogc:def:data:unsignedInt";
-    public final static String ulongURN = "urn:ogc:def:data:unsignedLong";
-    public final static String asciiURN = "urn:ogc:def:data:string:ascii";
-    public final static String utfURN = "urn:ogc:def:data:string:utf";
+    public final static String doubleURI = "http://www.opengis.net/def/dataType/OGC/0/double";
+    public final static String floatURI = "http://www.opengis.net/def/dataType/OGC/0/float32";
+    public final static String booleanURI = "http://www.opengis.net/def/dataType/OGC/0/boolean";
+    public final static String byteURI = "http://www.opengis.net/def/dataType/OGC/0/signedByte";
+    public final static String shortURI = "http://www.opengis.net/def/dataType/OGC/0/signedShort";
+    public final static String intURI = "http://www.opengis.net/def/dataType/OGC/0/signedInt";
+    public final static String longURI = "http://www.opengis.net/def/dataType/OGC/0/signedLong";
+    public final static String ubyteURI = "http://www.opengis.net/def/dataType/OGC/0/unsignedByte";
+    public final static String ushortURI = "http://www.opengis.net/def/dataType/OGC/0/unsignedShort";
+    public final static String uintURI = "http://www.opengis.net/def/dataType/OGC/0/unsignedInt";
+    public final static String ulongURI = "http://www.opengis.net/def/dataType/OGC/0/unsignedLong";
+    public final static String asciiURI = "http://www.opengis.net/def/dataType/OGC/0/string-ascii";
+    public final static String utfURI = "http://www.opengis.net/def/dataType/OGC/0/string-utf-8";
     
     public DataType type;
     public int bitLength; 

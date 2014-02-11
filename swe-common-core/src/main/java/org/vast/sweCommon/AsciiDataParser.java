@@ -22,7 +22,6 @@ package org.vast.sweCommon;
 
 import java.io.*;
 import java.text.ParseException;
-
 import org.vast.cdm.common.*;
 import org.vast.data.*;
 import org.vast.util.DateTimeFormat;
@@ -279,16 +278,20 @@ public class AsciiDataParser extends AbstractDataParser
                     break;
                     
                 case SHORT:
+                case UBYTE:
                     short shortValue = Short.parseShort(token);
                     data.setShortValue(shortValue);
                     break;
                     
                 case INT:
+                case USHORT:
                     int intValue = Integer.parseInt(token);
                     data.setIntValue(intValue);
                     break;
                     
                 case LONG:
+                case UINT:
+                case ULONG:
                     long longValue = Long.parseLong(token);
                     data.setLongValue(longValue);
                     break;
@@ -299,32 +302,17 @@ public class AsciiDataParser extends AbstractDataParser
                     break;
                     
                 case DOUBLE:
-                    try
-                    {
-                        double doubleValue = Double.parseDouble(token);
-                        data.setDoubleValue(doubleValue);
-                    }
-                    catch (NumberFormatException e)
-                    {
-                        // case of ISO time
-                        double doubleValue;
-                        try
-                        {
-                            doubleValue = DateTimeFormat.parseIso(token);
-                        }
-                        catch (ParseException e1)
-                        {
-                            // TODO Improve this (ok only if NO_DATA character)
-                            doubleValue = Double.NaN;
-                        }
-                        data.setDoubleValue(doubleValue);
-                    }                       
+                    double doubleValue = parseDoubleOrInfOrIsoTime(token);
+                    data.setDoubleValue(doubleValue);                     
                     break;
                     
                 case UTF_STRING:
                 case ASCII_STRING:
                     data.setStringValue(token);
                     break;
+                    
+                default:
+                    throw new RuntimeException("Unsupported datatype " + dataType);
             }
         }
         catch (Exception e)
@@ -366,5 +354,65 @@ public class AsciiDataParser extends AbstractDataParser
     public void close() throws IOException
     {
         reader.close();
+    }
+    
+    
+    /**
+     * Improves on Java Double.parseDouble() method to include +INF/-INF
+     * This is needed because Java Infinity is not allowed by XML schema
+     * @param val
+     * @return
+     */
+    public static double parseDoubleOrInf(String text) throws NumberFormatException
+    {
+        double val;
+        
+        try
+        {
+            val = Double.parseDouble(text);
+        }
+        catch (NumberFormatException e)
+        {
+            if (text.equalsIgnoreCase("-INF"))
+                val = Double.NEGATIVE_INFINITY;
+            else if (text.equalsIgnoreCase("INF") || text.equalsIgnoreCase("+INF"))
+                val = Double.POSITIVE_INFINITY;
+            else
+                throw e; 
+        }
+        
+        return val;
+    }
+    
+    
+    /**
+     * Allows parsing a double or ISO encoded date/time value
+     * @param val
+     * @return
+     */
+    public static double parseDoubleOrInfOrIsoTime(String text) throws NumberFormatException
+    {
+        double val;
+        
+        try
+        {
+            val = parseDoubleOrInf(text);
+        }
+        catch (NumberFormatException e)
+        {
+            try
+            {
+                val = DateTimeFormat.parseIso(text);
+            }
+            catch (ParseException e1)
+            {
+                if (text.equals("NO_DATA"))
+                    return Double.NaN;
+                else
+                    throw e;
+            } 
+        }
+        
+        return val;
     }
 }

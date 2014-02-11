@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataSource;
-import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
@@ -74,18 +73,8 @@ public class DataSourceDOM implements DataSource
      */
     public InputStream getDataStream() throws IOException
     {
-    	String xlinkUri = OGCRegistry.getNamespaceURI(OGCRegistry.XLINK);
-    	String href = parentElt.getAttributeNS(xlinkUri, "href");
-        
-    	if (href != null && href.trim().length() > 0)
-        {
-            return URIStreamHandler.openStream(href);
-        }
-        else
-        {
-            String values = parentElt.getTextContent();
-            return(new ByteArrayInputStream(values.getBytes()));
-        }
+    	String values = parentElt.getTextContent();
+        return(new ByteArrayInputStream(values.getBytes()));
     }
     
 }

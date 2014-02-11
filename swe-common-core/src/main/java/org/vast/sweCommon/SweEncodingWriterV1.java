@@ -152,55 +152,55 @@ public class SweEncodingWriterV1 implements DataEncodingWriter
         switch (binaryOptions.type)
         {
             case BOOLEAN: 
-                dataTypeUrn = BinaryComponent.booleanURN;
+                dataTypeUrn = BinaryComponent.booleanURI;
                 break;
             
             case DOUBLE: 
-                dataTypeUrn = BinaryComponent.doubleURN;
+                dataTypeUrn = BinaryComponent.doubleURI;
                 break;
             
             case FLOAT: 
-                dataTypeUrn = BinaryComponent.floatURN;
+                dataTypeUrn = BinaryComponent.floatURI;
                 break;
                 
             case BYTE: 
-                dataTypeUrn = BinaryComponent.byteURN;
+                dataTypeUrn = BinaryComponent.byteURI;
                 break;
                 
             case UBYTE: 
-                dataTypeUrn = BinaryComponent.ubyteURN;
+                dataTypeUrn = BinaryComponent.ubyteURI;
                 break;
                 
             case SHORT: 
-                dataTypeUrn = BinaryComponent.shortURN;
+                dataTypeUrn = BinaryComponent.shortURI;
                 break;
                 
             case USHORT: 
-                dataTypeUrn = BinaryComponent.ushortURN;
+                dataTypeUrn = BinaryComponent.ushortURI;
                 break;
                 
             case INT: 
-                dataTypeUrn = BinaryComponent.intURN;
+                dataTypeUrn = BinaryComponent.intURI;
                 break;
                 
             case UINT: 
-                dataTypeUrn = BinaryComponent.uintURN;
+                dataTypeUrn = BinaryComponent.uintURI;
                 break;
                 
             case LONG: 
-                dataTypeUrn = BinaryComponent.longURN;
+                dataTypeUrn = BinaryComponent.longURI;
                 break;
                 
             case ULONG: 
-                dataTypeUrn = BinaryComponent.ulongURN;
+                dataTypeUrn = BinaryComponent.ulongURI;
                 break;
                 
             case ASCII_STRING: 
-                dataTypeUrn = BinaryComponent.asciiURN;
+                dataTypeUrn = BinaryComponent.asciiURI;
                 break;
                 
             case UTF_STRING: 
-                dataTypeUrn = BinaryComponent.utfURN;
+                dataTypeUrn = BinaryComponent.utfURI;
                 break;
         }
         binaryEncElt.setAttribute("dataType", dataTypeUrn);

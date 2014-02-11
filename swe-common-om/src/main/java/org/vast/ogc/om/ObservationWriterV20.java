@@ -69,7 +69,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         timeWriter = new GMLTimeWriter(GML_VERSION);
         featureWriter = new GMLFeatureWriter();
         featureWriter.setGmlVersion(GML_VERSION);
-        sweWriter = new SweComponentWriterV20(true);
+        sweWriter = new SweComponentWriterV20();
         
         currentId = 1;
         idFormatter = NumberFormat.getNumberInstance();

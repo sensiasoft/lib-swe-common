@@ -193,55 +193,55 @@ public class SweEncodingReaderV20 implements DataEncodingReader
         // read dataType attribute
         String dataType = dom.getAttributeValue(componentElement, "dataType");
         
-        if (dataType.endsWith(":boolean"))
+        if (dataType.endsWith("/boolean"))
         {
             binaryValue.type = DataType.BOOLEAN;
         }
-        else if (dataType.endsWith(":signedByte"))
+        else if (dataType.endsWith("/signedByte"))
         {
         	binaryValue.type = DataType.BYTE;
         }
-        else if (dataType.endsWith(":unsignedByte"))
+        else if (dataType.endsWith("/unsignedByte"))
         {
         	binaryValue.type = DataType.UBYTE;
         }
-        else if (dataType.endsWith(":signedShort"))
+        else if (dataType.endsWith("/signedShort"))
         {
         	binaryValue.type = DataType.SHORT;
         }
-        else if (dataType.endsWith(":unsignedShort"))
+        else if (dataType.endsWith("/unsignedShort"))
         {
         	binaryValue.type = DataType.USHORT;
         }
-        else if (dataType.endsWith(":signedInt"))
+        else if (dataType.endsWith("/signedInt"))
         {
         	binaryValue.type = DataType.INT;
         }
-        else if (dataType.endsWith(":unsignedInt"))
+        else if (dataType.endsWith("/unsignedInt"))
         {
         	binaryValue.type = DataType.UINT;
         }
-        else if (dataType.endsWith(":signedLong"))
+        else if (dataType.endsWith("/signedLong"))
         {
         	binaryValue.type = DataType.LONG;
         }
-        else if (dataType.endsWith(":unsignedLong"))
+        else if (dataType.endsWith("/unsignedLong"))
         {
         	binaryValue.type = DataType.ULONG;
         }
-        else if (dataType.endsWith(":float"))
+        else if (dataType.endsWith("/float32"))
         {
         	binaryValue.type = DataType.FLOAT;
         }
-        else if (dataType.endsWith(":double"))
+        else if (dataType.endsWith("/double") || dataType.endsWith("/float64"))
         {
         	binaryValue.type = DataType.DOUBLE;
         }
-        else if (dataType.endsWith(":string:utf"))
+        else if (dataType.endsWith("/string-utf-8"))
         {
         	binaryValue.type = DataType.UTF_STRING;
         }
-        else if (dataType.endsWith(":string:ascii"))
+        else if (dataType.endsWith("/string-ascii"))
         {
         	binaryValue.type = DataType.ASCII_STRING;
         }

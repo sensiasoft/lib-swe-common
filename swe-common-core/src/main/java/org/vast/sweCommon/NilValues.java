@@ -37,7 +37,8 @@ import java.util.Hashtable;
  */
 public class NilValues
 {
-	protected Hashtable<String, Object> reasonsToValues;
+	protected String id;
+    protected Hashtable<String, Object> reasonsToValues;
 	protected Hashtable<Object, String> valuesToReasons;
 	
 	
@@ -48,7 +49,19 @@ public class NilValues
 	}
 	
 	
-	public void addNilValue(String reason, Object value)
+	public String getId()
+    {
+        return id;
+    }
+
+
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+
+    public void addNilValue(String reason, Object value)
 	{
 		reasonsToValues.put(reason, value);
 		valuesToReasons.put(value, reason);
@@ -65,4 +78,10 @@ public class NilValues
 	{
 		return valuesToReasons.get(value);
 	}
+
+
+    public Hashtable<String, Object> getReasonsToValues()
+    {
+        return reasonsToValues;
+    }
 }
