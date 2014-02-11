@@ -139,7 +139,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
             if (dom.existAttribute(procPropElt, "href"))
             {
                 ProcedureRef ref = new ProcedureRef();
-                XlinkUtils.readXlinkAttributes(procPropElt, ref);
+                XlinkUtils.readXlinkAttributes(dom, procPropElt, ref);
                 obs.setProcedure(ref);
             }
             else
@@ -180,7 +180,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         if (obsPropElt != null && !obsPropElt.hasAttribute("nil"))
         {
             DefinitionRef ref = new DefinitionRef();
-            XlinkUtils.readXlinkAttributes(obsPropElt, ref);
+            XlinkUtils.readXlinkAttributes(dom, obsPropElt, ref);
             obs.setObservedProperty(ref);
         }
         
@@ -191,7 +191,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
             if (dom.existAttribute(foiPropElt, "href"))
             {
                 FeatureRef ref = new FeatureRef();
-                XlinkUtils.readXlinkAttributes(foiPropElt, ref);
+                XlinkUtils.readXlinkAttributes(dom, foiPropElt, ref);
                 obs.setFeatureOfInterest(ref);
             }
             else
@@ -236,7 +236,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         if (featureElt != null)
         {
             FeatureRef ref = new FeatureRef();
-            XlinkUtils.readXlinkAttributes(foiElt, ref);
+            XlinkUtils.readXlinkAttributes(dom, foiElt, ref);
             return ref;
         }
         else

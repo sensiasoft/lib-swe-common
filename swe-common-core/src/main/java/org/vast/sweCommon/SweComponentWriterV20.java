@@ -151,7 +151,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         
         if (xlinkOptions != null && keepHref)
         {
-            XlinkUtils.writeXlinkAttributes(propElt, xlinkOptions);
+            XlinkUtils.writeXlinkAttributes(dom, propElt, xlinkOptions);
         }
         else
         {
@@ -803,7 +803,7 @@ public class SweComponentWriterV20 implements DataComponentWriter
         CachedReference<?> xlinkOptions = (CachedReference<?>)dataValue.getProperty(SweConstants.NIL_XLINK);
         if (xlinkOptions != null)
         {
-            XlinkUtils.writeXlinkAttributes(nilPropElt, xlinkOptions);
+            XlinkUtils.writeXlinkAttributes(dom, nilPropElt, xlinkOptions);
         }
         else
         {

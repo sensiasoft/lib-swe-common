@@ -185,7 +185,7 @@ public class ObservationReaderV10 implements IXMLReaderDOM<IObservation>
         if (featureElt != null)
         {
             FeatureRef ref = new FeatureRef();
-            XlinkUtils.readXlinkAttributes(foiElt, ref);
+            XlinkUtils.readXlinkAttributes(dom, foiElt, ref);
             return ref;
         }
         else

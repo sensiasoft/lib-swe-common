@@ -83,7 +83,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         if (dom.existAttribute(propertyElt, "href"))
         {
             CachedReference<?> xlinkOptions = new CachedReference<Object>();
-            XlinkUtils.readXlinkAttributes(propertyElt, xlinkOptions);
+            XlinkUtils.readXlinkAttributes(dom, propertyElt, xlinkOptions);
             container.setProperty(SweConstants.COMP_XLINK, xlinkOptions);
         }
                
@@ -801,7 +801,7 @@ public class SweComponentReaderV20 implements DataComponentReader
         if (dom.existAttribute(nilPropElt, "href"))
         {
             CachedReference<?> nilRef = new CachedReference<Object>();
-            XlinkUtils.readXlinkAttributes(nilPropElt, nilRef);
+            XlinkUtils.readXlinkAttributes(dom, nilPropElt, nilRef);
             dataValue.setProperty(SweConstants.NIL_XLINK, nilRef);
         }
     }

@@ -158,8 +158,14 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         
         // procedure
         IProcedure proc = obs.getProcedure();
-        if (proc != null && proc instanceof ProcedureRef)
-            dom.setAttributeValue(obsElt, "om:procedure/xlink:href", ((ProcedureRef)proc).getHref());
+        if (proc != null)
+        {
+            Element propElt = dom.addElement(obsElt, "om:procedure");
+            if (proc instanceof ProcedureRef)
+                XlinkUtils.writeXlinkAttributes(dom, propElt, (ProcedureRef)proc);
+            else
+                throw new XMLWriterException("Unsupported procedure type: " + proc.getClass().getCanonicalName());
+        }
         else
             dom.setXsiNil(obsElt, "om:procedure");
         
@@ -212,7 +218,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         if (foi != null)
         {
             if (foi instanceof FeatureRef) {
-                XlinkUtils.writeXlinkAttributes(foiPropElt, (FeatureRef)foi);
+                XlinkUtils.writeXlinkAttributes(dom, foiPropElt, (FeatureRef)foi);
             }
             else
                 writeFOI(dom, obsElt, foi);
@@ -249,7 +255,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     {
         if (foi instanceof FeatureRef)
         {
-            XlinkUtils.writeXlinkAttributes(foiPropElt, (FeatureRef)foi);
+            XlinkUtils.writeXlinkAttributes(dom, foiPropElt, (FeatureRef)foi);
         }
         else
         {

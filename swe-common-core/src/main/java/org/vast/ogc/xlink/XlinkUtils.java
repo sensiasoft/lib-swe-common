@@ -24,6 +24,7 @@
 package org.vast.ogc.xlink;
 
 import org.vast.ogc.OGCRegistry;
+import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 
 
@@ -32,28 +33,30 @@ public class XlinkUtils
     private final static String NS_URI = OGCRegistry.getNamespaceURI(OGCRegistry.XLINK);
         
         
-    public static void readXlinkAttributes(Element propertyElt, IXlinkReference<?> refObj)
+    public static void readXlinkAttributes(DOMHelper dom, Element propertyElt, IXlinkReference<?> refObj)
     {
-        String href = propertyElt.getAttributeNS(NS_URI, "href");
+        String href = dom.getAttributeValue(propertyElt, "href");
         refObj.setHref(href);
         
-        String role = propertyElt.getAttributeNS(NS_URI, "role");
+        String role = dom.getAttributeValue(propertyElt, "role");
         refObj.setRole(role);
         
-        String arcRole = propertyElt.getAttributeNS(NS_URI, "arcrole");
+        String arcRole = dom.getAttributeValue(propertyElt, "arcrole");
         refObj.setArcRole(arcRole);
     }
     
     
-    public static void writeXlinkAttributes(Element propertyElt, IXlinkReference<?> refObj)
+    public static void writeXlinkAttributes(DOMHelper dom, Element propertyElt, IXlinkReference<?> refObj)
     {
+        dom.addUserPrefix("xlink", NS_URI);
+        
         if (refObj.getHref() != null && !refObj.getHref().isEmpty())
-            propertyElt.setAttributeNS(NS_URI, "href", refObj.getHref());
+            dom.setAttributeValue(propertyElt, "xlink:href", refObj.getHref());
         
         if (refObj.getRole() != null && !refObj.getRole().isEmpty())
-            propertyElt.setAttributeNS(NS_URI, "role", refObj.getRole());
+            dom.setAttributeValue(propertyElt, "xlink:role", refObj.getRole());
         
         if (refObj.getArcRole() != null && !refObj.getArcRole().isEmpty())
-            propertyElt.setAttributeNS(NS_URI, "arcrole", refObj.getArcRole());
+            dom.setAttributeValue(propertyElt, "xlink:arcrole", refObj.getArcRole());
     }
 }
