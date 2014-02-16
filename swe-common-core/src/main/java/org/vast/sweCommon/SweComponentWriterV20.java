@@ -515,10 +515,12 @@ public class SweComponentWriterV20 implements DataComponentWriter
         if (valueQName != null)
 	        return "swe:" + valueQName.getLocalPart();
         
-        Object def = dataValue.getProperty("definition");
+        String def = (String)dataValue.getProperty(SweConstants.DEF_URI);
+        String uomUri = (String)dataValue.getProperty(SweConstants.UOM_URI);
+        boolean isoUnit = (uomUri != null) && uomUri.equals(SweConstants.ISO_TIME_DEF);
     	String eltName;
     	
-        if (def != null && ((String)def).contains("time"))
+        if (isoUnit || (def != null && def.toLowerCase().contains("time")))
             eltName = "swe:Time";
         else if (dataValue.getDataType() == DataType.BOOLEAN)
             eltName = "swe:Boolean";
@@ -700,11 +702,10 @@ public class SweComponentWriterV20 implements DataComponentWriter
     	if (constraints != null && !constraints.isEmpty())
     	{
     		Element constraintElt = dom.addElement(dataValueElt, "swe:constraint");
-    		String uomUri = (String)dataValue.getProperty(SweConstants.UOM_URI);
-    		String compName = ((QName)dataValue.getProperty(SweConstants.COMP_QNAME)).getLocalPart();
     		
     		boolean writeIntegers = (dataValue.getDataType() != DataType.DOUBLE && dataValue.getDataType() != DataType.FLOAT);
-    		boolean isTime = compName.startsWith("Time");
+    		boolean isTime = dataValueElt.getLocalName().startsWith("Time");
+    		String uomUri = (String)dataValue.getProperty(SweConstants.UOM_URI);
     		boolean useIso = (uomUri != null && uomUri.equals(SweConstants.ISO_TIME_DEF));
     		
     		Element allowedValuesElt;
