@@ -116,19 +116,12 @@ public class BinaryDataWriter extends AbstractDataWriter
 	    for (BinaryOptions binaryOpts: encodingList)
 		{
 			String [] dataPath = binaryOpts.componentName.split("/");
-			DataComponent dataComponent = null;
+			DataComponent dataComponent = dataComponents;
 			
 			// find component in tree
             for (int j=0; j<dataPath.length; j++)
             {
-                if (j==0)
-                {
-                    if (dataPath[0].equals(dataComponents.getName()))
-                        dataComponent = dataComponents;
-                }
-                else
-                    dataComponent = dataComponent.getComponent(dataPath[j]);
-                
+                dataComponent = dataComponent.getComponent(dataPath[j]);                
                 if (dataComponent == null)
                 {
                     System.err.println("Unknown component " + dataPath[j]);
@@ -231,6 +224,9 @@ public class BinaryDataWriter extends AbstractDataWriter
                     String asciiValue = scalarInfo.getData().getStringValue();
                     dataOutput.writeASCII(asciiValue);
 					break;
+					
+				default:
+				    throw new RuntimeException("Unsupported datatype " + binaryInfo.type);
 			}
 		}
 		catch (Exception e)

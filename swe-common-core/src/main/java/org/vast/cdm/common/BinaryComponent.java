@@ -58,6 +58,13 @@ public class BinaryComponent extends BinaryOptions
     }
     
     
+    public BinaryComponent(String componentName, DataType type)
+    {
+        this.componentName = componentName;
+        this.type = type;
+    }
+    
+    
     public BinaryComponent copy()
     {
     	BinaryComponent newVal = new BinaryComponent();

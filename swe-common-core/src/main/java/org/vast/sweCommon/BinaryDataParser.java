@@ -195,19 +195,12 @@ public class BinaryDataParser extends AbstractDataParser
 		for (BinaryOptions binaryOpts: encodingList)
 		{
 			String [] dataPath = binaryOpts.componentName.split("/");
-			DataComponent dataComponent = null;
+			DataComponent dataComponent = dataComponents;
 			
 			// find component in tree
             for (int j=0; j<dataPath.length; j++)
             {
-                if (j==0)
-                {
-                    if (dataPath[0].equals(this.dataComponents.getName()))
-                        dataComponent = this.dataComponents;
-                }
-                else
-                    dataComponent = dataComponent.getComponent(dataPath[j]);
-                
+                dataComponent = dataComponent.getComponent(dataPath[j]);                
                 if (dataComponent == null)
                 {
                     throw new CDMException("Unknown component " + binaryOpts.componentName);
@@ -394,6 +387,9 @@ public class BinaryDataParser extends AbstractDataParser
 					String asciiValue = dataInput.readASCII();
 					scalarInfo.getData().setStringValue(asciiValue);
 					break;
+					
+				default:
+                    throw new RuntimeException("Unsupported datatype " + binaryInfo.type);
 			}
 		}
 		catch (RuntimeException e)
