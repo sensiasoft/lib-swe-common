@@ -213,7 +213,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
             dom.setXsiNil(obsElt, "om:observedProperty");
         
         // foi
-        Element foiPropElt = dom.addElement(obsElt, "+om:featureOfInterest");
+        Element foiPropElt = dom.addElement(obsElt, "om:featureOfInterest");
         IFeature foi = obs.getFeatureOfInterest();
         if (foi != null)
         {
@@ -224,7 +224,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
                 writeFOI(dom, obsElt, foi);
         }
         else
-            dom.setXsiNil(foiPropElt, "");
+            dom.setXsiNil(obsElt, "om:featureOfInterest");
         
         // TODO write ISO quality
         

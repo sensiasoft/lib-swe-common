@@ -44,6 +44,15 @@ import org.vast.util.TimeExtent;
  */
 public interface IObservation extends IFeature
 {
+    public String OBS_TYPE_GENERIC = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Observation";
+    public String OBS_TYPE_MEAS = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement";
+    public String OBS_TYPE_COUNT = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CountObservation"; 
+    public String OBS_TYPE_CATEGORY = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CategoryObservation"; 
+    public String OBS_TYPE_SCALAR = "http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEScalarObservation";
+    public String OBS_TYPE_RECORD = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation";
+    public String OBS_TYPE_ARRAY = "http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEArrayObservation";
+       
+    
     public Object getMetadata();
     
     public void setMetadata(Object metadata);
