@@ -103,15 +103,15 @@ public class SweComponentReaderV20 implements DataComponentReader
     	String eltName = componentElt.getLocalName();
     	
     	// call the right default method depending on type
-    	if (eltName.equals("DataRecord"))
+    	if (eltName.equals(SweConstants.DATARECORD_COMPONENT_TAG))
         	container = readDataRecord(dom, componentElt);
-    	else if (eltName.equals("Vector"))
+    	else if (eltName.equals(SweConstants.VECTOR_COMPONENT_TAG))
         	container = readVector(dom, componentElt);
-        else if (eltName.equals("DataArray") || eltName.equals("Matrix"))
+        else if (eltName.equals(SweConstants.DATAARRAY_COMPONENT_TAG) || eltName.equals(SweConstants.MATRIX_COMPONENT_TAG))
             container = readDataArray(dom, componentElt);
-        else if (eltName.equals("DataStream"))
+        else if (eltName.equals(SweConstants.DATASTREAM_COMPONENT_TAG))
             container = readDataStream(dom, componentElt);
-        else if (eltName.equals("DataChoice"))
+        else if (eltName.equals(SweConstants.DATACHOICE_COMPONENT_TAG))
             container = readDataChoice(dom, componentElt);
         else if (eltName.endsWith("Range"))
             container = readRange(dom, componentElt);
@@ -173,7 +173,7 @@ public class SweComponentReaderV20 implements DataComponentReader
      */
     private DataGroup readVector(DOMHelper dom, Element vectorElt) throws XMLReaderException
     {
-       // parse all fields elements
+        // parse all fields elements
 		NodeList coordList = dom.getElements(vectorElt, "swe:coordinate");
         int coordCount = coordList.getLength();
         DataGroup dataGroup = new DataGroup(coordCount);
@@ -390,13 +390,13 @@ public class SweComponentReaderV20 implements DataComponentReader
         String eltName = scalarElt.getLocalName();
         
         // Create DataValue Object with appropriate type
-    	if (eltName.equals("Quantity") || eltName.equals("Time") || eltName.equals("ObservableProperty"))
+    	if (eltName.equals(SweConstants.QUANTITY_COMPONENT_TAG) || eltName.equals(SweConstants.TIME_COMPONENT_TAG) || eltName.equals("ObservableProperty"))
     	    dataValue = new DataValue(DataType.DOUBLE);
-        else if (eltName.equals("Count"))
+        else if (eltName.equals(SweConstants.COUNT_COMPONENT_TAG))
             dataValue = new DataValue(DataType.INT);
-        else if (eltName.equals("Boolean"))
+        else if (eltName.equals(SweConstants.BOOL_COMPONENT_TAG))
         	dataValue = new DataValue(DataType.BOOLEAN);
-        else if (eltName.equals("Category") || eltName.equals("Text"))
+        else if (eltName.equals(SweConstants.CATEGORY_COMPONENT_TAG) || eltName.equals(SweConstants.TEXT_COMPONENT_TAG))
         	dataValue = new DataValue(DataType.UTF_STRING);
         else
             throw new XMLReaderException("Invalid scalar component: " + eltName, scalarElt);
@@ -447,13 +447,13 @@ public class SweComponentReaderV20 implements DataComponentReader
     	range.setProperty(SweConstants.COMP_QNAME, compQName);
         
         // Create Data component Object
-        if (eltName.startsWith("Quantity"))
+        if (eltName.startsWith(SweConstants.QUANTITY_COMPONENT_TAG))
         	paramVal = new DataValue(DataType.DOUBLE);
-        else if (eltName.startsWith("Count"))
+        else if (eltName.startsWith(SweConstants.COUNT_COMPONENT_TAG))
             paramVal = new DataValue(DataType.INT);
-        else if (eltName.startsWith("Time"))
+        else if (eltName.startsWith(SweConstants.TIME_COMPONENT_TAG))
             paramVal = new DataValue(DataType.DOUBLE);
-        else if (eltName.startsWith("Category"))
+        else if (eltName.startsWith(SweConstants.CATEGORY_COMPONENT_TAG))
             paramVal = new DataValue(DataType.UTF_STRING);
         else
             throw new XMLReaderException("Only Quantity, Time, Count and Category ranges are allowed", rangeElt);

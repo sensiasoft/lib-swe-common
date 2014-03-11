@@ -39,5 +39,49 @@ public enum DataType
 
 	OTHER,
 	DISCARD,
-	MIXED
+	MIXED;
+	
+	
+	public boolean isIntegralType()
+	{
+	    if (this == BYTE)
+	        return true;
+	    if (this == UBYTE)
+            return true;
+	    if (this == SHORT)
+            return true;
+	    if (this == USHORT)
+            return true;
+	    if (this == INT)
+            return true;
+	    if (this == UINT)
+            return true;
+	    if (this == LONG)
+            return true;
+	    if (this == ULONG)
+            return true;
+	    return false;
+	}
+	
+	
+	public boolean isNumberType()
+	{
+	    if (isIntegralType())
+	        return true;
+	    if (this == FLOAT)
+	        return true;
+	    if (this == DOUBLE)
+            return true;
+	    return false;
+	}
+	
+	
+	public boolean isTextType()
+    {
+        if (this == ASCII_STRING)
+            return true;
+        if (this == UTF_STRING)
+            return true;
+        return false;
+    }
 }

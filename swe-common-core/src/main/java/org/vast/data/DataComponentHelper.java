@@ -24,6 +24,7 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.data;
 
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.sweCommon.SweConstants;
 
@@ -39,16 +40,11 @@ import org.vast.sweCommon.SweConstants;
  * @since Mar, 11 2008
  * @version 1.0
  */
-public class ParamHelper
+public class DataComponentHelper
 {
 
-	public ParamHelper()
-	{
-		super();
-	}
 
-
-	public DataComponent findParameterByName(String name, DataComponent parent)
+	public static DataComponent findParameterByName(DataComponent parent, String name)
 	{
 		if (parent instanceof DataArray)
 			parent = ((DataArray)parent).getArrayComponent();
@@ -63,7 +59,7 @@ public class ParamHelper
 				return child;
 			
 			// try to find it recursively!
-			DataComponent desiredParam = findParameterByName(name, child);
+			DataComponent desiredParam = findParameterByName(child, name);
 			if (desiredParam != null)
 				return desiredParam;
 		}
@@ -72,7 +68,7 @@ public class ParamHelper
 	}
 
 
-	public DataComponent findParameterByDefinition(String defUri, DataComponent parent)
+	public static DataComponent findParameterByDefinition(DataComponent parent, String defUri)
 	{
 		if (parent instanceof DataArray)
 			parent = ((DataArray)parent).getArrayComponent();
@@ -87,11 +83,32 @@ public class ParamHelper
 				return child;
 			
 			// try to find it recursively!
-			DataComponent desiredParam = findParameterByDefinition(defUri, child);
+			DataComponent desiredParam = findParameterByDefinition(child, defUri);
 			if (desiredParam != null)
 				return desiredParam;
 		}
 		
 		return null;
 	}
+	
+	
+	public static DataComponent findComponentByPath(String path, DataComponent parent) throws CDMException
+	{
+	    return findComponentByPath(path.split("/"), parent);
+	}
+	
+	
+	public static DataComponent findComponentByPath(String [] dataPath, DataComponent parent) throws CDMException
+    {
+        DataComponent data = parent;
+        
+        for (int i=0; i<dataPath.length; i++)
+        {
+            data = data.getComponent(dataPath[i]);            
+            if (data == null)
+                throw new CDMException("Unknown component " + dataPath[i]);
+        }
+        
+        return data;
+    }
 }

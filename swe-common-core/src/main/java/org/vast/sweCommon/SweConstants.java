@@ -33,7 +33,22 @@ package org.vast.sweCommon;
  */
 public class SweConstants
 {
-	public final static String ELT_COUNT_NAME = "elementCount";
+	/* component tag names */
+    public final static String BOOL_COMPONENT_TAG = "Boolean";
+    public final static String COUNT_COMPONENT_TAG = "Count";
+    public final static String QUANTITY_COMPONENT_TAG = "Quantity";
+    public final static String TIME_COMPONENT_TAG = "Time";
+    public final static String TEXT_COMPONENT_TAG = "Text";
+    public final static String CATEGORY_COMPONENT_TAG = "Category";
+    public final static String DATARECORD_COMPONENT_TAG = "DataRecord";
+    public final static String VECTOR_COMPONENT_TAG = "Vector";
+    public final static String DATAARRAY_COMPONENT_TAG = "DataArray";
+    public final static String MATRIX_COMPONENT_TAG = "Matrix";
+    public final static String DATASTREAM_COMPONENT_TAG = "DataStream";
+    public final static String DATACHOICE_COMPONENT_TAG = "DataChoice";
+    
+    /* properties */
+    public final static String ELT_COUNT_NAME = "elementCount";
 	public final static String MIN_VALUE_NAME = "min";
 	public final static String MAX_VALUE_NAME = "max";
 	
@@ -63,7 +78,9 @@ public class SweConstants
 	public final static String NIL_XLINK = "nil_xlink"; // xlink ref to NilValues
 	public static final String ENCODING_TYPE = "encoding"; // DataEncoding object
 	
-	
 	/* property values defined in SWE Common standards */
 	public static final String ISO_TIME_DEF = "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian";
+	public static final String DEF_SAMPLING_TIME = "http://www.opengis.net/def/property/OGC/0/SamplingTime";
+	public static final String DEF_SAMPLING_LOC = "http://www.opengis.net/def/property/OGC/0/SamplingLocation";
+    
 }
