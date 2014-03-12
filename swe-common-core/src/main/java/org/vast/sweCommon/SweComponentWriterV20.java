@@ -147,14 +147,14 @@ public class SweComponentWriterV20 implements DataComponentWriter
     public Element addComponentProperty(DOMHelper dom, Element parentElt, String propEltPath, DataComponent dataComponent, boolean writeInlineData) throws XMLWriterException
     {
         Element propElt = dom.addElement(parentElt, propEltPath);
-        CachedReference<?> xlinkOptions = (CachedReference<?>)dataComponent.getProperty(SweConstants.COMP_XLINK);
         
-        if (xlinkOptions != null && keepHref)
-        {
+        CachedReference<?> xlinkOptions = (CachedReference<?>)dataComponent.getProperty(SweConstants.COMP_XLINK);
+        if (xlinkOptions != null)
             XlinkUtils.writeXlinkAttributes(dom, propElt, xlinkOptions);
-        }
-        else
+            
+        if (xlinkOptions == null || xlinkOptions.getHref() == null || !keepHref)
         {
+            propElt.removeAttributeNS(dom.getXmlDocument().getNSUri("xlink"), "href");
             Element qualElt = writeComponent(dom, dataComponent, writeInlineData);
             propElt.appendChild(qualElt);
         }

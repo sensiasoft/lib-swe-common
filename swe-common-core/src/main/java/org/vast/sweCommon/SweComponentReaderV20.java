@@ -80,12 +80,10 @@ public class SweComponentReaderV20 implements DataComponentReader
         container.setName(name);
         
         // if href is present also parse and save xlink attr group
-        if (dom.existAttribute(propertyElt, "href"))
-        {
-            CachedReference<?> xlinkOptions = new CachedReference<Object>();
-            XlinkUtils.readXlinkAttributes(dom, propertyElt, xlinkOptions);
+        CachedReference<?> xlinkOptions = new CachedReference<Object>();
+        XlinkUtils.readXlinkAttributes(dom, propertyElt, xlinkOptions);        
+        if (xlinkOptions.getHref() != null || xlinkOptions.getArcRole() != null || xlinkOptions.getRole() != null)
             container.setProperty(SweConstants.COMP_XLINK, xlinkOptions);
-        }
                
         return container;
     }
