@@ -20,6 +20,9 @@
 
 package org.vast.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * SensorML ResponsibleParty
@@ -35,19 +38,28 @@ public class ResponsibleParty extends Contact
     protected String individualName;
     protected String organizationName;
     protected String positionName;
-    protected String voiceNumber;
-    protected String faxNumber;
-    protected String deliveryPoint;
+    protected List<String> voiceNumbers;
+    protected List<String> faxNumbers;
+    protected List<String> deliveryPoints;
     protected String city;
     protected String administrativeArea;
     protected String postalCode;
     protected String country;
-    protected String email;
+    protected List<String> emails;
     protected String website;
     protected String hoursOfService;
     protected String contactInstructions;
 
 
+    public ResponsibleParty()
+    {
+        voiceNumbers = new ArrayList<String>(1);
+        faxNumbers = new ArrayList<String>(1);
+        deliveryPoints = new ArrayList<String>(1);
+        emails = new ArrayList<String>(1);        
+    }
+    
+    
     public String getAdministrativeArea()
     {
         return administrativeArea;
@@ -96,27 +108,45 @@ public class ResponsibleParty extends Contact
     }
 
 
+    public List<String> getDeliveryPoints()
+    {
+        return deliveryPoints;
+    }
+
+
     public String getDeliveryPoint()
     {
-        return deliveryPoint;
+        if (deliveryPoints.size() == 0)
+            return null;
+        
+        return deliveryPoints.get(0);
     }
 
 
     public void setDeliveryPoint(String deliveryPoint)
     {
-        this.deliveryPoint = deliveryPoint;
+        deliveryPoints.set(0, deliveryPoint);
     }
 
 
+    public List<String> getEmails()
+    {
+        return emails;
+    }
+    
+    
     public String getEmail()
     {
-        return email;
+        if (emails.size() == 0)
+            return null;
+        
+        return emails.get(0);
     }
 
 
     public void setEmail(String email)
     {
-        this.email = email;
+        emails.set(0, email);
     }
 
 
@@ -132,15 +162,24 @@ public class ResponsibleParty extends Contact
 	}
 
 
-	public String getFaxNumber()
+    public List<String> getFaxNumbers()
     {
-        return faxNumber;
+        return faxNumbers;
+    }
+    
+    
+    public String getFaxNumber()
+    {
+        if (faxNumbers.size() == 0)
+            return null;
+        
+	    return faxNumbers.get(0);
     }
 
 
     public void setFaxNumber(String faxNumber)
     {
-        this.faxNumber = faxNumber;
+        faxNumbers.set(0, faxNumber);
     }
 
 
@@ -206,12 +245,21 @@ public class ResponsibleParty extends Contact
 
     public String getVoiceNumber()
     {
-        return voiceNumber;
+        if (voiceNumbers.size() == 0)
+            return null;
+        
+        return voiceNumbers.get(0);
     }
 
 
     public void setVoiceNumber(String voiceNumber)
     {
-        this.voiceNumber = voiceNumber;
+        voiceNumbers.set(0, voiceNumber);
+    }
+
+
+    public List<String> getVoiceNumbers()
+    {
+        return voiceNumbers;
     }
 }

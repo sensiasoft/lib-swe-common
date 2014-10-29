@@ -33,6 +33,7 @@ package org.vast.util;
 public abstract class Contact
 {
     protected String role;
+    protected String roleCodeList;
     protected String hrefUri;
     protected boolean hrefPresent = false;
     
@@ -46,6 +47,18 @@ public abstract class Contact
     public void setRole(String role)
     {
         this.role = role;
+    }
+
+
+    public String getRoleCodeList()
+    {
+        return roleCodeList;
+    }
+
+
+    public void setRoleCodeList(String roleCodeList)
+    {
+        this.roleCodeList = roleCodeList;
     }
 
 
