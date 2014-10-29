@@ -34,7 +34,7 @@ public interface CompressedStreamWriter
     
     /**
      * Writes compressed data obtained from block component to output stream
-     * @param inputStream
+     * @param outputStream
      * @param blockComponent
      * @throws CDMException
      */
