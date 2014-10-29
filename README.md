@@ -10,14 +10,14 @@ Dependencies
 
 The following libraries are needed in order to compile the code published on SVN or in the download section:
 
-    [Xerces J 2.9.0 - XML Parser](http://archive.apache.org/dist/xml/xerces-j)
-    Vecmath library extracted from Java3D 1.4
-    JTS 1.9 - Java Topology Library
-    StAX API and a working implementation
-    Apache Common Logging 1.1.1 and a logger implementation such as Apache Log4j 1.2 
+[Xerces J 2.9.0](http://archive.apache.org/dist/xml/xerces-j) - XML Parser
+[Vecmath library] extracted from Java3D 1.4
+[JTS 1.9] - Java Topology Library
+[StAX API] and a working implementation
+[Apache Common Logging 1.1.1] and a logger implementation such as Apache [Log4j 1.2]
 
 For dealing with existing data formats, the following libraries are also needed:
 
-    JAI & ImageIO 1.1 if not already included in your JDK - Java Advanced Imaging
-    JJ2000 5.1 - JPEG 2000 support
-    NetCDF Java Library - NetCDF data library 
+[JAI & ImageIO 1.1] - Java Advanced Imaging (if not already included in your JDK)
+[JJ2000 5.1] - JPEG 2000 support
+[NetCDF Java Library] - NetCDF data library
