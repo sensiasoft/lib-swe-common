@@ -10,7 +10,7 @@ Dependencies
 
 The following libraries are needed in order to compile the code published on SVN or in the download section:
 
-    Xerces J 2.9.0 - XML Parser
+    [Xerces J 2.9.0 - XML Parser](http://archive.apache.org/dist/xml/xerces-j)
     Vecmath library extracted from Java3D 1.4
     JTS 1.9 - Java Topology Library
     StAX API and a working implementation
