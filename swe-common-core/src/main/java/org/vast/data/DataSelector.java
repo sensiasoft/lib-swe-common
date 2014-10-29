@@ -20,6 +20,7 @@
 
 package org.vast.data;
 
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 
 
@@ -43,17 +44,23 @@ public class DataSelector
 	}
 	
 	
-	public DataComponent findComponent(DataComponent parent, String path) throws DataException
+	public DataComponent findComponent(DataComponent parent, String path) throws CDMException
     {
-		DataComponent data = parent;
-		String[] dataPath = path.split(separator);		
+	    String[] dataPath = path.split(separator);
+	    return findComponent(parent, dataPath);
+    }
+	
+	
+	public DataComponent findComponent(DataComponent parent, String[] dataPath) throws CDMException
+    {
+		DataComponent data = parent;				
 		
 		for (int i=0; i<dataPath.length; i++)
         {
             data = data.getComponent(dataPath[i]);
             
             if (data == null)
-            	throw new DataException("Unknown component " + dataPath[i]);
+            	throw new CDMException("Unknown component " + dataPath[i]);
         }
     	
     	return data;

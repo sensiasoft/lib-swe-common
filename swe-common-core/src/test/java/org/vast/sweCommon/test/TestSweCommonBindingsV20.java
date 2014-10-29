@@ -45,6 +45,7 @@ public class TestSweCommonBindingsV20 extends XMLTestCase
         XMLUnit.setIgnoreComments(true);
         XMLUnit.setIgnoreWhitespace(true);
         XMLUnit.setNormalizeWhitespace(true);
+        XMLUnit.setIgnoreAttributeOrder(true);
     }
     
     
