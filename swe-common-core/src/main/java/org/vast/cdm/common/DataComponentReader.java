@@ -44,9 +44,9 @@ public interface DataComponentReader
     /**
      * Reads contents of any data component (record/array/scalar)
      * @param dom
-     * @param dataComponentElement
-     * @return
-     * @throws CDMException
+     * @param componentElement
+     * @return new component
+     * @throws XMLReaderException
      */
     public DataComponent readComponent(DOMHelper dom, Element componentElement) throws XMLReaderException;
     
@@ -55,8 +55,8 @@ public interface DataComponentReader
      * Reads a component property in a data component
      * @param dom
      * @param propertyElement
-     * @return
-     * @throws CDMException
+     * @return new component
+     * @throws XMLReaderException
      */
     public DataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException;
 }
