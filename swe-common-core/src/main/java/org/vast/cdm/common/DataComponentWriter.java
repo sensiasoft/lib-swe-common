@@ -44,8 +44,8 @@ public interface DataComponentWriter
      * Creates a DOM Element from a DataComponent object
      * @param dom
      * @param dataComponents
-     * @return
-     * @throws CDMException
+     * @return new element
+     * @throws XMLWriterException
 	 */
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws XMLWriterException;
     
@@ -56,8 +56,8 @@ public interface DataComponentWriter
      * @param dom
      * @param dataComponents
      * @param writeInlineData
-     * @return
-     * @throws CDMException
+     * @return new element
+     * @throws XMLWriterException
      */
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents, boolean writeInlineData) throws XMLWriterException;
 }
