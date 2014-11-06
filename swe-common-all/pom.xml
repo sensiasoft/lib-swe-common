@@ -26,14 +26,14 @@
     </developer>
   </developers>
   <scm>
-     <url>http://code.google.com/p/swe-common-data-framework/source/browse/</url>
-     <connection>scm:svn:http://swe-common-data-framework.googlecode.com/svn/</connection>
-     <tag>HEAD</tag>
-     <developerConnection>scm:svn:https://swe-common-data-framework.googlecode.com/svn/</developerConnection>
+     <url>https://github.com/sensiasoft/lib-swe-common/tree/master/swe-common-all</url>
+     <connection>scm:git:https://github.com/sensiasoft/lib-swe-common/swe-common-all</connection>
+     <tag>master</tag>
+     <developerConnection>scm:git:https://github.com/sensiasoft/lib-swe-common/swe-common-all</developerConnection>
   </scm>
   <issueManagement>
-     <system>Google Code</system>
-     <url>http://code.google.com/p/swe-common-data-framework/issues/list</url>
+     <system>GitHub</system>
+     <url>https://github.com/sensiasoft/lib-swe-common/issues</url>
   </issueManagement>
   <modules>
      <module>../swe-common-core</module>
