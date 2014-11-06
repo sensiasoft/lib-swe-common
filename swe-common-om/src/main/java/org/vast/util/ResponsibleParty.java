@@ -125,7 +125,7 @@ public class ResponsibleParty extends Contact
 
     public void setDeliveryPoint(String deliveryPoint)
     {
-        deliveryPoints.set(0, deliveryPoint);
+        deliveryPoints.add(0, deliveryPoint);
     }
 
 
@@ -146,7 +146,7 @@ public class ResponsibleParty extends Contact
 
     public void setEmail(String email)
     {
-        emails.set(0, email);
+        emails.add(0, email);
     }
 
 
@@ -179,7 +179,7 @@ public class ResponsibleParty extends Contact
 
     public void setFaxNumber(String faxNumber)
     {
-        faxNumbers.set(0, faxNumber);
+        faxNumbers.add(0, faxNumber);
     }
 
 
@@ -254,7 +254,7 @@ public class ResponsibleParty extends Contact
 
     public void setVoiceNumber(String voiceNumber)
     {
-        voiceNumbers.set(0, voiceNumber);
+        voiceNumbers.add(0, voiceNumber);
     }
 
 
