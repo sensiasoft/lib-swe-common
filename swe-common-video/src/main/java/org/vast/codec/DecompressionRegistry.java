@@ -18,7 +18,7 @@
  
  ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.decompression;
+package org.vast.codec;
 
 import java.util.Hashtable;
 import org.vast.xml.DOMHelper;
@@ -46,7 +46,7 @@ public class DecompressionRegistry
     static
     {
         readerClasses = new Hashtable<String, Class<?>>();
-        String mapFileUrl = DecompressionRegistry.class.getResource("DecompressionRegistry.xml").toString();
+        String mapFileUrl = DecompressionRegistry.class.getResource("CodecRegistry.xml").toString();
         loadMaps(mapFileUrl, false);
     }
 

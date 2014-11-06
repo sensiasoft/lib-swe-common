@@ -29,20 +29,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-
 import jj2000.j2k.decoder.Decoder;
 import jj2000.j2k.io.RandomAccessIO;
 import jj2000.j2k.util.ISRandomAccessIO;
 import jj2000.j2k.util.ParameterList;
-
 import org.junit.Test;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataType;
+import org.vast.codec.JP2KDecoder;
+import org.vast.codec.JP2KStreamDecoder;
 import org.vast.data.DataArray;
 import org.vast.data.DataGroup;
 import org.vast.data.DataValue;
-import org.vast.decompression.JP2KDecoder;
-import org.vast.decompression.JP2KStreamDecoder;
 import org.vast.sweCommon.DataInputStreamBI;
 
 

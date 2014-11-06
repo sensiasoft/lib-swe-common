@@ -23,7 +23,7 @@
  
  ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.decompression;
+package org.vast.codec;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

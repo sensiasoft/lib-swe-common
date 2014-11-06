@@ -1,5 +1,5 @@
 
-package org.vast.decompression;
+package org.vast.codec;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;

@@ -21,7 +21,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.decompression;
+package org.vast.codec;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
