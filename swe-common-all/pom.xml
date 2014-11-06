@@ -5,7 +5,7 @@
   <version>1.0</version>
   <packaging>pom</packaging>
   <name>SWE Common Data Framework</name>
-  <url>http://code.google.com/p/swe-common-data-framework/</url>
+  <url>https://github.com/sensiasoft/lib-swe-common/tree/master/swe-common-all</url>
   <description>Java bindings and associated data components for the SWE Common Data Model language</description>
   <licenses>
     <license>
@@ -27,9 +27,7 @@
   </developers>
   <scm>
      <url>https://github.com/sensiasoft/lib-swe-common/tree/master/swe-common-all</url>
-     <connection>scm:git:https://github.com/sensiasoft/lib-swe-common/swe-common-all</connection>
      <tag>master</tag>
-     <developerConnection>scm:git:https://github.com/sensiasoft/lib-swe-common/swe-common-all</developerConnection>
   </scm>
   <issueManagement>
      <system>GitHub</system>
