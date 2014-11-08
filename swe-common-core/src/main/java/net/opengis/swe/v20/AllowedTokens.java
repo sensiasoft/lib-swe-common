@@ -9,7 +9,7 @@ import java.util.List;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface AllowedTokens extends AbstractSWE
+public interface AllowedTokens extends AbstractSWE, DataConstraint
 {
     
     

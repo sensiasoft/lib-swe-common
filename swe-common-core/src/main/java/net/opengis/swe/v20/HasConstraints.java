@@ -23,23 +23,44 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.data;
+package net.opengis.swe.v20;
 
+import net.opengis.OgcProperty;
 
 /**
  * <p>
- * Tagging interface for data components that have a code space
+ * Tagging interface for data components with constraints
  * </p>
  *
  * <p>Copyright (c) 2014 Sensia Software LLC</p>
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
- * @since Nov 7, 2014
+ * @since Nov 8, 2014
  */
-public interface HasCodeSpace
-{   
-   public String getCodeSpace();
-   
-   public boolean isSetCodeSpace();
-   
-   public void setCodeSpace(String codeSpaceUri);
+@SuppressWarnings("javadoc")
+public interface HasConstraints<ConstraintType extends DataConstraint>
+{
+
+    /**
+     * Gets the constraint property
+     */
+    public abstract ConstraintType getConstraint();
+
+
+    /**
+     * Gets extra info (name, xlink, etc.) carried by the constraint property
+     */
+    public abstract OgcProperty<ConstraintType> getConstraintProperty();
+
+
+    /**
+     * Checks if constraint is set
+     */
+    public abstract boolean isSetConstraint();
+
+
+    /**
+     * Sets the constraint property
+     */
+    public abstract void setConstraint(ConstraintType constraint);
+
 }

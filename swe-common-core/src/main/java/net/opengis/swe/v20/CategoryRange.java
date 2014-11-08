@@ -1,7 +1,5 @@
 package net.opengis.swe.v20;
 
-import net.opengis.OgcProperty;
-
 
 /**
  * POJO class for XML type CategoryRangeType(@http://www.opengis.net/swe/2.0).
@@ -9,52 +7,9 @@ import net.opengis.OgcProperty;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface CategoryRange extends AbstractSimpleComponent
+public interface CategoryRange extends AbstractSimpleComponent, HasCodeSpace, HasConstraints<AllowedTokens>
 {
-    
-    
-    /**
-     * Gets the codeSpace property
-     */
-    public String getCodeSpace();
-    
-    
-    /**
-     * Checks if codeSpace is set
-     */
-    public boolean isSetCodeSpace();
-    
-    
-    /**
-     * Sets the codeSpace property
-     */
-    public void setCodeSpace(String codeSpace);
-    
-    
-    /**
-     * Gets the constraint property
-     */
-    public AllowedTokens getConstraint();
-    
-    
-    /**
-     * Gets extra info (name, xlink, etc.) carried by the constraint property
-     */
-    public OgcProperty<AllowedTokens> getConstraintProperty();
-    
-    
-    /**
-     * Checks if constraint is set
-     */
-    public boolean isSetConstraint();
-    
-    
-    /**
-     * Sets the constraint property
-     */
-    public void setConstraint(AllowedTokens constraint);
-    
-    
+        
     /**
      * Gets the value property
      */

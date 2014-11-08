@@ -76,4 +76,10 @@ public interface AbstractDataComponent extends AbstractSWEIdentifiable
      * Sets the definition property
      */
     public void setDefinition(String definition);
+    
+    
+    /**
+     * Gets the parent component
+     */
+    public AbstractDataComponent getParent();
 }

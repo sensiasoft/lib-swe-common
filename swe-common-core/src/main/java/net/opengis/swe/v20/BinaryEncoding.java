@@ -65,7 +65,7 @@ public interface BinaryEncoding extends AbstractEncoding
     /**
      * Gets the byteLength property
      */
-    public int getByteLength();
+    public long getByteLength();
     
     
     /**
@@ -77,7 +77,7 @@ public interface BinaryEncoding extends AbstractEncoding
     /**
      * Sets the byteLength property
      */
-    public void setByteLength(int byteLength);
+    public void setByteLength(long byteLength);
     
     
     /**

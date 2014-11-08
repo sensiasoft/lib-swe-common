@@ -10,7 +10,7 @@ import net.opengis.IDateTime;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface AllowedTimes extends AbstractSWE
+public interface AllowedTimes extends AbstractSWE, DataConstraint
 {
     
     

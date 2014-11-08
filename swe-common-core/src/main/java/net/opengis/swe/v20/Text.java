@@ -1,7 +1,5 @@
 package net.opengis.swe.v20;
 
-import net.opengis.OgcProperty;
-
 
 /**
  * POJO class for XML type TextType(@http://www.opengis.net/swe/2.0).
@@ -9,33 +7,8 @@ import net.opengis.OgcProperty;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface Text extends AbstractSimpleComponent
+public interface Text extends AbstractSimpleComponent, HasConstraints<AllowedTokens>
 {
-    
-    
-    /**
-     * Gets the constraint property
-     */
-    public AllowedTokens getConstraint();
-    
-    
-    /**
-     * Gets extra info (name, xlink, etc.) carried by the constraint property
-     */
-    public OgcProperty<AllowedTokens> getConstraintProperty();
-    
-    
-    /**
-     * Checks if constraint is set
-     */
-    public boolean isSetConstraint();
-    
-    
-    /**
-     * Sets the constraint property
-     */
-    public void setConstraint(AllowedTokens constraint);
-    
     
     /**
      * Gets the value property

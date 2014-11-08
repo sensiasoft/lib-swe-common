@@ -1,13 +1,3 @@
-/***************************** BEGIN LICENSE BLOCK ***************************
-
- The contents of this file are Copyright (C) 2014 Sensia Software LLC.
- All Rights Reserved.
- 
- Contributor(s): 
-    Alexandre Robin <alex.robin@sensiasoftware.com>
- 
-******************************* END LICENSE BLOCK ***************************/
-
 package net.opengis;
 
 import java.util.ArrayList;
@@ -18,6 +8,20 @@ import java.util.List;
 import java.util.ListIterator;
 
 
+/**
+ * <p>
+ * List implementation for holding list of OgcProperty objects.
+ * As seen from the interface the elements of the list are actually the properties
+ * values which allows for simple browsing when no access to the actual property is
+ * needed. For more advanced usage, OgcProperty objects themselves can be retrieved
+ * with getProperty() methods.
+ * </p>
+ *
+ * <p>Copyright (c) 2014 Sensia Software LLC</p>
+ * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @param <ValueType> Type of the properties value
+ * @since Nov 8, 2014
+ */
 public class OgcPropertyList<ValueType> implements List<ValueType>
 {
     ArrayList<OgcProperty<ValueType>> items;

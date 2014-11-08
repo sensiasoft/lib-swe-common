@@ -99,7 +99,7 @@ public interface BinaryBlock extends AbstractSWE, BinaryMember
     /**
      * Gets the byteLength property
      */
-    public int getByteLength();
+    public long getByteLength();
     
     
     /**
@@ -111,7 +111,7 @@ public interface BinaryBlock extends AbstractSWE, BinaryMember
     /**
      * Sets the byteLength property
      */
-    public void setByteLength(int byteLength);
+    public void setByteLength(long byteLength);
     
     
     /**

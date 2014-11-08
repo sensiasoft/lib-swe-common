@@ -11,9 +11,10 @@
 package net.opengis;
 
 import java.io.IOException;
+import org.vast.ogc.xlink.IXlinkReference;
 
 
-public interface OgcProperty<ValueType>
+public interface OgcProperty<ValueType> extends IXlinkReference<ValueType>
 {
 
     public OgcProperty<ValueType> copy();
@@ -23,27 +24,6 @@ public interface OgcProperty<ValueType>
 
 
     public void setName(String name);
-
-
-    public String getHref();
-
-
-    public void setHref(String href);
-    
-    
-    public boolean hasHref();
-
-
-    public String getRole();
-
-
-    public void setRole(String role);
-    
-    
-    public String getArcRole();
-
-
-    public void setArcRole(String role);
     
     
     public String getNilReason();
@@ -59,6 +39,9 @@ public interface OgcProperty<ValueType>
 
 
     public void setValue(ValueType value);
+    
+    
+    public boolean hasHref();
     
     
     /**

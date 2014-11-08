@@ -9,9 +9,8 @@ import net.opengis.OgcPropertyList;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface Vector extends AbstractDataComponent
+public interface Vector extends AbstractDataComponent, HasRefFrames
 {
-    
     
     /**
      * Gets the list of coordinate properties
@@ -47,34 +46,4 @@ public interface Vector extends AbstractDataComponent
      * Adds a new coordinateAsTime property
      */
     public void addCoordinateAsTime(String name, Time coordinate);
-    
-    
-    /**
-     * Gets the referenceFrame property
-     */
-    public String getReferenceFrame();
-    
-    
-    /**
-     * Sets the referenceFrame property
-     */
-    public void setReferenceFrame(String referenceFrame);
-    
-    
-    /**
-     * Gets the localFrame property
-     */
-    public String getLocalFrame();
-    
-    
-    /**
-     * Checks if localFrame is set
-     */
-    public boolean isSetLocalFrame();
-    
-    
-    /**
-     * Sets the localFrame property
-     */
-    public void setLocalFrame(String localFrame);
 }

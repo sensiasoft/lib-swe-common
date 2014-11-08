@@ -1,7 +1,6 @@
 package net.opengis.swe.v20;
 
 import net.opengis.IDateTime;
-import net.opengis.OgcProperty;
 
 
 /**
@@ -10,45 +9,9 @@ import net.opengis.OgcProperty;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface Time extends AbstractSimpleComponent
+public interface Time extends AbstractSimpleComponent, HasUom, HasConstraints<AllowedTimes>
 {
     public static final String ISO_TIME_UNIT = "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian";
-    
-    
-    /**
-     * Gets the uom property
-     */
-    public UnitReference getUom();
-    
-    
-    /**
-     * Sets the uom property
-     */
-    public void setUom(UnitReference uom);
-    
-    
-    /**
-     * Gets the constraint property
-     */
-    public AllowedTimes getConstraint();
-    
-    
-    /**
-     * Gets extra info (name, xlink, etc.) carried by the constraint property
-     */
-    public OgcProperty<AllowedTimes> getConstraintProperty();
-    
-    
-    /**
-     * Checks if constraint is set
-     */
-    public boolean isSetConstraint();
-    
-    
-    /**
-     * Sets the constraint property
-     */
-    public void setConstraint(AllowedTimes constraint);
     
     
     /**

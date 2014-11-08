@@ -23,23 +23,10 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.data;
-
-import net.opengis.swe.v20.UnitReference;
+package net.opengis.swe.v20;
 
 
-/**
- * <p>
- * TAgging interface for data components that have a unit of measure
- * </p>
- *
- * <p>Copyright (c) 2014 Sensia Software LLC</p>
- * @author Alexandre Robin <alex.robin@sensiasoftware.com>
- * @since Nov 7, 2014
- */
-public interface HasUom
+public interface DataConstraint
 {
-    public UnitReference getUom();    
-    
-   ;public void setUom(UnitReference uom);
+
 }

@@ -247,4 +247,11 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
         
         return ret;
     }
+    
+    
+    @Override
+    public ValueType getTarget()
+    {
+        return getValue();
+    }
 }
