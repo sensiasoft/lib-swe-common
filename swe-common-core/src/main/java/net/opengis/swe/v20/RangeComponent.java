@@ -10,7 +10,7 @@ package net.opengis.swe.v20;
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
  * @since Nov 8, 2014
  */
-public interface RangeComponent
+public interface RangeComponent extends AbstractSimpleComponent
 {
 
 }
