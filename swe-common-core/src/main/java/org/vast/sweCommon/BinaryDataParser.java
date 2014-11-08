@@ -20,10 +20,26 @@
 
 package org.vast.sweCommon;
 
-import java.io.*;
-import org.vast.data.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteOrder;
+import net.opengis.swe.v20.BinaryBlock;
+import net.opengis.swe.v20.BinaryComponent;
+import net.opengis.swe.v20.BinaryEncoding;
+import net.opengis.swe.v20.BinaryMember;
+import org.vast.cdm.common.CDMException;
+import org.vast.cdm.common.CompressedStreamParser;
+import org.vast.cdm.common.DataBlock;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataInputExt;
+import org.vast.data.AbstractDataComponentImpl;
+import org.vast.data.BinaryBlockImpl;
+import org.vast.data.BinaryComponentImpl;
+import org.vast.data.DataChoiceImpl;
+import org.vast.data.DataSelector;
+import org.vast.data.DataValue;
 import org.vast.util.ReaderException;
-import org.vast.cdm.common.*;
 
 
 /**
@@ -54,10 +70,10 @@ public class BinaryDataParser extends AbstractDataParser
 	{
 		InputStream dataIn = null;
 		
-		// use Base64 converter, and TODO swap bytes if necessary
-		switch (((BinaryEncoding)dataEncoding).byteEncoding)
+		// use Base64 converter
+		switch (((BinaryEncoding)dataEncoding).getByteEncoding())
 		{
-			case BASE64:
+			case BASE_64:
 				dataIn = new Base64Decoder(inputStream);
 				break;
 				
@@ -70,9 +86,9 @@ public class BinaryDataParser extends AbstractDataParser
 		}
 		
 		// create data input stream
-		if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.BIG_ENDIAN)
+		if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.BIG_ENDIAN)
 		    input = new DataInputStreamBI(new BufferedInputStream(dataIn));
-        else if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.LITTLE_ENDIAN)
+        else if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.LITTLE_ENDIAN)
             input = new DataInputStreamLI(new BufferedInputStream(dataIn));
 		
 		dataInput = (DataInputExt)input;
@@ -105,7 +121,7 @@ public class BinaryDataParser extends AbstractDataParser
 			// of the whole block size and send it directly.
 			else
 			{
-				int size = (int)((BinaryEncoding)dataEncoding).byteLength;			
+				int size = (int)((BinaryEncoding)dataEncoding).getByteLength();		
 				int byteLeft = size;
 				int byteRead = 0;
 				byte [] buffer = new byte[size];
@@ -147,7 +163,6 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 	
 	
-	//@Override
 	public DataBlock parse() throws IOException
 	{
 	    try
@@ -190,33 +205,23 @@ public class BinaryDataParser extends AbstractDataParser
 	 */
 	protected void resolveComponentEncodings() throws CDMException
 	{
-		BinaryOptions[] encodingList = ((BinaryEncoding)dataEncoding).componentEncodings;
-				
-		for (BinaryOptions binaryOpts: encodingList)
+	    DataSelector dataSelector = new DataSelector();
+	    
+	    for (BinaryMember binaryOpts: ((BinaryEncoding)dataEncoding).getMemberList())
 		{
-			String [] dataPath = binaryOpts.componentName.split("/");
-			DataComponent dataComponent = dataComponents;
-			
 			// find component in tree
-            for (int j=0; j<dataPath.length; j++)
-            {
-                dataComponent = dataComponent.getComponent(dataPath[j]);                
-                if (dataComponent == null)
-                {
-                    throw new CDMException("Unknown component " + binaryOpts.componentName);
-                }
-            }
-			
+			AbstractDataComponentImpl dataComponent = (AbstractDataComponentImpl)dataSelector.findComponent(dataComponents, binaryOpts.getRef());
+            			
 			// add binary info to component
             if (binaryOpts instanceof BinaryComponent)
             {
-            	((DataValue)dataComponent).setDataType(((BinaryComponent)binaryOpts).type);
+            	((DataValue)dataComponent).setDataType(((BinaryComponentImpl)binaryOpts).getCdmDataType());
             	dataComponent.setEncodingInfo(binaryOpts);
             }
             else if(binaryOpts instanceof BinaryBlock)
             {
                 dataComponent.setEncodingInfo(binaryOpts);
-                initBlockReader(dataComponent, (BinaryBlock)binaryOpts);
+                initBlockReader(dataComponent, (BinaryBlockImpl)binaryOpts);
             }
 		}
 		
@@ -224,29 +229,29 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 	
 	
-	protected void initBlockReader(DataComponent blockComponent, BinaryBlock binaryOpts) throws CDMException
+	protected void initBlockReader(DataComponent blockComponent, BinaryBlockImpl binaryOpts) throws CDMException
     {
-	    CompressedStreamParser reader = CodecLookup.getInstance().createDecoder(binaryOpts.compression);
+	    CompressedStreamParser reader = CodecLookup.getInstance().createDecoder(binaryOpts.getCompression());
+	    binaryOpts.setBlockReader(reader);
         reader.init(blockComponent, binaryOpts);
-        blockComponent.setProperty(BLOCK_READER, reader);
     }
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarInfo) throws CDMException
+	protected void processAtom(DataValue scalarComponent) throws CDMException
 	{
 		// get next encoding block
-		BinaryComponent binaryComponent = (BinaryComponent)scalarInfo.getEncodingInfo();
+	    BinaryComponentImpl binaryInfo = (BinaryComponentImpl)scalarComponent.getEncodingInfo();
 		
 		// parse token = dataAtom					
-		parseBinaryAtom(scalarInfo, binaryComponent);
+		parseBinaryAtom(scalarComponent, binaryInfo);
 	}
 	
 	
 	@Override
-	protected boolean processBlock(DataComponent blockInfo) throws CDMException
+	protected boolean processBlock(DataComponent blockComponent) throws CDMException
 	{
-		if (blockInfo instanceof DataChoice)
+		if (blockComponent instanceof DataChoiceImpl)
 		{
 			int choiceIndex = -1;
 			
@@ -254,7 +259,7 @@ public class BinaryDataParser extends AbstractDataParser
 			try
 			{
 				choiceIndex = dataInput.readByte();
-				((DataChoice)blockInfo).setSelected(choiceIndex);
+				((DataChoiceImpl)blockComponent).setSelected(choiceIndex);
 			}
 			catch (IllegalStateException e)
 			{
@@ -267,13 +272,13 @@ public class BinaryDataParser extends AbstractDataParser
 		}
 		else
 		{		
-			// get block details
-			BinaryBlock binaryBlock = (BinaryBlock)blockInfo.getEncodingInfo();
+			// get block encoding details
+			BinaryBlockImpl binaryInfo = (BinaryBlockImpl)((AbstractDataComponentImpl)blockComponent).getEncodingInfo();
 			
 			// parse whole block at once if compression found
-			if (binaryBlock != null)
+			if (binaryInfo != null)
 			{
-				parseBinaryBlock(blockInfo, binaryBlock);
+				parseBinaryBlock(blockComponent, binaryInfo);
 				return false;
 			}
 		}
@@ -317,11 +322,11 @@ public class BinaryDataParser extends AbstractDataParser
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void parseBinaryAtom(DataValue scalarInfo, BinaryComponent binaryInfo) throws CDMException
+	private void parseBinaryAtom(DataValue scalarInfo, BinaryComponentImpl binaryInfo) throws CDMException
 	{
 		try
 		{
-			switch (binaryInfo.type)
+			switch (binaryInfo.getCdmDataType())
 			{
 				case BOOLEAN:
 					boolean boolValue = dataInput.readBoolean();
@@ -389,7 +394,7 @@ public class BinaryDataParser extends AbstractDataParser
 					break;
 					
 				default:
-                    throw new RuntimeException("Unsupported datatype " + binaryInfo.type);
+                    throw new RuntimeException("Unsupported datatype " + binaryInfo.getCdmDataType());
 			}
 		}
 		catch (RuntimeException e)
@@ -406,15 +411,15 @@ public class BinaryDataParser extends AbstractDataParser
 	/**
 	 * Parse binary block using DataInfo and DataEncoding structures
 	 * Decoded value is assigned to each DataValue
-	 * @param scalarInfo
+	 * @param blockComponent
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void parseBinaryBlock(DataComponent blockInfo, BinaryBlock binaryInfo) throws CDMException
+	private void parseBinaryBlock(DataComponent blockComponent, BinaryBlockImpl binaryInfo) throws CDMException
 	{
 		// TODO: PADDING IS TAKEN CARE OF HERE... 
-	    CompressedStreamParser reader = (CompressedStreamParser)blockInfo.getProperty(BLOCK_READER);
-		reader.decode(dataInput, blockInfo);					
+	    CompressedStreamParser reader = binaryInfo.getBlockReader();
+		reader.decode(dataInput, blockComponent);					
 	}
 	
 	

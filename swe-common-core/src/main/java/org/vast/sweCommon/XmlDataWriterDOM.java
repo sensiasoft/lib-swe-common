@@ -134,8 +134,8 @@ public class XmlDataWriterDOM extends AbstractDataWriter
         this.dom = dom;
         this.currentParentElt = parentElt;
         
-        namespace = ((XmlEncoding)dataEncoding).namespace;
-        prefix = ((XmlEncoding)dataEncoding).prefix;
+        namespace = ((XMLEncodingImpl)dataEncoding).getNamespace();
+        prefix = ((XMLEncodingImpl)dataEncoding).getPrefix();
         if (prefix == null)
             prefix = "data";
         

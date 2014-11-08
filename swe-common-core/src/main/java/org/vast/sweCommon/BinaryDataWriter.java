@@ -21,10 +21,16 @@
 package org.vast.sweCommon;
 
 import java.io.*;
+import java.nio.ByteOrder;
+import java.util.List;
+import net.opengis.swe.v20.BinaryBlock;
+import net.opengis.swe.v20.BinaryComponent;
+import net.opengis.swe.v20.BinaryEncoding;
+import net.opengis.swe.v20.BinaryMember;
+import net.opengis.swe.v20.ByteEncoding;
 import org.vast.data.*;
 import org.vast.util.WriterException;
 import org.vast.cdm.common.*;
-import org.vast.cdm.common.BinaryEncoding.ByteEncoding;
 
 
 /**
@@ -53,11 +59,11 @@ public class BinaryDataWriter extends AbstractDataWriter
 	@Override
 	public void setOutput(OutputStream outputStream) throws IOException
 	{
-	    ByteEncoding byteEnc = ((BinaryEncoding)dataEncoding).byteEncoding;
+	    ByteEncoding byteEnc = ((BinaryEncoding)dataEncoding).getByteEncoding();
 	    
 	    switch (byteEnc)
         {
-            case BASE64:
+            case BASE_64:
                 // use streaming Base64 converter
                 outputStream = new Base64Encoder(outputStream);
                 break;
@@ -70,9 +76,9 @@ public class BinaryDataWriter extends AbstractDataWriter
         }
         
         // create right data output stream
-        if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.BIG_ENDIAN)
+        if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.BIG_ENDIAN)
             dataOutput = new DataOutputStreamBI(new BufferedOutputStream(outputStream));
-        else if (((BinaryEncoding)dataEncoding).byteOrder == BinaryEncoding.ByteOrder.LITTLE_ENDIAN)
+        else if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.LITTLE_ENDIAN)
             dataOutput = new DataOutputStreamLI(new BufferedOutputStream(outputStream));
 	}
 	
@@ -111,11 +117,11 @@ public class BinaryDataWriter extends AbstractDataWriter
 	 */
 	protected void resolveComponentEncodings()
 	{
-		BinaryOptions[] encodingList = ((BinaryEncoding)dataEncoding).componentEncodings;
+		List<BinaryMember> encodingList = ((BinaryEncoding)dataEncoding).getMemberList();
 		
-	    for (BinaryOptions binaryOpts: encodingList)
+	    for (BinaryMember binaryOpts: encodingList)
 		{
-			String [] dataPath = binaryOpts.componentName.split("/");
+			String [] dataPath = binaryOpts.getRef().split("/");
 			DataComponent dataComponent = dataComponents;
 			
 			// find component in tree
@@ -129,7 +135,7 @@ public class BinaryDataWriter extends AbstractDataWriter
                 }
             }
 			
-			dataComponent.setEncodingInfo(binaryOpts);	
+			((AbstractDataComponentImpl)dataComponent).setEncodingInfo(binaryOpts);	
 		}
 		
 		componentEncodingResolved = true;
@@ -137,13 +143,13 @@ public class BinaryDataWriter extends AbstractDataWriter
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarInfo) throws IOException
+	protected void processAtom(DataValue scalarComponent) throws IOException
 	{
 		// get encoding info for component
-		BinaryComponent binaryComponent = (BinaryComponent)scalarInfo.getEncodingInfo();
+		BinaryComponent binaryInfo = (BinaryComponent)scalarComponent.getEncodingInfo();
 		
 		// write token = dataAtom					
-		writeBinaryAtom(scalarInfo, binaryComponent);
+		writeBinaryAtom(scalarComponent, binaryInfo);
 	}
 	
 	
@@ -154,105 +160,107 @@ public class BinaryDataWriter extends AbstractDataWriter
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void writeBinaryAtom(DataValue scalarInfo, BinaryComponent binaryInfo) throws IOException
+	private void writeBinaryAtom(DataValue scalarComponent, BinaryComponent binaryInfo) throws IOException
 	{
-		try
+	    DataType dataType = ((BinaryComponentImpl)binaryInfo).getCdmDataType();
+        
+	    try
 		{
-			switch (binaryInfo.type)
+			switch (dataType)
 			{
 				case BOOLEAN:
-					boolean boolValue = scalarInfo.getData().getBooleanValue();
+					boolean boolValue = scalarComponent.getData().getBooleanValue();
                     dataOutput.writeBoolean(boolValue);										
 					break;
 				
 				case BYTE:
-					byte byteValue = scalarInfo.getData().getByteValue();
+					byte byteValue = scalarComponent.getData().getByteValue();
                     dataOutput.writeByte(byteValue);
 					break;
 					
 				case UBYTE:
-					short ubyteValue = scalarInfo.getData().getShortValue();
+					short ubyteValue = scalarComponent.getData().getShortValue();
 					dataOutput.writeUnsignedByte(ubyteValue);
 					break;
 					
 				case SHORT:
-					short shortValue = scalarInfo.getData().getShortValue();
+					short shortValue = scalarComponent.getData().getShortValue();
                     dataOutput.writeByte(shortValue);
 					break;
 					
 				case USHORT:
-                    int ushortValue = scalarInfo.getData().getIntValue();
+                    int ushortValue = scalarComponent.getData().getIntValue();
 					dataOutput.writeUnsignedShort(ushortValue);
 					break;
 					
 				case INT:
-					int intValue = scalarInfo.getData().getIntValue();
+					int intValue = scalarComponent.getData().getIntValue();
                     dataOutput.writeInt(intValue);
 					break;
 					
 				case UINT:
-					long uintValue = scalarInfo.getData().getLongValue();
+					long uintValue = scalarComponent.getData().getLongValue();
 					dataOutput.writeUnsignedInt(uintValue);
 					break;
 					
 				case LONG:
-					long longValue = scalarInfo.getData().getLongValue();
+					long longValue = scalarComponent.getData().getLongValue();
                     dataOutput.writeLong(longValue);
 					break;
 					
 				case ULONG:
-                    long ulongValue = scalarInfo.getData().getLongValue();
+                    long ulongValue = scalarComponent.getData().getLongValue();
                     dataOutput.writeLong(ulongValue);
 					break;
 					
 				case FLOAT:
-					float floatValue = scalarInfo.getData().getFloatValue();
+					float floatValue = scalarComponent.getData().getFloatValue();
                     dataOutput.writeFloat(floatValue);
 					break;
 					
 				case DOUBLE:
-                    double doubleValue = scalarInfo.getData().getDoubleValue();
+                    double doubleValue = scalarComponent.getData().getDoubleValue();
                     dataOutput.writeDouble(doubleValue);
 					break;
 					
 				case UTF_STRING:
-					String utfValue = scalarInfo.getData().getStringValue();
+					String utfValue = scalarComponent.getData().getStringValue();
                     dataOutput.writeUTF(utfValue);
 					break;
 					
 				case ASCII_STRING:
-                    String asciiValue = scalarInfo.getData().getStringValue();
+                    String asciiValue = scalarComponent.getData().getStringValue();
                     dataOutput.writeASCII(asciiValue);
 					break;
 					
 				default:
-				    throw new RuntimeException("Unsupported datatype " + binaryInfo.type);
+				    throw new RuntimeException("Unsupported datatype " + dataType);
 			}
 		}
 		catch (Exception e)
 		{
-			throw new WriterException("Error while writing scalar component " + scalarInfo.getName() + " as " + binaryInfo.type, e);
+			throw new WriterException("Error while writing scalar component " + scalarComponent.getName() + " as " + dataType, e);
 		}
 	}
 	
 	
 	@Override
-	protected boolean processBlock(DataComponent blockInfo) throws IOException
+	protected boolean processBlock(DataComponent blockComponent) throws IOException
 	{		
-		if (blockInfo instanceof DataChoice)
+		if (blockComponent instanceof DataChoiceImpl)
 		{
-		    int selected = ((DataChoice)blockInfo).getSelected();
+		    int selected = ((DataChoiceImpl)blockComponent).getSelected();
             dataOutput.writeByte(selected);
 		}
 		else
 		{
 			// get next encoding block
-			BinaryBlock binaryBlock = (BinaryBlock)blockInfo.getEncodingInfo();
+		    BinaryBlock binaryInfo = (BinaryBlock)((AbstractDataComponentImpl)blockComponent).getEncodingInfo();
 			
 			// write whole block at once
-			if (binaryBlock != null)
+			if (binaryInfo != null)
 			{
-				writeBinaryBlock(blockInfo, binaryBlock);
+				writeBinaryBlock(blockComponent, binaryInfo);
 				return false;
 			}
 		}
@@ -261,7 +269,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	}
 
 	
-	private void writeBinaryBlock(DataComponent blockInfo, BinaryBlock binaryBlock)  throws IOException
+	private void writeBinaryBlock(DataComponent blockComponent, BinaryBlock binaryInfo)  throws IOException
 	{
 	    try
         {
@@ -269,7 +277,7 @@ public class BinaryDataWriter extends AbstractDataWriter
         }
         catch (Exception e)
         {
-            throw new WriterException("Error while writing block component " + blockInfo.getName() + " as " + binaryBlock.compression, e);
+            throw new WriterException("Error while writing block component " + blockComponent.getName() + " as " + binaryInfo.getCompression(), e);
         }
 	}
 }

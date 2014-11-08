@@ -22,14 +22,12 @@ package org.vast.sweCommon;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import net.opengis.swe.v20.AbstractEncoding;
 import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataComponentReader;
-import org.vast.cdm.common.DataComponentWriter;
-import org.vast.cdm.common.DataEncoding;
-import org.vast.cdm.common.DataEncodingReader;
-import org.vast.cdm.common.DataEncodingWriter;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.IXMLReaderDOM;
+import org.vast.xml.IXMLWriterDOM;
 import org.vast.xml.XMLReaderException;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
@@ -47,7 +45,7 @@ import org.w3c.dom.Element;
  * @since Feb 2, 2007
  * @version 1.0
  */
-public class SWECommonUtils implements DataComponentReader, DataComponentWriter, DataEncodingReader, DataEncodingWriter
+public class SWECommonUtils
 {
 	public final static String SWE = "SWE";
 	public final static String SWECOMMON = "SWECommon";
@@ -56,53 +54,53 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     private String version = "2.0";
     private boolean versionChanged;
     private DOMHelper previousDom;
-    private DataComponentReader componentReader = null;
-    private DataComponentWriter componentWriter = null;
-    private DataEncodingReader encodingReader = null;
-    private DataEncodingWriter encodingWriter = null;
+    private IXMLReaderDOM<DataComponent> componentReader = null;
+    private IXMLWriterDOM<DataComponent> componentWriter = null;
+    private IXMLReaderDOM<AbstractEncoding> encodingReader = null;
+    private IXMLWriterDOM<AbstractEncoding> encodingWriter = null;
 	    
     
     public DataComponent readComponent(DOMHelper dom, Element componentElement) throws XMLReaderException
     {
-        DataComponentReader reader = getDataComponentReader(dom, componentElement);
-        return reader.readComponent(dom, componentElement);
+        IXMLReaderDOM<DataComponent> reader = getDataComponentReader(dom, componentElement);
+        return reader.read(dom, componentElement);
     }
 
 
     public DataComponent readComponentProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException
     {
         Element componentElement = dom.getFirstChildElement(propertyElement);
-        DataComponentReader reader = getDataComponentReader(dom, componentElement);
-        return reader.readComponentProperty(dom, propertyElement);
+        IXMLReaderDOM<DataComponent> reader = getDataComponentReader(dom, componentElement);
+        return reader.read(dom, componentElement);
     }
     
     
-    public DataEncoding readEncoding(DOMHelper dom, Element encodingElement) throws XMLReaderException
+    public AbstractEncoding readEncoding(DOMHelper dom, Element encodingElement) throws XMLReaderException
     {
-        DataEncodingReader reader = getDataEncodingReader(dom, encodingElement);
-        return reader.readEncoding(dom, encodingElement);
+        IXMLReaderDOM<AbstractEncoding> reader = getDataEncodingReader(dom, encodingElement);
+        return reader.read(dom, encodingElement);
     }
 
 
-    public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException
+    public AbstractEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException
     {
         Element componentElement = dom.getFirstChildElement(propertyElement);
-        DataEncodingReader reader = getDataEncodingReader(dom, componentElement);
-        return reader.readEncodingProperty(dom, propertyElement);
+        IXMLReaderDOM<AbstractEncoding> reader = getDataEncodingReader(dom, componentElement);
+        return reader.read(dom, componentElement);
     }
 
 
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws XMLWriterException
     {
-        DataComponentWriter writer = getDataComponentWriter();
-        return writer.writeComponent(dom, dataComponents);
+        IXMLWriterDOM<DataComponent> writer = getDataComponentWriter();
+        return writer.write(dom, dataComponents);
     }
     
     
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents, boolean writeInlineData) throws XMLWriterException
     {
-        DataComponentWriter writer = getDataComponentWriter();
-        return writer.writeComponent(dom, dataComponents, writeInlineData);
+        IXMLWriterDOM<DataComponent> writer = getDataComponentWriter();
+        return writer.write(dom, dataComponents);
     }
     
     
@@ -114,21 +112,21 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     }
 
 
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws XMLWriterException
+    public Element writeEncoding(DOMHelper dom, AbstractEncoding dataEncoding) throws XMLWriterException
     {
-        DataEncodingWriter writer = getDataEncodingWriter();
-        return writer.writeEncoding(dom, dataEncoding);
+        IXMLWriterDOM<AbstractEncoding> writer = getDataEncodingWriter();
+        return writer.write(dom, dataEncoding);
     }
     
     
     /**
-     * Reuses or creates the DataComponentReader corresponding to
+     * Reuses or creates the DataComponent reader corresponding to
      * the version specified by the SWE namespace URI
      * @param dom
      * @param componentElt
      * @return
      */
-    private DataComponentReader getDataComponentReader(DOMHelper dom, Element componentElt)
+    private IXMLReaderDOM<DataComponent> getDataComponentReader(DOMHelper dom, Element componentElt)
     {
         if (dom == previousDom && componentReader != null)
         {
@@ -136,8 +134,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         }
         else
         {
-            DataComponentReader reader = 
-                (DataComponentReader)OGCRegistry.createReader(SWECOMMON, DATACOMPONENT, getVersion(dom, componentElt));
+            IXMLReaderDOM<DataComponent> reader = 
+                (IXMLReaderDOM<DataComponent>)OGCRegistry.createReader(SWECOMMON, DATACOMPONENT, getVersion(dom, componentElt));
             componentReader = reader;
             return reader;
         }
@@ -151,7 +149,7 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
      * @param componentElt
      * @return
      */
-    private DataEncodingReader getDataEncodingReader(DOMHelper dom, Element componentElt)
+    private IXMLReaderDOM<AbstractEncoding> getDataEncodingReader(DOMHelper dom, Element componentElt)
     {
         if (dom == previousDom && encodingReader != null)
         {
@@ -159,8 +157,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         }
         else
         {
-            DataEncodingReader reader =
-                (DataEncodingReader)OGCRegistry.createReader(SWECOMMON, DATAENCODING, getVersion(dom, componentElt));
+            IXMLReaderDOM<AbstractEncoding> reader =
+                (IXMLReaderDOM<AbstractEncoding>)OGCRegistry.createReader(SWECOMMON, DATAENCODING, getVersion(dom, componentElt));
             encodingReader = reader;
             return reader;
         }
@@ -168,11 +166,11 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     
     
     /**
-     * Reuses or creates the DataComponentWriter corresponding to
+     * Reuses or creates the DataComponent writer corresponding to
      * the specified version (previously set by setOutputVersion)
      * @return
      */
-    private DataComponentWriter getDataComponentWriter()
+    private IXMLWriterDOM<DataComponent> getDataComponentWriter()
     {
         if (!versionChanged && componentWriter != null)
         {
@@ -180,8 +178,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         }
         else
         {
-            DataComponentWriter writer =
-                (DataComponentWriter)OGCRegistry.createWriter(SWECOMMON, DATACOMPONENT, this.version);
+            IXMLWriterDOM<DataComponent> writer =
+                (IXMLWriterDOM<DataComponent>)OGCRegistry.createWriter(SWECOMMON, DATACOMPONENT, this.version);
             componentWriter = writer;
             versionChanged = false;
             return writer;
@@ -190,11 +188,11 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
     
     
     /**
-     * Reuses or creates the DataEncodingWriter corresponding to
+     * Reuses or creates the DataEncoding writer corresponding to
      * the specified version (previously set by setOutputVersion)
      * @return
      */
-    private DataEncodingWriter getDataEncodingWriter()
+    private IXMLWriterDOM<AbstractEncoding> getDataEncodingWriter()
     {
         if (!versionChanged && encodingWriter != null)
         {
@@ -202,8 +200,8 @@ public class SWECommonUtils implements DataComponentReader, DataComponentWriter,
         }
         else
         {
-            DataEncodingWriter writer = 
-                (DataEncodingWriter)OGCRegistry.createWriter(SWECOMMON, DATACOMPONENT, this.version);
+            IXMLWriterDOM<AbstractEncoding> writer = 
+                (IXMLWriterDOM<AbstractEncoding>)OGCRegistry.createWriter(SWECOMMON, DATACOMPONENT, this.version);
             encodingWriter = writer;
             versionChanged = false;
             return writer;

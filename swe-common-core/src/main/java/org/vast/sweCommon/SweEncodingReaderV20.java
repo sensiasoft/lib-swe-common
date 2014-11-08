@@ -22,17 +22,21 @@
 
 package org.vast.sweCommon;
 
+import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.TextEncoding;
 import org.vast.cdm.common.AsciiEncoding;
 import org.vast.cdm.common.BinaryBlock;
 import org.vast.cdm.common.BinaryComponent;
-import org.vast.cdm.common.BinaryEncoding;
+import org.vast.cdm.common.BinaryEncodingOld;
 import org.vast.cdm.common.BinaryOptions;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataEncodingReader;
 import org.vast.cdm.common.DataType;
 import org.vast.cdm.common.StandardFormatEncoding;
 import org.vast.cdm.common.XmlEncoding;
+import org.vast.data.TextEncodingImpl;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.IXMLReaderDOM;
 import org.vast.xml.XMLReaderException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -49,25 +53,17 @@ import org.w3c.dom.NodeList;
  * @since Feb 1, 2008
  * @version 1.0
  */
-public class SweEncodingReaderV20 implements DataEncodingReader
+public class SweEncodingReaderV20 implements IXMLReaderDOM<AbstractEncoding>
 {
     
     public SweEncodingReaderV20()
     {
     }
- 
-
-    public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException
-    {
-    	Element encodingElement = dom.getFirstChildElement(propertyElement);
-    	DataEncoding encoding = readEncoding(dom, encodingElement);        
-        return encoding;
-    }
     
     
-    public DataEncoding readEncoding(DOMHelper dom, Element encodingElt) throws XMLReaderException
+    public AbstractEncoding read(DOMHelper dom, Element encodingElt) throws XMLReaderException
     {
-    	DataEncoding encoding = null;
+        AbstractEncoding encoding = null;
     	String encodingName = encodingElt.getLocalName();
     	
         if (encodingName.equals("TextEncoding"))
@@ -85,9 +81,9 @@ public class SweEncodingReaderV20 implements DataEncodingReader
     }
     
     
-    private AsciiEncoding readTextEncodingOptions(DOMHelper dom, Element asciiEncodingElt) throws XMLReaderException
+    private TextEncoding readTextEncodingOptions(DOMHelper dom, Element asciiEncodingElt) throws XMLReaderException
     {
-    	AsciiEncoding encoding = new AsciiEncoding();
+        TextEncoding encoding = new TextEncodingImpl();
     	
     	String decimalSep = dom.getAttributeValue(asciiEncodingElt, "decimalSeparator");
     	if (decimalSep != null)
@@ -122,9 +118,9 @@ public class SweEncodingReaderV20 implements DataEncodingReader
     }
     
     
-    private BinaryEncoding readBinaryEncodingOptions(DOMHelper dom, Element binaryEncodingElt) throws XMLReaderException
+    private BinaryEncodingOld readBinaryEncodingOptions(DOMHelper dom, Element binaryEncodingElt) throws XMLReaderException
     {
-    	BinaryEncoding encoding = new BinaryEncoding();
+    	BinaryEncodingOld encoding = new BinaryEncodingOld();
     	
     	// parse byte length
     	String byteLength = dom.getAttributeValue(binaryEncodingElt, "byteLength");
@@ -135,22 +131,22 @@ public class SweEncodingReaderV20 implements DataEncodingReader
     	String byteEncoding = dom.getAttributeValue(binaryEncodingElt, "byteEncoding");
     	if (byteEncoding.equalsIgnoreCase("base64"))
         {
-    		encoding.byteEncoding = BinaryEncoding.ByteEncoding.BASE64;
+    		encoding.byteEncoding = BinaryEncodingOld.ByteEncoding.BASE64;
         }
         else if (byteEncoding.equalsIgnoreCase("raw"))
         {
-        	encoding.byteEncoding = BinaryEncoding.ByteEncoding.RAW;
+        	encoding.byteEncoding = BinaryEncodingOld.ByteEncoding.RAW;
         }
     	
     	// parse byte order
     	String byteOrder = dom.getAttributeValue(binaryEncodingElt, "byteOrder");
     	if (byteOrder.equalsIgnoreCase("bigEndian"))
         {
-    		encoding.byteOrder = BinaryEncoding.ByteOrder.BIG_ENDIAN;
+    		encoding.byteOrder = BinaryEncodingOld.ByteOrder.BIG_ENDIAN;
         }
         else if (byteOrder.equalsIgnoreCase("littleEndian"))
         {
-        	encoding.byteOrder = BinaryEncoding.ByteOrder.LITTLE_ENDIAN;
+        	encoding.byteOrder = BinaryEncodingOld.ByteOrder.LITTLE_ENDIAN;
         }
     	
     	// parse component encodings

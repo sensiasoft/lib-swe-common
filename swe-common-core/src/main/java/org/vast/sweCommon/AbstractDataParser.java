@@ -23,7 +23,6 @@ package org.vast.sweCommon;
 import java.io.*;
 import java.net.URI;
 import org.vast.cdm.common.*;
-import org.vast.data.AbstractDataComponent;
 import org.vast.util.ReaderException;
 
 
@@ -121,6 +120,6 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	@Override
     public void setDataComponents(DataComponent dataInfo)
     {
-        this.dataComponents = (AbstractDataComponent)dataInfo.copy();
+        this.dataComponents = dataInfo.copy();
     }
 }

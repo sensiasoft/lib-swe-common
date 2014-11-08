@@ -22,7 +22,8 @@
 
 package org.vast.sweCommon;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import org.vast.data.*;
 import org.vast.util.ReaderException;
 import org.vast.xml.DOMHelper;
@@ -188,7 +189,7 @@ public class XmlDataParserDOM extends AbstractDataParser
 		Record parentRecord = componentStack.peek();
 		
 		// case of multiple children in DataArray
-		if (parentRecord.component instanceof DataArray)
+		if (parentRecord.component instanceof DataArrayImpl)
 		{
 			NodeList elts = dom.getElements(currentParentElt, eltName);
 			return (Element)elts.item(parentRecord.index);
@@ -201,15 +202,15 @@ public class XmlDataParserDOM extends AbstractDataParser
 	
 	
 	@Override
-	protected boolean processBlock(DataComponent blockInfo) throws IOException
+	protected boolean processBlock(DataComponent blockComponent) throws IOException
 	{
-		currentParentElt = getCurrentElement(blockInfo);
+		currentParentElt = getCurrentElement(blockComponent);
 		
-		if (blockInfo instanceof DataChoice)
+		if (blockComponent instanceof DataChoiceImpl)
 		{
 			// figure out choice selection
 			Element firstChild = dom.getFirstChildElement(currentParentElt);
-			((DataChoice)blockInfo).setSelectedComponent(firstChild.getLocalName());
+			((DataChoiceImpl)blockComponent).setSelectedComponent(firstChild.getLocalName());
 		}
 		
 		/* deal with optional block here
@@ -230,10 +231,10 @@ public class XmlDataParserDOM extends AbstractDataParser
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarInfo) throws IOException
+	protected void processAtom(DataValue scalarComponent) throws IOException
 	{
 		setCurrentParent();
-		String localName = scalarInfo.getName();
+		String localName = scalarComponent.getName();
 		String val;
 		
 		// special case of array size -> read from elementCount attribute
@@ -245,12 +246,12 @@ public class XmlDataParserDOM extends AbstractDataParser
 		// else read from element content
 		else
 		{
-			Element currentElt = getCurrentElement(scalarInfo);
+			Element currentElt = getCurrentElement(scalarComponent);
 			val = dom.getElementValue(currentElt);
 		}
 		
 		//System.out.println(scalarInfo.getName());
-		tokenParser.parseToken(scalarInfo, val, (char)0);
+		tokenParser.parseToken(scalarComponent, val, (char)0);
 	}
 	
 	

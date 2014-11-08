@@ -20,9 +20,14 @@
 
 package org.vast.sweCommon;
 
-import java.io.*;
-import org.vast.cdm.common.*;
-import org.vast.data.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import net.opengis.swe.v20.TextEncoding;
+import org.vast.cdm.common.DataComponent;
+import org.vast.data.DataChoiceImpl;
+import org.vast.data.DataValue;
 import org.vast.util.WriterException;
 
 
@@ -54,8 +59,8 @@ public class AsciiDataWriter extends AbstractDataWriter
     public void setOutput(OutputStream outputStream) throws IOException
     {
 	    outputWriter = new OutputStreamWriter(outputStream);
-        tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
-        blockSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
+        tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator().toCharArray();
+        blockSep = ((TextEncoding)dataEncoding).getBlockSeparator().toCharArray();
         firstToken = true;
         appendBlockSeparator = false;
     }
@@ -125,14 +130,14 @@ public class AsciiDataWriter extends AbstractDataWriter
     @Override
 	protected boolean processBlock(DataComponent blockInfo) throws IOException
 	{
-		if (blockInfo instanceof DataChoice)
+		if (blockInfo instanceof DataChoiceImpl)
 		{
 			String token = null;
 			
 			// write implicit choice token
 			try
 			{
-				token = ((DataChoice)blockInfo).getSelectedComponent().getName();
+				token = ((DataChoiceImpl)blockInfo).getSelectedComponent().getName();
 				writeToken(token);
 			}
 			catch (IllegalStateException e)

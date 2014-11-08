@@ -25,7 +25,7 @@ package org.vast.sweCommon;
 import org.vast.cdm.common.AsciiEncoding;
 import org.vast.cdm.common.BinaryBlock;
 import org.vast.cdm.common.BinaryComponent;
-import org.vast.cdm.common.BinaryEncoding;
+import org.vast.cdm.common.BinaryEncodingOld;
 import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataEncodingWriter;
 import org.vast.cdm.common.StandardFormatEncoding;
@@ -68,8 +68,8 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
         
         if (dataEncoding instanceof AsciiEncoding)
             dataEncElt = writeTextEncodingOptions(dom, (AsciiEncoding)dataEncoding);
-        else if (dataEncoding instanceof BinaryEncoding)
-            dataEncElt = writeBinaryEncoding(dom, (BinaryEncoding)dataEncoding);
+        else if (dataEncoding instanceof BinaryEncodingOld)
+            dataEncElt = writeBinaryEncoding(dom, (BinaryEncodingOld)dataEncoding);
         else if (dataEncoding instanceof XmlEncoding)
             dataEncElt = writeXmlEncodingOptions(dom, (XmlEncoding)dataEncoding);
         else if (dataEncoding instanceof StandardFormatEncoding)
@@ -109,20 +109,20 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
     }
     
     
-    private Element writeBinaryEncoding(DOMHelper dom, BinaryEncoding binaryEncoding) throws XMLWriterException
+    private Element writeBinaryEncoding(DOMHelper dom, BinaryEncodingOld binaryEncoding) throws XMLWriterException
     {
     	Element binaryEncElt = dom.createElement("swe:BinaryEncoding");
         
         // write byteEncoding attribute
-        if (binaryEncoding.byteEncoding == BinaryEncoding.ByteEncoding.BASE64)
+        if (binaryEncoding.byteEncoding == BinaryEncodingOld.ByteEncoding.BASE64)
             binaryEncElt.setAttribute("byteEncoding", "base64");
-        else if (binaryEncoding.byteEncoding == BinaryEncoding.ByteEncoding.RAW)
+        else if (binaryEncoding.byteEncoding == BinaryEncodingOld.ByteEncoding.RAW)
             binaryEncElt.setAttribute("byteEncoding", "raw");
             	    	
     	// write byteOrder attribute
-        if (binaryEncoding.byteOrder == BinaryEncoding.ByteOrder.BIG_ENDIAN)
+        if (binaryEncoding.byteOrder == BinaryEncodingOld.ByteOrder.BIG_ENDIAN)
             binaryEncElt.setAttribute("byteOrder", "bigEndian");
-        else if (binaryEncoding.byteOrder == BinaryEncoding.ByteOrder.LITTLE_ENDIAN)
+        else if (binaryEncoding.byteOrder == BinaryEncodingOld.ByteOrder.LITTLE_ENDIAN)
             binaryEncElt.setAttribute("byteOrder", "littleEndian");
         
         // write components encoding

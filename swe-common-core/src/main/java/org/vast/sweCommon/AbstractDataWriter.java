@@ -22,11 +22,11 @@ package org.vast.sweCommon;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import net.opengis.swe.v20.Time;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.cdm.common.DataType;
-import org.vast.data.AbstractDataComponent;
 import org.vast.data.DataValue;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
@@ -63,9 +63,9 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	
     public abstract void flush() throws IOException;
                 
-    protected abstract void processAtom(DataValue scalarInfo) throws IOException;
+    protected abstract void processAtom(DataValue scalarComponent) throws IOException;
 
-    protected abstract boolean processBlock(DataComponent blockInfo) throws IOException;
+    protected abstract boolean processBlock(DataComponent blockComponent) throws IOException;
     
     
     public void write(OutputStream outputStream) throws IOException
@@ -129,12 +129,16 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	 */
 	protected String getStringValue(DataValue scalarInfo)
 	{
-		String def = (String)scalarInfo.getProperty(SweConstants.UOM_URI);
-		DataType dataType = scalarInfo.getDataType();
-		DataBlock data = scalarInfo.getData();
-		String val;
-		
-		if (def != null && def.contains("8601"))
+	    DataType dataType = scalarInfo.getDataType();
+        DataBlock data = scalarInfo.getData();
+        String val;
+	    
+        // case of time component
+	    String uom = null;
+		if (scalarInfo instanceof Time && ((Time)scalarInfo).getUom() != null)
+		    uom = ((Time)scalarInfo).getUom().getHref();
+				
+		if (uom != null && uom.equals(Time.ISO_TIME_UNIT))
 			val = getDoubleAsString(data.getDoubleValue(), true);
 		else if (dataType == DataType.DOUBLE || dataType == DataType.FLOAT)
 		    val = getDoubleAsString(data.getDoubleValue(), false);
@@ -148,7 +152,7 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	@Override
 	public void setDataComponents(DataComponent dataInfo)
     {
-        this.dataComponents = (AbstractDataComponent)dataInfo.copy();
+        this.dataComponents = dataInfo.copy();
     }
 	
 	

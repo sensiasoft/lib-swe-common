@@ -20,10 +20,11 @@
 
 package org.vast.sweCommon;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import net.opengis.swe.v20.AbstractEncoding;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.cdm.common.OutputStreamProvider;
 
@@ -48,7 +49,7 @@ import org.vast.cdm.common.OutputStreamProvider;
  */
 public abstract class SWEWriter implements OutputStreamProvider
 {
-	protected DataEncoding dataEncoding;
+	protected AbstractEncoding dataEncoding;
 	protected DataComponent dataComponents;
 		
 
@@ -66,7 +67,7 @@ public abstract class SWEWriter implements OutputStreamProvider
 	}
 	
 	
-	public DataEncoding getDataEncoding()
+	public AbstractEncoding getDataEncoding()
 	{
 		return this.dataEncoding;
 	}
@@ -84,7 +85,7 @@ public abstract class SWEWriter implements OutputStreamProvider
     }
     
     
-    public void setDataEncoding(DataEncoding dataEncoding)
+    public void setDataEncoding(AbstractEncoding dataEncoding)
     {
         this.dataEncoding = dataEncoding;        
     }

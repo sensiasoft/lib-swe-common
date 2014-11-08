@@ -22,7 +22,8 @@
 
 package org.vast.sweCommon;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -63,8 +64,8 @@ public class XmlDataWriter extends AbstractDataWriter
     	    XMLOutputFactory factory = XMLOutputFactory.newInstance();
             xmlWriter = factory.createXMLStreamWriter(outputStream);
             
-            namespace = ((XmlEncoding)dataEncoding).namespace;
-            prefix = ((XmlEncoding)dataEncoding).prefix;
+            namespace = ((XMLEncodingImpl)dataEncoding).getNamespace();
+            prefix = ((XMLEncodingImpl)dataEncoding).getPrefix();
         }
 	    catch (XMLStreamException e)
         {

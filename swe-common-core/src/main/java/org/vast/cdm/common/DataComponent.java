@@ -21,89 +21,153 @@
 package org.vast.cdm.common;
 
 import java.util.List;
+import net.opengis.HasCopy;
 
 
 /**
  * <p>
  * Implementation of this class should store information relative
- * to the component structure of the data. (see swe:dataComponents).
+ * to the component structure of the data.
  * It should give access to information such as component names, units,
  * definition, etc.. in a hierarchical manner.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
+ * <p>Copyright (c) 2014</p>
  * @author Alexandre Robin
  * @since Nov 30, 2005
  * @version 1.0
  */
-public interface DataComponent extends Cloneable
+public interface DataComponent extends HasCopy, Cloneable
 {
     
-	public int getComponentCount();
+    /**
+     * Returns number of sub-components in this component
+     * @return number of direct sub-components
+     */
+    public int getComponentCount();
 
 
-	public DataComponent getComponent(int index);
+    /**
+     * Get the sub-component located at the specified index
+     * @param index index of component to lookup
+     * @return child component or null if none exists at the specified index
+     */
+    public DataComponent getComponent(int index);
 
 
-	public DataComponent getComponent(String id);
+	/**
+     * Get the sub-component registered with the specified name
+     * @param name name of component to lookup
+     * @return child component or null if none exists with the specified name
+     */
+    public DataComponent getComponent(String name);
     
     
-    public int getComponentIndex(String id);
+    /**
+     * Get the index of the sub-component registered with this name
+     * @param name name of component to lookup
+     * @return index of child component or -1 if none exists with the specified name
+     */
+    public int getComponentIndex(String name);
 	
 	
-	public void addComponent(DataComponent dataInfo);
-
-
-	public void addComponent(String id, DataComponent dataInfo);
+    /**
+     * Add a sub-component and registers a name for it
+     * @param name name of component to use
+     * @param component new sub-component to append to this component
+     */
+    public void addComponent(String name, DataComponent component);
 	
 	
-	public String getName();
+	/**
+     * @return parent component of this component
+     */
+    public DataComponent getParent();
 	
 	
-	public DataComponent getParent();
-	
-	
-	public void setName(String name);
-
-
-	public Object getProperty(String propName);
-
-
-	public void setProperty(String propName, Object propValue);
-	
-	
-	public EncodingInfo getEncodingInfo();
-	
-	
-	public void setEncodingInfo(EncodingInfo encInfo);
-	
-	
-	public DataBlock getData();
-	
-	
-	public void setData(DataBlock dataBlock);
+    /**
+     * @return name of sub-component
+     */
+    public String getName();
     
     
+    /**
+     * Sets the name of this component
+     * @param name
+     */
+    public void setName(String name);
+	
+	
+	/**
+     * Get the datablock associated to this component 
+     * @return datablock object or null if none has been generated yet
+     */
+    public DataBlock getData();
+	
+	
+	/**
+     * Assign a new datablock to this component.
+     * This will recursively assign the right datablocks to sub-components recursively.
+     * @param dataBlock
+     */
+    public void setData(DataBlock dataBlock);
+    
+    
+	/**
+     * Clear the datablock used by this component.
+     * This will also clear data from all the sub-components recursively.
+     */
     public void clearData();
     
     
+    /**
+     * Validates dataBlock against constraints if any.
+     * No exceptions are thrown, rather they are appended to the provided list.
+     * @param errorList list to which validation exceptions will be appended
+     */
     public void validateData(List<CDMException> errorList);
     
     
+    /**
+     * Recursively checks if constraints are specified in this component or 
+     * any of its sub-components
+     * @return true if at least one constraint is found, false otherwise
+     */
     public boolean hasConstraints();
     
     
+    /**
+     * Return a structural copy of this component
+     * The copy is done recursively, but only the structure is copied (not the data)
+     * @return copy of this component, including sub-components
+     */
     public DataComponent copy();
     
     
+    /**
+     * Get a full recursive copy of this component. Both structure and data are copied
+     * @return clone of this component, including sub-components
+     */
     public DataComponent clone();
     
     
+    /**
+     * Create a new datablock for holding data of this component
+     * @return new datablock object
+     */
     public DataBlock createDataBlock();
     
     
+    /**
+     * Create and assign a new datablock structure to this component.
+     * This will also assign the right datablocks to sub-components recursively.
+     */
     public void assignNewDataBlock();
     
     
+    /**
+     * Renew the datablock of this component by cloning it.
+     * This method is faster than recreating a datablock from scratch with createDataBlock().
+     */
     public void renewDataBlock();
 }

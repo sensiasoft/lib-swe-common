@@ -10,6 +10,8 @@
 
 package org.vast.cdm.common;
 
+import net.opengis.swe.v20.BinaryBlock;
+
 
 /**
  * <p>
@@ -34,7 +36,7 @@ public interface CompressedStreamWriter
     
     /**
      * Writes compressed data obtained from block component to output stream
-     * @param outputStream
+     * @param inputStream
      * @param blockComponent
      * @throws CDMException
      */

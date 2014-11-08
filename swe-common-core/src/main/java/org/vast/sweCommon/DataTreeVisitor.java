@@ -21,17 +21,17 @@
 package org.vast.sweCommon;
 
 import java.util.Stack;
+import net.opengis.swe.v20.AbstractEncoding;
+import org.vast.cdm.common.BlockComponent;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataHandler;
-import org.vast.cdm.common.DataType;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
-import org.vast.data.AbstractDataComponent;
-import org.vast.data.DataArray;
-import org.vast.data.DataChoice;
+import org.vast.data.DataArrayImpl;
+import org.vast.data.DataChoiceImpl;
 import org.vast.data.DataValue;
+import org.vast.data.CountImpl;
 
 
 public abstract class DataTreeVisitor
@@ -39,16 +39,16 @@ public abstract class DataTreeVisitor
 	protected DataHandler dataHandler;
 	protected RawDataHandler rawHandler;
 	protected ErrorHandler errorHandler;
-    protected DataArray parentArray;
+    protected BlockComponent parentArray;
     protected int parentArrayIndex;
 	protected DataComponent dataComponents;
-	protected DataEncoding dataEncoding;
+	protected AbstractEncoding dataEncoding;
 	protected Stack<Record> componentStack;
 	protected Record currentRecord;
     protected boolean newBlock = true;
 	protected boolean endOfArray = false;
 	protected boolean parsing = true;
-	protected DataValue sizeValue; // for holding implicit array size
+	protected CountImpl sizeValue; // for holding implicit array size
 	
     
 	protected class Record
@@ -70,21 +70,21 @@ public abstract class DataTreeVisitor
 	{
 		this.parsing = parsing;
 		this.componentStack = new Stack<Record>();
-		this.sizeValue = new DataValue(SweConstants.ELT_COUNT_NAME, DataType.INT);
+		this.sizeValue = new CountImpl();
 		this.sizeValue.assignNewDataBlock();
 	}
 	
 	
-	protected abstract void processAtom(DataValue scalarInfo) throws Exception;
+	protected abstract void processAtom(DataValue scalarComponent) throws Exception;
 	
 	
 	/**
 	 * Process an aggregate component
-	 * @param scalarInfo
+	 * @param scalarComponent
 	 * @return true if children should be processed, false otherwise
 	 * @throws CDMException
 	 */
-	protected abstract boolean processBlock(DataComponent blockInfo) throws Exception;
+	protected abstract boolean processBlock(DataComponent blockInfoComponent) throws Exception;
 	
 	
 	/**
@@ -121,9 +121,9 @@ public abstract class DataTreeVisitor
         	if (processChildren)
         	{
         		// case of variable array size
-	    		if ((next instanceof DataArray) && ((DataArray)next).isVariableSize())
+	    		if ((next instanceof DataArrayImpl) && ((DataArrayImpl)next).isVariableSize())
 	    		{
-	    			if (((DataArray)next).getSizeComponent().getParent() == null)
+	    			if (((DataArrayImpl)next).isImplicitSize())
 	    			{
 	    				// read implicit array size (when parsing)
 	    				if (parsing)
@@ -132,19 +132,19 @@ public abstract class DataTreeVisitor
 	            			int newSize = sizeValue.getData().getIntValue();
 	            			
 	            			// resize array according to size read!
-	            			((DataArray)next).updateSize(newSize);
+	            			((DataArrayImpl)next).updateSize(newSize);
 	            			currentRecord.count = newSize;
 	        			}
 	        		
 	        			// write array size
 	        			else
 	        			{
-	        				sizeValue.getData().setIntValue(((DataArray)next).getComponentCount());
+	        				sizeValue.getData().setIntValue(((DataArrayImpl)next).getComponentCount());
 	        				processAtom(sizeValue);
 	        			}
 	    			}        		
 	    			else if (parsing)
-	    				((DataArray)next).updateSize();
+	    				((DataArrayImpl)next).updateSize();
 	    		}
 	    	
 	    		// do only if we actually have children
@@ -154,9 +154,9 @@ public abstract class DataTreeVisitor
 		    		componentStack.push(currentRecord);
 		    		
 		    		// select first child of aggregate
-	    			if (next instanceof DataChoice)
+	    			if (next instanceof DataChoiceImpl)
 	    			{
-	    				DataComponent selectedComponent = ((DataChoice)next).getSelectedComponent();
+	    				DataComponent selectedComponent = ((DataChoiceImpl)next).getSelectedComponent();
 	    				if (selectedComponent != null)
 	    					next = selectedComponent;
 	    				else
@@ -210,7 +210,7 @@ public abstract class DataTreeVisitor
             parentRecord = componentStack.pop();
             
             // increment index of parent component
-            if (parentRecord.component instanceof DataChoice)
+            if (parentRecord.component instanceof DataChoiceImpl)
                 parentRecord.index = parentRecord.count;
             else
                 parentRecord.index++;
@@ -284,7 +284,7 @@ public abstract class DataTreeVisitor
 	}
 
 
-	public DataEncoding getDataEncoding()
+	public AbstractEncoding getDataEncoding()
 	{
 		return this.dataEncoding;
 	}
@@ -310,17 +310,17 @@ public abstract class DataTreeVisitor
 	
 	public void setDataComponents(DataComponent dataInfo)
 	{
-		this.dataComponents = (AbstractDataComponent)dataInfo;
+		this.dataComponents = dataInfo;
 	}
 
 
-	public void setDataEncoding(DataEncoding dataEncoding)
+	public void setDataEncoding(AbstractEncoding dataEncoding)
 	{
 		this.dataEncoding = dataEncoding;
 	}
     
     
-    public void setParentArray(DataArray parentArray)
+    public void setParentArray(BlockComponent parentArray)
     {
         this.parentArray = parentArray;
         parentArray.renewDataBlock();

@@ -35,6 +35,7 @@ import org.w3c.dom.Element;
  * @author Alexandre Robin
  * @since Sep 30, 2012
  * @version 1.0
+ * @param <ObjectType> Type of object this reader can deserialize
  */
 public interface IXMLReaderDOM<ObjectType>
 {

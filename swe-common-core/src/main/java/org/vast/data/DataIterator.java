@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 import org.vast.cdm.common.DataComponent;
-import org.vast.data.DataArray;
-import org.vast.data.DataValue;
 
 
 /**
@@ -56,7 +54,7 @@ public class DataIterator implements Iterator<DataComponent>
             this.count = component.getComponentCount();
             this.index = -1;
             
-            if (component instanceof DataArray)
+            if (component instanceof DataArrayImpl)
                 this.count = 1;
         }
     }
@@ -96,8 +94,8 @@ public class DataIterator implements Iterator<DataComponent>
             
             // select next child of aggregate
             DataComponent child;
-            if (current instanceof DataArray)
-                child = ((DataArray)current).getArrayComponent();
+            if (current instanceof DataArrayImpl)
+                child = ((DataArrayImpl)current).getArrayComponent();
             else
                 child = current.getComponent(currentRecord.index);
             currentRecord.index++;

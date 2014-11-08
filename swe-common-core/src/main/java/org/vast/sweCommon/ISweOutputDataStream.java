@@ -26,7 +26,7 @@
 
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.AbstractEncoding;
 import org.vast.cdm.common.IDataConsumer;
 
 
@@ -43,5 +43,5 @@ import org.vast.cdm.common.IDataConsumer;
  */
 public interface ISweOutputDataStream extends IDataConsumer
 {
-    public void setEncoding(DataEncoding encoding);
+    public void setEncoding(AbstractEncoding encoding);
 }

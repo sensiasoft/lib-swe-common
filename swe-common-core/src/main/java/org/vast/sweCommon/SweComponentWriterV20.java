@@ -30,8 +30,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import org.vast.cdm.common.AsciiEncoding;
-import org.vast.cdm.common.BinaryEncoding;
-import org.vast.cdm.common.BinaryEncoding.ByteEncoding;
+import org.vast.cdm.common.BinaryEncodingOld;
+import org.vast.cdm.common.BinaryEncodingOld.ByteEncoding;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataComponentWriter;
@@ -639,10 +639,10 @@ public class SweComponentWriterV20 implements DataComponentWriter
         ByteArrayOutputStream os = new ByteArrayOutputStream(array.getData().getAtomCount()*10);
         
         // force base64 if byte encoding is raw
-        if (encoding instanceof BinaryEncoding)
+        if (encoding instanceof BinaryEncodingOld)
         {
-            if (((BinaryEncoding) encoding).byteEncoding == ByteEncoding.RAW)
-                ((BinaryEncoding) encoding).byteEncoding = ByteEncoding.BASE64;
+            if (((BinaryEncodingOld) encoding).byteEncoding == ByteEncoding.RAW)
+                ((BinaryEncodingOld) encoding).byteEncoding = ByteEncoding.BASE64;
         }
         
         // write values with proper encoding to byte array

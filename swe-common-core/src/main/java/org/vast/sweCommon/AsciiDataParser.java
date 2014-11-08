@@ -22,7 +22,10 @@ package org.vast.sweCommon;
 
 import java.io.*;
 import java.text.ParseException;
-import org.vast.cdm.common.*;
+import net.opengis.swe.v20.TextEncoding;
+import org.vast.cdm.common.DataBlock;
+import org.vast.cdm.common.DataComponent;
+import org.vast.cdm.common.DataType;
 import org.vast.data.*;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.ReaderException;
@@ -32,6 +35,7 @@ public class AsciiDataParser extends AbstractDataParser
 {
 	protected int tupleSize;
 	protected char[] tokenSep, blockSep;
+	protected char decimalSep;
 	protected boolean collapseWhiteSpaces = true;
 	protected StringBuffer tokenBuf = new StringBuffer();
 	protected String lastToken;
@@ -49,9 +53,10 @@ public class AsciiDataParser extends AbstractDataParser
 	{
 		//reader = new BufferedReader(new InputStreamReader(inputStream));
 	    reader = new BufferedInputStream(inputStream);
-		tokenSep = ((AsciiEncoding)dataEncoding).tokenSeparator.toCharArray();
-		blockSep = ((AsciiEncoding)dataEncoding).blockSeparator.toCharArray();
-		collapseWhiteSpaces = ((AsciiEncoding)dataEncoding).collapseWhiteSpaces;
+		tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator().toCharArray();
+		blockSep = ((TextEncoding)dataEncoding).getBlockSeparator().toCharArray();
+		decimalSep = ((TextEncoding)dataEncoding).getDecimalSeparator().charAt(0);
+		collapseWhiteSpaces = ((TextEncoding)dataEncoding).getCollapseWhiteSpaces();
 	}
 	
 	
@@ -215,7 +220,6 @@ public class AsciiDataParser extends AbstractDataParser
     @Override
 	protected void processAtom(DataValue scalarInfo) throws IOException
 	{
-		char decimalSep = ((AsciiEncoding)dataEncoding).decimalSeparator;
 		String token = readToken();
 		parseToken(scalarInfo, token, decimalSep);
 	}
@@ -330,7 +334,7 @@ public class AsciiDataParser extends AbstractDataParser
 	@Override
 	protected boolean processBlock(DataComponent blockInfo) throws IOException
 	{
-		if (blockInfo instanceof DataChoice)
+		if (blockInfo instanceof DataChoiceImpl)
 		{
 			String token = null;
 			
@@ -338,7 +342,7 @@ public class AsciiDataParser extends AbstractDataParser
 			try
 			{
 				token = readToken();
-				((DataChoice)blockInfo).setSelectedComponent(token);
+				((DataChoiceImpl)blockInfo).setSelectedComponent(token);
 			}
 			catch (IllegalStateException e)
 			{
@@ -360,8 +364,9 @@ public class AsciiDataParser extends AbstractDataParser
     /**
      * Improves on Java Double.parseDouble() method to include +INF/-INF
      * This is needed because Java Infinity is not allowed by XML schema
-     * @param val
-     * @return
+     * @param text string to decode value from
+     * @return decoded value
+     * @throws NumberFormatException if argument doesn't contain a valid double string
      */
     public static double parseDoubleOrInf(String text) throws NumberFormatException
     {
@@ -387,8 +392,9 @@ public class AsciiDataParser extends AbstractDataParser
     
     /**
      * Allows parsing a double or ISO encoded date/time value
-     * @param val
-     * @return
+     * @param text string to decode value from
+     * @return decoded value
+     * @throws NumberFormatException 
      */
     public static double parseDoubleOrInfOrIsoTime(String text) throws NumberFormatException
     {

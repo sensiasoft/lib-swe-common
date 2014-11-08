@@ -39,12 +39,12 @@ import org.vast.cdm.common.DataComponent;
  * @author Alexandre Robin
  * @version 1.0
  */
-public class DataList extends AbstractDataComponent
+public class DataList extends AbstractDataComponentImpl
 {
     private static final long serialVersionUID = 3525149069812989611L;
     protected ListIterator<DataBlock> blockIterator;
-    protected AbstractDataComponent component = null;
-    protected AbstractDataComponent tempComponent = null;
+    protected AbstractDataComponentImpl component = null;
+    protected AbstractDataComponentImpl tempComponent = null;
         
 
     public DataList()
@@ -81,25 +81,20 @@ public class DataList extends AbstractDataComponent
     
     
     @Override
-    public void addComponent(DataComponent component)
+    public void addComponent(String name, DataComponent component)
     {
         if (this.component == null)
         {
-            String componentName = component.getName();
-            if (componentName != null)
-                this.names.put(componentName, 0);
-            
-            AbstractDataComponent container = (AbstractDataComponent)component;
-    		this.component = container;
-        	this.component.parent = this;
-        	
-        	this.tempComponent = (AbstractDataComponent)component.copy();
+            ((AbstractDataComponentImpl)component).parent = this;
+            ((AbstractDataComponentImpl)component).name = name;            
+            this.component = (AbstractDataComponentImpl)component;        	
+        	this.tempComponent = (AbstractDataComponentImpl)component.copy();
         }
     }
     
     
     @Override
-    public AbstractDataComponent getComponent(int index)
+    public AbstractDataComponentImpl getComponent(int index)
     {
         checkIndex(index);
         tempComponent.setData(((DataBlockList)dataBlock).blockList.get(index));        
@@ -125,7 +120,7 @@ public class DataList extends AbstractDataComponent
     }
     
     
-    public AbstractDataComponent nextComponent()
+    public AbstractDataComponentImpl nextComponent()
     {
         if (blockIterator == null)
             resetIterator();
@@ -222,26 +217,29 @@ public class DataList extends AbstractDataComponent
     }
     
     
-    @Override
-    public void removeAllComponents()
-    {
-        this.clearData();
-    	this.dataBlock = new DataBlockList();
-    	this.component.parent = null;
-        this.component = null;
-    }
-    
-    
-    @Override
-    public void removeComponent(int index)
-    {
-    	throw new UnsupportedOperationException();
-    }
-    
-    
 	@Override
 	public boolean hasConstraints()
 	{
 		return component.hasConstraints();
 	}
+
+
+    @Override
+    public int getComponentIndex(String name)
+    {
+        if (component.name.equals(name))
+            return 0;
+        else
+            return -1;
+    }
+
+
+    @Override
+    public AbstractDataComponentImpl getComponent(String name)
+    {
+        if (component.name.equals(name))
+            return component;
+        else
+            return null;
+    }
 }

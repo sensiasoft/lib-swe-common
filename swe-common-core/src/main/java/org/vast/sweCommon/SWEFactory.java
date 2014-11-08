@@ -20,7 +20,10 @@
 
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.DataEncoding;
+import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.BinaryEncoding;
+import net.opengis.swe.v20.TextEncoding;
+import net.opengis.swe.v20.XMLEncoding;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
 
@@ -28,56 +31,32 @@ import org.vast.cdm.common.DataStreamWriter;
 public class SWEFactory
 {
         
-    public static DataStreamParser createDataParser(DataEncoding encoding)
+    public static DataStreamParser createDataParser(AbstractEncoding encoding)
     {
         DataStreamParser parser = null;
         
-        switch (encoding.getEncodingType())
-        {
-            case ASCII:
-                parser = new AsciiDataParser();
-                break;
-                
-            case BINARY:
-                parser = new BinaryDataParser();
-                break;
-                
-            case XML:
-                parser = new XmlDataParser();
-                break;
-                
-            case MIME_FORMAT:
-            	// TODO develop framework to plugin mime format parsers
-                return null;
-        }
+        if (encoding instanceof TextEncoding)
+            parser = new AsciiDataParser();
+        else if (encoding instanceof BinaryEncoding)
+            parser = new BinaryDataParser();
+        else if (encoding instanceof XMLEncoding)
+            parser = new XmlDataParser();
         
         parser.setDataEncoding(encoding);
         return parser;
     }
     
     
-    public static DataStreamWriter createDataWriter(DataEncoding encoding)
+    public static DataStreamWriter createDataWriter(AbstractEncoding encoding)
     {
         DataStreamWriter writer = null;
         
-        switch (encoding.getEncodingType())
-        {
-            case ASCII:
-                writer = new AsciiDataWriter();
-                break;
-                
-            case BINARY:
-                writer = new BinaryDataWriter();
-                break;
-                
-            case XML:
-            	writer = new XmlDataWriter();
-                break;
-                
-            case MIME_FORMAT:
-            	// TODO develop framework to plug mime format writers
-                return null;
-        }
+        if (encoding instanceof TextEncoding)
+            writer = new AsciiDataWriter();
+        else if (encoding instanceof BinaryEncoding)
+            writer = new BinaryDataWriter();
+        else if (encoding instanceof XMLEncoding)
+            writer = new XmlDataWriter();
         
         writer.setDataEncoding(encoding);
         return writer;

@@ -24,9 +24,9 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.data;
 
+import net.opengis.swe.v20.AbstractDataComponent;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
-import org.vast.sweCommon.SweConstants;
 
 
 /**
@@ -46,8 +46,8 @@ public class DataComponentHelper
 
 	public static DataComponent findParameterByName(DataComponent parent, String name)
 	{
-		if (parent instanceof DataArray)
-			parent = ((DataArray)parent).getArrayComponent();
+		if (parent instanceof DataArrayImpl)
+			parent = ((DataArrayImpl)parent).getArrayComponent();
 		
 		int childCount = parent.getComponentCount();
 		for (int i=0; i<childCount; i++)
@@ -70,14 +70,14 @@ public class DataComponentHelper
 
 	public static DataComponent findParameterByDefinition(DataComponent parent, String defUri)
 	{
-		if (parent instanceof DataArray)
-			parent = ((DataArray)parent).getArrayComponent();
+		if (parent instanceof DataArrayImpl)
+			parent = ((DataArrayImpl)parent).getArrayComponent();
 		
 		int childCount = parent.getComponentCount();
 		for (int i=0; i<childCount; i++)
 		{
-			DataComponent child = parent.getComponent(i);
-			String childDef = (String)child.getProperty(SweConstants.DEF_URI);
+		    DataComponent child = parent.getComponent(i);
+			String childDef = ((AbstractDataComponent)child).getDefinition();
 			
 			if (childDef != null && childDef.equals(defUri))
 				return child;
