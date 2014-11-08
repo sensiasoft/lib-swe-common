@@ -9,7 +9,7 @@ import net.opengis.IDateTime;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface TimeRange extends AbstractSimpleComponent, HasUom, HasConstraints<AllowedTimes>
+public interface TimeRange extends AbstractSimpleComponent, RangeComponent, HasUom, HasConstraints<AllowedTimes>
 {
     
     /**
