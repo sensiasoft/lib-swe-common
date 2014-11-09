@@ -8,15 +8,9 @@
    <Namespace type="SWE" version="1.0.1" uri="http://www.opengis.net/swe/1.0.1"/>
    <Namespace type="SWE" version="2.0" uri="http://www.opengis.net/swe/2.0"/>
    <!-- -->
-   <Reader type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentReaderV1"/>
-   <Reader type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingReaderV1"/>
-   <Reader type="SWECommon" subType="DataComponent" version="1.0.1" class="org.vast.sweCommon.SweComponentReaderV1"/>
-   <Reader type="SWECommon" subType="DataEncoding" version="1.0.1" class="org.vast.sweCommon.SweEncodingReaderV1"/>
    <Reader type="SWECommon" subType="DataComponent" version="2.0" class="org.vast.sweCommon.SweComponentReaderV20"/>
    <Reader type="SWECommon" subType="DataEncoding" version="2.0" class="org.vast.sweCommon.SweEncodingReaderV20"/>  
    <!-- -->
-   <Writer type="SWECommon" subType="DataComponent" version="1.0" class="org.vast.sweCommon.SweComponentWriterV1"/>
-   <Writer type="SWECommon" subType="DataEncoding" version="1.0" class="org.vast.sweCommon.SweEncodingWriterV1"/>
    <Writer type="SWECommon" subType="DataComponent" version="2.0" class="org.vast.sweCommon.SweComponentWriterV20"/>
    <Writer type="SWECommon" subType="DataEncoding" version="2.0" class="org.vast.sweCommon.SweEncodingWriterV20"/>  
    <!-- -->

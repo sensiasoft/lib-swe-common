@@ -33,14 +33,12 @@ import jj2000.j2k.decoder.Decoder;
 import jj2000.j2k.io.RandomAccessIO;
 import jj2000.j2k.util.ISRandomAccessIO;
 import jj2000.j2k.util.ParameterList;
-import org.junit.Test;
 import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataType;
 import org.vast.codec.JP2KDecoder;
 import org.vast.codec.JP2KStreamDecoder;
-import org.vast.data.DataArray;
-import org.vast.data.DataGroup;
-import org.vast.data.DataValue;
+import org.vast.data.CountImpl;
+import org.vast.data.DataArrayImpl;
+import org.vast.data.DataRecordImpl;
 import org.vast.sweCommon.DataInputStreamBI;
 
 
@@ -89,11 +87,11 @@ public class TestDecompression
         File file = new File(filePath);
         FileInputStream is = new FileInputStream(file);
 
-        DataArray imgData = new DataArray(new DataValue(DataType.INT), true);
-        DataGroup pixelData = new DataGroup(3);
-        pixelData.addComponent(new DataValue("red", DataType.INT));
-        pixelData.addComponent(new DataValue("green", DataType.INT));
-        pixelData.addComponent(new DataValue("blue", DataType.INT));
+        DataArrayImpl imgData = new DataArrayImpl();
+        DataRecordImpl pixelData = new DataRecordImpl(3);
+        pixelData.addComponent("red", new CountImpl());
+        pixelData.addComponent("green", new CountImpl());
+        pixelData.addComponent("blue", new CountImpl());
         imgData.addComponent("pixel", pixelData);
         
         JP2KStreamDecoder decoder = new JP2KStreamDecoder(file.length());

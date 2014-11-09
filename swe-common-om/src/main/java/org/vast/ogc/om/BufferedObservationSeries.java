@@ -26,9 +26,9 @@ package org.vast.ogc.om;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import net.opengis.swe.v20.AbstractEncoding;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
 import org.vast.ogc.gml.FeatureImpl;
 import org.vast.ogc.gml.IFeature;
 import org.vast.sweCommon.SWEData;
@@ -113,9 +113,9 @@ public class BufferedObservationSeries extends FeatureImpl implements IObservati
 
 
     @Override
-    public int getElementCount()
+    public int getNumElements()
     {
-        return resultData.getElementCount();
+        return resultData.getNumElements();
     }
 
 
@@ -134,14 +134,14 @@ public class BufferedObservationSeries extends FeatureImpl implements IObservati
 
 
     @Override
-    public DataEncoding getEncoding()
+    public AbstractEncoding getEncoding()
     {
         return resultData.getEncoding();
     }
 
 
     @Override
-    public void setEncoding(DataEncoding dataEncoding)
+    public void setEncoding(AbstractEncoding dataEncoding)
     {
         resultData.setEncoding(dataEncoding);
     }

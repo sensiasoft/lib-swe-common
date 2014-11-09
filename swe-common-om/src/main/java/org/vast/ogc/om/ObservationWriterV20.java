@@ -37,7 +37,6 @@ import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.sweCommon.SweComponentWriterV20;
-import org.vast.sweCommon.SweConstants;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLWriterDOM;
 import org.vast.xml.XMLWriterException;
@@ -237,9 +236,8 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
                 Element componentElt = sweWriter.writeComponent(dom, obs.getResult(), true);
                 resultElt.appendChild(componentElt);
                 
-                QName sweQName = (QName)obs.getResult().getProperty(SweConstants.COMP_QNAME);
-                if (sweQName != null)
-                    resultElt.setAttributeNS(DOMHelper.XSI_NS_URI, "xsi:type", "swe:" + sweQName.getLocalPart() + "PropertyType");
+                String sweQName = componentElt.getLocalName();
+                resultElt.setAttributeNS(DOMHelper.XSI_NS_URI, "xsi:type", "swe:" + sweQName + "PropertyType");
             }
             catch (XMLWriterException e)
             {

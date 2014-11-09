@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import jj2000.j2k.decoder.Decoder;
 import jj2000.j2k.util.ParameterList;
-import org.vast.cdm.common.BinaryBlock;
+import net.opengis.swe.v20.BinaryBlock;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.CompressedStreamParser;
 import org.vast.cdm.common.DataBlock;
@@ -65,7 +65,7 @@ public class CommonImageIODecoder implements CompressedStreamParser
         {
             ((DataValue) primitiveRecord.getComponent(i)).setDataType(DataType.BYTE);
         }
-        String compression = binaryBlock.compression;
+        String compression = binaryBlock.getCompression();
 
         String mimeType = "";
         Iterator<ImageReader> readersList = null;

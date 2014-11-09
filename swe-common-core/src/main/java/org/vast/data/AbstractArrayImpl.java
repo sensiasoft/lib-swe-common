@@ -69,7 +69,24 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     @Override
     public void addComponent(String name, DataComponent component)
     {
+        if (elementType.hasValue())
+            throw new IllegalStateException("The array element type is already set. Use setElementType() to replace it");
+            
         setElementType(name, component);
+    }
+    
+    
+    @Override
+    public AbstractDataComponentImpl removeComponent(int index)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+
+    @Override
+    public AbstractDataComponentImpl removeComponent(String name)
+    {
+        throw new UnsupportedOperationException();
     }
 
 

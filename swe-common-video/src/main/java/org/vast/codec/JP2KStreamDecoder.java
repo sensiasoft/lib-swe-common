@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import jj2000.j2k.io.RandomAccessIO;
 import jj2000.j2k.util.ISRandomAccessIO;
-import org.vast.cdm.common.BinaryBlock;
+import net.opengis.swe.v20.BinaryBlock;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.CompressedStreamParser;
 import org.vast.cdm.common.DataComponent;

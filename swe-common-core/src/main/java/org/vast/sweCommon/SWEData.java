@@ -203,7 +203,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
 
 
     @Override
-    public int getNumElements() throws IOException
+    public int getNumElements()
     {
         return getComponentCount();
     } 

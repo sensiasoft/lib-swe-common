@@ -42,14 +42,13 @@ public abstract class ObservationStreamReader extends SWEReader
     
     /**
      * Reads an Observation object from the given InputStream
-     * @param is
+     * @param inputStream
      * @param dataHandler
-     * @return
-     * @throws OMException
+     * @throws IOException
      */
-    public void readObservationStream(InputStream inputStream, DataHandler handler) throws IOException
+    public void readObservationStream(InputStream inputStream, DataHandler dataHandler) throws IOException
     {
-        parse(inputStream, handler);
+        parse(inputStream, dataHandler);
     }
 
     

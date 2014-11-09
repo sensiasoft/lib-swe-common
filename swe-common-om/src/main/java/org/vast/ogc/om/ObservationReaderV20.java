@@ -163,7 +163,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
             try
             {
                 if (valueElt.getNamespaceURI().equals(SweComponentReaderV20.SWE_NS))
-                    paramValue = sweReader.readComponent(dom, valueElt);
+                    paramValue = sweReader.read(dom, valueElt);
                 else
                     paramValue = valueElt.cloneNode(true);
             }
@@ -216,7 +216,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         {
             try
             {
-                DataComponent result = sweReader.readComponent(dom, resultElt);
+                DataComponent result = sweReader.read(dom, resultElt);
                 obs.setResult(result);
             }
             catch (XMLReaderException e)
