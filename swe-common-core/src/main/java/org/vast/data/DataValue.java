@@ -20,10 +20,6 @@
 
 package org.vast.data;
 
-import net.opengis.OgcProperty;
-import net.opengis.OgcPropertyList;
-import net.opengis.swe.v20.AbstractSimpleComponent;
-import net.opengis.swe.v20.NilValues;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataType;
 
@@ -41,12 +37,6 @@ import org.vast.cdm.common.DataType;
 public abstract class DataValue extends AbstractSimpleComponentImpl
 {
     private static final long serialVersionUID = -7411819306997320628L;
-    protected DataType dataType;
-    
-    protected OgcPropertyList<AbstractSimpleComponent> qualityList = new OgcPropertyList<AbstractSimpleComponent>();
-    protected OgcProperty<NilValues> nilValues;
-    protected String referenceFrame;
-    protected String axisID;
     
     
     public DataValue()

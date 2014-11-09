@@ -25,10 +25,10 @@ import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AbstractDataComponent;
 import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.EncodedValues;
-import org.vast.cdm.common.BlockComponent;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
@@ -64,7 +64,7 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
     protected OgcPropertyImpl<Count> elementCount = new OgcPropertyImpl<Count>();
     protected OgcPropertyImpl<AbstractDataComponent> elementType = new OgcPropertyImpl<AbstractDataComponent>();
     protected AbstractEncodingImpl encoding;
-    protected EncodedValues values;
+    protected EncodedValues values = new EncodedValuesImpl();
     
     
     public DataArrayImpl()
@@ -565,7 +565,7 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
 	}
 	
 	
-	final protected CountImpl getArraySizeComponent()
+	protected final CountImpl getArraySizeComponent()
     {
 	    // case of implicit size
         if (isImplicitSize())
@@ -579,8 +579,8 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
 	    if (!elementCount.hasValue())
 	    {
 	        String sizeIdRef = elementCount.getHref().substring(1);
-	        AbstractDataComponentImpl parentComponent = this.parent;
-	        AbstractDataComponentImpl sizeComponent = this;
+	        DataComponent parentComponent = this.parent;
+	        DataComponent sizeComponent = this;
             while (parentComponent != null)
             {
                 boolean found = false;
@@ -595,7 +595,7 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
                 }
                 if (found)
                     break;
-                parentComponent = parentComponent.parent;
+                parentComponent = parentComponent.getParent();
             }
             
             elementCount.setValue((Count)sizeComponent);
@@ -655,9 +655,6 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
     }
     
     
-    /**
-     * Gets extra info (name, xlink, etc.) carried by the elementType property
-     */
     @Override
     public OgcProperty<AbstractDataComponent> getElementTypeProperty()
     {
@@ -721,7 +718,7 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
     @Override
     public boolean isSetValues()
     {
-        return (values != null);
+        return (dataBlock != null);
     }
     
     

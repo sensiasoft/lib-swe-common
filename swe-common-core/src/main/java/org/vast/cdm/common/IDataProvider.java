@@ -41,7 +41,7 @@ import java.io.IOException;
  */
 public interface IDataProvider
 {
-    public int getElementCount() throws IOException;
+    public int getNumElements() throws IOException;
     
     public DataComponent getElementType() throws IOException;
     

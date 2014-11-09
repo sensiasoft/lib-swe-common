@@ -23,7 +23,6 @@ package org.vast.data;
 
 import java.io.Serializable;
 import java.util.*;
-import net.opengis.swe.v20.AbstractDataComponent;
 import net.opengis.swe.v20.BinaryMember;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
@@ -40,7 +39,7 @@ import org.vast.cdm.common.DataComponent;
  * @version 1.0
  */
 @SuppressWarnings("serial")
-public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableImpl implements AbstractDataComponent, DataComponent, Serializable
+public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableImpl implements DataComponent, Serializable
 {
     public static int MAX_ARRAY_ERRORS = 10;
     protected final static String INDENT = "  ";
@@ -49,7 +48,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
     protected Boolean optional;
     protected String definition;
     
-    protected String name;
+    protected String name; // TODO get rid of name property +get/set
 	protected AbstractDataBlock dataBlock;
 	protected AbstractDataComponentImpl parent = null;
 	protected int scalarCount = -1;
@@ -88,9 +87,15 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
 
     
     @Override
-    public AbstractDataComponentImpl getParent()
+    public DataComponent getParent()
     {
         return parent;
+    }
+
+
+    public void setParent(AbstractDataComponentImpl parent)
+    {
+        this.parent = parent;
     }
 
 
@@ -99,7 +104,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
 
 
     @Override
-    public abstract AbstractDataComponentImpl getComponent(int index);
+    public abstract DataComponent getComponent(int index);
 
 
 	@Override
@@ -107,7 +112,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
     
     
 	@Override
-    public abstract AbstractDataComponentImpl getComponent(String name);
+    public abstract DataComponent getComponent(String name);
 	
 	
     @Override

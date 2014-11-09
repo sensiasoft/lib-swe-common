@@ -23,7 +23,7 @@ public class BinaryEncodingImpl extends AbstractEncodingImpl implements BinaryEn
     protected List<BinaryMember> memberList = new ArrayList<BinaryMember>();
     protected ByteOrder byteOrder;
     protected ByteEncoding byteEncoding;
-    protected Integer byteLength;
+    protected Long byteLength;
     
     
     public BinaryEncodingImpl()
@@ -130,7 +130,7 @@ public class BinaryEncodingImpl extends AbstractEncodingImpl implements BinaryEn
      * Gets the byteLength property
      */
     @Override
-    public int getByteLength()
+    public long getByteLength()
     {
         return byteLength;
     }
@@ -150,7 +150,7 @@ public class BinaryEncodingImpl extends AbstractEncodingImpl implements BinaryEn
      * Sets the byteLength property
      */
     @Override
-    public void setByteLength(int byteLength)
+    public void setByteLength(long byteLength)
     {
         this.byteLength = byteLength;
     }

@@ -35,4 +35,5 @@ public interface DataRecord extends AbstractDataComponent
      * Adds a new field property
      */
     public void addField(String name, AbstractDataComponent field);
+    
 }

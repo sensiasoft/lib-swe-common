@@ -18,7 +18,7 @@ import net.opengis.swe.v20.CategoryRange;
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
  * @since Aug 30, 2014
  */
-public class CategoryRangeImpl extends AbstractRangeComponentImpl implements CategoryRange, HasCodeSpace
+public class CategoryRangeImpl extends AbstractRangeComponentImpl implements CategoryRange
 {
     static final long serialVersionUID = 1L;
     protected String codeSpace;
@@ -179,9 +179,9 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
         {
             text.append(" = [");
             text.append(dataBlock.getStringValue(0));
-            text.append(" ");
+            text.append(' ');
             text.append(dataBlock.getStringValue(1));
-            text.append("]");
+            text.append(']');
         }
         text.append("\n");
         return text.toString();

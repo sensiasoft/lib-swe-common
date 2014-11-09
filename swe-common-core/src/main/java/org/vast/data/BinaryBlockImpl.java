@@ -17,7 +17,7 @@ public class BinaryBlockImpl extends AbstractSWEImpl implements BinaryBlock, Has
     protected String encryption;
     protected Integer paddingBytesAfter;
     protected Integer paddingBytesBefore;
-    protected Integer byteLength;
+    protected Long byteLength;
     protected String ref = "";
     protected CompressedStreamParser reader;
     
@@ -185,7 +185,7 @@ public class BinaryBlockImpl extends AbstractSWEImpl implements BinaryBlock, Has
      * Gets the byteLength property
      */
     @Override
-    public int getByteLength()
+    public long getByteLength()
     {
         return byteLength;
     }
@@ -205,7 +205,7 @@ public class BinaryBlockImpl extends AbstractSWEImpl implements BinaryBlock, Has
      * Sets the byteLength property
      */
     @Override
-    public void setByteLength(int byteLength)
+    public void setByteLength(long byteLength)
     {
         this.byteLength = byteLength;
     }

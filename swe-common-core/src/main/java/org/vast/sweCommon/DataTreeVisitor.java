@@ -22,7 +22,7 @@ package org.vast.sweCommon;
 
 import java.util.Stack;
 import net.opengis.swe.v20.AbstractEncoding;
-import org.vast.cdm.common.BlockComponent;
+import net.opengis.swe.v20.BlockComponent;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataHandler;
@@ -88,8 +88,8 @@ public abstract class DataTreeVisitor
 	
 	
 	/**
-	 * TODO nextInfo method description
-	 * @return
+	 * Process the next scalar element in the stream
+	 * @throws Exception 
 	 */
 	public void processNextElement() throws Exception
 	{
@@ -200,7 +200,7 @@ public abstract class DataTreeVisitor
                 newBlock = true;
                 currentRecord = null;
                 
-                if (parentArray != null && parentArrayIndex == parentArray.getComponentCount())
+                if (parentArray != null && parentArrayIndex == ((DataComponent)parentArray).getComponentCount())
                     endOfArray = true;
                 
                 return;
@@ -247,7 +247,7 @@ public abstract class DataTreeVisitor
 		// prepare next array element
 		if (parentArray != null)
         {
-            dataComponents = parentArray.getComponent(parentArrayIndex);
+            dataComponents = ((DataComponent)parentArray).getComponent(parentArrayIndex);
             parentArrayIndex++;
         }
         
@@ -323,7 +323,7 @@ public abstract class DataTreeVisitor
     public void setParentArray(BlockComponent parentArray)
     {
         this.parentArray = parentArray;
-        parentArray.renewDataBlock();
+        ((DataComponent)parentArray).renewDataBlock();
         parentArrayIndex = 0;
     }
 }

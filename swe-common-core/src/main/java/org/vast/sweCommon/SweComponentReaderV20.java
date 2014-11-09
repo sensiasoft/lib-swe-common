@@ -25,21 +25,23 @@ package org.vast.sweCommon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
-import javax.xml.namespace.QName;
 import net.opengis.DateTimeDouble;
 import net.opengis.IDateTime;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
+import net.opengis.swe.v20.AbstractDataComponent;
 import net.opengis.swe.v20.AbstractEncoding;
 import net.opengis.swe.v20.AbstractSimpleComponent;
 import net.opengis.swe.v20.AllowedTimes;
+import net.opengis.swe.v20.HasCodeSpace;
+import net.opengis.swe.v20.HasConstraints;
+import net.opengis.swe.v20.HasRefFrames;
+import net.opengis.swe.v20.HasUom;
 import org.w3c.dom.*;
 import org.vast.cdm.common.*;
 import org.vast.data.*;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.gml.GMLUnitReader;
-import org.vast.ogc.xlink.CachedReference;
 import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
@@ -110,20 +112,24 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
     }
     
     
-    public DataComponent readComponentProperty(DOMHelper dom, Element propertyElt) throws XMLReaderException
+    public void readComponentProperty(OgcProperty<AbstractDataComponent> prop, DOMHelper dom, Element propertyElt) throws XMLReaderException
     {
-        Element dataElement = dom.getFirstChildElement(propertyElt);
-        DataComponent component = read(dom, dataElement);
+        // name attribute
         String name = readPropertyName(dom, propertyElt);
-        component.setName(name);
+        if (name != null)
+            prop.setName(name);
         
-        // if href is present also parse and save xlink attr group
-        CachedReference<?> xlinkOptions = new CachedReference<Object>();
-        XlinkUtils.readXlinkAttributes(dom, propertyElt, xlinkOptions);        
-        if (xlinkOptions.getHref() != null || xlinkOptions.getArcRole() != null || xlinkOptions.getRole() != null)
-            component.setProperty(SweConstants.COMP_XLINK, xlinkOptions);
-               
-        return component;
+        // property value
+        Element dataElement = dom.getFirstChildElement(propertyElt);
+        if (dataElement != null)
+        {
+            DataComponent component = read(dom, dataElement);
+            component.setName(name);
+            prop.setValue((AbstractDataComponent)component);
+        }
+        
+        // also parse and save xlink attributes if present
+        XlinkUtils.readXlinkAttributes(dom, propertyElt, prop);   
     }
     
     
@@ -138,7 +144,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
        // parse all fields elements
 		NodeList fieldList = dom.getElements(recordElt, "swe:field");
         int fieldCount = fieldList.getLength();
-        DataRecordImpl dataGroup = new DataRecordImpl(fieldCount);
+        DataRecordImpl dataRecord = new DataRecordImpl(fieldCount);
 		
 		// loop through all fields
         for (int i = 0; i < fieldCount; i++)
@@ -146,19 +152,22 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             Element fieldElt = (Element)fieldList.item(i);
 
             // add field components
-            DataComponent dataComponent = readComponentProperty(dom, fieldElt);
-            dataGroup.addComponent(readPropertyName(dom, fieldElt), dataComponent);
+            OgcProperty<AbstractDataComponent> fieldProp = new OgcPropertyImpl<AbstractDataComponent>();
+            readComponentProperty(fieldProp, dom, fieldElt);
+            if (fieldProp.hasValue())
+                ((AbstractDataComponentImpl)fieldProp.getValue()).setParent(dataRecord);
+            dataRecord.getFieldList().add(fieldProp);
         }
     	
         // error if no field present
-        if (dataGroup.getComponentCount() == 0)
+        if (dataRecord.getComponentCount() == 0)
             throw new XMLReaderException("Invalid DataRecord: Must have AT LEAST ONE field", recordElt);
 
         // read common stuffs
-        readBaseProperties(dataGroup, dom, recordElt);
-        readCommonAttributes(dataGroup, dom, recordElt);
+        readBaseProperties(dataRecord, dom, recordElt);
+        readCommonAttributes(dataRecord, dom, recordElt);
 
-        return dataGroup;
+        return dataRecord;
     }
     
     
@@ -168,12 +177,13 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
      * @throws CDMException
      * @return DataGroup
      */
+    @SuppressWarnings("rawtypes")
     private VectorImpl readVector(DOMHelper dom, Element vectorElt) throws XMLReaderException
     {
         // parse all fields elements
 		NodeList coordList = dom.getElements(vectorElt, "swe:coordinate");
         int coordCount = coordList.getLength();
-        VectorImpl dataGroup = new VectorImpl(coordCount);
+        VectorImpl vector = new VectorImpl(coordCount);
 		
 		// loop through all coordinates
         for (int i = 0; i < coordCount; i++)
@@ -181,19 +191,22 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             Element coordElt = (Element)coordList.item(i);
 
             // add coordinate components
-            DataComponent dataComponent = readComponentProperty(dom, coordElt);
-            dataGroup.addComponent(readPropertyName(dom, coordElt), dataComponent);
+            OgcProperty fieldProp = new OgcPropertyImpl();
+            readComponentProperty(fieldProp, dom, coordElt);
+            if (fieldProp.hasValue())
+                ((AbstractDataComponentImpl)fieldProp.getValue()).setParent(vector);
+            vector.getCoordinateList().add(fieldProp);
         }
     	
         // error if no coordinate present
-        if (dataGroup.getComponentCount() == 0)
+        if (vector.getComponentCount() == 0)
             throw new XMLReaderException("Invalid Vector: Must have AT LEAST ONE coordinate", vectorElt);
 
         // read common stuffs
-        readBaseProperties(dataGroup, dom, vectorElt);
-        readCommonAttributes(dataGroup, dom, vectorElt);
+        readBaseProperties(vector, dom, vectorElt);
+        readCommonAttributes(vector, dom, vectorElt);
 
-        return dataGroup;
+        return vector;
     }
         
     
@@ -214,11 +227,14 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
 		// loop through all items
         for (int i = 0; i < itemCount; i++)
         {
-            Element fieldElt = (Element)itemList.item(i);
+            Element itemElt = (Element)itemList.item(i);
             
             // add item components
-            DataComponent dataComponent = readComponentProperty(dom, fieldElt);
-            dataChoice.addComponent(readPropertyName(dom, fieldElt), dataComponent);
+            OgcProperty<AbstractDataComponent> itemProp = new OgcPropertyImpl<AbstractDataComponent>();
+            readComponentProperty(itemProp, dom, itemElt);
+            if (itemProp.hasValue())
+                ((AbstractDataComponentImpl)itemProp.getValue()).setParent(dataChoice);
+            dataChoice.getItemList().add(itemProp);
         }
         
         // read common stuffs
@@ -238,7 +254,12 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
      */
     private DataArrayImpl readDataArray(DOMHelper dom, Element arrayElt) throws XMLReaderException
     {
-        DataArrayImpl dataArray = new DataArrayImpl();
+        DataArrayImpl dataArray;
+        
+        if (arrayElt.getLocalName().equals(SweConstants.MATRIX_COMPONENT_TAG))
+            dataArray = new MatrixImpl();
+        else
+            dataArray = new DataArrayImpl();
         
         // case of elementCount referencing another component
         String countId = dom.getAttributeValue(arrayElt, "elementCount/@href");
@@ -257,7 +278,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             {
                 Element countElt = dom.getElement(arrayElt, "elementCount/Count");
                 DataValue sizeComponent = this.readScalar(dom, countElt);
-                dataArray.setElementCount((CountImpl)sizeComponent);            
+                dataArray.setElementCount((CountImpl)sizeComponent);
             }
             catch (Exception e)
             {
@@ -267,8 +288,10 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
                         
         // read array component
         Element elementTypeElt = dom.getElement(arrayElt, "elementType");
-        DataComponent dataComponent = readComponentProperty(dom, elementTypeElt);
-        dataArray.addComponent(dataComponent.getName(), dataComponent);
+        OgcProperty<AbstractDataComponent> eltTypeProp = dataArray.getElementTypeProperty();
+        readComponentProperty(eltTypeProp, dom, elementTypeElt);
+        if (eltTypeProp.hasValue())
+            ((AbstractDataComponentImpl)eltTypeProp.getValue()).setParent(dataArray);
         
         // read common stuffs
         readBaseProperties(dataArray, dom, arrayElt);
@@ -328,11 +351,19 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         readBaseProperties(sweData, dom, streamElt);
         readCommonAttributes(sweData, dom, streamElt);
         
+        // read element count
+        Element countElt = dom.getElement(streamElt, "elementCount/Count");
+        if (countElt != null)
+        {
+            DataValue sizeComponent = this.readScalar(dom, countElt);
+            sweData.setElementCount((CountImpl)sizeComponent);
+        }
+        
         // read stream component
         Element elementTypeElt = dom.getElement(streamElt, "elementType");
-        DataComponent dataComponent = readComponentProperty(dom, elementTypeElt);
-        sweData.setElementType(dataComponent);
-                
+        OgcProperty<AbstractDataComponent> eltTypeProp = sweData.getElementTypeProperty();
+        readComponentProperty(eltTypeProp, dom, elementTypeElt);
+        
         // read encoding
         Element encodingElt = dom.getElement(streamElt, "encoding/*");
         AbstractEncoding encoding = encodingReader.read(dom, encodingElt);
@@ -466,8 +497,8 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             try
             {
                 String[] vals = valueText.split(" ");
-                asciiParser.parseToken((DataValue)range.getComponent(0), vals[0], '.');
-                asciiParser.parseToken((DataValue)range.getComponent(1), vals[1], '.');
+                asciiParser.parseToken(range, vals[0], '.', range.getData(), 0);
+                asciiParser.parseToken(range, vals[1], '.', range.getData(), 1);
             }
             catch (Exception e)
             {
@@ -484,12 +515,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
      */
     private String readPropertyName(DOMHelper dom, Element propertyElt)
     {
-        String name = dom.getAttributeValue(propertyElt, "name");
-        
-        if (name == null)
-            name = propertyElt.getLocalName();
-        
-        return name;
+        return dom.getAttributeValue(propertyElt, "name");
     }
     
     
@@ -551,17 +577,13 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         String refFrame = dom.getAttributeValue(componentElt, "referenceFrame");
         if (refFrame != null && dataComponent instanceof DataValue)
             ((DataValue)dataComponent).setReferenceFrame(refFrame);
-        else if (refFrame != null && dataComponent instanceof VectorImpl)
-            ((VectorImpl)dataComponent).setReferenceFrame(refFrame);
-        else if (refFrame != null && dataComponent instanceof MatrixImpl)
-            ((MatrixImpl)dataComponent).setReferenceFrame(refFrame);
+        else if (refFrame != null && dataComponent instanceof HasRefFrames)
+            ((HasRefFrames)dataComponent).setReferenceFrame(refFrame);
         
         // local frame
         String localFrame = dom.getAttributeValue(componentElt, "localFrame");
-        if (localFrame != null && dataComponent instanceof VectorImpl)
-            ((VectorImpl)dataComponent).setLocalFrame(localFrame);
-        else if (localFrame != null && dataComponent instanceof MatrixImpl)
-            ((MatrixImpl)dataComponent).setLocalFrame(localFrame);
+        if (localFrame != null && dataComponent instanceof HasRefFrames)
+            ((HasRefFrames)dataComponent).setLocalFrame(localFrame);
         
         // read axis code attribute
         String axisCode = dom.getAttributeValue(componentElt, "axisID");
@@ -623,7 +645,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
     }
     
     
-    private void readCodeSpace(AbstractDataComponentImpl dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
+    private void readCodeSpace(AbstractSimpleComponent dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
         if (!(dataComponent instanceof HasCodeSpace))
             return;
@@ -635,6 +657,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
     }
     
     
+    @SuppressWarnings("rawtypes")
     private void readQuality(AbstractSimpleComponent dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
         if (!dom.existElement(scalarElt, "quality"))
@@ -645,16 +668,9 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         for (int i=0; i<numQualityElts; i++)
         {
             Element qualityElt = (Element)qualityElts.item(i);
-            DataComponent quality = readComponentProperty(dom, qualityElt);
-            
-            if (quality instanceof CategoryImpl)
-                dataComponent.addQualityAsCategory((CategoryImpl)quality);
-            else if (quality instanceof QuantityImpl)
-                dataComponent.addQualityAsQuantity((QuantityImpl)quality);
-            else if (quality instanceof QuantityRangeImpl)
-                dataComponent.addQualityAsQuantityRange((QuantityRangeImpl)quality);
-            else if (quality instanceof TextImpl)
-                dataComponent.addQualityAsText((TextImpl)quality);
+            OgcProperty qualityProp = new OgcPropertyImpl();
+            readComponentProperty(qualityProp, dom, qualityElt);
+            dataComponent.getQualityList().add(qualityProp);
         }
     }
     
@@ -734,17 +750,17 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         
         // also parse xlink attr to rewrite properly
         if (dom.existAttribute(nilPropElt, "href"))
-        {
-            CachedReference<?> nilRef = new CachedReference<Object>();
-            XlinkUtils.readXlinkAttributes(dom, nilPropElt, nilRef);
-            dataValue.getNilValuesProperty().setHref(nilRef.getHref());
-        }
+            XlinkUtils.readXlinkAttributes(dom, nilPropElt, dataValue.getNilValuesProperty());
     }
     
     
+    @SuppressWarnings("rawtypes")
     private void readConstraints(AbstractSimpleComponent dataValue, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
-    	Element constraintElt = dom.getElement(scalarElt, "constraint/*");
+        if (!(dataValue instanceof HasConstraints))
+            return;
+        
+        Element constraintElt = dom.getElement(scalarElt, "constraint/*");
     	if (constraintElt == null)
     		return;
     	
@@ -766,6 +782,8 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
 	    		for (int i=0; i<valueElts.getLength(); i++)
 	    		    constraint.addValue(dom.getElementValue((Element)valueElts.item(i)));
     		}
+    		
+    		((HasConstraints)dataValue).setConstraint(constraint);
 		}
 		else if (timeConstraints)
 		{
@@ -792,6 +810,8 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
                     }
 	    		}
     		}
+    		
+    		((HasConstraints)dataValue).setConstraint(constraint);
 		}
         else if (numericConstraints)
 		{
@@ -820,6 +840,8 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
     		}
     		
     		// TODO read significantFigures
+    		
+    		((HasConstraints)dataValue).setConstraint(constraint);
 		}
     }
     

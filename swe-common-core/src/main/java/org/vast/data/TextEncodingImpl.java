@@ -11,7 +11,7 @@ import net.opengis.swe.v20.TextEncoding;
 public class TextEncodingImpl extends AbstractEncodingImpl implements TextEncoding
 {
     static final long serialVersionUID = 1L;
-    protected Boolean collapseWhiteSpaces;
+    protected Boolean collapseWhiteSpaces = true;
     protected String decimalSeparator = ".";
     protected String tokenSeparator = ",";
     protected String blockSeparator = " ";
@@ -19,6 +19,13 @@ public class TextEncodingImpl extends AbstractEncodingImpl implements TextEncodi
     
     public TextEncodingImpl()
     {
+    }
+    
+    
+    public TextEncodingImpl(String tokenSeparator, String blockSeparator)
+    {
+        this.tokenSeparator = tokenSeparator;
+        this.blockSeparator = blockSeparator;
     }
     
     

@@ -167,9 +167,9 @@ import net.opengis.swe.v20.CountRange;
         {
             text.append(" = [");
             text.append(dataBlock.getIntValue(0));
-            text.append(" ");
+            text.append(' ');
             text.append(dataBlock.getIntValue(1));
-            text.append("]");
+            text.append(']');
         }
         return text.toString();
     }

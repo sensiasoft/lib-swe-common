@@ -14,7 +14,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.vast.cdm.common.BlockComponent;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataStreamParser;
@@ -22,6 +21,7 @@ import org.vast.cdm.common.DataStreamWriter;
 import org.vast.sweCommon.SWEFactory;
 import net.opengis.swe.v20.AbstractEncoding;
 import net.opengis.swe.v20.BinaryEncoding;
+import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.ByteEncoding;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataStream;
@@ -68,7 +68,7 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
 
     public String encode(BlockComponent array, AbstractEncoding encoding)
     {
-        ByteArrayOutputStream os = new ByteArrayOutputStream(array.getData().getAtomCount()*10);
+        ByteArrayOutputStream os = new ByteArrayOutputStream(((DataComponent)array).getData().getAtomCount()*10);
         
         // force base64 if byte encoding is raw
         if (encoding instanceof BinaryEncoding)
@@ -81,9 +81,9 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
             writer.setDataComponents(((DataComponent)array.getElementType()).copy());
             writer.setOutput(os);
             
-            for (int i = 0; i < array.getComponentCount(); i++)
+            for (int i = 0; i < array.getElementCount().getValue(); i++)
             {
-                DataBlock nextBlock = array.getComponent(i).getData();
+                DataBlock nextBlock = ((DataComponent)array).getComponent(i).getData();
                 writer.write(nextBlock);
             }
             
@@ -102,29 +102,28 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
     @Override
     public void setAsText(DataArray array, AbstractEncoding encoding, String text)
     {
-        decode((DataArrayImpl)array, encoding, text);
+        decode(array, encoding, text);
     }
 
 
     @Override
     public String getAsText(DataArray array, AbstractEncoding encoding)
     {
-        return encode((DataArrayImpl)array, encoding);     
+        return encode(array, encoding);     
     }
 
 
     @Override
     public void setAsText(DataStream dataStream, AbstractEncoding encoding, String text)
     {
-        //decode((DataStreamImpl)dataStream, encoding, text);        
+        decode(dataStream, encoding, text);        
     }
 
 
     @Override
     public String getAsText(DataStream dataStream, AbstractEncoding encoding)
     {
-        //return encode((DataStreamImpl)dataStream, encoding);
-        return null;
+        return encode(dataStream, encoding);        
     }
 
 }

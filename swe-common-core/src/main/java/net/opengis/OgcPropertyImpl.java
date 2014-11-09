@@ -102,8 +102,8 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     @Override
     public void setHref(String href)
     {
-        if (value != null)
-            throw new IllegalStateException("Attempting to set xlink:href on property that already has a value");
+        //if (value != null)
+        //    throw new IllegalStateException("Attempting to set xlink:href on property that already has a value");
         
         this.href = href;
     }
@@ -215,8 +215,8 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     @Override
     public void setValue(ValueType value)
     {
-        if (href != null)
-            throw new IllegalStateException("Attempting to set value of property that already has an xlink:href");
+        //if (href != null)
+        //    throw new IllegalStateException("Attempting to set value of property that already has an xlink:href");
         
         this.value = value;
     }

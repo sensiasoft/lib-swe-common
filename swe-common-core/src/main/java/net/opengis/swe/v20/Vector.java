@@ -46,4 +46,5 @@ public interface Vector extends AbstractDataComponent, HasRefFrames
      * Adds a new coordinateAsTime property
      */
     public void addCoordinateAsTime(String name, Time coordinate);
+
 }

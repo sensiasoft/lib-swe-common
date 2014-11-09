@@ -9,7 +9,7 @@ import net.opengis.IDateTime;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface TimeRange extends RangeComponent, HasUom, HasConstraints<AllowedTimes>
+public interface TimeRange extends RangeComponent, HasRefFrames, HasUom, HasConstraints<AllowedTimes>
 {
     
     /**
@@ -46,22 +46,4 @@ public interface TimeRange extends RangeComponent, HasUom, HasConstraints<Allowe
      * Sets the referenceTime property
      */
     public void setReferenceTime(IDateTime referenceTime);
-    
-    
-    /**
-     * Gets the localFrame property
-     */
-    public String getLocalFrame();
-    
-    
-    /**
-     * Checks if localFrame is set
-     */
-    public boolean isSetLocalFrame();
-    
-    
-    /**
-     * Sets the localFrame property
-     */
-    public void setLocalFrame(String localFrame);
 }

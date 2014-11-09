@@ -21,6 +21,8 @@
 package org.vast.data;
 
 import java.util.*;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.swe.v20.AbstractDataComponent;
 import net.opengis.swe.v20.Category;
@@ -68,7 +70,10 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
         DataChoiceImpl newObj = new DataChoiceImpl(itemList.size());
         super.copyTo(newObj);
         newObj.selected = selected;
-        newObj.choiceValue = ((CategoryImpl)choiceValue).copy();
+        
+        if (choiceValue != null)
+            newObj.choiceValue = ((CategoryImpl)choiceValue).copy();
+        
         itemList.copyTo(newObj.itemList);
         return newObj;
     }
@@ -95,9 +100,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     @Override
     public void addComponent(String name, DataComponent component)
     {
-        ((AbstractDataComponentImpl)component).parent = this;
-        ((AbstractDataComponentImpl)component).name = name;
-        itemList.add(name, (AbstractDataComponentImpl)component);
+        addItem(name, component);
     }
 
 
@@ -377,6 +380,21 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     @Override
     public void addItem(String name, AbstractDataComponent item)
     {
-        addComponent(name, (AbstractDataComponentImpl)item);
+        addItem(new OgcPropertyImpl<AbstractDataComponent>(name, (AbstractDataComponentImpl)item));
+    }
+    
+    
+    /**
+     * Adds a new field property
+     */
+    private void addItem(OgcProperty<AbstractDataComponent> prop)
+    {
+        itemList.add(prop);
+        
+        if (prop.hasValue())
+        {
+            ((AbstractDataComponentImpl)prop.getValue()).parent = this;
+            ((AbstractDataComponentImpl)prop.getValue()).name = name;            
+        }
     }
 }

@@ -5,7 +5,6 @@ import org.vast.data.AllowedTokensImpl;
 import org.vast.data.AllowedValuesImpl;
 import org.vast.data.CategoryRangeImpl;
 import org.vast.data.CountRangeImpl;
-import org.vast.data.DataStreamImpl;
 import org.vast.data.NilValueImpl;
 import org.vast.data.QuantityRangeImpl;
 import org.vast.data.ReferenceImpl;
@@ -80,7 +79,7 @@ public class DataComponentFactory implements Factory
     
     public DataStream newDataStream()
     {
-        return new DataStreamImpl();
+        return new DataList();
     }
     
     

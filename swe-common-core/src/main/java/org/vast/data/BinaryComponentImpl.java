@@ -209,6 +209,7 @@ public class BinaryComponentImpl extends AbstractSWEImpl implements BinaryCompon
     public void setDataType(String dataType)
     {
         this.dataType = dataType;
+        cdmDataType = null;
     }
     
     
@@ -298,6 +299,8 @@ public class BinaryComponentImpl extends AbstractSWEImpl implements BinaryCompon
     
     public void setCdmDataType(DataType cdmDataType)
     {
+        this.cdmDataType = cdmDataType;
+        
         switch (cdmDataType)
         {
             case BOOLEAN:

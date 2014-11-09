@@ -19,7 +19,7 @@ import net.opengis.swe.v20.UnitReference;
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
  * @since Aug 30, 2014
  */
-public class QuantityImpl extends DataValue implements Quantity, HasUom
+public class QuantityImpl extends DataValue implements Quantity
 {
     static final long serialVersionUID = 1L;
     protected UnitReferenceImpl uom;

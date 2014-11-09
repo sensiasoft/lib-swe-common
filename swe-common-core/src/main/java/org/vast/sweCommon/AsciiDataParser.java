@@ -247,12 +247,28 @@ public class AsciiDataParser extends AbstractDataParser
      */
     protected DataBlock parseToken(DataValue scalarInfo, String token, char decimalSep) throws IOException
     {
-        // get data block and its data type
-        DataBlock data = scalarInfo.getData();
+        parseToken(scalarInfo, token, decimalSep, scalarInfo.getData(), 0);
+        return scalarInfo.getData();
+    }
+    
+        
+    /**
+     * Parse a token from a tuple depending on the corresponding Data Component Definition 
+     * @param scalarInfo
+     * @param token
+     * @param decimalSep character to be used as the decimal separator. (don't change anything and assume '.' if 0)
+     * @param dataBlock the DataBlock to contain the read data
+     * @param offset index to write to in the datablock
+     * @throws CDMException
+     * @throws NumberFormatException
+     */
+    protected void parseToken(AbstractSimpleComponentImpl scalarInfo, String token, char decimalSep, DataBlock data, int offset) throws IOException
+    {
+        // get component data type
         DataType dataType = data.getDataType();
         //System.out.println(scalarInfo.getName() + ": " + token);
         
-        // replace decimal separator by a '.'
+        // always replace decimal separator by '.'
         if (decimalSep != 0)
             token.replace(decimalSep, '.');
                
@@ -267,52 +283,52 @@ public class AsciiDataParser extends AbstractDataParser
                         if ((intValue != 0) && (intValue != 1))
                             throw new ParseException("", 0);
                         
-                        data.setBooleanValue(intValue != 0);
+                        data.setBooleanValue(offset, intValue != 0);
                     }
                     catch (NumberFormatException e)
                     {
                         boolean boolValue = Boolean.parseBoolean(token);
-                        data.setBooleanValue(boolValue);
+                        data.setBooleanValue(offset, boolValue);
                     } 
                     break;
                     
                 case BYTE:
                     byte byteValue = Byte.parseByte(token);
-                    data.setByteValue(byteValue);
+                    data.setByteValue(offset, byteValue);
                     break;
                     
                 case SHORT:
                 case UBYTE:
                     short shortValue = Short.parseShort(token);
-                    data.setShortValue(shortValue);
+                    data.setShortValue(offset, shortValue);
                     break;
                     
                 case INT:
                 case USHORT:
                     int intValue = Integer.parseInt(token);
-                    data.setIntValue(intValue);
+                    data.setIntValue(offset, intValue);
                     break;
                     
                 case LONG:
                 case UINT:
                 case ULONG:
                     long longValue = Long.parseLong(token);
-                    data.setLongValue(longValue);
+                    data.setLongValue(offset, longValue);
                     break;
                     
                 case FLOAT:
                     float floatValue = Float.parseFloat(token);
-                    data.setFloatValue(floatValue);
+                    data.setFloatValue(offset, floatValue);
                     break;
                     
                 case DOUBLE:
                     double doubleValue = parseDoubleOrInfOrIsoTime(token);
-                    data.setDoubleValue(doubleValue);                     
+                    data.setDoubleValue(offset, doubleValue);                     
                     break;
                     
                 case UTF_STRING:
                 case ASCII_STRING:
-                    data.setStringValue(token);
+                    data.setStringValue(offset, token);
                     break;
                     
                 default:
@@ -326,8 +342,6 @@ public class AsciiDataParser extends AbstractDataParser
             else
             	throw new ReaderException(STREAM_ERROR, e);
         }
-        
-        return data;
     }
 
 

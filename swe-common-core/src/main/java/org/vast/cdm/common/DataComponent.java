@@ -22,6 +22,7 @@ package org.vast.cdm.common;
 
 import java.util.List;
 import net.opengis.HasCopy;
+import net.opengis.swe.v20.AbstractDataComponent;
 
 
 /**
@@ -37,7 +38,7 @@ import net.opengis.HasCopy;
  * @since Nov 30, 2005
  * @version 1.0
  */
-public interface DataComponent extends HasCopy, Cloneable
+public interface DataComponent extends AbstractDataComponent, HasCopy, Cloneable
 {
     
     /**

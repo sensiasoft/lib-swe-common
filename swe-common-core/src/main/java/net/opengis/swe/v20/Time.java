@@ -9,7 +9,7 @@ import net.opengis.IDateTime;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface Time extends AbstractSimpleComponent, HasUom, HasConstraints<AllowedTimes>
+public interface Time extends AbstractSimpleComponent, HasRefFrames, HasUom, HasConstraints<AllowedTimes>
 {
     public static final String ISO_TIME_UNIT = "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian";
     
@@ -48,22 +48,4 @@ public interface Time extends AbstractSimpleComponent, HasUom, HasConstraints<Al
      * Sets the referenceTime property
      */
     public void setReferenceTime(IDateTime referenceTime);
-    
-    
-    /**
-     * Gets the localFrame property
-     */
-    public String getLocalFrame();
-    
-    
-    /**
-     * Checks if localFrame is set
-     */
-    public boolean isSetLocalFrame();
-    
-    
-    /**
-     * Sets the localFrame property
-     */
-    public void setLocalFrame(String localFrame);
 }

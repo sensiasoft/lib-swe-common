@@ -23,7 +23,7 @@ import net.opengis.swe.v20.UnitReference;
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
  * @since Aug 30, 2014
  */
-public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRange, HasUom
+public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRange
 {
     static final long serialVersionUID = 1L;
     protected UnitReferenceImpl uom;
@@ -260,14 +260,14 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
             double max = dataBlock.getDoubleValue(1);
             if (Time.ISO_TIME_UNIT.equals(uom.getHref()))
             {
-                text.append(DateTimeFormat.formatIso(min, 0)).append(" ");
+                text.append(DateTimeFormat.formatIso(min, 0)).append(' ');
                 text.append(DateTimeFormat.formatIso(max, 0));
             }
             else
             {
-                text.append(min).append(" ").append(max);
+                text.append(min).append(' ').append(max);
             }
-            text.append("]");            
+            text.append(']');
         }
         return text.toString();
     }

@@ -18,7 +18,7 @@ import net.opengis.swe.v20.Category;
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
  * @since Aug 30, 2014
  */
-public class CategoryImpl extends DataValue implements Category, HasCodeSpace
+public class CategoryImpl extends DataValue implements Category
 {
     static final long serialVersionUID = 1L;
     protected String codeSpace;

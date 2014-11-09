@@ -20,6 +20,8 @@
 
 package org.vast.data;
 
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.swe.v20.AbstractDataComponent;
 import net.opengis.swe.v20.DataRecord;
@@ -65,9 +67,7 @@ public class DataRecordImpl extends AbstractRecordImpl<AbstractDataComponent> im
     @Override
     public void addComponent(String name, DataComponent component)
     {
-        ((AbstractDataComponentImpl)component).parent = this;
-        ((AbstractDataComponentImpl)component).name = name;
-        fieldList.add(name, (AbstractDataComponentImpl)component);        
+        addField(name, component);
     }
     
     
@@ -130,6 +130,21 @@ public class DataRecordImpl extends AbstractRecordImpl<AbstractDataComponent> im
     @Override
     public void addField(String name, AbstractDataComponent field)
     {
-        addComponent(name, (AbstractDataComponentImpl)field);
+        addField(new OgcPropertyImpl<AbstractDataComponent>(name, (AbstractDataComponentImpl)field));
+    }
+    
+    
+    /**
+     * Adds a new field property
+     */
+    private void addField(OgcProperty<AbstractDataComponent> prop)
+    {
+        fieldList.add(prop);
+        
+        if (prop.hasValue())
+        {
+            ((AbstractDataComponentImpl)prop.getValue()).parent = this;
+            ((AbstractDataComponentImpl)prop.getValue()).name = name;            
+        }
     }
 }

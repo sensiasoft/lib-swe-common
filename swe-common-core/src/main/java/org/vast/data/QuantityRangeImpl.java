@@ -19,7 +19,7 @@ import net.opengis.swe.v20.UnitReference;
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
  * @since Aug 30, 2014
  */
-public class QuantityRangeImpl extends AbstractRangeComponentImpl implements QuantityRange, HasUom
+public class QuantityRangeImpl extends AbstractRangeComponentImpl implements QuantityRange
 {
     static final long serialVersionUID = 1L;
     protected UnitReferenceImpl uom;
@@ -195,9 +195,9 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
         {
             text.append(" = [");
             text.append(dataBlock.getStringValue(0));
-            text.append(" ");
+            text.append(' ');
             text.append(dataBlock.getStringValue(1));
-            text.append("]");
+            text.append(']');
         }
         return text.toString();
     }

@@ -23,15 +23,14 @@ package org.vast.sweCommon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.vast.cdm.common.CDMException;
+import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.XMLEncoding;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataEncoding;
 import org.vast.cdm.common.DataSink;
 import org.vast.cdm.common.DataSource;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
-import org.vast.cdm.common.XmlEncoding;
 import org.vast.data.DataList;
 
 
@@ -50,45 +49,10 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
 {
     private static final long serialVersionUID = 3128971142750657973L;
     protected DataSource dataSource;
-
+    
 
     public SWEData()
     {
-    }
-    
-    
-    @Override
-    public int getElementCount()
-    {
-        return getComponentCount();
-    }
-    
-    
-    @Override
-    public DataComponent getElementType()
-    {
-        return getListComponent();
-    }
-
-
-    @Override
-    public void setElementType(DataComponent elementType)
-    {
-        addComponent(elementType);
-    }
-
-
-    @Override
-    public DataEncoding getEncoding()
-    {
-        return (DataEncoding)getProperty(SweConstants.ENCODING_TYPE);
-    }
-
-
-    @Override
-    public void setEncoding(DataEncoding dataEncoding)
-    {
-        setProperty(SweConstants.ENCODING_TYPE, dataEncoding);
     }
     
     
@@ -128,12 +92,12 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
     /**
      * Retrieves parser created for this SWE structure/encoding pair
      * Allows the use of the parser on a separate input streams w/ same structure
-     * @return
+     * @return parser instance
      */
     public DataStreamParser getDataParser()
     {
         DataStreamParser parser = SWEFactory.createDataParser(getEncoding());
-        parser.setDataComponents(getElementType());
+        parser.setDataComponents((DataComponent)getElementType());
         return parser;
     }
     
@@ -141,12 +105,12 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
     /**
      * Retrieves writer created for this structure/encoding pair
      * Allows the use of the writer on separate output streams
-     * @return
+     * @return writer instance
      */
     public DataStreamWriter getDataWriter()
     {
         DataStreamWriter writer = SWEFactory.createDataWriter(getEncoding());
-        writer.setDataComponents(getElementType());
+        writer.setDataComponents((DataComponent)getElementType());
         return writer;
     }
     
@@ -154,7 +118,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
     /**
      * Parses data from the internally stored data source stream
      * and stores data blocks in a DataList 
-     * @throws CDMException
+     * @throws IOException
      */
     public void parseData() throws IOException
     {
@@ -167,19 +131,19 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
      * Parses data from the given data source stream and stores
      * data blocks in the DataList
      * @param dataSource
-     * @throws CDMException
+     * @throws IOException
      */
     public void parseData(DataSource dataSource) throws IOException
     {
-    	DataEncoding encoding = getEncoding();
+        AbstractEncoding encoding = getEncoding();
     	
         // special case for reading XML encoded stream from a DOM
-        if (dataSource instanceof DataSourceDOM && encoding instanceof XmlEncoding)
+        if (dataSource instanceof DataSourceDOM && encoding instanceof XMLEncoding)
         {
         	DataSourceDOM domSrc = (DataSourceDOM)dataSource;
         	XmlDataParserDOM parser = new XmlDataParserDOM();
         	parser.setDataEncoding(encoding);
-        	parser.setDataComponents(getElementType());
+        	parser.setDataComponents((DataComponent)getElementType());
         	parser.setDataHandler(new DefaultParserHandler(this));
         	parser.read(domSrc.getDom(), domSrc.getParentElt());
         }
@@ -195,20 +159,20 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
     
     /**
      * Writes data blocks to the data stream specified
-     * @param buffer
-     * @throws CDMException
+     * @param dataSink
+     * @throws IOException
      */
     public void writeData(DataSink dataSink) throws IOException
     {
-        DataEncoding encoding = getEncoding();
+        AbstractEncoding encoding = getEncoding();
         
         // special case for writing XML encoded stream in a DOM
-        if (dataSink instanceof DataSinkDOM && encoding instanceof XmlEncoding)
+        if (dataSink instanceof DataSinkDOM && encoding instanceof XMLEncoding)
         {
         	DataSinkDOM domSink = (DataSinkDOM)dataSink;
         	XmlDataWriterDOM writer = new XmlDataWriterDOM();
         	writer.setDataEncoding(encoding);
-        	writer.setDataComponents(getElementType());
+        	writer.setDataComponents((DataComponent)getElementType());
         	writer.setDataHandler(new DefaultWriterHandler(this, writer));
         	writer.write(domSink.getDom(), domSink.getParentElt());
         }
@@ -228,5 +192,19 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
     public SWEData clone()
     {
         return (SWEData)super.clone();
-    }    
+    }
+
+
+    @Override
+    public void setElementType(DataComponent elementType)
+    {
+        this.setElementType(elementType.getName(), elementType);        
+    }
+
+
+    @Override
+    public int getNumElements() throws IOException
+    {
+        return getComponentCount();
+    } 
 }

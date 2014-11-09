@@ -22,16 +22,18 @@
 
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.AsciiEncoding;
-import org.vast.cdm.common.BinaryBlock;
-import org.vast.cdm.common.BinaryComponent;
-import org.vast.cdm.common.BinaryEncodingOld;
-import org.vast.cdm.common.DataEncoding;
-import org.vast.cdm.common.DataEncodingWriter;
-import org.vast.cdm.common.StandardFormatEncoding;
-import org.vast.cdm.common.XmlEncoding;
+import java.nio.ByteOrder;
+import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.BinaryBlock;
+import net.opengis.swe.v20.BinaryComponent;
+import net.opengis.swe.v20.BinaryEncoding;
+import net.opengis.swe.v20.BinaryMember;
+import net.opengis.swe.v20.ByteEncoding;
+import net.opengis.swe.v20.TextEncoding;
+import net.opengis.swe.v20.XMLEncoding;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.IXMLWriterDOM;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
 
@@ -47,7 +49,7 @@ import org.w3c.dom.Element;
  * @since Feb 10, 2006
  * @version 1.0
  */
-public class SweEncodingWriterV20 implements DataEncodingWriter
+public class SweEncodingWriterV20 implements IXMLWriterDOM<AbstractEncoding>
 {
     
     public SweEncodingWriterV20()
@@ -61,19 +63,17 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
     }
     
     
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws XMLWriterException
+    public Element write(DOMHelper dom, AbstractEncoding dataEncoding) throws XMLWriterException
     {
         Element dataEncElt = null;
         enforceNS(dom);
         
-        if (dataEncoding instanceof AsciiEncoding)
-            dataEncElt = writeTextEncodingOptions(dom, (AsciiEncoding)dataEncoding);
-        else if (dataEncoding instanceof BinaryEncodingOld)
-            dataEncElt = writeBinaryEncoding(dom, (BinaryEncodingOld)dataEncoding);
-        else if (dataEncoding instanceof XmlEncoding)
-            dataEncElt = writeXmlEncodingOptions(dom, (XmlEncoding)dataEncoding);
-        else if (dataEncoding instanceof StandardFormatEncoding)
-            dataEncElt = writeStandardFormat(dom, (StandardFormatEncoding)dataEncoding);
+        if (dataEncoding instanceof TextEncoding)
+            dataEncElt = writeTextEncodingOptions(dom, (TextEncoding)dataEncoding);
+        else if (dataEncoding instanceof BinaryEncoding)
+            dataEncElt = writeBinaryEncoding(dom, (BinaryEncoding)dataEncoding);
+        else if (dataEncoding instanceof XMLEncoding)
+            dataEncElt = writeXmlEncodingOptions(dom, (XMLEncoding)dataEncoding);
         else
             throw new XMLWriterException("Encoding not supported: " + dataEncoding.getClass().getCanonicalName());
         
@@ -81,64 +81,56 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
     }
     
     
-    private Element writeTextEncodingOptions(DOMHelper dom, AsciiEncoding asciiEncoding) throws XMLWriterException
+    private Element writeTextEncodingOptions(DOMHelper dom, TextEncoding asciiEncoding) throws XMLWriterException
     {
         Element dataEncElt = dom.createElement("swe:TextEncoding");
     	
-        dataEncElt.setAttribute("tokenSeparator", String.valueOf(asciiEncoding.tokenSeparator));
-        dataEncElt.setAttribute("blockSeparator", String.valueOf(asciiEncoding.blockSeparator));
-        dataEncElt.setAttribute("decimalSeparator", String.valueOf(asciiEncoding.decimalSeparator));
-        dataEncElt.setAttribute("collapseWhiteSpaces", asciiEncoding.collapseWhiteSpaces ? "true" : "false");
+        dataEncElt.setAttribute("tokenSeparator", asciiEncoding.getTokenSeparator());
+        dataEncElt.setAttribute("blockSeparator", asciiEncoding.getBlockSeparator());
+        dataEncElt.setAttribute("decimalSeparator", asciiEncoding.getDecimalSeparator());
+        dataEncElt.setAttribute("collapseWhiteSpaces", asciiEncoding.getCollapseWhiteSpaces() ? "true" : "false");
     	
     	return dataEncElt;
     }
     
     
-    private Element writeXmlEncodingOptions(DOMHelper dom, XmlEncoding xmlEncoding) throws XMLWriterException
+    private Element writeXmlEncodingOptions(DOMHelper dom, XMLEncoding xmlEncoding) throws XMLWriterException
     {
         Element dataEncElt = dom.createElement("swe:XMLEncoding");       
     	return dataEncElt;
     }
     
     
-    private Element writeStandardFormat(DOMHelper dom, StandardFormatEncoding formatEncoding) throws XMLWriterException
-    {
-        Element dataEncElt = dom.createElement("swe:StandardFormat");
-        dataEncElt.setAttribute("mimeType", formatEncoding.getMimeType());        
-    	return dataEncElt;
-    }
-    
-    
-    private Element writeBinaryEncoding(DOMHelper dom, BinaryEncodingOld binaryEncoding) throws XMLWriterException
+    private Element writeBinaryEncoding(DOMHelper dom, BinaryEncoding binaryEncoding) throws XMLWriterException
     {
     	Element binaryEncElt = dom.createElement("swe:BinaryEncoding");
         
         // write byteEncoding attribute
-        if (binaryEncoding.byteEncoding == BinaryEncodingOld.ByteEncoding.BASE64)
+        if (binaryEncoding.getByteEncoding() == ByteEncoding.BASE_64)
             binaryEncElt.setAttribute("byteEncoding", "base64");
-        else if (binaryEncoding.byteEncoding == BinaryEncodingOld.ByteEncoding.RAW)
+        else if (binaryEncoding.getByteEncoding() == ByteEncoding.RAW)
             binaryEncElt.setAttribute("byteEncoding", "raw");
             	    	
     	// write byteOrder attribute
-        if (binaryEncoding.byteOrder == BinaryEncodingOld.ByteOrder.BIG_ENDIAN)
+        if (binaryEncoding.getByteOrder() == ByteOrder.BIG_ENDIAN)
             binaryEncElt.setAttribute("byteOrder", "bigEndian");
-        else if (binaryEncoding.byteOrder == BinaryEncodingOld.ByteOrder.LITTLE_ENDIAN)
+        else if (binaryEncoding.getByteOrder() == ByteOrder.LITTLE_ENDIAN)
             binaryEncElt.setAttribute("byteOrder", "littleEndian");
         
         // write components encoding
-        for (int i=0; i<binaryEncoding.componentEncodings.length; i++)
+        for (BinaryMember member: binaryEncoding.getMemberList())
         {
             Element propElt = dom.addElement(binaryEncElt, "+swe:member");
             
-            if(binaryEncoding.componentEncodings[i] instanceof BinaryComponent)
+            if (member instanceof BinaryComponent)
             {
-	            Element componentElt = writeBinaryComponent(dom, (BinaryComponent)binaryEncoding.componentEncodings[i]);
+	            Element componentElt = writeBinaryComponent(dom, (BinaryComponent)member);
 	            propElt.appendChild(componentElt);
             }
             
-            if(binaryEncoding.componentEncodings[i] instanceof BinaryBlock)
+            if (member instanceof BinaryBlock)
             {
-	            Element componentElt = writeBinaryBlock(dom, (BinaryBlock)binaryEncoding.componentEncodings[i]);
+	            Element componentElt = writeBinaryBlock(dom, (BinaryBlock)member);
 	            propElt.appendChild(componentElt);
             }
         }
@@ -152,85 +144,18 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
         Element binaryEncElt = dom.createElement("swe:Component");
         
         // write component ref
-        binaryEncElt.setAttribute("ref", binaryOptions.componentName);
+        binaryEncElt.setAttribute("ref", binaryOptions.getRef());
                 
         // write dataType attribute
-        String dataTypeUri = "";
-        switch (binaryOptions.type)
-        {
-            case BOOLEAN: 
-                dataTypeUri = BinaryComponent.booleanURI;
-                break;
-            
-            case DOUBLE: 
-                dataTypeUri = BinaryComponent.doubleURI;
-                break;
-            
-            case FLOAT: 
-                dataTypeUri = BinaryComponent.floatURI;
-                break;
-                
-            case BYTE: 
-                dataTypeUri = BinaryComponent.byteURI;
-                break;
-                
-            case UBYTE: 
-                dataTypeUri = BinaryComponent.ubyteURI;
-                break;
-                
-            case SHORT: 
-                dataTypeUri = BinaryComponent.shortURI;
-                break;
-                
-            case USHORT: 
-                dataTypeUri = BinaryComponent.ushortURI;
-                break;
-                
-            case INT: 
-                dataTypeUri = BinaryComponent.intURI;
-                break;
-                
-            case UINT: 
-                dataTypeUri = BinaryComponent.uintURI;
-                break;
-                
-            case LONG: 
-                dataTypeUri = BinaryComponent.longURI;
-                break;
-                
-            case ULONG: 
-                dataTypeUri = BinaryComponent.ulongURI;
-                break;
-                
-            case ASCII_STRING: 
-                dataTypeUri = BinaryComponent.asciiURI;
-                break;
-                
-            case UTF_STRING: 
-                dataTypeUri = BinaryComponent.utfURI;
-                break;
-                
-            default:
-                throw new XMLWriterException("Unsupported datatype " + binaryOptions.type + " for component " + binaryOptions.componentName);
-        }
+        binaryEncElt.setAttribute("dataType", binaryOptions.getDataType());
         
-        binaryEncElt.setAttribute("dataType", dataTypeUri);
-        
-        // write block byteLength if any
-        if(binaryOptions.byteLength != 0)
-    		binaryEncElt.setAttribute("byteLength", Integer.toString(binaryOptions.byteLength));
-    	
-        // write block paddingBefore if any
-        if(binaryOptions.paddingBefore != 0)
-    		binaryEncElt.setAttribute("paddingBefore", Integer.toString(binaryOptions.paddingBefore));
-    	
-        // write block paddingAfter if any
-        if(binaryOptions.paddingAfter != 0)
-        	binaryEncElt.setAttribute("paddingAfter", Integer.toString(binaryOptions.paddingAfter));
-        
-        // write block paddingAfter if any
-        if(binaryOptions.bitLength != 0)
-        	binaryEncElt.setAttribute("bitLength", Integer.toString(binaryOptions.bitLength));
+        // write byteLength if any
+        if (binaryOptions.isSetByteLength())
+    		binaryEncElt.setAttribute("byteLength", Integer.toString(binaryOptions.getByteLength()));
+    	        
+        // write bitLength if any
+        if (binaryOptions.isSetBitLength())
+        	binaryEncElt.setAttribute("bitLength", Integer.toString(binaryOptions.getBitLength()));
         
         return binaryEncElt;
     }
@@ -241,27 +166,27 @@ public class SweEncodingWriterV20 implements DataEncodingWriter
         Element binaryEncElt = dom.createElement("swe:Block");
         
         // write block ref
-        binaryEncElt.setAttribute("ref", binaryOptions.componentName);
+        binaryEncElt.setAttribute("ref", binaryOptions.getRef());
         
         // write block compression if any
-        if(binaryOptions.compression != null)
-        	binaryEncElt.setAttribute("compression", binaryOptions.compression);
+        if(binaryOptions.isSetEncryption())
+        	binaryEncElt.setAttribute("compression", binaryOptions.getCompression());
                 
         // write block byteLength if any
-        if(binaryOptions.byteLength != 0)
-    		binaryEncElt.setAttribute("byteLength", Integer.toString(binaryOptions.byteLength));
+        if(binaryOptions.isSetByteLength())
+    		binaryEncElt.setAttribute("byteLength", Long.toString(binaryOptions.getByteLength()));
     	        
         // write block paddingBefore if any
-        if(binaryOptions.paddingBefore != 0)
-    		binaryEncElt.setAttribute("paddingBefore", Integer.toString(binaryOptions.paddingBefore));
+        if(binaryOptions.isSetPaddingBytesBefore())
+    		binaryEncElt.setAttribute("paddingBytesBefore", Integer.toString(binaryOptions.getPaddingBytesBefore()));
     	        
         // write block paddingAfter if any
-        if(binaryOptions.paddingAfter != 0)
-        	binaryEncElt.setAttribute("paddingAfter", Integer.toString(binaryOptions.paddingAfter));
+        if(binaryOptions.isSetPaddingBytesAfter())
+        	binaryEncElt.setAttribute("paddingBytesAfter", Integer.toString(binaryOptions.getPaddingBytesAfter()));
         
         // write block encryption if any
-        if(binaryOptions.encryption != null)
-        	binaryEncElt.setAttribute("encryption", binaryOptions.encryption);
+        if(binaryOptions.isSetEncryption())
+        	binaryEncElt.setAttribute("encryption", binaryOptions.getEncryption());
                
         return binaryEncElt;
     }

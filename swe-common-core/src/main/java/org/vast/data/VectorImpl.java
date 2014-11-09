@@ -1,6 +1,8 @@
 package org.vast.data;
 
 import org.vast.cdm.common.DataComponent;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.swe.v20.AbstractSimpleComponent;
 import net.opengis.swe.v20.Count;
@@ -48,9 +50,7 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
     @Override
     public void addComponent(String name, DataComponent component)
     {
-        ((AbstractDataComponentImpl)component).parent = this;
-        ((AbstractDataComponentImpl)component).name = name;
-        fieldList.add(name, (DataValue)component);        
+        addCoordinate(new OgcPropertyImpl<AbstractSimpleComponent>(name, (AbstractSimpleComponent)component));       
     }
     
     
@@ -115,7 +115,7 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
     @Override
     public void addCoordinateAsCount(String name, Count coordinate)
     {
-        this.fieldList.add(name, coordinate);
+        addCoordinate(new OgcPropertyImpl<AbstractSimpleComponent>(name, coordinate));
     }
     
     
@@ -125,7 +125,7 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
     @Override
     public void addCoordinateAsQuantity(String name, Quantity coordinate)
     {
-        this.fieldList.add(name, coordinate);
+        addCoordinate(new OgcPropertyImpl<AbstractSimpleComponent>(name, coordinate));
     }
     
     
@@ -135,7 +135,22 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
     @Override
     public void addCoordinateAsTime(String name, Time coordinate)
     {
-        this.fieldList.add(name, coordinate);
+        addCoordinate(new OgcPropertyImpl<AbstractSimpleComponent>(name, coordinate));
+    }
+    
+    
+    /**
+     * Adds a new field property
+     */
+    private void addCoordinate(OgcProperty<AbstractSimpleComponent> prop)
+    {
+        fieldList.add(prop);
+        
+        if (prop.hasValue())
+        {
+            ((AbstractDataComponentImpl)prop.getValue()).parent = this;
+            ((AbstractDataComponentImpl)prop.getValue()).name = name;            
+        }
     }
     
     
@@ -146,6 +161,16 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
     public String getReferenceFrame()
     {
         return referenceFrame;
+    }
+    
+    
+    /**
+     * Checks if referenceFrame is set
+     */
+    @Override
+    public boolean isSetReferenceFrame()
+    {
+        return (referenceFrame != null);
     }
     
     

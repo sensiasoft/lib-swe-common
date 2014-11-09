@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.BlockComponent;
 
 
 /**
