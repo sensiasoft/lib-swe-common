@@ -21,7 +21,6 @@
 package org.vast.data;
 
 import java.util.*;
-import net.opengis.OgcPropertyList;
 import net.opengis.swe.v20.AbstractDataComponent;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
@@ -42,18 +41,18 @@ import org.vast.cdm.common.DataType;
 public abstract class AbstractRecordImpl<ComponentType extends AbstractDataComponent> extends AbstractDataComponentImpl
 {
     private static final long serialVersionUID = 5402778409089789225L;
-    protected OgcPropertyList<ComponentType> fieldList;
+    protected DataComponentPropertyList<ComponentType> fieldList;
 
-    
+        
     public AbstractRecordImpl()
     {
-        fieldList = new OgcPropertyList<ComponentType>();
+        fieldList = new DataComponentPropertyList<ComponentType>(this);
     }
     
     
     public AbstractRecordImpl(int size)
     {
-        this.fieldList = new OgcPropertyList<ComponentType>(size);
+        this.fieldList = new DataComponentPropertyList<ComponentType>(this, size);
     }
     
     

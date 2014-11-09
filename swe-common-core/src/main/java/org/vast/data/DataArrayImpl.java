@@ -21,14 +21,9 @@
 package org.vast.data;
 
 import java.util.List;
-import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AbstractDataComponent;
-import net.opengis.swe.v20.AbstractEncoding;
-import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.Count;
-import net.opengis.swe.v20.DataArray;
-import net.opengis.swe.v20.EncodedValues;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
@@ -53,22 +48,29 @@ import org.vast.cdm.common.DataComponent;
  * @author Alexandre Robin
  * @version 1.0
  */
-public class DataArrayImpl extends AbstractDataComponentImpl implements DataArray, BlockComponent
+public class DataArrayImpl extends AbstractArrayImpl
 {
     private static final long serialVersionUID = -585236845658753642L;
     protected final static String errorBlockMixed = "Error: DataArrays should never contain a DataBlockMixed";
     public final static String ARRAY_SIZE_FIELD = "ArraySize";
     
     protected int currentSize;
-    protected CountImpl implicitElementCount;    
-    protected OgcPropertyImpl<Count> elementCount = new OgcPropertyImpl<Count>();
-    protected OgcPropertyImpl<AbstractDataComponent> elementType = new OgcPropertyImpl<AbstractDataComponent>();
-    protected AbstractEncodingImpl encoding;
-    protected EncodedValues values = new EncodedValuesImpl();
+    protected CountImpl implicitElementCount;
     
     
     public DataArrayImpl()
     {
+        // special property object to correctly set parent
+        elementType = new OgcPropertyImpl<AbstractDataComponent>() 
+        {
+            @Override
+            public void setValue(AbstractDataComponent value)
+            {
+                super.setValue(value);
+                ((AbstractDataComponentImpl)value).setName(this.name);
+                ((AbstractDataComponentImpl)value).setParent(DataArrayImpl.this);
+            }
+        };
     }  
     
     
@@ -90,20 +92,10 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
     
     protected void copyTo(DataArrayImpl other)
     {
-        super.copyTo(other);
-        
+        super.copyTo(other);        
         other.currentSize = this.currentSize;
-        
-        other.elementCount = this.elementCount.copy();
         if (!isVariableSize())
-            other.elementCount.getValue().setValue(getComponentCount());     
-        
-        other.elementType = this.elementType.copy();
-        
-        if (this.encoding != null)
-            other.encoding = this.encoding.copy();
-        else
-            other.encoding = null;
+            other.elementCount.getValue().setValue(getComponentCount());
     }
     
     
@@ -155,15 +147,6 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
         
         if (parent != null)
             parent.updateAtomCount(atomCountDiff);
-    }
-    
-    
-    @Override
-    public void addComponent(String name, DataComponent component)
-    {
-        ((AbstractDataComponentImpl)component).parent = this;
-        ((AbstractDataComponentImpl)component).name = name;
-        elementType.setValue((AbstractDataComponentImpl)component);
     }
 
 
@@ -558,14 +541,7 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
     }
     
     
-    @Override
-	public boolean hasConstraints()
-	{
-		return ((DataValue)elementType.getValue()).hasConstraints();
-	}
-	
-	
-	protected final CountImpl getArraySizeComponent()
+    protected final CountImpl getArraySizeComponent()
     {
 	    // case of implicit size
         if (isImplicitSize())
@@ -614,120 +590,4 @@ public class DataArrayImpl extends AbstractDataComponentImpl implements DataArra
 	/* ************************************ */
     /*  Auto-generated Getters and Setters  */    
     /* ************************************ */
-	
-	/**
-     * Gets the elementCount property
-     */
-    @Override
-    public Count getElementCount()
-    {
-        return elementCount.getValue();
-    }
-    
-    
-    /**
-     * Gets extra info (name, xlink, etc.) carried by the elementCount property
-     */
-    @Override
-    public OgcProperty<Count> getElementCountProperty()
-    {
-        return elementCount;
-    }
-    
-    
-    /**
-     * Sets the elementCount property
-     */
-    @Override
-    public void setElementCount(Count elementCount)
-    {
-        this.elementCount.setValue(elementCount);
-    }
-    
-    
-    /**
-     * Gets the elementType property
-     */
-    @Override
-    public AbstractDataComponent getElementType()
-    {
-        return elementType.getValue();
-    }
-    
-    
-    @Override
-    public OgcProperty<AbstractDataComponent> getElementTypeProperty()
-    {
-        return elementType;
-    }
-    
-    
-    /**
-     * Sets the elementType property
-     */
-    @Override
-    public void setElementType(String name, AbstractDataComponent elementType)
-    {
-        addComponent(name, (AbstractDataComponentImpl)elementType);
-    }
-    
-    
-    /**
-     * Gets the encoding property
-     */
-    @Override
-    public AbstractEncoding getEncoding()
-    {
-        return encoding;
-    }
-    
-    
-    /**
-     * Checks if encoding is set
-     */
-    @Override
-    public boolean isSetEncoding()
-    {
-        return (encoding != null);
-    }
-    
-    
-    /**
-     * Sets the encoding property
-     */
-    @Override
-    public void setEncoding(AbstractEncoding encoding)
-    {
-        this.encoding = (AbstractEncodingImpl)encoding;
-    }
-    
-    
-    /**
-     * Gets the values property
-     */
-    @Override
-    public EncodedValues getValues()
-    {
-        return values;
-    }
-    
-    
-    /**
-     * Checks if values is set
-     */
-    @Override
-    public boolean isSetValues()
-    {
-        return (dataBlock != null);
-    }
-    
-    
-    /**
-     * Sets the values property
-     */
-    @Override
-    public void setValues(EncodedValues values)
-    {
-        this.values = values;
-    }
 }

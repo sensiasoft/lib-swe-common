@@ -145,8 +145,8 @@ public class TextImpl extends DataValue implements Text
                 return;
             
             // add error if not valid
-            errorList.add(new CDMException(name, "Value '" + dataBlock.getStringValue() + 
-                    "' is not valid for component '" + name + "': " + getAssertionMessage()));
+            errorList.add(new CDMException(getName(), "Value '" + dataBlock.getStringValue() + 
+                    "' is not valid for component '" + getName() + "': " + getAssertionMessage()));
         }
     }
     

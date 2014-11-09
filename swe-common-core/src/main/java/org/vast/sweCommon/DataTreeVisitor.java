@@ -28,6 +28,7 @@ import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataHandler;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
+import org.vast.data.AbstractArrayImpl;
 import org.vast.data.DataArrayImpl;
 import org.vast.data.DataChoiceImpl;
 import org.vast.data.DataValue;
@@ -139,7 +140,7 @@ public abstract class DataTreeVisitor
 	        			// write array size
 	        			else
 	        			{
-	        				sizeValue.getData().setIntValue(((DataArrayImpl)next).getComponentCount());
+	        				sizeValue.getData().setIntValue(((AbstractArrayImpl)next).getComponentCount());
 	        				processAtom(sizeValue);
 	        			}
 	    			}        		

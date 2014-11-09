@@ -22,15 +22,11 @@ package org.vast.data;
 
 import java.util.List;
 import java.util.ListIterator;
-import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AbstractDataComponent;
-import net.opengis.swe.v20.AbstractEncoding;
 import net.opengis.swe.v20.BlockComponent;
-import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataStream;
-import net.opengis.swe.v20.EncodedValues;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
 import org.vast.cdm.common.DataComponent;
@@ -49,20 +45,29 @@ import org.vast.cdm.common.DataComponent;
  * @author Alexandre Robin
  * @version 1.0
  */
-public class DataList extends AbstractDataComponentImpl implements DataArray, DataStream, BlockComponent
+public class DataList extends AbstractArrayImpl implements DataArray, DataStream, BlockComponent
 {
     private static final long serialVersionUID = 3525149069812989611L;
     protected ListIterator<DataBlock> blockIterator;
     protected AbstractDataComponentImpl tempComponent = null;
-    protected OgcPropertyImpl<Count> elementCount = new OgcPropertyImpl<Count>();
-    protected OgcPropertyImpl<AbstractDataComponent> elementType = new OgcPropertyImpl<AbstractDataComponent>();
-    protected AbstractEncodingImpl encoding;
-    protected EncodedValues values = new EncodedValuesImpl();
     
 
     public DataList()
     {
         this.dataBlock = new DataBlockList();
+        
+        // special property object to correctly set parent
+        elementType = new OgcPropertyImpl<AbstractDataComponent>()
+        {
+            @Override
+            public void setValue(AbstractDataComponent value)
+            {
+                super.setValue(value);
+                ((AbstractDataComponentImpl)value).setName(this.name);
+                ((AbstractDataComponentImpl)value).setParent(DataList.this);
+                tempComponent = ((AbstractDataComponentImpl)value).copy();
+            }    
+        };
     }
     
     
@@ -82,20 +87,6 @@ public class DataList extends AbstractDataComponentImpl implements DataArray, Da
     }
     
     
-    protected void copyTo(DataList other)
-    {
-        super.copyTo(other);
-        
-        other.elementCount = this.elementCount.copy();        
-        other.elementType = this.elementType.copy();
-        
-        if (this.encoding != null)
-            other.encoding = this.encoding.copy();
-        else
-            other.encoding = null;
-    }
-    
-    
     @Override
     protected void updateStartIndex(int startIndex)
     {        
@@ -109,32 +100,10 @@ public class DataList extends AbstractDataComponentImpl implements DataArray, Da
     
     
     @Override
-    public void addComponent(String name, DataComponent component)
-    {
-        if (!elementType.hasValue())
-        {
-            ((AbstractDataComponentImpl)component).parent = this;
-            ((AbstractDataComponentImpl)component).name = name;
-            elementType.setValue((AbstractDataComponentImpl)component);
-            createTempComponent();
-        }
-    }
-    
-    
-    private void createTempComponent()
-    {
-        tempComponent = ((AbstractDataComponentImpl)elementType.getValue()).copy();
-    }
-    
-    
-    @Override
     public AbstractDataComponentImpl getComponent(int index)
     {
         checkIndex(index);        
-        if (tempComponent == null)
-            createTempComponent();
-        
-        tempComponent.setData(((DataBlockList)dataBlock).blockList.get(index));  
+        tempComponent.setData(((DataBlockList)dataBlock).blockList.get(index));
         
         return tempComponent;
     }
@@ -163,11 +132,7 @@ public class DataList extends AbstractDataComponentImpl implements DataArray, Da
         if (blockIterator == null)
             resetIterator();
         
-        if (tempComponent == null)
-            createTempComponent();
-        
-        tempComponent.setData(blockIterator.next());
-        
+        tempComponent.setData(blockIterator.next());        
         return tempComponent;
     }
     
@@ -286,130 +251,10 @@ public class DataList extends AbstractDataComponentImpl implements DataArray, Da
     }
 
 
-    /* ************************************ */
-    /*  Auto-generated Getters and Setters  */    
-    /* ************************************ */
-    
-    /**
-     * Gets the elementCount property
-     */
-    @Override
-    public Count getElementCount()
-    {
-        return elementCount.getValue();
-    }
-    
-    
-    /**
-     * Gets extra info (name, xlink, etc.) carried by the elementCount property
-     */
-    @Override
-    public OgcProperty<Count> getElementCountProperty()
-    {
-        return elementCount;
-    }
-    
-    
     @Override
     public boolean isSetElementCount()
     {
         return (elementCount != null && (elementCount.hasValue() || elementCount.hasHref()));
     }
     
-    
-    /**
-     * Sets the elementCount property
-     */
-    @Override
-    public void setElementCount(Count elementCount)
-    {
-        this.elementCount.setValue(elementCount);
-    }
-    
-    
-    /**
-     * Gets the elementType property
-     */
-    @Override
-    public DataComponent getElementType()
-    {
-        return (DataComponent)elementType.getValue();
-    }
-    
-    
-    @Override
-    public OgcProperty<AbstractDataComponent> getElementTypeProperty()
-    {
-        return elementType;
-    }
-    
-    
-    /**
-     * Sets the elementType property
-     */
-    @Override
-    public void setElementType(String name, AbstractDataComponent elementType)
-    {
-        addComponent(name, (AbstractDataComponentImpl)elementType);
-    }
-    
-    
-    /**
-     * Gets the encoding property
-     */
-    @Override
-    public AbstractEncoding getEncoding()
-    {
-        return encoding;
-    }
-    
-    
-    /**
-     * Checks if encoding is set
-     */
-    @Override
-    public boolean isSetEncoding()
-    {
-        return (encoding != null);
-    }
-    
-    
-    /**
-     * Sets the encoding property
-     */
-    @Override
-    public void setEncoding(AbstractEncoding encoding)
-    {
-        this.encoding = (AbstractEncodingImpl)encoding;
-    }
-    
-    
-    /**
-     * Gets the values property
-     */
-    @Override
-    public EncodedValues getValues()
-    {
-        return values;
-    }
-    
-    
-    /**
-     * Checks if values is set
-     */
-    @Override
-    public boolean isSetValues()
-    {
-        return (getComponentCount() > 0);
-    }
-    
-    
-    /**
-     * Sets the values property
-     */
-    @Override
-    public void setValues(EncodedValues values)
-    {
-        this.values = values;
-    }
 }

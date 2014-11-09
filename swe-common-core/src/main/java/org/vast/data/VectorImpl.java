@@ -1,12 +1,11 @@
 package org.vast.data;
 
 import org.vast.cdm.common.DataComponent;
-import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
-import net.opengis.swe.v20.AbstractSimpleComponent;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.Quantity;
+import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.Vector;
 
@@ -16,7 +15,7 @@ import net.opengis.swe.v20.Vector;
  *
  * This is a complex type.
  */
-public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> implements Vector
+public class VectorImpl extends AbstractRecordImpl<ScalarComponent> implements Vector
 {
     static final long serialVersionUID = 1L;
     protected String referenceFrame = "";
@@ -50,7 +49,10 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
     @Override
     public void addComponent(String name, DataComponent component)
     {
-        addCoordinate(new OgcPropertyImpl<AbstractSimpleComponent>(name, (AbstractSimpleComponent)component));       
+        if (!(component instanceof ScalarComponent))
+            throw new IllegalArgumentException("A vector can only have scalar coordinates");
+        
+        fieldList.add(new OgcPropertyImpl<ScalarComponent>(name, (ScalarComponent)component));       
     }
     
     
@@ -83,7 +85,7 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
      * Gets the list of coordinate properties
      */
     @Override
-    public OgcPropertyList<AbstractSimpleComponent> getCoordinateList()
+    public OgcPropertyList<ScalarComponent> getCoordinateList()
     {
         return fieldList;
     }
@@ -103,9 +105,9 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
      * Gets the coordinate property with the given name
      */
     @Override
-    public AbstractSimpleComponent getCoordinate(String name)
+    public ScalarComponent getCoordinate(String name)
     {
-        return (AbstractSimpleComponent)fieldList.get(name);
+        return fieldList.get(name);
     }
     
     
@@ -115,7 +117,7 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
     @Override
     public void addCoordinateAsCount(String name, Count coordinate)
     {
-        addCoordinate(new OgcPropertyImpl<AbstractSimpleComponent>(name, coordinate));
+        fieldList.add(new OgcPropertyImpl<ScalarComponent>(name, coordinate));
     }
     
     
@@ -125,7 +127,7 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
     @Override
     public void addCoordinateAsQuantity(String name, Quantity coordinate)
     {
-        addCoordinate(new OgcPropertyImpl<AbstractSimpleComponent>(name, coordinate));
+        fieldList.add(new OgcPropertyImpl<ScalarComponent>(name, coordinate));
     }
     
     
@@ -135,22 +137,7 @@ public class VectorImpl extends AbstractRecordImpl<AbstractSimpleComponent> impl
     @Override
     public void addCoordinateAsTime(String name, Time coordinate)
     {
-        addCoordinate(new OgcPropertyImpl<AbstractSimpleComponent>(name, coordinate));
-    }
-    
-    
-    /**
-     * Adds a new field property
-     */
-    private void addCoordinate(OgcProperty<AbstractSimpleComponent> prop)
-    {
-        fieldList.add(prop);
-        
-        if (prop.hasValue())
-        {
-            ((AbstractDataComponentImpl)prop.getValue()).parent = this;
-            ((AbstractDataComponentImpl)prop.getValue()).name = name;            
-        }
+        fieldList.add(new OgcPropertyImpl<ScalarComponent>(name, coordinate));
     }
     
     

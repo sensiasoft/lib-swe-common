@@ -240,8 +240,8 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
                     maxText = dataBlock.getStringValue(1);
                 }
                 
-                errorList.add(new CDMException(name, "Value '[" + minText + " " + maxText + "]" +
-                        "' is not valid for component '" + name + "': " + constraint.getAssertionMessage()));
+                errorList.add(new CDMException(getName(), "Value '[" + minText + " " + maxText + "]" +
+                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }        
     }

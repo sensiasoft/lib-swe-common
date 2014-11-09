@@ -1,6 +1,8 @@
 package org.vast.data;
 
+import net.opengis.swe.v20.AbstractDataComponent;
 import net.opengis.swe.v20.Matrix;
+import net.opengis.swe.v20.ScalarComponent;
 
 
 /**
@@ -28,6 +30,19 @@ public class MatrixImpl extends DataArrayImpl implements Matrix
         newObj.referenceFrame = this.referenceFrame;
         newObj.localFrame = this.localFrame;
         return newObj;
+    }
+    
+    
+    /**
+     * Sets the elementType property
+     */
+    @Override
+    public void setElementType(String name, AbstractDataComponent component)
+    {
+        if (!(component instanceof ScalarComponent))
+            throw new IllegalArgumentException("A matrix can only have scalar elements");
+        
+        super.setElementType(name, component);
     }
     
     

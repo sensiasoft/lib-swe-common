@@ -148,8 +148,8 @@ public class CountImpl extends DataValue implements Count
             AllowedValuesImpl constraint = (AllowedValuesImpl)this.constraint;            
             if (!constraint.isValid(getValue()))
             {
-                errorList.add(new CDMException(name, "Value '" + dataBlock.getStringValue() +
-                        "' is not valid for component '" + name + "': " + constraint.getAssertionMessage()));
+                errorList.add(new CDMException(getName(), "Value '" + dataBlock.getStringValue() +
+                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }
     }

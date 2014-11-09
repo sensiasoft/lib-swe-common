@@ -241,8 +241,8 @@ public class TimeImpl extends DataValue implements Time
                 else
                     valText = dataBlock.getStringValue();
                 
-                errorList.add(new CDMException(name, "Value '" + valText +
-                    "' is not valid for component '" + name + "': " + constraint.getAssertionMessage()));
+                errorList.add(new CDMException(getName(), "Value '" + valText +
+                    "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }
     }

@@ -21,7 +21,6 @@
 package org.vast.data;
 
 import java.util.*;
-import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.swe.v20.AbstractDataComponent;
@@ -49,18 +48,18 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 	protected static String UNSELECTED_ERROR = "No item was selected in DataChoice ";
 	protected int selected = -1;
 	protected Category choiceValue;
-    protected OgcPropertyList<AbstractDataComponent> itemList;
+    protected DataComponentPropertyList<AbstractDataComponent> itemList;
     
 
     public DataChoiceImpl()
     {
-    	this.itemList = new OgcPropertyList<AbstractDataComponent>();
+    	this.itemList = new DataComponentPropertyList<AbstractDataComponent>(this);
     }
     
     
     public DataChoiceImpl(int size)
     {
-        this.itemList = new OgcPropertyList<AbstractDataComponent>(size);
+        this.itemList = new DataComponentPropertyList<AbstractDataComponent>(this, size);
     }
     
     
@@ -380,21 +379,6 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     @Override
     public void addItem(String name, AbstractDataComponent item)
     {
-        addItem(new OgcPropertyImpl<AbstractDataComponent>(name, (AbstractDataComponentImpl)item));
-    }
-    
-    
-    /**
-     * Adds a new field property
-     */
-    private void addItem(OgcProperty<AbstractDataComponent> prop)
-    {
-        itemList.add(prop);
-        
-        if (prop.hasValue())
-        {
-            ((AbstractDataComponentImpl)prop.getValue()).parent = this;
-            ((AbstractDataComponentImpl)prop.getValue()).name = name;            
-        }
+        itemList.add(new OgcPropertyImpl<AbstractDataComponent>(name, (AbstractDataComponentImpl)item));
     }
 }

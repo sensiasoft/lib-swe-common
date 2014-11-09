@@ -150,8 +150,8 @@ import net.opengis.swe.v20.CountRange;
             
             if (!constraint.isValid(min) || !constraint.isValid(max))
             {
-                errorList.add(new CDMException(name, "Value '[" + min + " " + max + "]" +
-                        "' is not valid for component '" + name + "': " + constraint.getAssertionMessage()));
+                errorList.add(new CDMException(getName(), "Value '[" + min + " " + max + "]" +
+                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }        
     }

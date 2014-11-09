@@ -174,8 +174,8 @@ public class CategoryImpl extends DataValue implements Category
             AllowedTokensImpl constraint = (AllowedTokensImpl)this.constraint;            
             if (!constraint.isValid(getValue()))
             {
-                errorList.add(new CDMException(name, "Value '" + dataBlock.getStringValue() + 
-                    "' is not valid for component '" + name + "': " + constraint.getAssertionMessage()));
+                errorList.add(new CDMException(getName(), "Value '" + dataBlock.getStringValue() + 
+                    "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }
     }

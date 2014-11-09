@@ -124,7 +124,6 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         if (dataElement != null)
         {
             DataComponent component = read(dom, dataElement);
-            component.setName(name);
             prop.setValue((AbstractDataComponent)component);
         }
         
@@ -154,8 +153,6 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             // add field components
             OgcProperty<AbstractDataComponent> fieldProp = new OgcPropertyImpl<AbstractDataComponent>();
             readComponentProperty(fieldProp, dom, fieldElt);
-            if (fieldProp.hasValue())
-                ((AbstractDataComponentImpl)fieldProp.getValue()).setParent(dataRecord);
             dataRecord.getFieldList().add(fieldProp);
         }
     	
@@ -193,8 +190,6 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             // add coordinate components
             OgcProperty fieldProp = new OgcPropertyImpl();
             readComponentProperty(fieldProp, dom, coordElt);
-            if (fieldProp.hasValue())
-                ((AbstractDataComponentImpl)fieldProp.getValue()).setParent(vector);
             vector.getCoordinateList().add(fieldProp);
         }
     	
@@ -232,8 +227,6 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             // add item components
             OgcProperty<AbstractDataComponent> itemProp = new OgcPropertyImpl<AbstractDataComponent>();
             readComponentProperty(itemProp, dom, itemElt);
-            if (itemProp.hasValue())
-                ((AbstractDataComponentImpl)itemProp.getValue()).setParent(dataChoice);
             dataChoice.getItemList().add(itemProp);
         }
         
@@ -252,7 +245,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
      * @throws CDMException
      * @return 
      */
-    private DataArrayImpl readDataArray(DOMHelper dom, Element arrayElt) throws XMLReaderException
+    private AbstractArrayImpl readDataArray(DOMHelper dom, Element arrayElt) throws XMLReaderException
     {
         DataArrayImpl dataArray;
         
@@ -290,8 +283,6 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         Element elementTypeElt = dom.getElement(arrayElt, "elementType");
         OgcProperty<AbstractDataComponent> eltTypeProp = dataArray.getElementTypeProperty();
         readComponentProperty(eltTypeProp, dom, elementTypeElt);
-        if (eltTypeProp.hasValue())
-            ((AbstractDataComponentImpl)eltTypeProp.getValue()).setParent(dataArray);
         
         // read common stuffs
         readBaseProperties(dataArray, dom, arrayElt);

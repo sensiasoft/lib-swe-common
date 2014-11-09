@@ -329,17 +329,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
             dom.setElementValue(streamElt, "swe:elementCount/swe:Count/swe:value", Integer.toString(arraySize));        
         
         // write array component
-        Element propElt = dom.addElement(streamElt, "swe:elementType");
-        DataComponent listComponent = dataList.getListComponent();
-        
-        // add name attribute if different from 'elementType'
-        String fieldName = listComponent.getName();
-        if (fieldName != null && !fieldName.equals("elementType"))
-            propElt.setAttribute("name", fieldName);
-        
-        // write steam component definition
-        Element componentElt = writeComponent(dom, listComponent, false);
-        propElt.appendChild(componentElt);
+        addComponentProperty(dom, streamElt, "swe:elementType", dataList.getElementTypeProperty(), false);
         
         // write encoding
         AbstractEncoding encoding = (AbstractEncoding)dataList.getEncoding();        
@@ -356,7 +346,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
         }        
         else if (dataList.getData() != null && writeInlineData)
         {   
-            Element tupleValuesElt = writeArrayValues(dom, (DataComponent)dataList, (AbstractDataComponentImpl)listComponent, encoding);
+            Element tupleValuesElt = writeArrayValues(dom, (DataComponent)dataList, dataList.getElementType(), encoding);
             streamElt.appendChild(tupleValuesElt);
         }
         

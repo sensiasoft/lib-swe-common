@@ -48,11 +48,12 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
     protected Boolean optional;
     protected String definition;
     
-    protected String name; // TODO get rid of name property +get/set
-	protected AbstractDataBlock dataBlock;
-	protected AbstractDataComponentImpl parent = null;
+    protected AbstractDataComponentImpl parent = null;
+    protected AbstractDataBlock dataBlock;
 	protected int scalarCount = -1;
 	protected BinaryMember encodingInfo;
+	
+	private String name; // can we get rid of this? it is also in property object but it's convenient to have it here    
 
 	
 	public AbstractDataComponentImpl()
@@ -87,13 +88,13 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
 
     
     @Override
-    public DataComponent getParent()
+    public final DataComponent getParent()
     {
         return parent;
     }
 
 
-    public void setParent(AbstractDataComponentImpl parent)
+    protected final void setParent(AbstractDataComponentImpl parent)
     {
         this.parent = parent;
     }
