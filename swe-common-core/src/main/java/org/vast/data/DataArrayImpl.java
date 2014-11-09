@@ -58,6 +58,12 @@ public class DataArrayImpl extends AbstractArrayImpl
     protected CountImpl implicitElementCount;
     
     
+    /**
+     * Default constructor.
+     * The array will be variable size with implicit size until
+     * either setSize() is called or the elementType property
+     * is set to reference the ID of another component in the tree.
+     */
     public DataArrayImpl()
     {
         // special property object to correctly set parent
@@ -71,7 +77,7 @@ public class DataArrayImpl extends AbstractArrayImpl
                 ((AbstractDataComponentImpl)value).setParent(DataArrayImpl.this);
             }
         };
-    }  
+    }
     
     
     public DataArrayImpl(int arraySize)
@@ -464,8 +470,20 @@ public class DataArrayImpl extends AbstractArrayImpl
                 return;
         	
         	// resize underlying datablock
-        	resizeDataBlock(oldSize, newSize);         
+        	resizeDataBlock(oldSize, newSize);
         }
+    }
+    
+    
+    /**
+     * Sets the size component to use (for variable size array).
+     * The component must have an ID and exist up the data component tree
+     * @param sizeComponent Count component to obtain array size from
+     */
+    public void setSizeComponent(CountImpl sizeComponent)
+    {
+        assert(sizeComponent.isSetId());
+        this.elementCount.setHref("#" + sizeComponent.getId());
     }
     
     
@@ -569,8 +587,10 @@ public class DataArrayImpl extends AbstractArrayImpl
                         break;
                     }
                 }
+                
                 if (found)
                     break;
+                
                 parentComponent = parentComponent.getParent();
             }
             

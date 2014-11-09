@@ -47,7 +47,7 @@ public interface DataInputExt extends DataInput
     
     /**
 	 * Reads 4 input bytes and returns a long value in the range 0-2^32.
-	 * @return
+	 * @return long value
 	 * @throws IOException
 	 */
 	public long readUnsignedInt() throws IOException;
@@ -57,7 +57,7 @@ public interface DataInputExt extends DataInput
 	 * Reads 8 input bytes and returns a long value in the range 0-2^63.
 	 * Values greater than 2^63 won't be read correctly since they are not 
 	 * supported by java.
-	 * @return
+	 * @return long value
 	 * @throws IOException
 	 */
 	public long readUnsignedLong() throws IOException;
@@ -65,7 +65,7 @@ public interface DataInputExt extends DataInput
 	
 	/**
 	 * Reads a 0 terminated ASCII string from input stream
-	 * @return
+	 * @return string value
 	 * @throws IOException
 	 */
 	public String readASCII() throws IOException;

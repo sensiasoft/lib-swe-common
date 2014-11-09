@@ -41,7 +41,7 @@ public interface DataOutputExt extends DataOutput
     /**
      * Writes the lowest significant byte of the given
      * short value as an unsigned byte
-     * @return
+     * @param val 
      * @throws IOException
      */
     public void writeUnsignedByte(short val) throws IOException;
@@ -50,7 +50,7 @@ public interface DataOutputExt extends DataOutput
     /**
      * Writes the 2 lowest significant bytes of the given
      * int value as an unsigned short
-     * @return
+     * @param val 
      * @throws IOException
      */
     public void writeUnsignedShort(int val) throws IOException;
@@ -59,7 +59,7 @@ public interface DataOutputExt extends DataOutput
     /**
 	 * Writes the 4 lowest significant bytes of the given
 	 * long value as an unsigned int
-	 * @return
+     * @param val 
 	 * @throws IOException
 	 */
 	public void writeUnsignedInt(long val) throws IOException;
@@ -67,7 +67,7 @@ public interface DataOutputExt extends DataOutput
 	
 	/**
 	 * Writes long value as unsigned.
-	 * @return
+	 * @param val 
 	 * @throws IOException
 	 */
 	public void writeUnsignedLong(long val) throws IOException;
@@ -75,7 +75,7 @@ public interface DataOutputExt extends DataOutput
 	
 	/**
 	 * Writes a 0 terminated ASCII string to stream
-	 * @return
+	 * @param val 
 	 * @throws IOException
 	 */
 	public void writeASCII(String val) throws IOException;
