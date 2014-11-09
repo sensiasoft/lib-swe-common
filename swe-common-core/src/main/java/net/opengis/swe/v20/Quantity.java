@@ -7,7 +7,7 @@ package net.opengis.swe.v20;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface Quantity extends AbstractSimpleComponent, HasUom, HasConstraints<AllowedValues>
+public interface Quantity extends ScalarComponent, HasUom, HasConstraints<AllowedValues>
 {
     
     /**

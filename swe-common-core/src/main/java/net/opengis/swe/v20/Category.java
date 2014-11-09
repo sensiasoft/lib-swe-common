@@ -7,7 +7,7 @@ package net.opengis.swe.v20;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface Category extends AbstractSimpleComponent, HasCodeSpace, HasConstraints<AllowedTokens>
+public interface Category extends ScalarComponent, HasCodeSpace, HasConstraints<AllowedTokens>
 {
     
     /**

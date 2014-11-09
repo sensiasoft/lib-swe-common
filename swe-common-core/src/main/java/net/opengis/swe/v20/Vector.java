@@ -15,7 +15,7 @@ public interface Vector extends AbstractDataComponent, HasRefFrames
     /**
      * Gets the list of coordinate properties
      */
-    public OgcPropertyList<AbstractSimpleComponent> getCoordinateList();
+    public OgcPropertyList<ScalarComponent> getCoordinateList();
     
     
     /**
@@ -27,7 +27,7 @@ public interface Vector extends AbstractDataComponent, HasRefFrames
     /**
      * Gets the coordinate property with the given name
      */
-    public AbstractSimpleComponent getCoordinate(String name);
+    public ScalarComponent getCoordinate(String name);
     
     
     /**

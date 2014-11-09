@@ -40,6 +40,7 @@ import net.opengis.swe.v20.NilValues;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.QuantityRange;
 import net.opengis.swe.v20.Reference;
+import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.Time;
@@ -227,7 +228,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             found = checkElementName(reader, "coordinate");
             if (found)
             {
-                OgcProperty<AbstractSimpleComponent> coordProp = new OgcPropertyImpl<AbstractSimpleComponent>();
+                OgcProperty<ScalarComponent> coordProp = new OgcPropertyImpl<ScalarComponent>();
                 readPropertyAttributes(reader, coordProp);
                 
                 reader.nextTag();
@@ -302,7 +303,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         numItems = bean.getCoordinateList().size();
         for (int i = 0; i < numItems; i++)
         {
-            OgcProperty<AbstractSimpleComponent> item = bean.getCoordinateList().getProperty(i);
+            OgcProperty<ScalarComponent> item = bean.getCoordinateList().getProperty(i);
             writer.writeStartElement(NS_URI, "coordinate");
             writePropertyAttributes(writer, item);
             

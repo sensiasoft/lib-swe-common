@@ -9,7 +9,7 @@ import net.opengis.IDateTime;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface Time extends AbstractSimpleComponent, HasRefFrames, HasUom, HasConstraints<AllowedTimes>
+public interface Time extends ScalarComponent, HasRefFrames, HasUom, HasConstraints<AllowedTimes>
 {
     public static final String ISO_TIME_UNIT = "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian";
     
