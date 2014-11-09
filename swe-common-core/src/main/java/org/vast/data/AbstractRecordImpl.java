@@ -122,6 +122,24 @@ public abstract class AbstractRecordImpl<ComponentType extends AbstractDataCompo
     
     
     @Override
+    public AbstractDataComponentImpl removeComponent(int index)
+    {
+        clearData();
+        ComponentType component = fieldList.remove(index);
+        ((AbstractDataComponentImpl)component).setParent(null);
+        return (AbstractDataComponentImpl)component;
+    }
+
+
+    @Override
+    public AbstractDataComponentImpl removeComponent(String name)
+    {
+        int index = getComponentIndex(name);
+        return removeComponent(index);
+    }
+
+
+    @Override
     public void setData(DataBlock dataBlock)
     {
     	assert(dataBlock != null);

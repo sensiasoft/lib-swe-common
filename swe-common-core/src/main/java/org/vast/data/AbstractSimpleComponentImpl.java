@@ -272,4 +272,16 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
     {
         throw new UnsupportedOperationException();
     }
+    
+    @Override
+    public AbstractDataComponentImpl removeComponent(int index)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public AbstractDataComponentImpl removeComponent(String name)
+    {
+        throw new UnsupportedOperationException();
+    }
 }

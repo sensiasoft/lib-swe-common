@@ -80,6 +80,22 @@ public interface DataComponent extends AbstractDataComponent, HasCopy, Cloneable
     public void addComponent(String name, DataComponent component);
 	
 	
+    /**
+     * Remove the sub-component at the specified index
+     * @param index
+     * @return the component that was just removed
+     */
+    public DataComponent removeComponent(int index);
+    
+    
+    /**
+     * Remove sub-component with the specified name
+     * @param name
+     * @return the component that was just removed
+     */
+    public DataComponent removeComponent(String name);
+    
+    
 	/**
      * @return parent component of this component
      */

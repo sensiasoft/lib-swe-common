@@ -128,6 +128,23 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     
     
     @Override
+    public AbstractDataComponentImpl removeComponent(int index)
+    {
+        AbstractDataComponent component = itemList.remove(index);
+        ((AbstractDataComponentImpl)component).setParent(null);
+        return (AbstractDataComponentImpl)component;
+    }
+
+
+    @Override
+    public AbstractDataComponentImpl removeComponent(String name)
+    {
+        int index = getComponentIndex(name);
+        return removeComponent(index);
+    }    
+    
+    
+    @Override
     public void setData(DataBlock dataBlock)
     {
         // HACK makes sure scalar count was properly computed
