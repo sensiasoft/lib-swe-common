@@ -28,6 +28,13 @@ public class BinaryComponentImpl extends AbstractSWEImpl implements BinaryCompon
     }
     
     
+    public BinaryComponentImpl(String ref, DataType dataType)
+    {
+        setRef(ref);
+        setCdmDataType(dataType);
+    }
+    
+    
     @Override
     public BinaryComponentImpl copy()
     {
