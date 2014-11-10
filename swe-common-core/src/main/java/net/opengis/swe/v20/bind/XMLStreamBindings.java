@@ -56,7 +56,6 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
 {
     public final static String NS_URI = "http://www.opengis.net/swe/2.0";
     protected Factory factory;
-    protected boolean writeInlineValues = true;
     
     
     public XMLStreamBindings(Factory factory)
@@ -137,10 +136,10 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Write method for DataRecordType complex type
      */
-    public void writeDataRecordType(XMLStreamWriter writer, DataRecord bean) throws XMLStreamException
+    public void writeDataRecordType(XMLStreamWriter writer, DataRecord bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeDataRecordTypeAttributes(writer, bean);
-        this.writeDataRecordTypeElements(writer, bean);
+        this.writeDataRecordTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -156,7 +155,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes elements of DataRecordType complex type
      */
-    public void writeDataRecordTypeElements(XMLStreamWriter writer, DataRecord bean) throws XMLStreamException
+    public void writeDataRecordTypeElements(XMLStreamWriter writer, DataRecord bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractDataComponentTypeElements(writer, bean);
         int numItems;
@@ -169,7 +168,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             writer.writeStartElement(NS_URI, "field");
             writePropertyAttributes(writer, item);
             if (item.hasValue() && !item.hasHref())
-                this.writeAbstractDataComponent(writer, item.getValue());
+                this.writeAbstractDataComponent(writer, item.getValue(), writeInlineValues);
             writer.writeEndElement();
         }
     }
@@ -267,11 +266,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for VectorType complex type
+     * @param writeInlineValues 
      */
-    public void writeVectorType(XMLStreamWriter writer, Vector bean) throws XMLStreamException
+    public void writeVectorType(XMLStreamWriter writer, Vector bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeVectorTypeAttributes(writer, bean);
-        this.writeVectorTypeElements(writer, bean);
+        this.writeVectorTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -294,7 +294,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes elements of VectorType complex type
      */
-    public void writeVectorTypeElements(XMLStreamWriter writer, Vector bean) throws XMLStreamException
+    public void writeVectorTypeElements(XMLStreamWriter writer, Vector bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractDataComponentTypeElements(writer, bean);
         int numItems;
@@ -310,11 +310,11 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             if (item.hasValue() && !item.hasHref())
             {
                 if (item.getValue() instanceof Count)
-                    this.writeCount(writer, (Count)item.getValue());
+                    this.writeCount(writer, (Count)item.getValue(), writeInlineValues);
                 else if (item.getValue() instanceof Quantity)
-                    this.writeQuantity(writer, (Quantity)item.getValue());
+                    this.writeQuantity(writer, (Quantity)item.getValue(), writeInlineValues);
                 else if (item.getValue() instanceof Time)
-                    this.writeTime(writer, (Time)item.getValue());
+                    this.writeTime(writer, (Time)item.getValue(), writeInlineValues);
             }
             
             writer.writeEndElement();
@@ -419,11 +419,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for DataArrayType complex type
+     * @param writeInlineValues 
      */
-    public void writeDataArrayType(XMLStreamWriter writer, DataArray bean) throws XMLStreamException
+    public void writeDataArrayType(XMLStreamWriter writer, DataArray bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeDataArrayTypeAttributes(writer, bean);
-        this.writeDataArrayTypeElements(writer, bean);
+        this.writeDataArrayTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -439,53 +440,43 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes elements of DataArrayType complex type
      */
-    public void writeDataArrayTypeElements(XMLStreamWriter writer, DataArray bean) throws XMLStreamException
+    public void writeDataArrayTypeElements(XMLStreamWriter writer, DataArray bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractDataComponentTypeElements(writer, bean);
                 
-        // we always have to write inline element count inline value
-        boolean saveWriteInlineState = this.writeInlineValues;
-        this.writeInlineValues = true;
-        
         // elementCount
         writer.writeStartElement(NS_URI, "elementCount");
         OgcProperty<Count> elementCountProp = bean.getElementCountProperty();
         writePropertyAttributes(writer, elementCountProp);
         if (elementCountProp.hasValue() && !elementCountProp.hasHref())
-            this.writeCount(writer, bean.getElementCount());
+            this.writeCount(writer, bean.getElementCount(), true);
         writer.writeEndElement();
-        
-        // temporary deactivate writeInlineValues
-        if (bean.isSetValues())
-            this.writeInlineValues = false;
-        else
-            this.writeInlineValues = saveWriteInlineState;
         
         // elementType
         writer.writeStartElement(NS_URI, "elementType");
         OgcProperty<AbstractDataComponent> elementTypeProp = bean.getElementTypeProperty();
         writePropertyAttributes(writer, elementTypeProp);
         if (elementTypeProp.hasValue() && !elementTypeProp.hasHref())
-            this.writeAbstractDataComponent(writer, bean.getElementType());
+            this.writeAbstractDataComponent(writer, bean.getElementType(), false);
         writer.writeEndElement();
         
-        // restore writeInlineValues state
-        this.writeInlineValues = saveWriteInlineState;
-        
-        // encoding
-        if (bean.isSetEncoding())
+        if (writeInlineValues)
         {
-            writer.writeStartElement(NS_URI, "encoding");
-            this.writeAbstractEncoding(writer, bean.getEncoding());
-            writer.writeEndElement();
-        }
-        
-        // values
-        if (bean.isSetValues())
-        {
-            writer.writeStartElement(NS_URI, "values");
-            this.writeEncodedValuesPropertyType(writer, bean, bean.getEncoding(), bean.getValues());
-            writer.writeEndElement();
+            // encoding
+            if (bean.isSetEncoding())
+            {
+                writer.writeStartElement(NS_URI, "encoding");
+                this.writeAbstractEncoding(writer, bean.getEncoding());
+                writer.writeEndElement();
+                
+                // values
+                if (bean.isSetValues())
+                {
+                    writer.writeStartElement(NS_URI, "values");
+                    this.writeEncodedValuesPropertyType(writer, bean, bean.getEncoding(), bean.getValues());
+                    writer.writeEndElement();
+                }
+            }
         }
     }
     
@@ -540,11 +531,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for MatrixType complex type
+     * @param writeInlineValues 
      */
-    public void writeMatrixType(XMLStreamWriter writer, Matrix bean) throws XMLStreamException
+    public void writeMatrixType(XMLStreamWriter writer, Matrix bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeMatrixTypeAttributes(writer, bean);
-        this.writeMatrixTypeElements(writer, bean);
+        this.writeMatrixTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -567,10 +559,11 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Writes elements of MatrixType complex type
+     * @param writeInlineValues 
      */
-    public void writeMatrixTypeElements(XMLStreamWriter writer, Matrix bean) throws XMLStreamException
+    public void writeMatrixTypeElements(XMLStreamWriter writer, Matrix bean, boolean writeInlineValues) throws XMLStreamException
     {
-        this.writeDataArrayTypeElements(writer, bean);
+        this.writeDataArrayTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -696,7 +689,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetElementCount())
         {
             writer.writeStartElement(NS_URI, "elementCount");
-            this.writeCount(writer, bean.getElementCount());
+            this.writeCount(writer, bean.getElementCount(), true);
             writer.writeEndElement();
         }
         
@@ -705,7 +698,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         OgcProperty<AbstractDataComponent> elementTypeProp = bean.getElementTypeProperty();
         writePropertyAttributes(writer, elementTypeProp);
         if (elementTypeProp.hasValue() && !elementTypeProp.hasHref())
-            this.writeAbstractDataComponent(writer, bean.getElementType());
+            this.writeAbstractDataComponent(writer, bean.getElementType(), false);
         writer.writeEndElement();
         
         // encoding
@@ -1187,10 +1180,10 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Write method for DataChoiceType complex type
      */
-    public void writeDataChoiceType(XMLStreamWriter writer, DataChoice bean) throws XMLStreamException
+    public void writeDataChoiceType(XMLStreamWriter writer, DataChoice bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeDataChoiceTypeAttributes(writer, bean);
-        this.writeDataChoiceTypeElements(writer, bean);
+        this.writeDataChoiceTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -1206,7 +1199,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes elements of DataChoiceType complex type
      */
-    public void writeDataChoiceTypeElements(XMLStreamWriter writer, DataChoice bean) throws XMLStreamException
+    public void writeDataChoiceTypeElements(XMLStreamWriter writer, DataChoice bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractDataComponentTypeElements(writer, bean);
         int numItems;
@@ -1215,7 +1208,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetChoiceValue())
         {
             writer.writeStartElement(NS_URI, "choiceValue");
-            this.writeCategory(writer, bean.getChoiceValue());
+            this.writeCategory(writer, bean.getChoiceValue(), false);
             writer.writeEndElement();
         }
         
@@ -1227,7 +1220,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             writer.writeStartElement(NS_URI, "item");
             writePropertyAttributes(writer, item);
             if (item.hasValue() && !item.hasHref())
-                this.writeAbstractDataComponent(writer, item.getValue());
+                this.writeAbstractDataComponent(writer, item.getValue(), writeInlineValues);
             writer.writeEndElement();
         }
     }
@@ -1301,11 +1294,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for CountType complex type
+     * @param writeInlineValue 
      */
-    public void writeCountType(XMLStreamWriter writer, Count bean) throws XMLStreamException
+    public void writeCountType(XMLStreamWriter writer, Count bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeCountTypeAttributes(writer, bean);
-        this.writeCountTypeElements(writer, bean);
+        this.writeCountTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -1321,7 +1315,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes elements of CountType complex type
      */
-    public void writeCountTypeElements(XMLStreamWriter writer, Count bean) throws XMLStreamException
+    public void writeCountTypeElements(XMLStreamWriter writer, Count bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -1424,11 +1418,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for CategoryRangeType complex type
+     * @param writeInlineValues 
      */
-    public void writeCategoryRangeType(XMLStreamWriter writer, CategoryRange bean) throws XMLStreamException
+    public void writeCategoryRangeType(XMLStreamWriter writer, CategoryRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeCategoryRangeTypeAttributes(writer, bean);
-        this.writeCategoryRangeTypeElements(writer, bean);
+        this.writeCategoryRangeTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -1443,8 +1438,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Writes elements of CategoryRangeType complex type
+     * @param writeInlineValues 
      */
-    public void writeCategoryRangeTypeElements(XMLStreamWriter writer, CategoryRange bean) throws XMLStreamException
+    public void writeCategoryRangeTypeElements(XMLStreamWriter writer, CategoryRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -1608,13 +1604,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             if (item.hasValue() && !item.hasHref())
             {
                 if (item.getValue() instanceof Quantity)
-                    this.writeQuantity(writer, (Quantity)item.getValue());
+                    this.writeQuantity(writer, (Quantity)item.getValue(), true);
                 else if (item.getValue() instanceof QuantityRange)
-                    this.writeQuantityRange(writer, (QuantityRange)item.getValue());
+                    this.writeQuantityRange(writer, (QuantityRange)item.getValue(), true);
                 else if (item.getValue() instanceof Category)
-                    this.writeCategory(writer, (Category)item.getValue());
+                    this.writeCategory(writer, (Category)item.getValue(), true);
                 else if (item.getValue() instanceof Text)
-                    this.writeText(writer, (Text)item.getValue());
+                    this.writeText(writer, (Text)item.getValue(), true);
             }
             
             writer.writeEndElement();
@@ -1710,11 +1706,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for QuantityRangeType complex type
+     * @param writeInlineValues 
      */
-    public void writeQuantityRangeType(XMLStreamWriter writer, QuantityRange bean) throws XMLStreamException
+    public void writeQuantityRangeType(XMLStreamWriter writer, QuantityRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeQuantityRangeTypeAttributes(writer, bean);
-        this.writeQuantityRangeTypeElements(writer, bean);
+        this.writeQuantityRangeTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -1729,8 +1726,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Writes elements of QuantityRangeType complex type
+     * @param writeInlineValues 
      */
-    public void writeQuantityRangeTypeElements(XMLStreamWriter writer, QuantityRange bean) throws XMLStreamException
+    public void writeQuantityRangeTypeElements(XMLStreamWriter writer, QuantityRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -1848,11 +1846,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for TimeType complex type
+     * @param writeInlineValues 
      */
-    public void writeTimeType(XMLStreamWriter writer, Time bean) throws XMLStreamException
+    public void writeTimeType(XMLStreamWriter writer, Time bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeTimeTypeAttributes(writer, bean);
-        this.writeTimeTypeElements(writer, bean);
+        this.writeTimeTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -1875,8 +1874,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Writes elements of TimeType complex type
+     * @param writeInlineValues 
      */
-    public void writeTimeTypeElements(XMLStreamWriter writer, Time bean) throws XMLStreamException
+    public void writeTimeTypeElements(XMLStreamWriter writer, Time bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -1999,11 +1999,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for TimeRangeType complex type
+     * @param writeInlineValues 
      */
-    public void writeTimeRangeType(XMLStreamWriter writer, TimeRange bean) throws XMLStreamException
+    public void writeTimeRangeType(XMLStreamWriter writer, TimeRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeTimeRangeTypeAttributes(writer, bean);
-        this.writeTimeRangeTypeElements(writer, bean);
+        this.writeTimeRangeTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -2026,8 +2027,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Writes elements of TimeRangeType complex type
+     * @param writeInlineValues 
      */
-    public void writeTimeRangeTypeElements(XMLStreamWriter writer, TimeRange bean) throws XMLStreamException
+    public void writeTimeRangeTypeElements(XMLStreamWriter writer, TimeRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -2113,11 +2115,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for BooleanType complex type
+     * @param writeInlineValues 
      */
-    public void writeBooleanType(XMLStreamWriter writer, Boolean bean) throws XMLStreamException
+    public void writeBooleanType(XMLStreamWriter writer, Boolean bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeBooleanTypeAttributes(writer, bean);
-        this.writeBooleanTypeElements(writer, bean);
+        this.writeBooleanTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -2132,8 +2135,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Writes elements of BooleanType complex type
+     * @param writeInlineValues 
      */
-    public void writeBooleanTypeElements(XMLStreamWriter writer, Boolean bean) throws XMLStreamException
+    public void writeBooleanTypeElements(XMLStreamWriter writer, Boolean bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -2215,11 +2219,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for TextType complex type
+     * @param writeInlineValues 
      */
-    public void writeTextType(XMLStreamWriter writer, Text bean) throws XMLStreamException
+    public void writeTextType(XMLStreamWriter writer, Text bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeTextTypeAttributes(writer, bean);
-        this.writeTextTypeElements(writer, bean);
+        this.writeTextTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -2234,8 +2239,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Writes elements of TextType complex type
+     * @param writeInlineValues 
      */
-    public void writeTextTypeElements(XMLStreamWriter writer, Text bean) throws XMLStreamException
+    public void writeTextTypeElements(XMLStreamWriter writer, Text bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -2338,11 +2344,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for CategoryType complex type
+     * @param writeInlineValues 
      */
-    public void writeCategoryType(XMLStreamWriter writer, Category bean) throws XMLStreamException
+    public void writeCategoryType(XMLStreamWriter writer, Category bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeCategoryTypeAttributes(writer, bean);
-        this.writeCategoryTypeElements(writer, bean);
+        this.writeCategoryTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -2357,8 +2364,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Writes elements of CategoryType complex type
+     * @param writeInlineValues 
      */
-    public void writeCategoryTypeElements(XMLStreamWriter writer, Category bean) throws XMLStreamException
+    public void writeCategoryTypeElements(XMLStreamWriter writer, Category bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -2468,11 +2476,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for QuantityType complex type
+     * @param writeInlineValues 
      */
-    public void writeQuantityType(XMLStreamWriter writer, Quantity bean) throws XMLStreamException
+    public void writeQuantityType(XMLStreamWriter writer, Quantity bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeQuantityTypeAttributes(writer, bean);
-        this.writeQuantityTypeElements(writer, bean);
+        this.writeQuantityTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -2487,8 +2496,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Writes elements of QuantityType complex type
+     * @param writeInlineValues 
      */
-    public void writeQuantityTypeElements(XMLStreamWriter writer, Quantity bean) throws XMLStreamException
+    public void writeQuantityTypeElements(XMLStreamWriter writer, Quantity bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -2652,11 +2662,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for CountRangeType complex type
+     * @param writeInlineValues 
      */
-    public void writeCountRangeType(XMLStreamWriter writer, CountRange bean) throws XMLStreamException
+    public void writeCountRangeType(XMLStreamWriter writer, CountRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeCountRangeTypeAttributes(writer, bean);
-        this.writeCountRangeTypeElements(writer, bean);
+        this.writeCountRangeTypeElements(writer, bean, writeInlineValues);
     }
     
     
@@ -2672,7 +2683,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes elements of CountRangeType complex type
      */
-    public void writeCountRangeTypeElements(XMLStreamWriter writer, CountRange bean) throws XMLStreamException
+    public void writeCountRangeTypeElements(XMLStreamWriter writer, CountRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         this.writeAbstractSimpleComponentTypeElements(writer, bean);
         
@@ -3693,14 +3704,17 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     {
         writePropertyAttributes(writer, bean);
         
-        String text = null;        
-        if (blockComponent instanceof DataArray)
-            text = bean.getAsText((DataArray)blockComponent, encoding);
-        else if (blockComponent instanceof DataStream)
-            text = bean.getAsText((DataStream)blockComponent, encoding);        
-        
-        if (text != null)
-            writer.writeCharacters(text);
+        if (!bean.hasHref())
+        {
+            String text = null;        
+            if (blockComponent instanceof DataArray)
+                text = bean.getAsText((DataArray)blockComponent, encoding);
+            else if (blockComponent instanceof DataStream)
+                text = bean.getAsText((DataStream)blockComponent, encoding);        
+            
+            if (text != null)
+                writer.writeCharacters(text);
+        }
     }
     
     
@@ -3761,12 +3775,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for DataRecord element
+     * @param writeInlineValue 
      */
-    public void writeDataRecord(XMLStreamWriter writer, DataRecord bean) throws XMLStreamException
+    public void writeDataRecord(XMLStreamWriter writer, DataRecord bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "DataRecord");
         this.writeNamespaces(writer);
-        this.writeDataRecordType(writer, bean);
+        this.writeDataRecordType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -3786,12 +3801,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for Vector element
+     * @param writeInlineValues 
      */
-    public void writeVector(XMLStreamWriter writer, Vector bean) throws XMLStreamException
+    public void writeVector(XMLStreamWriter writer, Vector bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "Vector");
         this.writeNamespaces(writer);
-        this.writeVectorType(writer, bean);
+        this.writeVectorType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -3811,12 +3827,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for DataArray element
+     * @param writeInlineValues 
      */
-    public void writeDataArray(XMLStreamWriter writer, DataArray bean) throws XMLStreamException
+    public void writeDataArray(XMLStreamWriter writer, DataArray bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "DataArray");
         this.writeNamespaces(writer);
-        this.writeDataArrayType(writer, bean);
+        this.writeDataArrayType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -3836,12 +3853,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for Matrix element
+     * @param writeInlineValues 
      */
-    public void writeMatrix(XMLStreamWriter writer, Matrix bean) throws XMLStreamException
+    public void writeMatrix(XMLStreamWriter writer, Matrix bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "Matrix");
         this.writeNamespaces(writer);
-        this.writeMatrixType(writer, bean);
+        this.writeMatrixType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -3961,12 +3979,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for DataChoice element
+     * @param writeInlineValues 
      */
-    public void writeDataChoice(XMLStreamWriter writer, DataChoice bean) throws XMLStreamException
+    public void writeDataChoice(XMLStreamWriter writer, DataChoice bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "DataChoice");
         this.writeNamespaces(writer);
-        this.writeDataChoiceType(writer, bean);
+        this.writeDataChoiceType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -3986,12 +4005,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for Count element
+     * @param writeInlineValue 
      */
-    public void writeCount(XMLStreamWriter writer, Count bean) throws XMLStreamException
+    public void writeCount(XMLStreamWriter writer, Count bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "Count");
         this.writeNamespaces(writer);
-        this.writeCountType(writer, bean);
+        this.writeCountType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4011,12 +4031,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for CategoryRange element
+     * @param writeInlineValues 
      */
-    public void writeCategoryRange(XMLStreamWriter writer, CategoryRange bean) throws XMLStreamException
+    public void writeCategoryRange(XMLStreamWriter writer, CategoryRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "CategoryRange");
         this.writeNamespaces(writer);
-        this.writeCategoryRangeType(writer, bean);
+        this.writeCategoryRangeType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4056,28 +4077,28 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Dispatcher method for writing classes derived from AbstractSimpleComponent
      */
-    public void writeAbstractSimpleComponent(XMLStreamWriter writer, AbstractSimpleComponent bean) throws XMLStreamException
+    public void writeAbstractSimpleComponent(XMLStreamWriter writer, AbstractSimpleComponent bean, boolean writeInlineValues) throws XMLStreamException
     {
         if (bean instanceof Count)
-            writeCount(writer, (Count)bean);
+            writeCount(writer, (Count)bean, writeInlineValues);
         else if (bean instanceof CategoryRange)
-            writeCategoryRange(writer, (CategoryRange)bean);
+            writeCategoryRange(writer, (CategoryRange)bean, writeInlineValues);
         else if (bean instanceof QuantityRange)
-            writeQuantityRange(writer, (QuantityRange)bean);
+            writeQuantityRange(writer, (QuantityRange)bean, writeInlineValues);
         else if (bean instanceof Time)
-            writeTime(writer, (Time)bean);
+            writeTime(writer, (Time)bean, writeInlineValues);
         else if (bean instanceof TimeRange)
-            writeTimeRange(writer, (TimeRange)bean);
+            writeTimeRange(writer, (TimeRange)bean, writeInlineValues);
         else if (bean instanceof Boolean)
-            writeBoolean(writer, (Boolean)bean);
+            writeBoolean(writer, (Boolean)bean, writeInlineValues);
         else if (bean instanceof Text)
-            writeText(writer, (Text)bean);
+            writeText(writer, (Text)bean, writeInlineValues);
         else if (bean instanceof Category)
-            writeCategory(writer, (Category)bean);
+            writeCategory(writer, (Category)bean, writeInlineValues);
         else if (bean instanceof Quantity)
-            writeQuantity(writer, (Quantity)bean);
+            writeQuantity(writer, (Quantity)bean, writeInlineValues);
         else if (bean instanceof CountRange)
-            writeCountRange(writer, (CountRange)bean);
+            writeCountRange(writer, (CountRange)bean, writeInlineValues);
     }
     
     
@@ -4096,12 +4117,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for QuantityRange element
+     * @param writeInlineValues 
      */
-    public void writeQuantityRange(XMLStreamWriter writer, QuantityRange bean) throws XMLStreamException
+    public void writeQuantityRange(XMLStreamWriter writer, QuantityRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "QuantityRange");
         this.writeNamespaces(writer);
-        this.writeQuantityRangeType(writer, bean);
+        this.writeQuantityRangeType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4121,12 +4143,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for Time element
+     * @param writeInlineValues 
      */
-    public void writeTime(XMLStreamWriter writer, Time bean) throws XMLStreamException
+    public void writeTime(XMLStreamWriter writer, Time bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "Time");
         this.writeNamespaces(writer);
-        this.writeTimeType(writer, bean);
+        this.writeTimeType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4146,12 +4169,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for TimeRange element
+     * @param writeInlineValues 
      */
-    public void writeTimeRange(XMLStreamWriter writer, TimeRange bean) throws XMLStreamException
+    public void writeTimeRange(XMLStreamWriter writer, TimeRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "TimeRange");
         this.writeNamespaces(writer);
-        this.writeTimeRangeType(writer, bean);
+        this.writeTimeRangeType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4171,12 +4195,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for Boolean element
+     * @param writeInlineValues 
      */
-    public void writeBoolean(XMLStreamWriter writer, Boolean bean) throws XMLStreamException
+    public void writeBoolean(XMLStreamWriter writer, Boolean bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "Boolean");
         this.writeNamespaces(writer);
-        this.writeBooleanType(writer, bean);
+        this.writeBooleanType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4196,12 +4221,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for Text element
+     * @param writeInlineValues 
      */
-    public void writeText(XMLStreamWriter writer, Text bean) throws XMLStreamException
+    public void writeText(XMLStreamWriter writer, Text bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "Text");
         this.writeNamespaces(writer);
-        this.writeTextType(writer, bean);
+        this.writeTextType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4221,12 +4247,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for Category element
+     * @param writeInlineValues 
      */
-    public void writeCategory(XMLStreamWriter writer, Category bean) throws XMLStreamException
+    public void writeCategory(XMLStreamWriter writer, Category bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "Category");
         this.writeNamespaces(writer);
-        this.writeCategoryType(writer, bean);
+        this.writeCategoryType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4246,12 +4273,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for Quantity element
+     * @param writeInlineValues 
      */
-    public void writeQuantity(XMLStreamWriter writer, Quantity bean) throws XMLStreamException
+    public void writeQuantity(XMLStreamWriter writer, Quantity bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "Quantity");
         this.writeNamespaces(writer);
-        this.writeQuantityType(writer, bean);
+        this.writeQuantityType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4301,38 +4329,38 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Dispatcher method for writing classes derived from AbstractDataComponent
      */
-    public void writeAbstractDataComponent(XMLStreamWriter writer, AbstractDataComponent bean) throws XMLStreamException
+    public void writeAbstractDataComponent(XMLStreamWriter writer, AbstractDataComponent bean, boolean writeInlineValues) throws XMLStreamException
     {
         if (bean instanceof DataRecord)
-            writeDataRecord(writer, (DataRecord)bean);
+            writeDataRecord(writer, (DataRecord)bean, writeInlineValues);
         else if (bean instanceof Vector)
-            writeVector(writer, (Vector)bean);
+            writeVector(writer, (Vector)bean, writeInlineValues);
         else if (bean instanceof Matrix)
-            writeMatrix(writer, (Matrix)bean);
+            writeMatrix(writer, (Matrix)bean, writeInlineValues);
         else if (bean instanceof DataArray)
-            writeDataArray(writer, (DataArray)bean);
+            writeDataArray(writer, (DataArray)bean, writeInlineValues);
         else if (bean instanceof DataChoice)
-            writeDataChoice(writer, (DataChoice)bean);
+            writeDataChoice(writer, (DataChoice)bean, writeInlineValues);
         else if (bean instanceof Count)
-            writeCount(writer, (Count)bean);
+            writeCount(writer, (Count)bean, writeInlineValues);
         else if (bean instanceof CategoryRange)
-            writeCategoryRange(writer, (CategoryRange)bean);
+            writeCategoryRange(writer, (CategoryRange)bean, writeInlineValues);
         else if (bean instanceof QuantityRange)
-            writeQuantityRange(writer, (QuantityRange)bean);
+            writeQuantityRange(writer, (QuantityRange)bean, writeInlineValues);
         else if (bean instanceof Time)
-            writeTime(writer, (Time)bean);
+            writeTime(writer, (Time)bean, writeInlineValues);
         else if (bean instanceof TimeRange)
-            writeTimeRange(writer, (TimeRange)bean);
+            writeTimeRange(writer, (TimeRange)bean, writeInlineValues);
         else if (bean instanceof Boolean)
-            writeBoolean(writer, (Boolean)bean);
+            writeBoolean(writer, (Boolean)bean, writeInlineValues);
         else if (bean instanceof Text)
-            writeText(writer, (Text)bean);
+            writeText(writer, (Text)bean, writeInlineValues);
         else if (bean instanceof Category)
-            writeCategory(writer, (Category)bean);
+            writeCategory(writer, (Category)bean, writeInlineValues);
         else if (bean instanceof Quantity)
-            writeQuantity(writer, (Quantity)bean);
+            writeQuantity(writer, (Quantity)bean, writeInlineValues);
         else if (bean instanceof CountRange)
-            writeCountRange(writer, (CountRange)bean);
+            writeCountRange(writer, (CountRange)bean, writeInlineValues);
     }
     
     
@@ -4351,12 +4379,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     /**
      * Write method for CountRange element
+     * @param writeInlineValues 
      */
-    public void writeCountRange(XMLStreamWriter writer, CountRange bean) throws XMLStreamException
+    public void writeCountRange(XMLStreamWriter writer, CountRange bean, boolean writeInlineValues) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "CountRange");
         this.writeNamespaces(writer);
-        this.writeCountRangeType(writer, bean);
+        this.writeCountRangeType(writer, bean, writeInlineValues);
         writer.writeEndElement();
     }
     
@@ -4606,64 +4635,6 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     
     /**
-     * Dispatcher method for writing classes derived from AbstractSWE
-     */
-    public void writeAbstractSWE(XMLStreamWriter writer, AbstractSWE bean) throws XMLStreamException
-    {
-        if (bean instanceof DataRecord)
-            writeDataRecord(writer, (DataRecord)bean);
-        else if (bean instanceof Vector)
-            writeVector(writer, (Vector)bean);
-        else if (bean instanceof DataArray)
-            writeDataArray(writer, (DataArray)bean);
-        else if (bean instanceof Matrix)
-            writeMatrix(writer, (Matrix)bean);
-        else if (bean instanceof DataStream)
-            writeDataStream(writer, (DataStream)bean);
-        else if (bean instanceof BinaryBlock)
-            writeBlock(writer, (BinaryBlock)bean);
-        else if (bean instanceof BinaryEncoding)
-            writeBinaryEncoding(writer, (BinaryEncoding)bean);
-        else if (bean instanceof BinaryComponent)
-            writeComponent(writer, (BinaryComponent)bean);
-        else if (bean instanceof DataChoice)
-            writeDataChoice(writer, (DataChoice)bean);
-        else if (bean instanceof Count)
-            writeCount(writer, (Count)bean);
-        else if (bean instanceof CategoryRange)
-            writeCategoryRange(writer, (CategoryRange)bean);
-        else if (bean instanceof QuantityRange)
-            writeQuantityRange(writer, (QuantityRange)bean);
-        else if (bean instanceof Time)
-            writeTime(writer, (Time)bean);
-        else if (bean instanceof TimeRange)
-            writeTimeRange(writer, (TimeRange)bean);
-        else if (bean instanceof Boolean)
-            writeBoolean(writer, (Boolean)bean);
-        else if (bean instanceof Text)
-            writeText(writer, (Text)bean);
-        else if (bean instanceof Category)
-            writeCategory(writer, (Category)bean);
-        else if (bean instanceof Quantity)
-            writeQuantity(writer, (Quantity)bean);
-        else if (bean instanceof CountRange)
-            writeCountRange(writer, (CountRange)bean);
-        else if (bean instanceof NilValues)
-            writeNilValues(writer, (NilValues)bean);
-        else if (bean instanceof AllowedTokens)
-            writeAllowedTokens(writer, (AllowedTokens)bean);
-        else if (bean instanceof AllowedValues)
-            writeAllowedValues(writer, (AllowedValues)bean, false);
-        else if (bean instanceof AllowedTimes)
-            writeAllowedTimes(writer, (AllowedTimes)bean);
-        else if (bean instanceof XMLEncoding)
-            writeXMLEncoding(writer, (XMLEncoding)bean);
-        else if (bean instanceof TextEncoding)
-            writeTextEncoding(writer, (TextEncoding)bean);
-    }
-    
-    
-    /**
      * Dispatcher method for reading elements derived from AbstractSWEIdentifiable
      */
     public AbstractSWEIdentifiable readAbstractSWEIdentifiable(XMLStreamReader reader) throws XMLStreamException
@@ -4704,45 +4675,5 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             return readCountRange(reader);
         
         throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
-    }
-    
-    
-    /**
-     * Dispatcher method for writing classes derived from AbstractSWEIdentifiable
-     */
-    public void writeAbstractSWEIdentifiable(XMLStreamWriter writer, AbstractSWEIdentifiable bean) throws XMLStreamException
-    {
-        if (bean instanceof DataRecord)
-            writeDataRecord(writer, (DataRecord)bean);
-        else if (bean instanceof Vector)
-            writeVector(writer, (Vector)bean);
-        else if (bean instanceof DataArray)
-            writeDataArray(writer, (DataArray)bean);
-        else if (bean instanceof Matrix)
-            writeMatrix(writer, (Matrix)bean);
-        else if (bean instanceof DataStream)
-            writeDataStream(writer, (DataStream)bean);
-        else if (bean instanceof DataChoice)
-            writeDataChoice(writer, (DataChoice)bean);
-        else if (bean instanceof Count)
-            writeCount(writer, (Count)bean);
-        else if (bean instanceof CategoryRange)
-            writeCategoryRange(writer, (CategoryRange)bean);
-        else if (bean instanceof QuantityRange)
-            writeQuantityRange(writer, (QuantityRange)bean);
-        else if (bean instanceof Time)
-            writeTime(writer, (Time)bean);
-        else if (bean instanceof TimeRange)
-            writeTimeRange(writer, (TimeRange)bean);
-        else if (bean instanceof Boolean)
-            writeBoolean(writer, (Boolean)bean);
-        else if (bean instanceof Text)
-            writeText(writer, (Text)bean);
-        else if (bean instanceof Category)
-            writeCategory(writer, (Category)bean);
-        else if (bean instanceof Quantity)
-            writeQuantity(writer, (Quantity)bean);
-        else if (bean instanceof CountRange)
-            writeCountRange(writer, (CountRange)bean);
     }
 }

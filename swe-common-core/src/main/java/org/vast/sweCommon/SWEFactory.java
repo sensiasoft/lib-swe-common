@@ -22,6 +22,7 @@ package org.vast.sweCommon;
 
 import net.opengis.swe.v20.AbstractEncoding;
 import net.opengis.swe.v20.BinaryEncoding;
+import net.opengis.swe.v20.JSONEncoding;
 import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.XMLEncoding;
 import org.vast.cdm.common.DataStreamParser;
@@ -41,6 +42,8 @@ public class SWEFactory
             parser = new BinaryDataParser();
         else if (encoding instanceof XMLEncoding)
             parser = new XmlDataParser();
+        else if (encoding instanceof JSONEncoding)
+            parser = new JSONDataParser();
         
         parser.setDataEncoding(encoding);
         return parser;
@@ -57,6 +60,8 @@ public class SWEFactory
             writer = new BinaryDataWriter();
         else if (encoding instanceof XMLEncoding)
             writer = new XmlDataWriter();
+        else if (encoding instanceof JSONEncoding)
+            writer = new JSONDataWriter();
         
         writer.setDataEncoding(encoding);
         return writer;

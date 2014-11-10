@@ -220,20 +220,8 @@ public class AsciiDataParser extends AbstractDataParser
     @Override
 	protected void processAtom(DataValue component) throws IOException
 	{
-        String token = null;
-        
-        try
-        {
-            token = readToken();
-            parseToken(component, token, decimalSep);
-        }
-        catch (Exception e)
-        {
-            if ((e instanceof NumberFormatException) || (e instanceof ParseException))
-                throw new ReaderException("Invalid value '" + token + "' for scalar component '" + component.getName() + "'", e);
-            else
-                throw new ReaderException(STREAM_ERROR, e);
-        }
+        String token = readToken();
+        parseToken(component, token, decimalSep);
 	}
     
     
@@ -257,76 +245,86 @@ public class AsciiDataParser extends AbstractDataParser
      * @throws CDMException
      * @throws NumberFormatException
      */
-    protected void parseToken(AbstractSimpleComponentImpl component, String token, char decimalSep) throws Exception
+    protected void parseToken(AbstractSimpleComponentImpl component, String token, char decimalSep) throws ReaderException
     {
         // get component data type
         DataBlock data = component.getData();
         DataType dataType = data.getDataType();
         //System.out.println(scalarInfo.getName() + ": " + token);
         
-        // always replace decimal separator by '.'
-        if (decimalSep != 0)
-            token.replace(decimalSep, '.');
-               
-        switch (dataType)
+        try
         {
-            case BOOLEAN:
-                try
-                {
-                    int intValue = Integer.parseInt(token);
-                    if ((intValue != 0) && (intValue != 1))
-                        throw new ParseException("", 0);
+            // always replace decimal separator by '.'
+            if (decimalSep != 0)
+                token.replace(decimalSep, '.');
+                   
+            switch (dataType)
+            {
+                case BOOLEAN:
+                    try
+                    {
+                        int intValue = Integer.parseInt(token);
+                        if ((intValue != 0) && (intValue != 1))
+                            throw new ParseException("", 0);
+                        
+                        data.setBooleanValue(intValue != 0);
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        boolean boolValue = Boolean.parseBoolean(token);
+                        data.setBooleanValue(boolValue);
+                    } 
+                    break;
                     
-                    data.setBooleanValue(intValue != 0);
-                }
-                catch (NumberFormatException e)
-                {
-                    boolean boolValue = Boolean.parseBoolean(token);
-                    data.setBooleanValue(boolValue);
-                } 
-                break;
-                
-            case BYTE:
-                byte byteValue = Byte.parseByte(token);
-                data.setByteValue(byteValue);
-                break;
-                
-            case SHORT:
-            case UBYTE:
-                short shortValue = Short.parseShort(token);
-                data.setShortValue(shortValue);
-                break;
-                
-            case INT:
-            case USHORT:
-                int intValue = Integer.parseInt(token);
-                data.setIntValue(intValue);
-                break;
-                
-            case LONG:
-            case UINT:
-            case ULONG:
-                long longValue = Long.parseLong(token);
-                data.setLongValue(longValue);
-                break;
-                
-            case FLOAT:
-                float floatValue = Float.parseFloat(token);
-                data.setFloatValue(floatValue);
-                break;
-                
-            case DOUBLE:
-                double doubleValue = parseDoubleOrInfOrIsoTime(token);
-                data.setDoubleValue(doubleValue);                     
-                break;
-                
-            case UTF_STRING:
-            case ASCII_STRING:
-                data.setStringValue(token);
-                break;
-                
-            default:
-                throw new IllegalArgumentException("Unsupported datatype " + dataType);
+                case BYTE:
+                    byte byteValue = Byte.parseByte(token);
+                    data.setByteValue(byteValue);
+                    break;
+                    
+                case SHORT:
+                case UBYTE:
+                    short shortValue = Short.parseShort(token);
+                    data.setShortValue(shortValue);
+                    break;
+                    
+                case INT:
+                case USHORT:
+                    int intValue = Integer.parseInt(token);
+                    data.setIntValue(intValue);
+                    break;
+                    
+                case LONG:
+                case UINT:
+                case ULONG:
+                    long longValue = Long.parseLong(token);
+                    data.setLongValue(longValue);
+                    break;
+                    
+                case FLOAT:
+                    float floatValue = Float.parseFloat(token);
+                    data.setFloatValue(floatValue);
+                    break;
+                    
+                case DOUBLE:
+                    double doubleValue = parseDoubleOrInfOrIsoTime(token);
+                    data.setDoubleValue(doubleValue);                     
+                    break;
+                    
+                case UTF_STRING:
+                case ASCII_STRING:
+                    data.setStringValue(token);
+                    break;
+                    
+                default:
+                    throw new IllegalArgumentException("Unsupported datatype " + dataType);
+            }
+        }
+        catch (Exception e)
+        {
+            if ((e instanceof NumberFormatException) || (e instanceof ParseException))
+                throw new ReaderException("Invalid value '" + token + "' for scalar component '" + component.getName() + "'", e);
+            else
+                throw new ReaderException(STREAM_ERROR, e);
         }
     }
 

@@ -54,8 +54,6 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
 
     public DataList()
     {
-        this.dataBlock = new DataBlockList();
-        
         // special property object to correctly set parent
         elementType = new OgcPropertyImpl<AbstractDataComponent>()
         {
@@ -102,7 +100,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     @Override
     public AbstractDataComponentImpl getComponent(int index)
     {
-        checkIndex(index);        
+        checkIndex(index);
         tempComponent.setData(((DataBlockList)dataBlock).blockList.get(index));
         
         return tempComponent;
@@ -153,7 +151,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     @Override
     public void clearData()
     {
-    	this.dataBlock = new DataBlockList();
+    	this.dataBlock = null;
     	if (tempComponent != null)
     	    tempComponent.clearData();
     }
@@ -179,17 +177,26 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     }
     
     
-    public void addData(DataBlock dataBlock)
+    public final void addData(DataBlock dataBlock)
     {
-    	((DataBlockList)this.dataBlock).add((AbstractDataBlock)dataBlock);
+    	// if we start adding blocks without first creating the datablock
+        // let the list grow on demand
+        if (this.dataBlock == null)
+    	    this.dataBlock = new DataBlockList();
+        
+        ((DataBlockList)this.dataBlock).add((AbstractDataBlock)dataBlock);
     }
     
     
     @Override
     public AbstractDataBlock createDataBlock()
     {
-    	this.dataBlock = new DataBlockList();
-    	return this.dataBlock;
+        int listSize = getComponentCount();
+        DataBlockList newDataBlock = new DataBlockList(listSize);
+        DataBlock childBlock = tempComponent.createDataBlock();
+        newDataBlock.add(childBlock);
+        newDataBlock.resize(listSize);
+        return newDataBlock;
     }
 
 
@@ -209,7 +216,12 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     @Override
     public int getComponentCount()
     {
-    	return ((DataBlockList)this.dataBlock).getListSize();
+    	if (elementCount.hasValue() && elementCount.getValue().isSetValue())
+    	    return elementCount.getValue().getValue();
+    	else if (dataBlock != null)
+    	    return ((DataBlockList)dataBlock).getListSize();
+    	else
+    	    return 0;
     }
 
 
@@ -223,13 +235,6 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
 
         return text.toString();
     }
-    
-    
-	@Override
-	public boolean hasConstraints()
-	{
-	    return ((DataValue)elementType.getValue()).hasConstraints();
-	}
 
 
     @Override

@@ -45,7 +45,7 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
     @Override
     public boolean resolveHref()
     {
-        // TODO Auto-generated method stub
+        // TODO Add support for remote data
         return false;
     }
     

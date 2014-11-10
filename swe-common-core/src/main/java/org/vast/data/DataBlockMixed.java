@@ -79,7 +79,10 @@ public class DataBlockMixed extends AbstractDataBlock
         
         // renew all blocks in the array
         for (int i=0; i<blockArray.length; i++)
-            newBlock.blockArray[i] = this.blockArray[i].renew();
+        {
+            if (this.blockArray[i] != null)
+                newBlock.blockArray[i] = this.blockArray[i].renew();
+        }
         
         newBlock.atomCount = this.atomCount;
         return newBlock;

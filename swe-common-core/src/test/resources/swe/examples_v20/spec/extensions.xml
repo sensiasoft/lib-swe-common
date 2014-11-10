@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swe:DataRecord xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/swe/2.0 http://schemas.opengis.net/sweCommon/2.0/swe.xsd">
+	<!-- -->
+    <swe:extension>
+        <swe:NewStuff/>
+    </swe:extension>
+    <!-- -->
+	<swe:field name="boolean_field">
+		<swe:Boolean definition="http://sweet.jpl.nasa.gov/2.0/physDynamics.owl#Motion">
+		  <swe:label>Motion Detected</swe:label>
+		  <swe:description>True when motion was detected in the room</swe:description>
+			<swe:value>true</swe:value>
+		</swe:Boolean>
+	</swe:field>
+	<!-- -->
+	<swe:field name="boolean_field_no_value">
+		<swe:Boolean definition="http://mmisw.org/ont/q2o/test/timeContinuityTest">
+		  <swe:label>Time Continuity Test</swe:label>
+		  <swe:description>Set to true to enable time continuity test</swe:description>			
+		</swe:Boolean>
+	</swe:field>
+	<!-- -->
+	<swe:field name="text_field">
+		<swe:Text definition="http://mmisw.org/ont/mmi/device/Manufacturer">
+			<swe:label>Manufacturer</swe:label>  
+			<swe:value>Ocean Devices, Inc.</swe:value>
+		</swe:Text>		
+	</swe:field>
+	<!-- -->
+   <swe:field/>
+</swe:DataRecord>

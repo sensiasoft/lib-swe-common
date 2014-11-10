@@ -21,7 +21,7 @@ import net.opengis.swe.v20.CountRange;
 {
     static final long serialVersionUID = 1L;
     protected OgcProperty<AllowedValues> constraint;
-    protected int[] tmpValue;
+    protected int[] tmpValue = new int[2];
     
     
     public CountRangeImpl()

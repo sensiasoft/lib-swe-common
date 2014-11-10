@@ -23,7 +23,6 @@
 package org.vast.sweCommon;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Hashtable;
 import net.opengis.DateTimeDouble;
@@ -34,6 +33,7 @@ import net.opengis.swe.v20.AbstractDataComponent;
 import net.opengis.swe.v20.AbstractEncoding;
 import net.opengis.swe.v20.AbstractSimpleComponent;
 import net.opengis.swe.v20.AllowedTimes;
+import net.opengis.swe.v20.EncodedValues;
 import net.opengis.swe.v20.HasCodeSpace;
 import net.opengis.swe.v20.HasConstraints;
 import net.opengis.swe.v20.HasRefFrames;
@@ -311,12 +311,13 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         try
         {
             // TODO add support for XML encoding?
+            
             AbstractEncoding encoding = encodingReader.read(dom, encodingElt);
-            DataStreamParser parser = SWEFactory.createDataParser(encoding);
-            parser.setParentArray(arrayObj);
-            InputStream is = new DataSourceDOM(dom, valuesElt).getDataStream();
-            parser.parse(is);
+            String text = valuesElt.getTextContent();            
+            EncodedValues values = new EncodedValuesImpl();
+            values.setAsText(arrayObj, encoding, text);            
             arrayObj.setEncoding(encoding);
+            arrayObj.setValues(values);
         }
         catch (IOException e)
         {

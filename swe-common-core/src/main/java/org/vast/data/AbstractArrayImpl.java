@@ -36,30 +36,37 @@ import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.EncodedValues;
 
 
+/**
+ * <p>
+ * Provides common methods for all implementations of block components
+ * </p>
+ *
+ * <p>Copyright (c) 2014 Sensia Software LLC</p>
+ * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @since Nov 10, 2014
+ */
 public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implements DataArray, BlockComponent
 {
     private static final long serialVersionUID = -2536261971844652828L;
-
+    public final static String ELT_COUNT_NAME = "elementCount";
+    
     protected OgcPropertyImpl<Count> elementCount = new OgcPropertyImpl<Count>();
     protected OgcPropertyImpl<AbstractDataComponent> elementType;
     protected AbstractEncodingImpl encoding;
-    protected EncodedValues values = new EncodedValuesImpl();
-
-    /* properties */
-    public final static String ELT_COUNT_NAME = "elementCount";
+    protected EncodedValues values;
 
 
     public AbstractArrayImpl()
     {
-        // special property object to correctly set parent
+        // special property object to correctly set parent and name
         elementType = new OgcPropertyImpl<AbstractDataComponent>() 
         {
             @Override
             public void setValue(AbstractDataComponent value)
             {
-                super.setValue(value);
                 ((AbstractDataComponentImpl)value).setName(this.name);
                 ((AbstractDataComponentImpl)value).setParent(AbstractArrayImpl.this);
+                super.setValue(value);
             }
         };
         
@@ -69,8 +76,8 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
             @Override
             public void setValue(Count value)
             {
-                super.setValue(value);
                 ((CountImpl)value).setName(AbstractArrayImpl.ELT_COUNT_NAME);
+                super.setValue(value);
             }
         };        
     }
@@ -225,7 +232,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     @Override
     public boolean isSetValues()
     {
-        return (dataBlock != null);
+        return (values != null);
     }
 
 

@@ -136,7 +136,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
     public void parseData(DataSource dataSource) throws IOException
     {
         AbstractEncoding encoding = getEncoding();
-    	
+    	    	
         // special case for reading XML encoded stream from a DOM
         if (dataSource instanceof DataSourceDOM && encoding instanceof XMLEncoding)
         {

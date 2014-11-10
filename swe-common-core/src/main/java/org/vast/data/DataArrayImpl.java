@@ -443,7 +443,7 @@ public class DataArrayImpl extends AbstractArrayImpl
      * Set the size of this array to a new FIXED value
      * @param newSize
      */
-    public void setSize(int newSize)
+    public void setFixedSize(int newSize)
     {
         if (newSize >= 0)
         {
@@ -464,10 +464,10 @@ public class DataArrayImpl extends AbstractArrayImpl
     
     /**
      * Sets the size component to use (for variable size array).
-     * The component must have an ID and exist up the data component tree
+     * The component must have an id and exist up the data component tree
      * @param sizeComponent Count component to obtain array size from
      */
-    public void setSizeComponent(CountImpl sizeComponent)
+    public void setVariableSizeComponent(CountImpl sizeComponent)
     {
         assert(sizeComponent.isSetId());
         this.elementCount.setHref("#" + sizeComponent.getId());

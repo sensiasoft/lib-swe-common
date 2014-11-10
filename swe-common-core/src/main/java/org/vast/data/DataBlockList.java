@@ -51,14 +51,20 @@ public class DataBlockList extends AbstractDataBlock
     
     public DataBlockList()
     {
-    	this(false);
+    	this(1, false);
     }
     
     
-    public DataBlockList(boolean useArrayList)
+    public DataBlockList(int listSize)
+    {
+        this(listSize, true);
+    }
+    
+    
+    public DataBlockList(int listSize, boolean useArrayList)
     {
     	if (useArrayList)
-    		this.blockList = new ArrayList<DataBlock>();
+    		this.blockList = new ArrayList<DataBlock>(listSize);
     	else
     		this.blockList = new LinkedList<DataBlock>();
     	
@@ -144,12 +150,15 @@ public class DataBlockList extends AbstractDataBlock
 	
 	public void resize(int size)
 	{
-		DataBlock childBlock = get(0);
-        atomCount = childBlock.getAtomCount() * size;
-		blockList.clear();
-        
-        if (childBlock != null)
+		if (blockList instanceof ArrayList)
+		    ((ArrayList<DataBlock>)blockList).ensureCapacity(size);
+	    
+	    if (blockList.size() > 0)
         {
+		    DataBlock childBlock = get(0);
+		    atomCount = childBlock.getAtomCount() * size;
+    		blockList.clear();        
+        
             for (int i=0; i<size; i++)
                 blockList.add(childBlock.clone());
         }        

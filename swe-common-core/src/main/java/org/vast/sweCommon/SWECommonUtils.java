@@ -212,7 +212,8 @@ public class SWECommonUtils
     /**
      * Logic to guess SWE version from namespace
      * @param dom
-     * @return
+     * @param sweElt 
+     * @return version
      */
     public String getVersion(DOMHelper dom, Element sweElt)
     {
