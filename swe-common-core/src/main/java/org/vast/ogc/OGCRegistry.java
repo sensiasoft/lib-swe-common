@@ -96,7 +96,7 @@ public class OGCRegistry
      * Retrieves OWS version for given OGC spec
      * @param spec
      * @param version
-     * @return
+     * @return version string
      */
     public static String getOWSVersion(String spec, String version)
     {
@@ -114,7 +114,7 @@ public class OGCRegistry
      * @param type
      * @param subType
      * @param version
-     * @return
+     * @return reader instance
      * @throws IllegalStateException
      */
     public static Object createReader(String type, String subType, String version) throws IllegalStateException
@@ -127,7 +127,7 @@ public class OGCRegistry
      * Instantiates a reader object for the specified content type and version
      * @param type
      * @param version
-     * @return
+     * @return reader instance
      * @throws IllegalStateException
      */
     public static Object createReader(String type, String version) throws IllegalStateException
@@ -141,7 +141,7 @@ public class OGCRegistry
      * @param type
      * @param subType
      * @param version
-     * @return
+     * @return writer instance
      * @throws IllegalStateException
      */
     public static Object createWriter(String type, String subType, String version) throws IllegalStateException
@@ -154,7 +154,7 @@ public class OGCRegistry
      * Instantiates a writer object for the specified content type and version
      * @param type
      * @param version
-     * @return
+     * @return writer instance
      * @throws IllegalStateException
      */
     public static Object createWriter(String type, String version) throws IllegalStateException
@@ -499,7 +499,7 @@ public class OGCRegistry
 
     /**
      * Provides direct access to the readerClasses hashtable
-     * @return
+     * @return map of spec to reader classes
      */
     public static Hashtable<String, Class<?>> getReaderClasses()
     {
@@ -509,7 +509,7 @@ public class OGCRegistry
 
     /**
      * Provides direct access to the writerClasses hashtable
-     * @return
+     * @return map of spec to writer classes
      */
     public static Hashtable<String, Class<?>> getWriterClasses()
     {
@@ -519,7 +519,7 @@ public class OGCRegistry
 
     /**
      * Provides direct access to the namespaceBuilders hashtable
-     * @return
+     * @return map of spec to namespace URIs
      */
     public static Hashtable<String, String> getNamespaces()
     {

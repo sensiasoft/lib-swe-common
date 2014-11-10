@@ -41,7 +41,7 @@ public abstract class AbstractDataBlock implements DataBlock, Serializable
     /**
      * Regenerate an identical datablock of same
      * size with a new underlying object
-     * @return
+     * @return new data block
      */
     public abstract AbstractDataBlock renew();
     
@@ -56,7 +56,7 @@ public abstract class AbstractDataBlock implements DataBlock, Serializable
     /**
      * Allow direct access to underlying object carrying
      * the data (usually a primitive array or composite)
-     * @return
+     * @return underlying object
      */
     public abstract Object getUnderlyingObject();
     

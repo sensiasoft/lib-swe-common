@@ -23,18 +23,22 @@
 
 package org.vast.ogc.xlink;
 
+import java.io.IOException;
+
 
 /**
  * <p>
  * Implementation of Xlink Reference that keeps a cached version of the target.
  * Object is cached on the first call to getTarget().
  * Reloading the target object can be enforced by calling refresh().
+ * @param <TargetType> Type of the link target object
  * </p>
  *
  * <p>Copyright (c) 2012</p>
  * @author Alexandre Robin
  * @since Sep 28, 2012
  * @version 1.0
+
  */
 public class CachedReference<TargetType> implements IXlinkReference<TargetType>
 {
@@ -114,8 +118,15 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
     @Override
     public TargetType getTarget()
     {
-        if (value == null)
-            refresh();
+        try
+        {
+            if (value == null)
+                refresh();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("Error while fetching linked content", e);
+        }
         
         return value;
     }
@@ -127,7 +138,7 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
     }
     
     
-    public void refresh()
+    public void refresh() throws IOException
     {
         if (resolver == null)
             throw new IllegalStateException("No resolver has been set for " + href);
@@ -140,7 +151,7 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
     }
     
     
-    protected TargetType fetchTarget(String href)
+    protected TargetType fetchTarget(String href) throws IOException
     {
         if (href != null)
             return resolver.fetchTarget(href);

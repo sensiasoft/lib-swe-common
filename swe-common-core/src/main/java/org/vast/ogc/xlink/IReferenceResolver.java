@@ -23,11 +23,14 @@
 
 package org.vast.ogc.xlink;
 
+import java.io.IOException;
+
 
 /**
  * <p>
  * Interface for resolving a URI to an object instance obtained from data
  * referenced from an XlinkReference object.
+ * @param <TargetType> Type of the link target object
  * </p>
  *
  * <p>Copyright (c) 2012</p>
@@ -40,8 +43,8 @@ public interface IReferenceResolver<TargetType>
     /**
      * Fetches the object referenced by the given URI
      * @param uri
-     * @return
-     * @throws RuntimeException if the object cannot be fetched
+     * @return target object
+     * @throws IOException if the object cannot be fetched
      */
-    public TargetType fetchTarget(String uri) throws RuntimeException;
+    public TargetType fetchTarget(String uri) throws IOException;
 }

@@ -27,6 +27,7 @@ package org.vast.ogc.xlink;
 /**
  * <p>
  * Interface for an xlink reference
+ * @param <TargetType> Type of the link target object
  * </p>
  *
  * <p>Copyright (c) 2012</p>
