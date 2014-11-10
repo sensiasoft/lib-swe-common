@@ -21,10 +21,10 @@
 package org.vast.sweCommon;
 
 import java.util.Stack;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BlockComponent;
-import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.ScalarComponent;
 import org.vast.cdm.common.DataHandler;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
@@ -32,7 +32,6 @@ import org.vast.data.AbstractArrayImpl;
 import org.vast.data.DataArrayImpl;
 import org.vast.data.DataChoiceImpl;
 import org.vast.data.CountImpl;
-import org.vast.data.DataValue;
 
 
 public abstract class DataTreeVisitor
@@ -43,7 +42,7 @@ public abstract class DataTreeVisitor
     protected BlockComponent parentArray;
     protected int parentArrayIndex;
 	protected DataComponent dataComponents;
-	protected AbstractEncoding dataEncoding;
+	protected DataEncoding dataEncoding;
 	protected Stack<Record> componentStack;
 	protected Record currentRecord;
     protected boolean newBlock = true;
@@ -76,14 +75,14 @@ public abstract class DataTreeVisitor
 	}
 	
 	
-	protected abstract void processAtom(DataValue component) throws Exception;
+	protected abstract void processAtom(ScalarComponent component) throws Exception;
 	
 	
 	/**
 	 * Process an aggregate component
 	 * @param scalarComponent
 	 * @return true if children should be processed, false otherwise
-	 * @throws CDMException
+	 * @throws Exception
 	 */
 	protected abstract boolean processBlock(DataComponent component) throws Exception;
 	
@@ -109,7 +108,7 @@ public abstract class DataTreeVisitor
     	DataComponent next = currentRecord.component;
     	
         // if child is not a DataValue, go in !!
-        if (!(next instanceof DataValue))
+        if (!(next instanceof ScalarComponent))
         {
         	// send start block event
         	if (dataHandler != null)
@@ -180,7 +179,7 @@ public abstract class DataTreeVisitor
             if (dataHandler != null)
                 dataHandler.beginDataAtom(next);
             
-            processAtom((DataValue)next);
+            processAtom((ScalarComponent)next);
             
             if (dataHandler != null)
                 dataHandler.endDataAtom(next, next.getData());
@@ -285,7 +284,7 @@ public abstract class DataTreeVisitor
 	}
 
 
-	public AbstractEncoding getDataEncoding()
+	public DataEncoding getDataEncoding()
 	{
 		return this.dataEncoding;
 	}
@@ -315,7 +314,7 @@ public abstract class DataTreeVisitor
 	}
 
 
-	public void setDataEncoding(AbstractEncoding dataEncoding)
+	public void setDataEncoding(DataEncoding dataEncoding)
 	{
 		this.dataEncoding = dataEncoding;
 	}

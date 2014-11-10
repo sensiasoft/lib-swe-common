@@ -20,8 +20,8 @@
 
 package org.vast.sweCommon;
 
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.cdm.common.DataHandler;
 import org.vast.cdm.common.DataStreamWriter;
 

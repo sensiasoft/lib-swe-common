@@ -9,14 +9,14 @@ import net.opengis.OgcPropertyList;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface DataRecord extends AbstractDataComponent
+public interface DataRecord extends DataComponent
 {
     
     
     /**
      * Gets the list of field properties
      */
-    public OgcPropertyList<AbstractDataComponent> getFieldList();
+    public OgcPropertyList<DataComponent> getFieldList();
     
     
     /**
@@ -28,12 +28,12 @@ public interface DataRecord extends AbstractDataComponent
     /**
      * Gets the field property with the given name
      */
-    public AbstractDataComponent getField(String name);
+    public DataComponent getField(String name);
     
     
     /**
      * Adds a new field property
      */
-    public void addField(String name, AbstractDataComponent field);
+    public void addField(String name, DataComponent field);
     
 }

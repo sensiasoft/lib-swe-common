@@ -35,7 +35,7 @@ package net.opengis.swe.v20;
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
  * @since Nov 9, 2014
  */
-public interface ScalarComponent extends AbstractSimpleComponent
+public interface ScalarComponent extends SimpleComponent
 {
 
 }

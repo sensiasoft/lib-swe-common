@@ -25,7 +25,7 @@ package org.vast.ogc.om;
 
 import java.util.List;
 import java.util.Map;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.IDefinition;
 import org.vast.ogc.gml.IFeature;
 import org.vast.ogc.xlink.IXlinkReference;

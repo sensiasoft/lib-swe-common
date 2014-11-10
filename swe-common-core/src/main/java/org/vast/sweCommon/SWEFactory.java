@@ -20,7 +20,7 @@
 
 package org.vast.sweCommon;
 
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.JSONEncoding;
 import net.opengis.swe.v20.TextEncoding;
@@ -32,7 +32,7 @@ import org.vast.cdm.common.DataStreamWriter;
 public class SWEFactory
 {
         
-    public static DataStreamParser createDataParser(AbstractEncoding encoding)
+    public static DataStreamParser createDataParser(DataEncoding encoding)
     {
         DataStreamParser parser = null;
         
@@ -50,7 +50,7 @@ public class SWEFactory
     }
     
     
-    public static DataStreamWriter createDataWriter(AbstractEncoding encoding)
+    public static DataStreamWriter createDataWriter(DataEncoding encoding)
     {
         DataStreamWriter writer = null;
         

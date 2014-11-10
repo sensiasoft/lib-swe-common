@@ -10,7 +10,7 @@ import java.util.List;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface BinaryEncoding extends AbstractEncoding
+public interface BinaryEncoding extends DataEncoding
 {
     
     

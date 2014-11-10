@@ -3,13 +3,13 @@ package org.vast.data;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
-import org.vast.cdm.common.DataComponent;
 import net.opengis.HasCopy;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.ByteEncoding;
 import net.opengis.swe.v20.BinaryComponent;
+import net.opengis.swe.v20.DataComponent;
 
 
 /**

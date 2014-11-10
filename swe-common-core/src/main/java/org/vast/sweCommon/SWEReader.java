@@ -22,7 +22,8 @@ package org.vast.sweCommon;
 
 import java.io.IOException;
 import java.io.InputStream;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
 import org.vast.cdm.common.*;
 
 
@@ -46,7 +47,7 @@ import org.vast.cdm.common.*;
  */
 public abstract class SWEReader implements InputStreamProvider
 {
-	protected AbstractEncoding dataEncoding;
+	protected DataEncoding dataEncoding;
 	protected DataComponent dataComponents;
 	protected DataStreamParser dataParser;
 	protected DataHandler dataHandler;
@@ -65,7 +66,7 @@ public abstract class SWEReader implements InputStreamProvider
 	}
 	
 	
-	public void setDataEncoding(AbstractEncoding dataEncoding)
+	public void setDataEncoding(DataEncoding dataEncoding)
 	{
 		this.dataEncoding = dataEncoding;
 	}
@@ -83,7 +84,7 @@ public abstract class SWEReader implements InputStreamProvider
 	}
 	
 	
-	public AbstractEncoding getDataEncoding()
+	public DataEncoding getDataEncoding()
 	{
 		return this.dataEncoding;
 	}

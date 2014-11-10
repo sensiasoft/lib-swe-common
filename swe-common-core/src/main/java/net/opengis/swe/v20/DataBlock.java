@@ -18,14 +18,14 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.cdm.common;
+package net.opengis.swe.v20;
 
 
 /**
  * <p>
  * Implementations of this class should be able to carry data
  * for any part of the data cluster defined in the DataDefinition
- * part of the Common Data Model. It should provide access to any
+ * part of the SWE Common Data Model. It should provide access to any
  * data atom through primitive specific methods. Data should be
  * casted from one primitive to another when needed and possible.
  * In order to improve performance, no check needs to be enforced on

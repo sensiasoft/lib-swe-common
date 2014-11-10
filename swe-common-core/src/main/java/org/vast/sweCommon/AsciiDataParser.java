@@ -22,10 +22,11 @@ package org.vast.sweCommon;
 
 import java.io.*;
 import java.text.ParseException;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.TextEncoding;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataType;
 import org.vast.data.*;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.ReaderException;
@@ -218,7 +219,7 @@ public class AsciiDataParser extends AbstractDataParser
 	
 	
     @Override
-	protected void processAtom(DataValue component) throws IOException
+	protected void processAtom(ScalarComponent component) throws IOException
 	{
         String token = readToken();
         parseToken(component, token, decimalSep);
@@ -245,7 +246,7 @@ public class AsciiDataParser extends AbstractDataParser
      * @throws CDMException
      * @throws NumberFormatException
      */
-    protected void parseToken(AbstractSimpleComponentImpl component, String token, char decimalSep) throws ReaderException
+    protected void parseToken(ScalarComponent component, String token, char decimalSep) throws ReaderException
     {
         // get component data type
         DataBlock data = component.getData();

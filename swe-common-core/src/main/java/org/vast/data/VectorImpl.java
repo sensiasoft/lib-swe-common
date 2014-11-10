@@ -1,9 +1,9 @@
 package org.vast.data;
 
-import org.vast.cdm.common.DataComponent;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.swe.v20.Count;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Time;

@@ -22,9 +22,8 @@ package org.vast.data;
 
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
-import net.opengis.swe.v20.AbstractDataComponent;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
-import org.vast.cdm.common.DataComponent;
 
 
 /**
@@ -36,7 +35,7 @@ import org.vast.cdm.common.DataComponent;
  * @author Alexandre Robin
  * @version 1.0
  */
-public class DataRecordImpl extends AbstractRecordImpl<AbstractDataComponent> implements DataRecord
+public class DataRecordImpl extends AbstractRecordImpl<DataComponent> implements DataRecord
 {
     private static final long serialVersionUID = 5402778409089789225L;
 
@@ -97,7 +96,7 @@ public class DataRecordImpl extends AbstractRecordImpl<AbstractDataComponent> im
      * Gets the list of field properties
      */
     @Override
-    public OgcPropertyList<AbstractDataComponent> getFieldList()
+    public OgcPropertyList<DataComponent> getFieldList()
     {
         return fieldList;
     }
@@ -117,7 +116,7 @@ public class DataRecordImpl extends AbstractRecordImpl<AbstractDataComponent> im
      * Gets the field property with the given name
      */
     @Override
-    public AbstractDataComponent getField(String name)
+    public DataComponent getField(String name)
     {
         return fieldList.get(name);
     }
@@ -127,9 +126,9 @@ public class DataRecordImpl extends AbstractRecordImpl<AbstractDataComponent> im
      * Adds a new field property
      */
     @Override
-    public void addField(String name, AbstractDataComponent field)
+    public void addField(String name, DataComponent field)
     {
-        fieldList.add(new OgcPropertyImpl<AbstractDataComponent>(name, (AbstractDataComponentImpl)field));
+        fieldList.add(new OgcPropertyImpl<DataComponent>(name, (AbstractDataComponentImpl)field));
     }
 
 }

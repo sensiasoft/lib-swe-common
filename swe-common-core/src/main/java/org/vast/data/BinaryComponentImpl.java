@@ -1,8 +1,8 @@
 package org.vast.data;
 
-import org.vast.cdm.common.DataType;
 import net.opengis.HasCopy;
 import net.opengis.swe.v20.BinaryComponent;
+import net.opengis.swe.v20.DataType;
 
 
 /**

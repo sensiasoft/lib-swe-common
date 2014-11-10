@@ -23,7 +23,7 @@ package org.vast.data;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Stack;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
 
 
 /**

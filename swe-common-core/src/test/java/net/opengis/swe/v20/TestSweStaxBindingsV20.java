@@ -34,7 +34,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import net.opengis.NamespaceRegister;
-import net.opengis.swe.v20.AbstractDataComponent;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.AbstractSWE;
 import net.opengis.swe.v20.DataStream;
 import org.custommonkey.xmlunit.Validator;
@@ -90,7 +90,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         if (isDataStream)
             sweObj = sweHelper.readDataStream(reader);
         else
-            sweObj = sweHelper.readAbstractDataComponent(reader);
+            sweObj = sweHelper.readDataComponent(reader);
         is.close();
         
         return sweObj;
@@ -118,7 +118,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         if (sweObj instanceof DataStream)
             sweHelper.writeDataStream(writer, (DataStream)sweObj);
         else
-            sweHelper.writeAbstractDataComponent(writer, (AbstractDataComponent)sweObj, true);
+            sweHelper.writeDataComponent(writer, (DataComponent)sweObj, true);
         writer.writeEndDocument();
         os.flush();
     }

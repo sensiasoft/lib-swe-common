@@ -24,12 +24,15 @@ package org.vast.sweCommon;
 
 import java.io.IOException;
 import java.io.InputStream;
-import org.vast.data.*;
+import net.opengis.swe.v20.DataArray;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.ScalarComponent;
+import org.vast.data.AbstractArrayImpl;
+import org.vast.data.DataChoiceImpl;
 import org.vast.util.ReaderException;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.vast.xml.XMLReaderException;
-import org.vast.cdm.common.*;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -189,7 +192,7 @@ public class XmlDataParserDOM extends AbstractDataParser
 		Record parentRecord = componentStack.peek();
 		
 		// case of multiple children in DataArray
-		if (parentRecord.component instanceof DataArrayImpl)
+		if (parentRecord.component instanceof DataArray)
 		{
 			NodeList elts = dom.getElements(currentParentElt, eltName);
 			return (Element)elts.item(parentRecord.index);
@@ -231,7 +234,7 @@ public class XmlDataParserDOM extends AbstractDataParser
 	
 	
 	@Override
-	protected void processAtom(DataValue component) throws IOException
+	protected void processAtom(ScalarComponent component) throws IOException
 	{
 		setCurrentParent();
 		String localName = component.getName();

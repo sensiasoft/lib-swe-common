@@ -30,15 +30,15 @@ import net.opengis.swe.v20.ScalarComponent;
 
 /**
  * <p>
- * Parser for data streams written using SWE Common XML encoding
+ * Reads SWE data streams in JSON format
  * </p>
  *
- * <p>Copyright (c) 2008</p>
+ * <p>Copyright (c) 2014</p>
  * @author Alexandre Robin <alexandre.robin@spotimage.fr>
- * @since Feb, 28 2008
+ * @since Nov, 2 2014
  * @version 1.0
  */
-public class XmlDataParser extends AbstractDataParser
+public class JSONDataParser extends AbstractDataParser
 {
 
 	public void setInput(InputStream inputStream) throws IOException
@@ -56,7 +56,7 @@ public class XmlDataParser extends AbstractDataParser
 
 	
 	@Override
-	protected void processAtom(ScalarComponent component) throws IOException
+	protected void processAtom(ScalarComponent scalarInfo) throws IOException
 	{
 		// TODO Auto-generated method stub
 		
@@ -64,7 +64,7 @@ public class XmlDataParser extends AbstractDataParser
 
 
 	@Override
-	protected boolean processBlock(DataComponent component) throws IOException
+	protected boolean processBlock(DataComponent blockInfo) throws IOException
 	{
 	    // TODO Auto-generated method stub
 	    return true;

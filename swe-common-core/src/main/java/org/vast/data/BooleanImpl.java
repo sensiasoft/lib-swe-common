@@ -1,9 +1,8 @@
 package org.vast.data;
 
 import java.util.List;
-import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataType;
 import net.opengis.swe.v20.Boolean;
+import net.opengis.swe.v20.DataType;
 
 
 /**
@@ -87,7 +86,7 @@ public class BooleanImpl extends DataValue implements Boolean
     
     
     @Override
-    public void validateData(List<CDMException> errorList)
+    public void validateData(List<Exception> errorList)
     {        
     }
     

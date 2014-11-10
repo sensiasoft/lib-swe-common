@@ -22,10 +22,8 @@ package org.vast.data;
 
 import java.util.List;
 import net.opengis.swe.v20.Count;
-import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
-
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 
 /**
  * <p>
@@ -246,7 +244,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     
     
     @Override
-    public void validateData(List<CDMException> errorList)
+    public void validateData(List<Exception> errorList)
     {
     	// do only if constraints are specified on descendants
     	if (hasConstraints())

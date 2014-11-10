@@ -20,17 +20,24 @@
 
 package org.vast.sweCommon;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteOrder;
 import java.util.List;
 import net.opengis.swe.v20.BinaryBlock;
-import net.opengis.swe.v20.BinaryComponent;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.ByteEncoding;
-import org.vast.data.*;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ScalarComponent;
 import org.vast.util.WriterException;
-import org.vast.cdm.common.*;
+import org.vast.cdm.common.DataOutputExt;
+import org.vast.data.AbstractDataComponentImpl;
+import org.vast.data.BinaryComponentImpl;
+import org.vast.data.DataChoiceImpl;
 
 
 /**
@@ -143,10 +150,10 @@ public class BinaryDataWriter extends AbstractDataWriter
 	
 	
 	@Override
-	protected void processAtom(DataValue component) throws IOException
+	protected void processAtom(ScalarComponent component) throws IOException
 	{
 		// get encoding info for component
-		BinaryComponent binaryInfo = (BinaryComponent)component.getEncodingInfo();
+		BinaryMember binaryInfo = ((AbstractDataComponentImpl)component).getEncodingInfo();
 		
 		try
         {
@@ -166,7 +173,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void writeBinaryAtom(DataValue component, BinaryComponent binaryInfo) throws Exception
+	private void writeBinaryAtom(ScalarComponent component, BinaryMember binaryInfo) throws Exception
 	{
 	    DataType dataType = ((BinaryComponentImpl)binaryInfo).getCdmDataType();
         DataBlock data = component.getData();

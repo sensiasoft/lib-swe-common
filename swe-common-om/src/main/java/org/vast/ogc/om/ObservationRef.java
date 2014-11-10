@@ -30,7 +30,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.IDefinition;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.IFeature;

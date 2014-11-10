@@ -22,11 +22,15 @@
 
 package org.vast.sweCommon;
 
-import java.io.*;
-import org.vast.data.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.ScalarComponent;
+import org.vast.data.AbstractArrayImpl;
+import org.vast.data.XMLEncodingImpl;
 import org.vast.util.WriterException;
 import org.vast.xml.DOMHelper;
-import org.vast.cdm.common.*;
 import org.w3c.dom.Element;
 
 
@@ -189,7 +193,7 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarInfo) throws IOException
+	protected void processAtom(ScalarComponent scalarInfo) throws IOException
 	{
 		setCurrentParent();
 		String localName = scalarInfo.getName();

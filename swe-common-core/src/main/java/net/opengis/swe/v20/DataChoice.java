@@ -9,7 +9,7 @@ import net.opengis.OgcPropertyList;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface DataChoice extends AbstractDataComponent
+public interface DataChoice extends DataComponent
 {
     
     
@@ -34,7 +34,7 @@ public interface DataChoice extends AbstractDataComponent
     /**
      * Gets the list of item properties
      */
-    public OgcPropertyList<AbstractDataComponent> getItemList();
+    public OgcPropertyList<DataComponent> getItemList();
     
     
     /**
@@ -46,11 +46,11 @@ public interface DataChoice extends AbstractDataComponent
     /**
      * Gets the item property with the given name
      */
-    public AbstractDataComponent getItem(String name);
+    public DataComponent getItem(String name);
     
     
     /**
      * Adds a new item property
      */
-    public void addItem(String name, AbstractDataComponent item);
+    public void addItem(String name, DataComponent item);
 }

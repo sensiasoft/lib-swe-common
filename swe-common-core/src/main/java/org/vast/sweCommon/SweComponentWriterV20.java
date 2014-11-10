@@ -29,9 +29,6 @@ import java.util.List;
 import java.util.Map;
 import net.opengis.IDateTime;
 import net.opengis.OgcProperty;
-import net.opengis.swe.v20.AbstractDataComponent;
-import net.opengis.swe.v20.AbstractEncoding;
-import net.opengis.swe.v20.AbstractSimpleComponent;
 import net.opengis.swe.v20.AllowedTimes;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.AllowedValues;
@@ -42,9 +39,13 @@ import net.opengis.swe.v20.CategoryRange;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.CountRange;
 import net.opengis.swe.v20.DataArray;
+import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataChoice;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataConstraint;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.HasCodeSpace;
 import net.opengis.swe.v20.HasConstraints;
 import net.opengis.swe.v20.HasRefFrames;
@@ -55,16 +56,13 @@ import net.opengis.swe.v20.NilValues;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.QuantityRange;
 import net.opengis.swe.v20.RangeComponent;
+import net.opengis.swe.v20.SimpleComponent;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.TimeRange;
 import net.opengis.swe.v20.Vector;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataSource;
 import org.vast.cdm.common.DataStreamWriter;
-import org.vast.cdm.common.DataType;
-import org.vast.data.AbstractDataComponentImpl;
 import org.vast.data.DataList;
 import org.vast.data.DataValue;
 import org.vast.data.TextEncodingImpl;
@@ -294,7 +292,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
         // write tuple values if present
         if (dataArray.isSetValues() && writeInlineData)
         {
-        	AbstractEncoding dataEncoding = (AbstractEncoding)dataArray.getEncoding();
+        	DataEncoding dataEncoding = dataArray.getEncoding();
         	if (dataEncoding == null)
         		dataEncoding = new TextEncodingImpl("\n", " ");
         	
@@ -302,7 +300,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
         	Element encElt = encodingWriter.write(dom, dataEncoding);
         	encPropElt.appendChild(encElt);
         	
-        	Element tupleValuesElt = writeArrayValues(dom, (DataComponent)dataArray, (AbstractDataComponentImpl)dataArray.getElementType(), dataEncoding);
+        	Element tupleValuesElt = writeArrayValues(dom, dataArray, dataArray.getElementType(), dataEncoding);
         	arrayElt.appendChild(tupleValuesElt);
         }
     }
@@ -332,7 +330,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
         addComponentProperty(dom, streamElt, "swe:elementType", dataList.getElementTypeProperty(), false);
         
         // write encoding
-        AbstractEncoding encoding = (AbstractEncoding)dataList.getEncoding();        
+        DataEncoding encoding = dataList.getEncoding();        
         Element encPropElt = dom.addElement(streamElt, "swe:encoding");
         Element encElt = encodingWriter.write(dom, encoding);
         encPropElt.appendChild(encElt);
@@ -346,7 +344,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
         }        
         else if (dataList.getData() != null && writeInlineData)
         {   
-            Element tupleValuesElt = writeArrayValues(dom, (DataComponent)dataList, dataList.getElementType(), encoding);
+            Element tupleValuesElt = writeArrayValues(dom, dataList, dataList.getElementType(), encoding);
             streamElt.appendChild(tupleValuesElt);
         }
         
@@ -477,7 +475,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     }
     
     
-    private String getElementName(AbstractSimpleComponent dataValue)
+    private String getElementName(SimpleComponent dataValue)
     {
     	String eltName = null;
     	
@@ -519,7 +517,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     }
     
     
-    private void writeBaseProperties(DOMHelper dom, AbstractDataComponent dataComponent, Element dataComponentElt) throws XMLWriterException
+    private void writeBaseProperties(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws XMLWriterException
     {
     	// id
     	String id = dataComponent.getId();
@@ -538,7 +536,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     }
     
     
-    private void writeCommonAttributes(DOMHelper dom, AbstractDataComponent dataComponent, Element dataComponentElt) throws XMLWriterException
+    private void writeCommonAttributes(DOMHelper dom, DataComponent dataComponent, Element dataComponentElt) throws XMLWriterException
     {
     	// definition URI
         String defUri = dataComponent.getDefinition();
@@ -575,15 +573,15 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
                 }
             }
         }
-        else if (dataComponent instanceof AbstractSimpleComponent)
+        else if (dataComponent instanceof SimpleComponent)
         {
             // reference frame
-            String refFrame = ((AbstractSimpleComponent)dataComponent).getReferenceFrame();
+            String refFrame = ((SimpleComponent)dataComponent).getReferenceFrame();
             if (refFrame != null)
                 dataComponentElt.setAttribute("referenceFrame", refFrame);
             
             // axis code attribute
-            String axisCode = ((AbstractSimpleComponent)dataComponent).getAxisID();
+            String axisCode = ((SimpleComponent)dataComponent).getAxisID();
             if (axisCode != null)
                 dataComponentElt.setAttribute("axisID", axisCode);
         }
@@ -600,7 +598,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
      * @return
      * @throws XMLWriterException
      */
-    private Element writeArrayValues(DOMHelper dom, DataComponent array, AbstractDataComponentImpl elementType, AbstractEncoding encoding) throws XMLWriterException
+    private Element writeArrayValues(DOMHelper dom, DataComponent array, DataComponent elementType, DataEncoding encoding) throws XMLWriterException
     {
         Element tupleValuesElement = dom.createElement("swe:values");
         ByteArrayOutputStream os = new ByteArrayOutputStream(array.getData().getAtomCount()*10);
@@ -638,7 +636,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     }
     
     
-    private void writeUom(DOMHelper dom, AbstractSimpleComponent dataValue, Element dataValueElt) throws XMLWriterException
+    private void writeUom(DOMHelper dom, SimpleComponent dataValue, Element dataValueElt) throws XMLWriterException
     {
         if (!(dataValue instanceof HasUom))
             return;
@@ -653,7 +651,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     }
     
     
-    private void writeCodeSpace(DOMHelper dom, AbstractSimpleComponent dataValue, Element categoryElt) throws XMLWriterException
+    private void writeCodeSpace(DOMHelper dom, SimpleComponent dataValue, Element categoryElt) throws XMLWriterException
     {
         if (!(dataValue instanceof HasCodeSpace))
             return;
@@ -665,7 +663,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     
     
     @SuppressWarnings("rawtypes")
-    private void writeConstraints(DOMHelper dom, AbstractSimpleComponent dataValue, Element dataValueElt) throws XMLWriterException
+    private void writeConstraints(DOMHelper dom, SimpleComponent dataValue, Element dataValueElt) throws XMLWriterException
     {
     	if (!(dataValue instanceof HasConstraints))
     	    return;
@@ -761,7 +759,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     }
     
     
-    private void writeQuality(DOMHelper dom, AbstractSimpleComponent dataValue, Element dataValueElt) throws XMLWriterException
+    private void writeQuality(DOMHelper dom, SimpleComponent dataValue, Element dataValueElt) throws XMLWriterException
     {
     	int listSize = dataValue.getNumQualitys();
         for (int i=0; i<listSize; i++)
@@ -769,7 +767,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     }
     
     
-    private void writeNilValues(DOMHelper dom, AbstractSimpleComponent dataValue, Element dataValueElt) throws XMLWriterException
+    private void writeNilValues(DOMHelper dom, SimpleComponent dataValue, Element dataValueElt) throws XMLWriterException
     {
         if (!dataValue.isSetNilValues())
             return;

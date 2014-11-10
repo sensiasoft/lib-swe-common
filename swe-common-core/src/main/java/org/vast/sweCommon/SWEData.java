@@ -23,10 +23,10 @@ package org.vast.sweCommon;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.XMLEncoding;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataSink;
 import org.vast.cdm.common.DataSource;
 import org.vast.cdm.common.DataStreamParser;
@@ -135,7 +135,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
      */
     public void parseData(DataSource dataSource) throws IOException
     {
-        AbstractEncoding encoding = getEncoding();
+        DataEncoding encoding = getEncoding();
     	    	
         // special case for reading XML encoded stream from a DOM
         if (dataSource instanceof DataSourceDOM && encoding instanceof XMLEncoding)
@@ -164,7 +164,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
      */
     public void writeData(DataSink dataSink) throws IOException
     {
-        AbstractEncoding encoding = getEncoding();
+        DataEncoding encoding = getEncoding();
         
         // special case for writing XML encoded stream in a DOM
         if (dataSink instanceof DataSinkDOM && encoding instanceof XMLEncoding)

@@ -23,7 +23,7 @@
 package org.vast.sweCommon;
 
 import java.nio.ByteOrder;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryComponent;
 import net.opengis.swe.v20.BinaryEncoding;
@@ -53,7 +53,7 @@ import org.w3c.dom.NodeList;
  * @since Feb 1, 2008
  * @version 1.0
  */
-public class SweEncodingReaderV20 implements IXMLReaderDOM<AbstractEncoding>
+public class SweEncodingReaderV20 implements IXMLReaderDOM<DataEncoding>
 {
     
     public SweEncodingReaderV20()
@@ -61,9 +61,9 @@ public class SweEncodingReaderV20 implements IXMLReaderDOM<AbstractEncoding>
     }
     
     
-    public AbstractEncoding read(DOMHelper dom, Element encodingElt) throws XMLReaderException
+    public DataEncoding read(DOMHelper dom, Element encodingElt) throws XMLReaderException
     {
-        AbstractEncoding encoding = null;
+        DataEncoding encoding = null;
     	String encodingName = encodingElt.getLocalName();
     	
         if (encodingName.equals("TextEncoding"))

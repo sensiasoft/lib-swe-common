@@ -23,13 +23,11 @@ package org.vast.data;
 import java.util.List;
 import java.util.ListIterator;
 import net.opengis.OgcPropertyImpl;
-import net.opengis.swe.v20.AbstractDataComponent;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataStream;
-import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
 
 
 /**
@@ -55,10 +53,10 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     public DataList()
     {
         // special property object to correctly set parent
-        elementType = new OgcPropertyImpl<AbstractDataComponent>()
+        elementType = new OgcPropertyImpl<DataComponent>()
         {
             @Override
-            public void setValue(AbstractDataComponent value)
+            public void setValue(DataComponent value)
             {
                 super.setValue(value);
                 ((AbstractDataComponentImpl)value).setName(this.name);
@@ -107,7 +105,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     }
     
     
-    public DataComponent getListComponent()
+    public AbstractDataComponentImpl getListComponent()
     {
         return (AbstractDataComponentImpl)elementType.getValue();
     }
@@ -158,7 +156,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     
     
     @Override
-    public void validateData(List<CDMException> errorList)
+    public void validateData(List<Exception> errorList)
     {
     	// do only if constraints are specified on descendants
     	if (hasConstraints())
@@ -247,7 +245,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
 
 
     @Override
-    public DataComponent getComponent(String name)
+    public AbstractDataComponentImpl getComponent(String name)
     {
         if (!name.equals(elementType.getName()))
             return null;

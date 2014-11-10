@@ -27,7 +27,7 @@ package org.vast.data;
 
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyList;
-import net.opengis.swe.v20.AbstractDataComponent;
+import net.opengis.swe.v20.DataComponent;
 
 
 /**
@@ -42,7 +42,7 @@ import net.opengis.swe.v20.AbstractDataComponent;
  * @param <ComponentType> Type of data component this list can hold
  * @since Nov 9, 2014
  */
-public class DataComponentPropertyList<ComponentType extends AbstractDataComponent> extends OgcPropertyList<ComponentType>
+public class DataComponentPropertyList<ComponentType extends DataComponent> extends OgcPropertyList<ComponentType>
 {
     AbstractDataComponentImpl parent;
     

@@ -24,9 +24,8 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.data;
 
-import net.opengis.swe.v20.AbstractDataComponent;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataComponent;
 
 
 /**
@@ -77,7 +76,7 @@ public class DataComponentHelper
 		for (int i=0; i<childCount; i++)
 		{
 		    DataComponent child = parent.getComponent(i);
-			String childDef = ((AbstractDataComponent)child).getDefinition();
+			String childDef = ((DataComponent)child).getDefinition();
 			
 			if (childDef != null && childDef.equals(defUri))
 				return child;

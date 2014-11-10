@@ -8,7 +8,7 @@ package net.opengis.swe.v20;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface TextEncoding extends AbstractEncoding
+public interface TextEncoding extends DataEncoding
 {
     
     

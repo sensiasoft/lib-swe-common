@@ -20,12 +20,14 @@
 
 package org.vast.cdm.common;
 
+import net.opengis.swe.v20.DataComponent;
+
 
 
 public interface RawDataHandler
 {
-	public void startData(DataComponent info);
-
+	
+    public void startData(DataComponent info);
 
 	public void endData(DataComponent info, byte[] data);
 }

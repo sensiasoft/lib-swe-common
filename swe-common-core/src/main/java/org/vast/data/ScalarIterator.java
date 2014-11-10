@@ -21,8 +21,7 @@
 package org.vast.data;
 
 import java.util.*;
-
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
 
 
 /**

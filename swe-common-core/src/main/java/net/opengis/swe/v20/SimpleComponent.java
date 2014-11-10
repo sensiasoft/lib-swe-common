@@ -10,14 +10,14 @@ import net.opengis.OgcPropertyList;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface AbstractSimpleComponent extends AbstractDataComponent
+public interface SimpleComponent extends DataComponent
 {
     
     
     /**
      * Gets the list of quality properties
      */
-    public OgcPropertyList<AbstractSimpleComponent> getQualityList();
+    public OgcPropertyList<SimpleComponent> getQualityList();
     
     
     /**

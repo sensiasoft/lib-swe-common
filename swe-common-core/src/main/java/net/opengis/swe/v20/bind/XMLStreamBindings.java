@@ -11,11 +11,11 @@ import net.opengis.IDateTime;
 import net.opengis.HrefResolverXML;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
-import net.opengis.swe.v20.AbstractDataComponent;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.AbstractSWE;
 import net.opengis.swe.v20.AbstractSWEIdentifiable;
-import net.opengis.swe.v20.AbstractSimpleComponent;
+import net.opengis.swe.v20.SimpleComponent;
 import net.opengis.swe.v20.AllowedTimes;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.AllowedValues;
@@ -106,13 +106,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             found = checkElementName(reader, "field");
             if (found)
             {
-                final OgcProperty<AbstractDataComponent> fieldProp = new OgcPropertyImpl<AbstractDataComponent>();
+                final OgcProperty<DataComponent> fieldProp = new OgcPropertyImpl<DataComponent>();
                 readPropertyAttributes(reader, fieldProp);
                 
                 reader.nextTag();
                 if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
                 {
-                    fieldProp.setValue(this.readAbstractDataComponent(reader));                    
+                    fieldProp.setValue(this.readDataComponent(reader));                    
                     reader.nextTag(); // end property tag
                 }
                 else if (fieldProp.hasHref())
@@ -120,7 +120,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
                     fieldProp.setHrefResolver(new HrefResolverXML() {
                         public void parseContent(XMLStreamReader reader) throws XMLStreamException
                         {
-                            fieldProp.setValue(readAbstractDataComponent(reader));
+                            fieldProp.setValue(readDataComponent(reader));
                         }
                     });
                 }
@@ -164,11 +164,11 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         numItems = bean.getFieldList().size();
         for (int i = 0; i < numItems; i++)
         {
-            OgcProperty<AbstractDataComponent> item = bean.getFieldList().getProperty(i);
+            OgcProperty<DataComponent> item = bean.getFieldList().getProperty(i);
             writer.writeStartElement(NS_URI, "field");
             writePropertyAttributes(writer, item);
             if (item.hasValue() && !item.hasHref())
-                this.writeAbstractDataComponent(writer, item.getValue(), writeInlineValues);
+                this.writeDataComponent(writer, item.getValue(), writeInlineValues);
             writer.writeEndElement();
         }
     }
@@ -379,13 +379,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         found = checkElementName(reader, "elementType");
         if (found)
         {
-            OgcProperty<AbstractDataComponent> elementTypeProp = bean.getElementTypeProperty();
+            OgcProperty<DataComponent> elementTypeProp = bean.getElementTypeProperty();
             readPropertyAttributes(reader, elementTypeProp);
             
             reader.nextTag();
             if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
             {
-                elementTypeProp.setValue(this.readAbstractDataComponent(reader));
+                elementTypeProp.setValue(this.readDataComponent(reader));
                 reader.nextTag(); // end property tag
             }
             
@@ -454,10 +454,10 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         
         // elementType
         writer.writeStartElement(NS_URI, "elementType");
-        OgcProperty<AbstractDataComponent> elementTypeProp = bean.getElementTypeProperty();
+        OgcProperty<DataComponent> elementTypeProp = bean.getElementTypeProperty();
         writePropertyAttributes(writer, elementTypeProp);
         if (elementTypeProp.hasValue() && !elementTypeProp.hasHref())
-            this.writeAbstractDataComponent(writer, bean.getElementType(), false);
+            this.writeDataComponent(writer, bean.getElementType(), false);
         writer.writeEndElement();
         
         if (writeInlineValues)
@@ -621,13 +621,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         found = checkElementName(reader, "elementType");
         if (found)
         {
-            OgcProperty<AbstractDataComponent> elementTypeProp = bean.getElementTypeProperty();
+            OgcProperty<DataComponent> elementTypeProp = bean.getElementTypeProperty();
             readPropertyAttributes(reader, elementTypeProp);
             
             reader.nextTag();
             if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
             {
-                elementTypeProp.setValue(this.readAbstractDataComponent(reader));
+                elementTypeProp.setValue(this.readDataComponent(reader));
                 reader.nextTag(); // end property tag
             }
             
@@ -695,10 +695,10 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         
         // elementType
         writer.writeStartElement(NS_URI, "elementType");
-        OgcProperty<AbstractDataComponent> elementTypeProp = bean.getElementTypeProperty();
+        OgcProperty<DataComponent> elementTypeProp = bean.getElementTypeProperty();
         writePropertyAttributes(writer, elementTypeProp);
         if (elementTypeProp.hasValue() && !elementTypeProp.hasHref())
-            this.writeAbstractDataComponent(writer, bean.getElementType(), false);
+            this.writeDataComponent(writer, bean.getElementType(), false);
         writer.writeEndElement();
         
         // encoding
@@ -1159,13 +1159,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             found = checkElementName(reader, "item");
             if (found)
             {
-                OgcProperty<AbstractDataComponent> itemProp = new OgcPropertyImpl<AbstractDataComponent>();
+                OgcProperty<DataComponent> itemProp = new OgcPropertyImpl<DataComponent>();
                 readPropertyAttributes(reader, itemProp);
                 
                 reader.nextTag();
                 if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
                 {
-                    itemProp.setValue(this.readAbstractDataComponent(reader));
+                    itemProp.setValue(this.readDataComponent(reader));
                     reader.nextTag(); // end property tag 
                 }                
                 
@@ -1216,11 +1216,11 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         numItems = bean.getItemList().size();
         for (int i = 0; i < numItems; i++)
         {
-            OgcProperty<AbstractDataComponent> item = bean.getItemList().getProperty(i);
+            OgcProperty<DataComponent> item = bean.getItemList().getProperty(i);
             writer.writeStartElement(NS_URI, "item");
             writePropertyAttributes(writer, item);
             if (item.hasValue() && !item.hasHref())
-                this.writeAbstractDataComponent(writer, item.getValue(), writeInlineValues);
+                this.writeDataComponent(writer, item.getValue(), writeInlineValues);
             writer.writeEndElement();
         }
     }
@@ -1476,7 +1476,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Reads attributes of AbstractSimpleComponentType complex type
      */
-    public void readAbstractSimpleComponentTypeAttributes(Map<String, String> attrMap, AbstractSimpleComponent bean) throws XMLStreamException
+    public void readAbstractSimpleComponentTypeAttributes(Map<String, String> attrMap, SimpleComponent bean) throws XMLStreamException
     {
         this.readAbstractDataComponentTypeAttributes(attrMap, bean);
         
@@ -1497,7 +1497,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Reads elements of AbstractSimpleComponentType complex type
      */
-    public void readAbstractSimpleComponentTypeElements(XMLStreamReader reader, AbstractSimpleComponent bean) throws XMLStreamException
+    public void readAbstractSimpleComponentTypeElements(XMLStreamReader reader, SimpleComponent bean) throws XMLStreamException
     {
         this.readAbstractDataComponentTypeElements(reader, bean);
         
@@ -1509,7 +1509,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             found = checkElementName(reader, "quality");
             if (found)
             {
-                OgcProperty<AbstractSimpleComponent> qualityProp = new OgcPropertyImpl<AbstractSimpleComponent>();
+                OgcProperty<SimpleComponent> qualityProp = new OgcPropertyImpl<SimpleComponent>();
                 readPropertyAttributes(reader, qualityProp);
                 
                 reader.nextTag();
@@ -1571,7 +1571,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes attributes of AbstractSimpleComponentType complex type
      */
-    public void writeAbstractSimpleComponentTypeAttributes(XMLStreamWriter writer, AbstractSimpleComponent bean) throws XMLStreamException
+    public void writeAbstractSimpleComponentTypeAttributes(XMLStreamWriter writer, SimpleComponent bean) throws XMLStreamException
     {
         this.writeAbstractDataComponentTypeAttributes(writer, bean);
         
@@ -1588,7 +1588,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes elements of AbstractSimpleComponentType complex type
      */
-    public void writeAbstractSimpleComponentTypeElements(XMLStreamWriter writer, AbstractSimpleComponent bean) throws XMLStreamException
+    public void writeAbstractSimpleComponentTypeElements(XMLStreamWriter writer, SimpleComponent bean) throws XMLStreamException
     {
         this.writeAbstractDataComponentTypeElements(writer, bean);
         int numItems;
@@ -1597,7 +1597,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         numItems = bean.getQualityList().size();
         for (int i = 0; i < numItems; i++)
         {
-            OgcProperty<AbstractSimpleComponent> item = bean.getQualityList().getProperty(i);
+            OgcProperty<SimpleComponent> item = bean.getQualityList().getProperty(i);
             writer.writeStartElement(NS_URI, "quality");
             writePropertyAttributes(writer, item);
             
@@ -2531,7 +2531,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Reads attributes of AbstractDataComponentType complex type
      */
-    public void readAbstractDataComponentTypeAttributes(Map<String, String> attrMap, AbstractDataComponent bean) throws XMLStreamException
+    public void readAbstractDataComponentTypeAttributes(Map<String, String> attrMap, DataComponent bean) throws XMLStreamException
     {
         this.readAbstractSWEIdentifiableTypeAttributes(attrMap, bean);
         
@@ -2557,7 +2557,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Reads elements of AbstractDataComponentType complex type
      */
-    public void readAbstractDataComponentTypeElements(XMLStreamReader reader, AbstractDataComponent bean) throws XMLStreamException
+    public void readAbstractDataComponentTypeElements(XMLStreamReader reader, DataComponent bean) throws XMLStreamException
     {
         this.readAbstractSWEIdentifiableTypeElements(reader, bean);
         
@@ -2567,7 +2567,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes attributes of AbstractDataComponentType complex type
      */
-    public void writeAbstractDataComponentTypeAttributes(XMLStreamWriter writer, AbstractDataComponent bean) throws XMLStreamException
+    public void writeAbstractDataComponentTypeAttributes(XMLStreamWriter writer, DataComponent bean) throws XMLStreamException
     {
         this.writeAbstractSWEIdentifiableTypeAttributes(writer, bean);
         
@@ -2588,7 +2588,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes elements of AbstractDataComponentType complex type
      */
-    public void writeAbstractDataComponentTypeElements(XMLStreamWriter writer, AbstractDataComponent bean) throws XMLStreamException
+    public void writeAbstractDataComponentTypeElements(XMLStreamWriter writer, DataComponent bean) throws XMLStreamException
     {
         this.writeAbstractSWEIdentifiableTypeElements(writer, bean);
     }
@@ -3193,7 +3193,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Reads attributes of AbstractEncodingType complex type
      */
-    public void readAbstractEncodingTypeAttributes(Map<String, String> attrMap, AbstractEncoding bean) throws XMLStreamException
+    public void readAbstractEncodingTypeAttributes(Map<String, String> attrMap, DataEncoding bean) throws XMLStreamException
     {
         this.readAbstractSWETypeAttributes(attrMap, bean);
         
@@ -3203,7 +3203,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Reads elements of AbstractEncodingType complex type
      */
-    public void readAbstractEncodingTypeElements(XMLStreamReader reader, AbstractEncoding bean) throws XMLStreamException
+    public void readAbstractEncodingTypeElements(XMLStreamReader reader, DataEncoding bean) throws XMLStreamException
     {
         this.readAbstractSWETypeElements(reader, bean);
         
@@ -3213,7 +3213,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes attributes of AbstractEncodingType complex type
      */
-    public void writeAbstractEncodingTypeAttributes(XMLStreamWriter writer, AbstractEncoding bean) throws XMLStreamException
+    public void writeAbstractEncodingTypeAttributes(XMLStreamWriter writer, DataEncoding bean) throws XMLStreamException
     {
         this.writeAbstractSWETypeAttributes(writer, bean);
     }
@@ -3222,7 +3222,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes elements of AbstractEncodingType complex type
      */
-    public void writeAbstractEncodingTypeElements(XMLStreamWriter writer, AbstractEncoding bean) throws XMLStreamException
+    public void writeAbstractEncodingTypeElements(XMLStreamWriter writer, DataEncoding bean) throws XMLStreamException
     {
         this.writeAbstractSWETypeElements(writer, bean);
     }
@@ -3677,7 +3677,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Read method for EncodedValuesPropertyType complex type
      */
-    public EncodedValues readEncodedValuesPropertyType(XMLStreamReader reader, AbstractSWEIdentifiable blockComponent, AbstractEncoding encoding) throws XMLStreamException
+    public EncodedValues readEncodedValuesPropertyType(XMLStreamReader reader, AbstractSWEIdentifiable blockComponent, DataEncoding encoding) throws XMLStreamException
     {
         EncodedValues bean = factory.newEncodedValuesProperty();
         
@@ -3700,7 +3700,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Write method for EncodedValuesPropertyType complex type
      */
-    public void writeEncodedValuesPropertyType(XMLStreamWriter writer, AbstractSWEIdentifiable blockComponent, AbstractEncoding encoding, EncodedValues bean) throws XMLStreamException
+    public void writeEncodedValuesPropertyType(XMLStreamWriter writer, AbstractSWEIdentifiable blockComponent, DataEncoding encoding, EncodedValues bean) throws XMLStreamException
     {
         writePropertyAttributes(writer, bean);
         
@@ -4045,7 +4045,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Dispatcher method for reading elements derived from AbstractSimpleComponent
      */
-    public AbstractSimpleComponent readAbstractSimpleComponent(XMLStreamReader reader) throws XMLStreamException
+    public SimpleComponent readAbstractSimpleComponent(XMLStreamReader reader) throws XMLStreamException
     {
         String localName = reader.getName().getLocalPart();
         
@@ -4077,7 +4077,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Dispatcher method for writing classes derived from AbstractSimpleComponent
      */
-    public void writeAbstractSimpleComponent(XMLStreamWriter writer, AbstractSimpleComponent bean, boolean writeInlineValues) throws XMLStreamException
+    public void writeAbstractSimpleComponent(XMLStreamWriter writer, SimpleComponent bean, boolean writeInlineValues) throws XMLStreamException
     {
         if (bean instanceof Count)
             writeCount(writer, (Count)bean, writeInlineValues);
@@ -4287,7 +4287,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Dispatcher method for reading elements derived from AbstractDataComponent
      */
-    public AbstractDataComponent readAbstractDataComponent(XMLStreamReader reader) throws XMLStreamException
+    public DataComponent readDataComponent(XMLStreamReader reader) throws XMLStreamException
     {
         String localName = reader.getName().getLocalPart();
         
@@ -4329,7 +4329,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Dispatcher method for writing classes derived from AbstractDataComponent
      */
-    public void writeAbstractDataComponent(XMLStreamWriter writer, AbstractDataComponent bean, boolean writeInlineValues) throws XMLStreamException
+    public void writeDataComponent(XMLStreamWriter writer, DataComponent bean, boolean writeInlineValues) throws XMLStreamException
     {
         if (bean instanceof DataRecord)
             writeDataRecord(writer, (DataRecord)bean, writeInlineValues);
@@ -4493,7 +4493,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Dispatcher method for reading elements derived from AbstractEncoding
      */
-    public AbstractEncoding readAbstractEncoding(XMLStreamReader reader) throws XMLStreamException
+    public DataEncoding readAbstractEncoding(XMLStreamReader reader) throws XMLStreamException
     {
         String localName = reader.getName().getLocalPart();
         
@@ -4511,7 +4511,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Dispatcher method for writing classes derived from AbstractEncoding
      */
-    public void writeAbstractEncoding(XMLStreamWriter writer, AbstractEncoding bean) throws XMLStreamException
+    public void writeAbstractEncoding(XMLStreamWriter writer, DataEncoding bean) throws XMLStreamException
     {
         if (bean instanceof BinaryEncoding)
             writeBinaryEncoding(writer, (BinaryEncoding)bean);

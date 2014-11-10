@@ -22,12 +22,12 @@ package org.vast.sweCommon;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Time;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataStreamWriter;
-import org.vast.cdm.common.DataType;
-import org.vast.data.DataValue;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
 
@@ -63,7 +63,7 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	
     public abstract void flush() throws IOException;
                 
-    protected abstract void processAtom(DataValue component) throws IOException;
+    protected abstract void processAtom(ScalarComponent component) throws IOException;
 
     protected abstract boolean processBlock(DataComponent component) throws IOException;
     
@@ -124,13 +124,13 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	/**
 	 * Retrieve string representation of value of component
 	 * This will convert to an ISO string for appropriate time components
-	 * @param scalarInfo
+	 * @param component
 	 * @return
 	 */
-	protected String getStringValue(DataValue component)
+	protected String getStringValue(ScalarComponent component)
 	{	
-	    DataType dataType = component.getDataType();
-        DataBlock data = component.getData();
+	    DataBlock data = component.getData();
+	    DataType dataType = data.getDataType();
         String val;
 	    
         // case of time component

@@ -24,8 +24,8 @@
 
 package org.vast.data;
 
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataType;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataType;
 
 
 /**

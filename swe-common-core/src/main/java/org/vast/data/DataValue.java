@@ -20,8 +20,9 @@
 
 package org.vast.data;
 
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataType;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ScalarComponent;
 
 
 /**
@@ -34,7 +35,7 @@ import org.vast.cdm.common.DataType;
  * @author Alexandre Robin
  * @version 1.0
  */
-public abstract class DataValue extends AbstractSimpleComponentImpl
+public abstract class DataValue extends AbstractSimpleComponentImpl implements ScalarComponent
 {
     private static final long serialVersionUID = -7411819306997320628L;
     

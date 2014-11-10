@@ -27,16 +27,16 @@ package org.vast.sweCommon;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.DataType;
 import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataType;
 import org.vast.data.BinaryComponentImpl;
 import org.vast.data.BooleanImpl;
 import org.vast.data.CategoryImpl;
@@ -73,7 +73,7 @@ public class SWEValidator
     }
     
     
-    public List<Exception> validateEncoding(AbstractEncoding encoding, DataComponent component, List<Exception> errors)
+    public List<Exception> validateEncoding(DataEncoding encoding, DataComponent component, List<Exception> errors)
     {
         if (encoding instanceof BinaryEncoding)
             return validateEncoding((BinaryEncoding)encoding, component, errors);

@@ -31,12 +31,12 @@ import javax.media.Buffer;
 import javax.media.format.RGBFormat;
 import javax.media.format.VideoFormat;
 import net.opengis.swe.v20.BinaryBlock;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
 import net.sourceforge.jffmpeg.VideoDecoder;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.CompressedStreamParser;
-import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataInputExt;
-import org.vast.cdm.common.DataType;
 import org.vast.data.DataValue;
 
 

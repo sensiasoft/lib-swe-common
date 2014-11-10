@@ -23,7 +23,7 @@
 package org.vast.sweCommon;
 
 import java.nio.ByteOrder;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryComponent;
 import net.opengis.swe.v20.BinaryEncoding;
@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  * @since Feb 10, 2006
  * @version 1.0
  */
-public class SweEncodingWriterV20 implements IXMLWriterDOM<AbstractEncoding>
+public class SweEncodingWriterV20 implements IXMLWriterDOM<DataEncoding>
 {
     
     public SweEncodingWriterV20()
@@ -63,7 +63,7 @@ public class SweEncodingWriterV20 implements IXMLWriterDOM<AbstractEncoding>
     }
     
     
-    public Element write(DOMHelper dom, AbstractEncoding dataEncoding) throws XMLWriterException
+    public Element write(DOMHelper dom, DataEncoding dataEncoding) throws XMLWriterException
     {
         Element dataEncElt = null;
         enforceNS(dom);

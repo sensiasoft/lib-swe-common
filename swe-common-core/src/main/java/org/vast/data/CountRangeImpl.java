@@ -2,11 +2,11 @@ package org.vast.data;
 
 import java.util.List;
 import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataType;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedValues;
 import net.opengis.swe.v20.CountRange;
+import net.opengis.swe.v20.DataType;
 
 
 /**
@@ -142,7 +142,7 @@ import net.opengis.swe.v20.CountRange;
 
 
     @Override
-    public void validateData(List<CDMException> errorList)
+    public void validateData(List<Exception> errorList)
     {
         if (constraint != null && isSetValue())
         {

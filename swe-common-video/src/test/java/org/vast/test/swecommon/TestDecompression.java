@@ -33,7 +33,7 @@ import jj2000.j2k.decoder.Decoder;
 import jj2000.j2k.io.RandomAccessIO;
 import jj2000.j2k.util.ISRandomAccessIO;
 import jj2000.j2k.util.ParameterList;
-import org.vast.cdm.common.DataBlock;
+import net.opengis.swe.v20.DataBlock;
 import org.vast.codec.JP2KDecoder;
 import org.vast.codec.JP2KStreamDecoder;
 import org.vast.data.CountImpl;

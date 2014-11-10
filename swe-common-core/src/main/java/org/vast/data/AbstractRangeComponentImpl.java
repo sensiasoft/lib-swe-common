@@ -20,8 +20,8 @@
 
 package org.vast.data;
 
-import net.opengis.swe.v20.AbstractSimpleComponent;
-import org.vast.cdm.common.DataBlock;
+import net.opengis.swe.v20.SimpleComponent;
+import net.opengis.swe.v20.DataBlock;
 
 
 /**
@@ -34,7 +34,7 @@ import org.vast.cdm.common.DataBlock;
  * @author Alexandre Robin
  * @version 1.0
  */
-public abstract class AbstractRangeComponentImpl extends AbstractSimpleComponentImpl implements AbstractSimpleComponent
+public abstract class AbstractRangeComponentImpl extends AbstractSimpleComponentImpl implements SimpleComponent
 {
     private static final long serialVersionUID = -7411819306997320628L;
     

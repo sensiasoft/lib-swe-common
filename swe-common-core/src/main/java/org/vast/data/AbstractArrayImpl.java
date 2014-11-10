@@ -25,11 +25,10 @@
 
 package org.vast.data;
 
-import org.vast.cdm.common.DataComponent;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
-import net.opengis.swe.v20.AbstractDataComponent;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
@@ -51,7 +50,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     public final static String ELT_COUNT_NAME = "elementCount";
     
     protected OgcPropertyImpl<Count> elementCount = new OgcPropertyImpl<Count>();
-    protected OgcPropertyImpl<AbstractDataComponent> elementType;
+    protected OgcPropertyImpl<DataComponent> elementType;
     protected AbstractEncodingImpl encoding;
     protected EncodedValues values;
 
@@ -59,10 +58,10 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     public AbstractArrayImpl()
     {
         // special property object to correctly set parent and name
-        elementType = new OgcPropertyImpl<AbstractDataComponent>() 
+        elementType = new OgcPropertyImpl<DataComponent>() 
         {
             @Override
-            public void setValue(AbstractDataComponent value)
+            public void setValue(DataComponent value)
             {
                 ((AbstractDataComponentImpl)value).setName(this.name);
                 ((AbstractDataComponentImpl)value).setParent(AbstractArrayImpl.this);
@@ -103,19 +102,19 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
         if (elementType.hasValue())
             throw new IllegalStateException("The array element type is already set. Use setElementType() to replace it");
             
-        setElementType(name, component);
+        setElementType(name, (DataComponent)component);
     }
     
     
     @Override
-    public AbstractDataComponentImpl removeComponent(int index)
+    public DataComponent removeComponent(int index)
     {
         throw new UnsupportedOperationException();
     }
 
 
     @Override
-    public AbstractDataComponentImpl removeComponent(String name)
+    public DataComponent removeComponent(String name)
     {
         throw new UnsupportedOperationException();
     }
@@ -162,14 +161,14 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
      * Gets the elementType property
      */
     @Override
-    public AbstractDataComponentImpl getElementType()
+    public DataComponent getElementType()
     {
-        return (AbstractDataComponentImpl)elementType.getValue();
+        return (DataComponent)elementType.getValue();
     }
 
 
     @Override
-    public OgcProperty<AbstractDataComponent> getElementTypeProperty()
+    public OgcProperty<DataComponent> getElementTypeProperty()
     {
         return elementType;
     }
@@ -179,7 +178,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
      * Sets the elementType property
      */
     @Override
-    public void setElementType(String name, AbstractDataComponent component)
+    public void setElementType(String name, DataComponent component)
     {
         elementType.setName(name);
         elementType.setValue(component);
@@ -190,7 +189,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
      * Gets the encoding property
      */
     @Override
-    public AbstractEncoding getEncoding()
+    public DataEncoding getEncoding()
     {
         return encoding;
     }
@@ -210,7 +209,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
      * Sets the encoding property
      */
     @Override
-    public void setEncoding(AbstractEncoding encoding)
+    public void setEncoding(DataEncoding encoding)
     {
         this.encoding = (AbstractEncodingImpl) encoding;
     }

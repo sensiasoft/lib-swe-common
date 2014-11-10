@@ -24,8 +24,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.TextEncoding;
-import org.vast.cdm.common.DataComponent;
 import org.vast.data.DataChoiceImpl;
 import org.vast.data.DataValue;
 import org.vast.util.WriterException;
@@ -90,7 +91,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 	
 	
     @Override
-	protected void processAtom(DataValue component) throws IOException
+	protected void processAtom(ScalarComponent component) throws IOException
 	{
         try
         {

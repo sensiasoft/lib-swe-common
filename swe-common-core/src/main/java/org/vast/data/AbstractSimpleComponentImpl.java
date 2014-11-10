@@ -25,12 +25,12 @@
 
 package org.vast.data;
 
-import org.vast.cdm.common.DataComponent;
-import org.vast.cdm.common.DataType;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
-import net.opengis.swe.v20.AbstractSimpleComponent;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.SimpleComponent;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.NilValues;
 import net.opengis.swe.v20.Quantity;
@@ -38,12 +38,12 @@ import net.opengis.swe.v20.QuantityRange;
 import net.opengis.swe.v20.Text;
 
 
-public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentImpl implements AbstractSimpleComponent
+public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentImpl implements SimpleComponent
 {
     private static final long serialVersionUID = 8170666086821263672L;
    
     protected DataType dataType;
-    protected OgcPropertyList<AbstractSimpleComponent> qualityList = new OgcPropertyList<AbstractSimpleComponent>();
+    protected OgcPropertyList<SimpleComponent> qualityList = new OgcPropertyList<SimpleComponent>();
     protected OgcProperty<NilValues> nilValues;
     protected String referenceFrame;
     protected String axisID;
@@ -87,7 +87,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
      * Gets the list of quality properties
      */
     @Override
-    public OgcPropertyList<AbstractSimpleComponent> getQualityList()
+    public OgcPropertyList<SimpleComponent> getQualityList()
     {
         return qualityList;
     }

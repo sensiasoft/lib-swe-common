@@ -25,8 +25,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataType;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataType;
 
 
 /**

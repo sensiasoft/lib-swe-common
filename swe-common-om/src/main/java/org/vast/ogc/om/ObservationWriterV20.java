@@ -26,7 +26,7 @@ package org.vast.ogc.om;
 import java.text.NumberFormat;
 import java.util.Map.Entry;
 import javax.xml.namespace.QName;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLFeatureWriter;

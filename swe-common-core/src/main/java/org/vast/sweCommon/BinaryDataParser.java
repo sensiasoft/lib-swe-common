@@ -28,10 +28,12 @@ import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryComponent;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BinaryMember;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ScalarComponent;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.CompressedStreamParser;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataInputExt;
 import org.vast.data.AbstractDataComponentImpl;
 import org.vast.data.BinaryBlockImpl;
@@ -238,10 +240,10 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarComponent) throws CDMException
+	protected void processAtom(ScalarComponent scalarComponent) throws CDMException
 	{
 		// get next encoding block
-	    BinaryComponentImpl binaryInfo = (BinaryComponentImpl)scalarComponent.getEncodingInfo();
+	    BinaryMember binaryInfo = ((AbstractDataComponentImpl)scalarComponent).getEncodingInfo();
 		
 		// parse token = dataAtom					
 		parseBinaryAtom(scalarComponent, binaryInfo);
@@ -273,12 +275,12 @@ public class BinaryDataParser extends AbstractDataParser
 		else
 		{		
 			// get block encoding details
-			BinaryBlockImpl binaryInfo = (BinaryBlockImpl)((AbstractDataComponentImpl)blockComponent).getEncodingInfo();
+			BinaryMember binaryInfo = ((AbstractDataComponentImpl)blockComponent).getEncodingInfo();
 			
 			// parse whole block at once if compression found
 			if (binaryInfo != null)
 			{
-				parseBinaryBlock(blockComponent, binaryInfo);
+				parseBinaryBlock(blockComponent, (BinaryBlockImpl)binaryInfo);
 				return false;
 			}
 		}
@@ -322,11 +324,13 @@ public class BinaryDataParser extends AbstractDataParser
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void parseBinaryAtom(DataValue scalarInfo, BinaryComponentImpl binaryInfo) throws CDMException
+	private void parseBinaryAtom(ScalarComponent scalarInfo, BinaryMember binaryInfo) throws CDMException
 	{
-		try
+		DataType dataType = ((BinaryComponentImpl)binaryInfo).getCdmDataType();
+		
+	    try
 		{
-			switch (binaryInfo.getCdmDataType())
+			switch (dataType)
 			{
 				case BOOLEAN:
 					boolean boolValue = dataInput.readBoolean();
@@ -394,7 +398,7 @@ public class BinaryDataParser extends AbstractDataParser
 					break;
 					
 				default:
-                    throw new RuntimeException("Unsupported datatype " + binaryInfo.getCdmDataType());
+                    throw new RuntimeException("Unsupported datatype " + dataType);
 			}
 		}
 		catch (RuntimeException e)

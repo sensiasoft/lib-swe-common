@@ -21,10 +21,9 @@
 package org.vast.data;
 
 import java.util.*;
-import net.opengis.swe.v20.AbstractDataComponent;
-import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataType;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
 
 
 /**
@@ -38,7 +37,7 @@ import org.vast.cdm.common.DataType;
  * @version 1.0
  * @param <ComponentType> 
  */
-public abstract class AbstractRecordImpl<ComponentType extends AbstractDataComponent> extends AbstractDataComponentImpl
+public abstract class AbstractRecordImpl<ComponentType extends DataComponent> extends AbstractDataComponentImpl
 {
     private static final long serialVersionUID = 5402778409089789225L;
     protected DataComponentPropertyList<ComponentType> fieldList;
@@ -114,7 +113,7 @@ public abstract class AbstractRecordImpl<ComponentType extends AbstractDataCompo
     @Override
     public int getComponentIndex(String name)
     {
-        AbstractDataComponent comp = fieldList.get(name);
+        DataComponent comp = fieldList.get(name);
         if (comp == null)
             return -1;
         return fieldList.indexOf(comp);
@@ -209,7 +208,7 @@ public abstract class AbstractRecordImpl<ComponentType extends AbstractDataCompo
     
     
     @Override
-    public void validateData(List<CDMException> errorList)
+    public void validateData(List<Exception> errorList)
     {
     	for (int i = 0; i < fieldList.size(); i++)
     	    ((AbstractDataComponentImpl)fieldList.get(i)).validateData(errorList);

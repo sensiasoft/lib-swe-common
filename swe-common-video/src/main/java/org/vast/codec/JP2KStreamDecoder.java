@@ -31,11 +31,11 @@ import java.io.InputStream;
 import jj2000.j2k.io.RandomAccessIO;
 import jj2000.j2k.util.ISRandomAccessIO;
 import net.opengis.swe.v20.BinaryBlock;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.CompressedStreamParser;
-import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataInputExt;
-import org.vast.cdm.common.DataType;
 import org.vast.data.DataValue;
 
 

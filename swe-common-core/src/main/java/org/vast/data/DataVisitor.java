@@ -20,7 +20,7 @@
 
 package org.vast.data;
 
-import org.vast.cdm.common.DataBlock;
+import net.opengis.swe.v20.DataBlock;
 
 
 /**

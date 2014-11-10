@@ -27,8 +27,8 @@
 package org.vast.cdm.common;
 
 import java.io.IOException;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 
 
 /**

@@ -23,12 +23,10 @@ package org.vast.data;
 import java.util.*;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
-import net.opengis.swe.v20.AbstractDataComponent;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.DataChoice;
-import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
 
 
 /**
@@ -48,18 +46,18 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 	protected static String UNSELECTED_ERROR = "No item was selected in DataChoice ";
 	protected int selected = UNSELECTED;
 	protected Category choiceValue;
-    protected DataComponentPropertyList<AbstractDataComponent> itemList;
+    protected DataComponentPropertyList<DataComponent> itemList;
     
 
     public DataChoiceImpl()
     {
-    	this.itemList = new DataComponentPropertyList<AbstractDataComponent>(this);
+    	this.itemList = new DataComponentPropertyList<DataComponent>(this);
     }
     
     
     public DataChoiceImpl(int size)
     {
-        this.itemList = new DataComponentPropertyList<AbstractDataComponent>(this, size);
+        this.itemList = new DataComponentPropertyList<DataComponent>(this, size);
     }
     
     
@@ -120,7 +118,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     @Override
     public int getComponentIndex(String name)
     {
-        AbstractDataComponent comp = itemList.get(name);
+        DataComponent comp = itemList.get(name);
         if (comp == null)
             return -1;
         return itemList.indexOf(comp);
@@ -130,7 +128,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     @Override
     public AbstractDataComponentImpl removeComponent(int index)
     {
-        AbstractDataComponent component = itemList.remove(index);
+        DataComponent component = itemList.remove(index);
         ((AbstractDataComponentImpl)component).setParent(null);
         return (AbstractDataComponentImpl)component;
     }
@@ -173,13 +171,13 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     public void clearData()
     {
         this.dataBlock = null;
-        for (net.opengis.swe.v20.AbstractDataComponent component: itemList)
+        for (net.opengis.swe.v20.DataComponent component: itemList)
             ((AbstractDataComponentImpl)component).clearData();
     }
     
     
     @Override
-    public void validateData(List<CDMException> errorList)
+    public void validateData(List<Exception> errorList)
     {
         ((AbstractDataComponentImpl)itemList.get(selected)).validateData(errorList);
     }
@@ -364,7 +362,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
      * Gets the list of item properties
      */
     @Override
-    public OgcPropertyList<AbstractDataComponent> getItemList()
+    public OgcPropertyList<DataComponent> getItemList()
     {
         return itemList;
     }
@@ -384,7 +382,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
      * Gets the item property with the given name
      */
     @Override
-    public AbstractDataComponent getItem(String name)
+    public DataComponent getItem(String name)
     {
         return itemList.get(name);
     }
@@ -394,8 +392,8 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
      * Adds a new item property
      */
     @Override
-    public void addItem(String name, AbstractDataComponent item)
+    public void addItem(String name, DataComponent item)
     {
-        itemList.add(new OgcPropertyImpl<AbstractDataComponent>(name, (AbstractDataComponentImpl)item));
+        itemList.add(new OgcPropertyImpl<DataComponent>(name, (AbstractDataComponentImpl)item));
     }
 }

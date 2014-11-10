@@ -22,6 +22,8 @@ package org.vast.sweCommon;
 
 import java.io.*;
 import java.net.URI;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.cdm.common.*;
 import org.vast.util.ReaderException;
 

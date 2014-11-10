@@ -13,7 +13,7 @@ import net.opengis.OgcProperty;
  * @since Nov 8, 2014
  */
 @SuppressWarnings("javadoc")
-public interface BlockComponent extends AbstractDataComponent
+public interface BlockComponent extends DataComponent
 {
     
     /**
@@ -37,25 +37,25 @@ public interface BlockComponent extends AbstractDataComponent
     /**
      * Gets the elementType property
      */
-    public AbstractDataComponent getElementType();
+    public DataComponent getElementType();
     
     
     /**
      * Gets extra info (name, xlink, etc.) carried by the elementType property
      */
-    public OgcProperty<AbstractDataComponent> getElementTypeProperty();
+    public OgcProperty<DataComponent> getElementTypeProperty();
     
     
     /**
      * Sets the elementType property
      */
-    public void setElementType(String name, AbstractDataComponent elementType);
+    public void setElementType(String name, DataComponent elementType);
     
     
     /**
      * Gets the encoding property
      */
-    public AbstractEncoding getEncoding();
+    public DataEncoding getEncoding();
     
     
     /**
@@ -67,7 +67,7 @@ public interface BlockComponent extends AbstractDataComponent
     /**
      * Sets the encoding property
      */
-    public void setEncoding(AbstractEncoding encoding);
+    public void setEncoding(DataEncoding encoding);
     
     
     /**

@@ -24,9 +24,8 @@ package org.vast.data;
 import java.io.Serializable;
 import java.util.*;
 import net.opengis.swe.v20.BinaryMember;
-import org.vast.cdm.common.CDMException;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 
 
 /**
@@ -88,7 +87,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
 
     
     @Override
-    public final DataComponent getParent()
+    public final AbstractDataComponentImpl getParent()
     {
         return parent;
     }
@@ -105,7 +104,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
 
 
     @Override
-    public abstract DataComponent getComponent(int index);
+    public abstract AbstractDataComponentImpl getComponent(int index);
 
 
 	@Override
@@ -113,7 +112,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
     
     
 	@Override
-    public abstract DataComponent getComponent(String name);
+    public abstract AbstractDataComponentImpl getComponent(String name);
 	
 	
     @Override
@@ -161,7 +160,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
     
     
     @Override
-    public abstract void validateData(List<CDMException> errorList);
+    public abstract void validateData(List<Exception> errorList);
 	
     
     @Override

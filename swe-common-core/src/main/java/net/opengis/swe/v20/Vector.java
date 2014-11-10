@@ -9,7 +9,7 @@ import net.opengis.OgcPropertyList;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface Vector extends AbstractDataComponent, HasRefFrames
+public interface Vector extends DataComponent, HasRefFrames
 {
     
     /**

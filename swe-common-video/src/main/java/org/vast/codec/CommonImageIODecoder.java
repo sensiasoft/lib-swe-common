@@ -13,12 +13,12 @@ import javax.imageio.ImageReader;
 import jj2000.j2k.decoder.Decoder;
 import jj2000.j2k.util.ParameterList;
 import net.opengis.swe.v20.BinaryBlock;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.CompressedStreamParser;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataInputExt;
-import org.vast.cdm.common.DataType;
 import org.vast.data.DataValue;
 
 

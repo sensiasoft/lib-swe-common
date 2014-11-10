@@ -10,14 +10,14 @@ package net.opengis.swe.v20;
 public interface EncodedValues extends net.opengis.OgcProperty<Object>
 {
    
-    public void setAsText(DataArray array, AbstractEncoding encoding, String text);
+    public void setAsText(DataArray array, DataEncoding encoding, String text);
     
     
-    public String getAsText(DataArray array, AbstractEncoding encoding);
+    public String getAsText(DataArray array, DataEncoding encoding);
     
     
-    public void setAsText(DataStream dataStream, AbstractEncoding encoding, String text);
+    public void setAsText(DataStream dataStream, DataEncoding encoding, String text);
     
     
-    public String getAsText(DataStream dataStream, AbstractEncoding encoding);
+    public String getAsText(DataStream dataStream, DataEncoding encoding);
 }

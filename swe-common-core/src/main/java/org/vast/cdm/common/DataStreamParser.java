@@ -23,8 +23,10 @@ package org.vast.cdm.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BlockComponent;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 
 
 /**
@@ -54,7 +56,7 @@ public interface DataStreamParser
 	public DataComponent getDataComponents();
 
 
-	public AbstractEncoding getDataEncoding();
+	public DataEncoding getDataEncoding();
 
 
 	public void setDataHandler(DataHandler handler);
@@ -69,7 +71,7 @@ public interface DataStreamParser
 	public void setDataComponents(DataComponent components);
 
 
-	public void setDataEncoding(AbstractEncoding encoding);
+	public void setDataEncoding(DataEncoding encoding);
     
     
     public void setParentArray(BlockComponent parentArray);

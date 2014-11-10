@@ -16,7 +16,7 @@
  the Initial Developer. All Rights Reserved.
  
  Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.fr>
+    Alexandre Robin <alex.robin@sensiasoftware.com>
  
 ******************************* END LICENSE BLOCK ***************************/
 
@@ -24,36 +24,40 @@ package org.vast.sweCommon;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import net.opengis.swe.v20.BlockComponent;
+import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.RangeComponent;
 import net.opengis.swe.v20.ScalarComponent;
+import net.opengis.swe.v20.Vector;
 import org.vast.data.AbstractArrayImpl;
-import org.vast.data.XMLEncodingImpl;
 import org.vast.util.WriterException;
 
 
 /**
  * <p>
- * Writes CDM XML data stream using the given data components
- * structure and encoding information.
+ * Writes SWE data stream in JSON format
  * </p>
  *
- * <p>Copyright (c) 2008</p>
+ * <p>Copyright (c) 2014</p>
  * @author Alexandre Robin
- * @since Feb 29, 2008
+ * @since Nov 2, 2014
  * @version 1.0
  */
-public class XmlDataWriter extends AbstractDataWriter
+public class JSONDataWriter extends AbstractDataWriter
 {
-	protected XMLStreamWriter xmlWriter;
+	protected Writer jsonWriter;
 	protected String namespace;
 	protected String prefix;
 	protected int prevStackSize = 0;
+	protected boolean pretty;
+	protected StringBuffer indent = new StringBuffer();
 	
 
-	public XmlDataWriter()
+	public JSONDataWriter()
 	{	    
 	}
 	
@@ -61,18 +65,7 @@ public class XmlDataWriter extends AbstractDataWriter
 	@Override
     public void setOutput(OutputStream outputStream) throws IOException
     {
-	    try
-        {
-    	    XMLOutputFactory factory = XMLOutputFactory.newInstance();
-            xmlWriter = factory.createXMLStreamWriter(outputStream);
-            
-            namespace = ((XMLEncodingImpl)dataEncoding).getNamespace();
-            prefix = ((XMLEncodingImpl)dataEncoding).getPrefix();
-        }
-	    catch (XMLStreamException e)
-        {
-            throw new WriterException(STREAM_ERROR, e);
-        }
+	    jsonWriter = new OutputStreamWriter(outputStream);
     }
 	
 	
@@ -81,10 +74,10 @@ public class XmlDataWriter extends AbstractDataWriter
     {
         try
         {
-            xmlWriter.flush();
-            xmlWriter.close();
+            jsonWriter.flush();
+            jsonWriter.close();
         }
-        catch (XMLStreamException e)
+        catch (IOException e)
         {
             throw new WriterException(STREAM_ERROR, e);
         }
@@ -96,9 +89,9 @@ public class XmlDataWriter extends AbstractDataWriter
     {
         try
         {
-            xmlWriter.flush();
+            jsonWriter.flush();
         }
-        catch (XMLStreamException e)
+        catch (IOException e)
         {
             throw new WriterException(STREAM_ERROR, e);
         }
@@ -120,21 +113,32 @@ public class XmlDataWriter extends AbstractDataWriter
 	}
 	
 	
-	protected void closeElements() throws XMLStreamException
+	protected void closeElements() throws IOException
 	{
 		if (prevStackSize > componentStack.size())
 		{
-			while (prevStackSize > componentStack.size())
+		    DataComponent parent = componentStack.peek().component;
+		    
+		    while (prevStackSize > componentStack.size())
 			{
-				xmlWriter.writeEndElement();
-				prevStackSize--;
+			    if (parent instanceof BlockComponent)
+	                jsonWriter.write(']');
+			    else if (parent instanceof RangeComponent)
+                    jsonWriter.write(']');
+	            else if (parent instanceof DataRecord || parent instanceof Vector)
+	                jsonWriter.write('}');
+	            else if (parent instanceof DataChoice)
+	                jsonWriter.write('}');
+			    
+			    parent = parent.getParent();
+			    prevStackSize--;
 			}
 		}
 		else
 			prevStackSize = componentStack.size();
 		
 		if (componentStack.size() == 0)
-		    xmlWriter.writeCharacters("\n");
+		    jsonWriter.write('\n');
 	}
 	
 	
@@ -145,21 +149,18 @@ public class XmlDataWriter extends AbstractDataWriter
 		{
 			closeElements();
 			
-			String eltName = component.getName();
-            
-			if (namespace != null)
-            {
-                if (prefix != null)
-                    xmlWriter.writeStartElement(prefix, eltName, namespace);
-                else
-                    xmlWriter.writeStartElement("", eltName, namespace);
-            }
-            else
-                xmlWriter.writeStartElement(eltName);
+			if (component instanceof BlockComponent)
+			    jsonWriter.write('[');
+			else if (component instanceof RangeComponent)
+                jsonWriter.write('[');
+			else if (component instanceof DataRecord || component instanceof Vector)
+			    jsonWriter.write('{');
+			else if (component instanceof DataChoice)
+			    jsonWriter.write('{');
 			
 			return true;
 		}
-		catch (XMLStreamException e)
+		catch (IOException e)
 		{
 			throw new WriterException("Error writing data for block component " + component.getName(), e);
 		}	
@@ -176,29 +177,32 @@ public class XmlDataWriter extends AbstractDataWriter
 			
 			if (localName.equals(AbstractArrayImpl.ELT_COUNT_NAME))
 			{
-				xmlWriter.writeAttribute(localName, component.getData().getStringValue());
+				// don't write array size
 			}
 			else
-			{
-				String eltName = component.getName();
-	            
-	            if (namespace != null)
+			{	            
+			    DataComponent parent = component.getParent();
+			    if (parent instanceof DataRecord || parent instanceof Vector || parent instanceof DataChoice)
+			    {
+			        jsonWriter.write(component.getName());
+			        jsonWriter.write(':');
+			    }
+			    
+			    jsonWriter.write(getStringValue(component));
+			    
+	            Record parentRecord = componentStack.get(componentStack.size()-2);
+	            if (parentRecord.index < parentRecord.count-1)
 	            {
-	            	if (prefix != null)
-	            	    xmlWriter.writeStartElement(prefix, eltName, namespace);
-	            	else
-	            	    xmlWriter.writeStartElement(namespace, eltName);
+	                jsonWriter.write(',');
+	                if (pretty)
+	                    jsonWriter.write('\n');
 	            }
-	            else
-	            	xmlWriter.writeStartElement(eltName);
-	            
-	            xmlWriter.writeCharacters(getStringValue(component));
-	            xmlWriter.writeEndElement();
 	        }
         }
-        catch (XMLStreamException e)
+        catch (IOException e)
         {
             throw new WriterException("Error writing data for scalar component " + component.getName(), e);
         }
 	}
+
 }

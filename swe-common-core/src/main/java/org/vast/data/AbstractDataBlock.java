@@ -21,7 +21,7 @@
 package org.vast.data;
 
 import java.io.Serializable;
-import org.vast.cdm.common.DataBlock;
+import net.opengis.swe.v20.DataBlock;
 
 
 @SuppressWarnings("serial")

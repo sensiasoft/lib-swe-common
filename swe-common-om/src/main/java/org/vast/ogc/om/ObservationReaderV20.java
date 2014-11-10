@@ -24,7 +24,7 @@
 package org.vast.ogc.om;
 
 import javax.xml.namespace.QName;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLFeatureReader;

@@ -29,9 +29,9 @@ import net.opengis.DateTimeDouble;
 import net.opengis.IDateTime;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
-import net.opengis.swe.v20.AbstractDataComponent;
-import net.opengis.swe.v20.AbstractEncoding;
-import net.opengis.swe.v20.AbstractSimpleComponent;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.SimpleComponent;
 import net.opengis.swe.v20.AllowedTimes;
 import net.opengis.swe.v20.EncodedValues;
 import net.opengis.swe.v20.HasCodeSpace;
@@ -57,6 +57,7 @@ import org.vast.xml.XMLReaderException;
  * DataArray, and hard typed derived structures from a DOM tree.
  * This is for version 2.0 of the SWE Common specification.
  * This class is not thread-safe.
+ * 11-2014: Modified to work with new auto-generated SWE Common classes
  * </p>
  *
  * <p>Copyright (c) 2008</p>
@@ -112,7 +113,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
     }
     
     
-    public void readComponentProperty(OgcProperty<AbstractDataComponent> prop, DOMHelper dom, Element propertyElt) throws XMLReaderException
+    public void readComponentProperty(OgcProperty<DataComponent> prop, DOMHelper dom, Element propertyElt) throws XMLReaderException
     {
         // name attribute
         String name = readPropertyName(dom, propertyElt);
@@ -124,7 +125,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         if (dataElement != null)
         {
             DataComponent component = read(dom, dataElement);
-            prop.setValue((AbstractDataComponent)component);
+            prop.setValue((DataComponent)component);
         }
         
         // also parse and save xlink attributes if present
@@ -151,7 +152,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             Element fieldElt = (Element)fieldList.item(i);
 
             // add field components
-            OgcProperty<AbstractDataComponent> fieldProp = new OgcPropertyImpl<AbstractDataComponent>();
+            OgcProperty<DataComponent> fieldProp = new OgcPropertyImpl<DataComponent>();
             readComponentProperty(fieldProp, dom, fieldElt);
             dataRecord.getFieldList().add(fieldProp);
         }
@@ -225,7 +226,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             Element itemElt = (Element)itemList.item(i);
             
             // add item components
-            OgcProperty<AbstractDataComponent> itemProp = new OgcPropertyImpl<AbstractDataComponent>();
+            OgcProperty<DataComponent> itemProp = new OgcPropertyImpl<DataComponent>();
             readComponentProperty(itemProp, dom, itemElt);
             dataChoice.getItemList().add(itemProp);
         }
@@ -281,7 +282,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
                         
         // read array component
         Element elementTypeElt = dom.getElement(arrayElt, "elementType");
-        OgcProperty<AbstractDataComponent> eltTypeProp = dataArray.getElementTypeProperty();
+        OgcProperty<DataComponent> eltTypeProp = dataArray.getElementTypeProperty();
         readComponentProperty(eltTypeProp, dom, elementTypeElt);
         
         // read common stuffs
@@ -312,7 +313,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         {
             // TODO add support for XML encoding?
             
-            AbstractEncoding encoding = encodingReader.read(dom, encodingElt);
+            DataEncoding encoding = encodingReader.read(dom, encodingElt);
             String text = valuesElt.getTextContent();            
             EncodedValues values = new EncodedValuesImpl();
             values.setAsText(arrayObj, encoding, text);            
@@ -353,12 +354,12 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         
         // read stream component
         Element elementTypeElt = dom.getElement(streamElt, "elementType");
-        OgcProperty<AbstractDataComponent> eltTypeProp = sweData.getElementTypeProperty();
+        OgcProperty<DataComponent> eltTypeProp = sweData.getElementTypeProperty();
         readComponentProperty(eltTypeProp, dom, elementTypeElt);
         
         // read encoding
         Element encodingElt = dom.getElement(streamElt, "encoding/*");
-        AbstractEncoding encoding = encodingReader.read(dom, encodingElt);
+        DataEncoding encoding = encodingReader.read(dom, encodingElt);
         sweData.setEncoding(encoding);
         
         // parse values
@@ -637,7 +638,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
     }
     
     
-    private void readCodeSpace(AbstractSimpleComponent dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
+    private void readCodeSpace(SimpleComponent dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
         if (!(dataComponent instanceof HasCodeSpace))
             return;
@@ -650,7 +651,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
     
     
     @SuppressWarnings("rawtypes")
-    private void readQuality(AbstractSimpleComponent dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
+    private void readQuality(SimpleComponent dataComponent, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
         if (!dom.existElement(scalarElt, "quality"))
             return;
@@ -747,7 +748,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
     
     
     @SuppressWarnings("rawtypes")
-    private void readConstraints(AbstractSimpleComponent dataValue, DOMHelper dom, Element scalarElt) throws XMLReaderException
+    private void readConstraints(SimpleComponent dataValue, DOMHelper dom, Element scalarElt) throws XMLReaderException
     {
         if (!(dataValue instanceof HasConstraints))
             return;

@@ -22,8 +22,8 @@ package org.vast.sweCommon;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import net.opengis.swe.v20.AbstractEncoding;
-import org.vast.cdm.common.DataComponent;
+import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataEncoding;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLReaderDOM;
@@ -56,8 +56,8 @@ public class SWECommonUtils
     private DOMHelper previousDom;
     private IXMLReaderDOM<DataComponent> componentReader = null;
     private IXMLWriterDOM<DataComponent> componentWriter = null;
-    private IXMLReaderDOM<AbstractEncoding> encodingReader = null;
-    private IXMLWriterDOM<AbstractEncoding> encodingWriter = null;
+    private IXMLReaderDOM<DataEncoding> encodingReader = null;
+    private IXMLWriterDOM<DataEncoding> encodingWriter = null;
 	    
     
     public DataComponent readComponent(DOMHelper dom, Element componentElement) throws XMLReaderException
@@ -75,17 +75,17 @@ public class SWECommonUtils
     }
     
     
-    public AbstractEncoding readEncoding(DOMHelper dom, Element encodingElement) throws XMLReaderException
+    public DataEncoding readEncoding(DOMHelper dom, Element encodingElement) throws XMLReaderException
     {
-        IXMLReaderDOM<AbstractEncoding> reader = getDataEncodingReader(dom, encodingElement);
+        IXMLReaderDOM<DataEncoding> reader = getDataEncodingReader(dom, encodingElement);
         return reader.read(dom, encodingElement);
     }
 
 
-    public AbstractEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException
+    public DataEncoding readEncodingProperty(DOMHelper dom, Element propertyElement) throws XMLReaderException
     {
         Element componentElement = dom.getFirstChildElement(propertyElement);
-        IXMLReaderDOM<AbstractEncoding> reader = getDataEncodingReader(dom, componentElement);
+        IXMLReaderDOM<DataEncoding> reader = getDataEncodingReader(dom, componentElement);
         return reader.read(dom, componentElement);
     }
 
@@ -112,9 +112,9 @@ public class SWECommonUtils
     }
 
 
-    public Element writeEncoding(DOMHelper dom, AbstractEncoding dataEncoding) throws XMLWriterException
+    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws XMLWriterException
     {
-        IXMLWriterDOM<AbstractEncoding> writer = getDataEncodingWriter();
+        IXMLWriterDOM<DataEncoding> writer = getDataEncodingWriter();
         return writer.write(dom, dataEncoding);
     }
     
@@ -149,7 +149,7 @@ public class SWECommonUtils
      * @param componentElt
      * @return
      */
-    private IXMLReaderDOM<AbstractEncoding> getDataEncodingReader(DOMHelper dom, Element componentElt)
+    private IXMLReaderDOM<DataEncoding> getDataEncodingReader(DOMHelper dom, Element componentElt)
     {
         if (dom == previousDom && encodingReader != null)
         {
@@ -157,8 +157,8 @@ public class SWECommonUtils
         }
         else
         {
-            IXMLReaderDOM<AbstractEncoding> reader =
-                (IXMLReaderDOM<AbstractEncoding>)OGCRegistry.createReader(SWECOMMON, DATAENCODING, getVersion(dom, componentElt));
+            IXMLReaderDOM<DataEncoding> reader =
+                (IXMLReaderDOM<DataEncoding>)OGCRegistry.createReader(SWECOMMON, DATAENCODING, getVersion(dom, componentElt));
             encodingReader = reader;
             return reader;
         }
@@ -192,7 +192,7 @@ public class SWECommonUtils
      * the specified version (previously set by setOutputVersion)
      * @return
      */
-    private IXMLWriterDOM<AbstractEncoding> getDataEncodingWriter()
+    private IXMLWriterDOM<DataEncoding> getDataEncodingWriter()
     {
         if (!versionChanged && encodingWriter != null)
         {
@@ -200,8 +200,8 @@ public class SWECommonUtils
         }
         else
         {
-            IXMLWriterDOM<AbstractEncoding> writer = 
-                (IXMLWriterDOM<AbstractEncoding>)OGCRegistry.createWriter(SWECOMMON, DATACOMPONENT, this.version);
+            IXMLWriterDOM<DataEncoding> writer = 
+                (IXMLWriterDOM<DataEncoding>)OGCRegistry.createWriter(SWECOMMON, DATACOMPONENT, this.version);
             encodingWriter = writer;
             versionChanged = false;
             return writer;

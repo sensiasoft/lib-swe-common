@@ -7,6 +7,6 @@ package net.opengis.swe.v20;
  *
  * This is a complex type.
  */
-public interface XMLEncoding extends AbstractEncoding
+public interface XMLEncoding extends DataEncoding
 {
 }

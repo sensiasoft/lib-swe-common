@@ -14,16 +14,15 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataComponent;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.sweCommon.SWEFactory;
-import net.opengis.swe.v20.AbstractEncoding;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.ByteEncoding;
 import net.opengis.swe.v20.DataArray;
+import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.EncodedValues;
 
@@ -50,7 +49,7 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
     }
     
     
-    public void decode(BlockComponent array, AbstractEncoding encoding, String text)
+    public void decode(BlockComponent array, DataEncoding encoding, String text)
     {
         try
         {
@@ -66,9 +65,9 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
     }
 
 
-    public String encode(BlockComponent array, AbstractEncoding encoding)
+    public String encode(BlockComponent array, DataEncoding encoding)
     {
-        ByteArrayOutputStream os = new ByteArrayOutputStream(((DataComponent)array).getData().getAtomCount()*10);
+        ByteArrayOutputStream os = new ByteArrayOutputStream(array.getData().getAtomCount()*10);
         
         // force base64 if byte encoding is raw
         if (encoding instanceof BinaryEncoding)
@@ -78,12 +77,12 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
         try
         {
             DataStreamWriter writer = SWEFactory.createDataWriter(encoding);
-            writer.setDataComponents(((DataComponent)array.getElementType()).copy());
+            writer.setDataComponents(array.getElementType().copy());
             writer.setOutput(os);
             
             for (int i = 0; i < array.getElementCount().getValue(); i++)
             {
-                DataBlock nextBlock = ((DataComponent)array).getComponent(i).getData();
+                DataBlock nextBlock = array.getComponent(i).getData();
                 writer.write(nextBlock);
             }
             
@@ -100,28 +99,28 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
 
 
     @Override
-    public void setAsText(DataArray array, AbstractEncoding encoding, String text)
+    public void setAsText(DataArray array, DataEncoding encoding, String text)
     {
         decode(array, encoding, text);
     }
 
 
     @Override
-    public String getAsText(DataArray array, AbstractEncoding encoding)
+    public String getAsText(DataArray array, DataEncoding encoding)
     {
         return encode(array, encoding);     
     }
 
 
     @Override
-    public void setAsText(DataStream dataStream, AbstractEncoding encoding, String text)
+    public void setAsText(DataStream dataStream, DataEncoding encoding, String text)
     {
         decode(dataStream, encoding, text);        
     }
 
 
     @Override
-    public String getAsText(DataStream dataStream, AbstractEncoding encoding)
+    public String getAsText(DataStream dataStream, DataEncoding encoding)
     {
         return encode(dataStream, encoding);        
     }
