@@ -9,7 +9,7 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "OGC Service Framework".
+ The Original Code is the "SWE Common Data Framework".
  
  The Initial Developer of the Original Code is Sensia Software LLC.
  Portions created by the Initial Developer are Copyright (C) 2014
@@ -42,8 +42,8 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.data.*;
 import org.vast.sweCommon.SweStaxBindings;
+import org.vast.xml.IndentingXMLStreamWriter;
 import org.xml.sax.InputSource;
-import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
 
 
 public class TestSweStaxBindingsV20 extends XMLTestCase
@@ -102,6 +102,8 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         SweStaxBindings sweHelper = new SweStaxBindings();
         
         XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
+        if (os == System.out)
+            System.err.println("Using " + output.getClass().getSimpleName());
         NamespaceRegister nsContext = new NamespaceRegister();
         nsContext.registerNamespace("swe", net.opengis.swe.v20.bind.XMLStreamBindings.NS_URI);
         nsContext.registerNamespace("xlink", net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
@@ -255,7 +257,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         //XMLInputFactory input = XMLInputFactory.newInstance();
         XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
         XMLInputFactory input = new com.ctc.wstx.stax.WstxInputFactory();
-        System.out.println("Using " + output.getClass().getSimpleName());
+        System.err.println("Using " + output.getClass().getSimpleName());
         
         NamespaceRegister nsContext = new NamespaceRegister();
         nsContext.registerNamespace("swe", net.opengis.swe.v20.bind.XMLStreamBindings.NS_URI);

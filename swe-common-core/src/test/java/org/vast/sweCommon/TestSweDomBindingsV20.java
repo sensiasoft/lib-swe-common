@@ -23,7 +23,7 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.sweCommon.test;
+package org.vast.sweCommon;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
