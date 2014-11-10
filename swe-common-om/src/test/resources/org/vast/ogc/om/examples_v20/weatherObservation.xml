@@ -27,7 +27,7 @@
             <swe:DataRecord>
                <swe:field name="time">
                   <swe:Time definition="http://www.opengis.net/def/property/OGC/0/SamplingTime">
-                     <swe:uom xlink:href="urn:ogc:def:unit:OGC::ISO-8601" />
+                     <swe:uom xlink:href="http://www.opengis.net/def/uom/ISO-8601/0/Gregorian" />
                   </swe:Time>
                </swe:field>
                <swe:field name="AirTemperature">
