@@ -41,14 +41,38 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     private static final long serialVersionUID = -2536261971844652828L;
 
     protected OgcPropertyImpl<Count> elementCount = new OgcPropertyImpl<Count>();
-    protected OgcPropertyImpl<AbstractDataComponent> elementType = new OgcPropertyImpl<AbstractDataComponent>();
+    protected OgcPropertyImpl<AbstractDataComponent> elementType;
     protected AbstractEncodingImpl encoding;
     protected EncodedValues values = new EncodedValuesImpl();
+
+    /* properties */
+    public final static String ELT_COUNT_NAME = "elementCount";
 
 
     public AbstractArrayImpl()
     {
-        super();
+        // special property object to correctly set parent
+        elementType = new OgcPropertyImpl<AbstractDataComponent>() 
+        {
+            @Override
+            public void setValue(AbstractDataComponent value)
+            {
+                super.setValue(value);
+                ((AbstractDataComponentImpl)value).setName(this.name);
+                ((AbstractDataComponentImpl)value).setParent(AbstractArrayImpl.this);
+            }
+        };
+        
+        // special property object to correctly set element count name
+        elementCount = new OgcPropertyImpl<Count>() 
+        {
+            @Override
+            public void setValue(Count value)
+            {
+                super.setValue(value);
+                ((CountImpl)value).setName(AbstractArrayImpl.ELT_COUNT_NAME);
+            }
+        };        
     }
     
     

@@ -143,13 +143,19 @@ public class BinaryDataWriter extends AbstractDataWriter
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarComponent) throws IOException
+	protected void processAtom(DataValue component) throws IOException
 	{
 		// get encoding info for component
-		BinaryComponent binaryInfo = (BinaryComponent)scalarComponent.getEncodingInfo();
+		BinaryComponent binaryInfo = (BinaryComponent)component.getEncodingInfo();
 		
-		// write token = dataAtom					
-		writeBinaryAtom(scalarComponent, binaryInfo);
+		try
+        {
+            writeBinaryAtom(component, binaryInfo);
+        }
+        catch (Exception e)
+        {
+            throw new WriterException("Error while writing scalar component " + component.getName(), e);
+        }
 	}
 	
 	
@@ -160,87 +166,81 @@ public class BinaryDataWriter extends AbstractDataWriter
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void writeBinaryAtom(DataValue scalarComponent, BinaryComponent binaryInfo) throws IOException
+	private void writeBinaryAtom(DataValue component, BinaryComponent binaryInfo) throws Exception
 	{
 	    DataType dataType = ((BinaryComponentImpl)binaryInfo).getCdmDataType();
+        DataBlock data = component.getData();
         
-	    try
-		{
-			switch (dataType)
-			{
-				case BOOLEAN:
-					boolean boolValue = scalarComponent.getData().getBooleanValue();
-                    dataOutput.writeBoolean(boolValue);										
-					break;
-				
-				case BYTE:
-					byte byteValue = scalarComponent.getData().getByteValue();
-                    dataOutput.writeByte(byteValue);
-					break;
-					
-				case UBYTE:
-					short ubyteValue = scalarComponent.getData().getShortValue();
-					dataOutput.writeUnsignedByte(ubyteValue);
-					break;
-					
-				case SHORT:
-					short shortValue = scalarComponent.getData().getShortValue();
-                    dataOutput.writeByte(shortValue);
-					break;
-					
-				case USHORT:
-                    int ushortValue = scalarComponent.getData().getIntValue();
-					dataOutput.writeUnsignedShort(ushortValue);
-					break;
-					
-				case INT:
-					int intValue = scalarComponent.getData().getIntValue();
-                    dataOutput.writeInt(intValue);
-					break;
-					
-				case UINT:
-					long uintValue = scalarComponent.getData().getLongValue();
-					dataOutput.writeUnsignedInt(uintValue);
-					break;
-					
-				case LONG:
-					long longValue = scalarComponent.getData().getLongValue();
-                    dataOutput.writeLong(longValue);
-					break;
-					
-				case ULONG:
-                    long ulongValue = scalarComponent.getData().getLongValue();
-                    dataOutput.writeLong(ulongValue);
-					break;
-					
-				case FLOAT:
-					float floatValue = scalarComponent.getData().getFloatValue();
-                    dataOutput.writeFloat(floatValue);
-					break;
-					
-				case DOUBLE:
-                    double doubleValue = scalarComponent.getData().getDoubleValue();
-                    dataOutput.writeDouble(doubleValue);
-					break;
-					
-				case UTF_STRING:
-					String utfValue = scalarComponent.getData().getStringValue();
-                    dataOutput.writeUTF(utfValue);
-					break;
-					
-				case ASCII_STRING:
-                    String asciiValue = scalarComponent.getData().getStringValue();
-                    dataOutput.writeASCII(asciiValue);
-					break;
-					
-				default:
-				    throw new RuntimeException("Unsupported datatype " + dataType);
-			}
-		}
-		catch (Exception e)
-		{
-			throw new WriterException("Error while writing scalar component " + scalarComponent.getName() + " as " + dataType, e);
-		}
+        switch (dataType)
+        {
+            case BOOLEAN:
+                boolean boolValue = data.getBooleanValue();
+                dataOutput.writeBoolean(boolValue);                                     
+                break;
+            
+            case BYTE:
+                byte byteValue = data.getByteValue();
+                dataOutput.writeByte(byteValue);
+                break;
+                
+            case UBYTE:
+                short ubyteValue = data.getShortValue();
+                dataOutput.writeUnsignedByte(ubyteValue);
+                break;
+                
+            case SHORT:
+                short shortValue = data.getShortValue();
+                dataOutput.writeByte(shortValue);
+                break;
+                
+            case USHORT:
+                int ushortValue = data.getIntValue();
+                dataOutput.writeUnsignedShort(ushortValue);
+                break;
+                
+            case INT:
+                int intValue = data.getIntValue();
+                dataOutput.writeInt(intValue);
+                break;
+                
+            case UINT:
+                long uintValue = data.getLongValue();
+                dataOutput.writeUnsignedInt(uintValue);
+                break;
+                
+            case LONG:
+                long longValue = data.getLongValue();
+                dataOutput.writeLong(longValue);
+                break;
+                
+            case ULONG:
+                long ulongValue = data.getLongValue();
+                dataOutput.writeLong(ulongValue);
+                break;
+                
+            case FLOAT:
+                float floatValue = data.getFloatValue();
+                dataOutput.writeFloat(floatValue);
+                break;
+                
+            case DOUBLE:
+                double doubleValue = data.getDoubleValue();
+                dataOutput.writeDouble(doubleValue);
+                break;
+                
+            case UTF_STRING:
+                String utfValue = data.getStringValue();
+                dataOutput.writeUTF(utfValue);
+                break;
+                
+            case ASCII_STRING:
+                String asciiValue = data.getStringValue();
+                dataOutput.writeASCII(asciiValue);
+                break;
+                
+            default:
+                throw new RuntimeException("Unsupported datatype " + dataType);
+        }
 	}
 	
 	

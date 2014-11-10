@@ -218,10 +218,22 @@ public class AsciiDataParser extends AbstractDataParser
 	
 	
     @Override
-	protected void processAtom(DataValue scalarInfo) throws IOException
+	protected void processAtom(DataValue component) throws IOException
 	{
-		String token = readToken();
-		parseToken(scalarInfo, token, decimalSep);
+        String token = null;
+        
+        try
+        {
+            token = readToken();
+            parseToken(component, token, decimalSep);
+        }
+        catch (Exception e)
+        {
+            if ((e instanceof NumberFormatException) || (e instanceof ParseException))
+                throw new ReaderException("Invalid value '" + token + "' for scalar component '" + component.getName() + "'", e);
+            else
+                throw new ReaderException(STREAM_ERROR, e);
+        }
 	}
     
     
@@ -235,22 +247,6 @@ public class AsciiDataParser extends AbstractDataParser
         return !(lastToken == null);
 	}
     
-    
-    /**
-     * Parse a token from a tuple depending on the corresponding Data Component Definition 
-     * @param scalarInfo
-     * @param token
-     * @param decimalSep character to be used as the decimal separator. (don't change anything and assume '.' if 0)
-     * @return a DataBlock containing the read data
-     * @throws CDMException
-     * @throws NumberFormatException
-     */
-    protected DataBlock parseToken(DataValue scalarInfo, String token, char decimalSep) throws IOException
-    {
-        parseToken(scalarInfo, token, decimalSep, scalarInfo.getData(), 0);
-        return scalarInfo.getData();
-    }
-    
         
     /**
      * Parse a token from a tuple depending on the corresponding Data Component Definition 
@@ -258,13 +254,13 @@ public class AsciiDataParser extends AbstractDataParser
      * @param token
      * @param decimalSep character to be used as the decimal separator. (don't change anything and assume '.' if 0)
      * @param dataBlock the DataBlock to contain the read data
-     * @param offset index to write to in the datablock
      * @throws CDMException
      * @throws NumberFormatException
      */
-    protected void parseToken(AbstractSimpleComponentImpl scalarInfo, String token, char decimalSep, DataBlock data, int offset) throws IOException
+    protected void parseToken(AbstractSimpleComponentImpl component, String token, char decimalSep) throws Exception
     {
         // get component data type
+        DataBlock data = component.getData();
         DataType dataType = data.getDataType();
         //System.out.println(scalarInfo.getName() + ": " + token);
         
@@ -272,83 +268,73 @@ public class AsciiDataParser extends AbstractDataParser
         if (decimalSep != 0)
             token.replace(decimalSep, '.');
                
-        try
+        switch (dataType)
         {
-            switch (dataType)
-            {
-                case BOOLEAN:
-                    try
-                    {
-                        int intValue = Integer.parseInt(token);
-                        if ((intValue != 0) && (intValue != 1))
-                            throw new ParseException("", 0);
-                        
-                        data.setBooleanValue(offset, intValue != 0);
-                    }
-                    catch (NumberFormatException e)
-                    {
-                        boolean boolValue = Boolean.parseBoolean(token);
-                        data.setBooleanValue(offset, boolValue);
-                    } 
-                    break;
-                    
-                case BYTE:
-                    byte byteValue = Byte.parseByte(token);
-                    data.setByteValue(offset, byteValue);
-                    break;
-                    
-                case SHORT:
-                case UBYTE:
-                    short shortValue = Short.parseShort(token);
-                    data.setShortValue(offset, shortValue);
-                    break;
-                    
-                case INT:
-                case USHORT:
+            case BOOLEAN:
+                try
+                {
                     int intValue = Integer.parseInt(token);
-                    data.setIntValue(offset, intValue);
-                    break;
+                    if ((intValue != 0) && (intValue != 1))
+                        throw new ParseException("", 0);
                     
-                case LONG:
-                case UINT:
-                case ULONG:
-                    long longValue = Long.parseLong(token);
-                    data.setLongValue(offset, longValue);
-                    break;
-                    
-                case FLOAT:
-                    float floatValue = Float.parseFloat(token);
-                    data.setFloatValue(offset, floatValue);
-                    break;
-                    
-                case DOUBLE:
-                    double doubleValue = parseDoubleOrInfOrIsoTime(token);
-                    data.setDoubleValue(offset, doubleValue);                     
-                    break;
-                    
-                case UTF_STRING:
-                case ASCII_STRING:
-                    data.setStringValue(offset, token);
-                    break;
-                    
-                default:
-                    throw new RuntimeException("Unsupported datatype " + dataType);
-            }
-        }
-        catch (Exception e)
-        {
-            if ((e instanceof NumberFormatException) || (e instanceof ParseException))
-            	throw new ReaderException("Invalid data '" + token + "' for component '" + scalarInfo.getName() + "'", e);
-            else
-            	throw new ReaderException(STREAM_ERROR, e);
+                    data.setBooleanValue(intValue != 0);
+                }
+                catch (NumberFormatException e)
+                {
+                    boolean boolValue = Boolean.parseBoolean(token);
+                    data.setBooleanValue(boolValue);
+                } 
+                break;
+                
+            case BYTE:
+                byte byteValue = Byte.parseByte(token);
+                data.setByteValue(byteValue);
+                break;
+                
+            case SHORT:
+            case UBYTE:
+                short shortValue = Short.parseShort(token);
+                data.setShortValue(shortValue);
+                break;
+                
+            case INT:
+            case USHORT:
+                int intValue = Integer.parseInt(token);
+                data.setIntValue(intValue);
+                break;
+                
+            case LONG:
+            case UINT:
+            case ULONG:
+                long longValue = Long.parseLong(token);
+                data.setLongValue(longValue);
+                break;
+                
+            case FLOAT:
+                float floatValue = Float.parseFloat(token);
+                data.setFloatValue(floatValue);
+                break;
+                
+            case DOUBLE:
+                double doubleValue = parseDoubleOrInfOrIsoTime(token);
+                data.setDoubleValue(doubleValue);                     
+                break;
+                
+            case UTF_STRING:
+            case ASCII_STRING:
+                data.setStringValue(token);
+                break;
+                
+            default:
+                throw new IllegalArgumentException("Unsupported datatype " + dataType);
         }
     }
 
 
 	@Override
-	protected boolean processBlock(DataComponent blockInfo) throws IOException
+	protected boolean processBlock(DataComponent component) throws IOException
 	{
-		if (blockInfo instanceof DataChoiceImpl)
+		if (component instanceof DataChoiceImpl)
 		{
 			String token = null;
 			
@@ -356,7 +342,7 @@ public class AsciiDataParser extends AbstractDataParser
 			try
 			{
 				token = readToken();
-				((DataChoiceImpl)blockInfo).setSelectedComponent(token);
+				((DataChoiceImpl)component).setSelectedComponent(token);
 			}
 			catch (IllegalStateException e)
 			{

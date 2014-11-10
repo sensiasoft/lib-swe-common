@@ -45,41 +45,9 @@ public class SweConstants
     public final static String DATAARRAY_COMPONENT_TAG = "DataArray";
     public final static String MATRIX_COMPONENT_TAG = "Matrix";
     public final static String DATASTREAM_COMPONENT_TAG = "DataStream";
-    public final static String DATACHOICE_COMPONENT_TAG = "DataChoice";
-    
-    /* properties */
-    public final static String ELT_COUNT_NAME = "elementCount";
-	public final static String MIN_VALUE_NAME = "min";
-	public final static String MAX_VALUE_NAME = "max";
-	
-	/* property names used to hold soft-typed information in DataComponents */ 
-	public final static String COMP_QNAME = "obj_qname"; // Component Elt QName
-	public static final String COMP_XLINK = "comp_xlink"; // xlink ref to component
-	public final static String ID = "id"; // String
-	public final static String META = "meta"; // Object
-	public final static String DESC = "desc"; // String
-	public final static String NAME = "name"; // String
-	public final static String REF_FRAME = "ref_frame"; // String
-	public final static String REF_TIME = "ref_time"; // Double
-	public final static String LOCAL_FRAME = "loc_frame"; // String
-	public final static String CRS = "crs"; // String
-	public final static String AXIS_CODE = "axis_code"; // String
-	public final static String DEF_URI = "def_uri"; // String
-	public final static String DEF_OBJ = "def_obj";
-	public final static String UOM_CODE = "uom_code"; // String
-	public final static String UOM_URI = "uom_uri"; // String
-	public final static String UOM_OBJ = "uom_obj"; // Unit
-	public final static String DIC_URI = "dic_uri"; // String
-	public final static String DIC_OBJ = "dic_obj";
-	public final static String QUALITY = "quality"; // DataComponent
-	public final static String UPDATABLE = "updatable"; // Boolean
-	public final static String OPTIONAL = "optional"; // Boolean
-	public final static String NIL_VALUES = "nil_values"; // NilValues object
-	public final static String NIL_XLINK = "nil_xlink"; // xlink ref to NilValues
-	public static final String ENCODING_TYPE = "encoding"; // DataEncoding object
+    public final static String DATACHOICE_COMPONENT_TAG = "DataChoice"; 	
 	
 	/* property values defined in SWE Common standards */
-	public static final String ISO_TIME_DEF = "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian";
 	public static final String DEF_SAMPLING_TIME = "http://www.opengis.net/def/property/OGC/0/SamplingTime";
 	public static final String DEF_SAMPLING_LOC = "http://www.opengis.net/def/property/OGC/0/SamplingLocation";
     

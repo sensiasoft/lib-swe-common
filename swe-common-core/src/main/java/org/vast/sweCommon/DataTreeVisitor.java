@@ -31,8 +31,8 @@ import org.vast.cdm.common.RawDataHandler;
 import org.vast.data.AbstractArrayImpl;
 import org.vast.data.DataArrayImpl;
 import org.vast.data.DataChoiceImpl;
-import org.vast.data.DataValue;
 import org.vast.data.CountImpl;
+import org.vast.data.DataValue;
 
 
 public abstract class DataTreeVisitor
@@ -76,7 +76,7 @@ public abstract class DataTreeVisitor
 	}
 	
 	
-	protected abstract void processAtom(DataValue scalarComponent) throws Exception;
+	protected abstract void processAtom(DataValue component) throws Exception;
 	
 	
 	/**
@@ -85,7 +85,7 @@ public abstract class DataTreeVisitor
 	 * @return true if children should be processed, false otherwise
 	 * @throws CDMException
 	 */
-	protected abstract boolean processBlock(DataComponent blockInfoComponent) throws Exception;
+	protected abstract boolean processBlock(DataComponent component) throws Exception;
 	
 	
 	/**

@@ -90,18 +90,16 @@ public class AsciiDataWriter extends AbstractDataWriter
 	
 	
     @Override
-	protected void processAtom(DataValue scalarInfo) throws IOException
+	protected void processAtom(DataValue component) throws IOException
 	{
-    	String val = getStringValue(scalarInfo);
-        //System.out.println(scalarInfo.getName() + ": " + val);
-    	
         try
         {
+            String val = getStringValue((DataValue)component);
             writeToken(val);
         }
         catch (IOException e)
         {
-            throw new WriterException("Error writing value for scalar component " + scalarInfo.getName(), e);
+            throw new WriterException("Error writing value for scalar component " + component.getName(), e);
         }
 	}
     
@@ -128,16 +126,16 @@ public class AsciiDataWriter extends AbstractDataWriter
 
 
     @Override
-	protected boolean processBlock(DataComponent blockInfo) throws IOException
+	protected boolean processBlock(DataComponent component) throws IOException
 	{
-		if (blockInfo instanceof DataChoiceImpl)
+		if (component instanceof DataChoiceImpl)
 		{
 			String token = null;
 			
 			// write implicit choice token
 			try
 			{
-				token = ((DataChoiceImpl)blockInfo).getSelectedComponent().getName();
+				token = ((DataChoiceImpl)component).getSelectedComponent().getName();
 				writeToken(token);
 			}
 			catch (IllegalStateException e)

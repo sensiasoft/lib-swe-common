@@ -63,9 +63,9 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	
     public abstract void flush() throws IOException;
                 
-    protected abstract void processAtom(DataValue scalarComponent) throws IOException;
+    protected abstract void processAtom(DataValue component) throws IOException;
 
-    protected abstract boolean processBlock(DataComponent blockComponent) throws IOException;
+    protected abstract boolean processBlock(DataComponent component) throws IOException;
     
     
     public void write(OutputStream outputStream) throws IOException
@@ -127,16 +127,16 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	 * @param scalarInfo
 	 * @return
 	 */
-	protected String getStringValue(DataValue scalarInfo)
-	{
-	    DataType dataType = scalarInfo.getDataType();
-        DataBlock data = scalarInfo.getData();
+	protected String getStringValue(DataValue component)
+	{	
+	    DataType dataType = component.getDataType();
+        DataBlock data = component.getData();
         String val;
 	    
         // case of time component
 	    String uom = null;
-		if (scalarInfo instanceof Time && ((Time)scalarInfo).getUom() != null)
-		    uom = ((Time)scalarInfo).getUom().getHref();
+		if (component instanceof Time)
+		    uom = ((Time)component).getUom().getHref();
 				
 		if (uom != null && uom.equals(Time.ISO_TIME_UNIT))
 			val = getDoubleAsString(data.getDoubleValue(), true);

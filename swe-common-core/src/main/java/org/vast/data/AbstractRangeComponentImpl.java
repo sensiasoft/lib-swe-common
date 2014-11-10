@@ -22,7 +22,6 @@ package org.vast.data;
 
 import net.opengis.swe.v20.AbstractSimpleComponent;
 import org.vast.cdm.common.DataBlock;
-import org.vast.cdm.common.DataType;
 
 
 /**
@@ -39,44 +38,33 @@ public abstract class AbstractRangeComponentImpl extends AbstractSimpleComponent
 {
     private static final long serialVersionUID = -7411819306997320628L;
     
+    protected DataValue min;
+    protected DataValue max;
     
-    public AbstractRangeComponentImpl()
+    
+    protected AbstractRangeComponentImpl()
     {
         this.scalarCount = 2;
-    }
-    
-    
-    public AbstractRangeComponentImpl(DataType type)
-    {
-        this.scalarCount = 2;
-        this.dataType = type;
-    }
-    
-    
-    public abstract AbstractRangeComponentImpl copy();
-    
-    
-    protected void copyTo(AbstractRangeComponentImpl other)
-    {
-        super.copyTo(other);
-        other.dataType = dataType;
-        
-        if (nilValues != null)
-            other.nilValues = nilValues.copy();
-        else
-            other.nilValues = null;
-        
-        qualityList.copyTo(other.qualityList);
-        other.referenceFrame = referenceFrame;
-        other.axisID = axisID;
     }
     
     
     @Override
     public int getComponentCount()
     {
-        return 0; //was 1 but i think it's wrong
-    } 
+        return 2;
+    }
+    
+    
+    public DataValue getComponent(int index)
+    {
+        if (index == 0)
+            return min;
+        
+        if (index == 1)
+            return max;
+        
+        throw new IndexOutOfBoundsException("Ranges have only two components. Index can only be 0 or 1"); 
+    }
    
     
     @Override
@@ -89,13 +77,46 @@ public abstract class AbstractRangeComponentImpl extends AbstractSimpleComponent
     @Override
     public void setData(DataBlock dataBlock)
     {
-    	if (dataBlock instanceof DataBlockTuple)
-    	{
-    		int blockIndex = ((DataBlockTuple)dataBlock).startIndex;
-    		this.dataBlock = ((DataBlockTuple)dataBlock).blockArray[blockIndex];
-    	}
-    	else
-    		this.dataBlock = (AbstractDataBlock)dataBlock;
+        assert(dataBlock != null);        
+        this.dataBlock = (AbstractDataBlock)dataBlock;
+
+        // also assign dataBlock to children
+        if (dataBlock instanceof DataBlockParallel)
+        {
+            min.setData(((DataBlockParallel)dataBlock).blockArray[0]);
+            max.setData(((DataBlockParallel)dataBlock).blockArray[1]);
+        }
+        else if (dataBlock instanceof DataBlockMixed)
+        {
+            min.setData(((DataBlockParallel)dataBlock).blockArray[0]);
+            max.setData(((DataBlockParallel)dataBlock).blockArray[1]);
+        }
+        else if (dataBlock instanceof DataBlockTuple)
+        {
+            AbstractDataBlock childBlock;
+            
+            childBlock = ((AbstractDataBlock)dataBlock).copy();
+            childBlock.atomCount = 1;
+            min.setData(childBlock);
+            
+            childBlock = ((AbstractDataBlock)dataBlock).copy();
+            childBlock.atomCount = 1;
+            childBlock.startIndex += 1;
+            max.setData(childBlock);
+        }
+        else // case of big primitive array
+        {
+            AbstractDataBlock childBlock;
+            
+            childBlock = ((AbstractDataBlock)dataBlock).copy();
+            childBlock.atomCount = 1;
+            min.setData(childBlock);
+            
+            childBlock = ((AbstractDataBlock)dataBlock).copy();
+            childBlock.atomCount = 1;
+            childBlock.startIndex += 1;
+            max.setData(childBlock);
+        }
     }
     
     

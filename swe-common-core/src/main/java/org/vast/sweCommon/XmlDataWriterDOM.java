@@ -196,7 +196,7 @@ public class XmlDataWriterDOM extends AbstractDataWriter
 		String eltName = getElementName(scalarInfo);		
 		String val = getStringValue(scalarInfo);
 		
-		if (localName.equals(SweConstants.ELT_COUNT_NAME))
+		if (localName.equals(AbstractArrayImpl.ELT_COUNT_NAME))
 			dom.setAttributeValue(currentParentElt, localName, val);
 		else
 			dom.setElementValue(currentParentElt, eltName, getStringValue(scalarInfo));

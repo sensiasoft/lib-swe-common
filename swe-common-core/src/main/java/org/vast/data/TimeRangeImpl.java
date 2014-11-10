@@ -36,6 +36,8 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     public TimeRangeImpl()
     {
         this.dataType = DataType.DOUBLE;
+        this.min = new TimeImpl();
+        this.max = new TimeImpl();
     }
     
     

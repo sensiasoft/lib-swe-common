@@ -21,8 +21,6 @@
 package org.vast.data;
 
 import java.util.List;
-import net.opengis.OgcPropertyImpl;
-import net.opengis.swe.v20.AbstractDataComponent;
 import net.opengis.swe.v20.Count;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataBlock;
@@ -65,18 +63,7 @@ public class DataArrayImpl extends AbstractArrayImpl
      * is set to reference the ID of another component in the tree.
      */
     public DataArrayImpl()
-    {
-        // special property object to correctly set parent
-        elementType = new OgcPropertyImpl<AbstractDataComponent>() 
-        {
-            @Override
-            public void setValue(AbstractDataComponent value)
-            {
-                super.setValue(value);
-                ((AbstractDataComponentImpl)value).setName(this.name);
-                ((AbstractDataComponentImpl)value).setParent(DataArrayImpl.this);
-            }
-        };
+    {        
     }
     
     
@@ -605,9 +592,4 @@ public class DataArrayImpl extends AbstractArrayImpl
 	{
 	    return (AbstractDataComponentImpl)elementType.getValue();
 	}
-	
-	
-	/* ************************************ */
-    /*  Auto-generated Getters and Setters  */    
-    /* ************************************ */
 }

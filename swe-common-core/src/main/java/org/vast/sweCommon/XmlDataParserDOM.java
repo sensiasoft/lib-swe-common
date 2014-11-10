@@ -231,14 +231,14 @@ public class XmlDataParserDOM extends AbstractDataParser
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarComponent) throws IOException
+	protected void processAtom(DataValue component) throws IOException
 	{
 		setCurrentParent();
-		String localName = scalarComponent.getName();
+		String localName = component.getName();
 		String val;
 		
 		// special case of array size -> read from elementCount attribute
-		if (localName.equals(SweConstants.ELT_COUNT_NAME))
+		if (localName.equals(AbstractArrayImpl.ELT_COUNT_NAME))
 		{
 			val = dom.getAttributeValue(currentParentElt, localName);
 		}
@@ -246,12 +246,19 @@ public class XmlDataParserDOM extends AbstractDataParser
 		// else read from element content
 		else
 		{
-			Element currentElt = getCurrentElement(scalarComponent);
+			Element currentElt = getCurrentElement(component);
 			val = dom.getElementValue(currentElt);
 		}
 		
 		//System.out.println(scalarInfo.getName());
-		tokenParser.parseToken(scalarComponent, val, (char)0);
+		try
+        {
+            tokenParser.parseToken(component, val, (char)0);
+        }
+        catch (Exception e)
+        {
+            throw new ReaderException("Invalid value '" + val + "' for scalar component '" + localName + "'", e);
+        }
 	}
 	
 	

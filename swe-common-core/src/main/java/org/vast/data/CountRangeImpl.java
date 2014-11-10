@@ -27,6 +27,8 @@ import net.opengis.swe.v20.CountRange;
     public CountRangeImpl()
     {
         this.dataType = DataType.INT;
+        this.min = new CountImpl();
+        this.max = new CountImpl();
     }
     
     

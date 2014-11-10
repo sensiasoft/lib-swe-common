@@ -243,7 +243,7 @@ public abstract class AbstractRecordImpl<ComponentType extends AbstractDataCompo
         	nextComponent = ((AbstractDataComponentImpl)fieldList.get(i));
             nextBlock = nextComponent.createDataBlock();
         	currentType = nextBlock.getDataType();
-        	totalSize += nextBlock.atomCount;       	
+        	totalSize += nextBlock.atomCount;
         	mixedBlock.blockArray[i] = nextBlock;
         	
         	/*if ((currentType == DataType.MIXED) || (i != 0 && currentType != previousType))
@@ -252,7 +252,7 @@ public abstract class AbstractRecordImpl<ComponentType extends AbstractDataCompo
         	else if ((nextComponent instanceof DataArray) && ((DataArray)nextComponent).variableSize)
         		sameType = false;*/
             
-            if (nextComponent instanceof DataArrayImpl || nextBlock instanceof DataBlockMixed)
+            if (nextComponent instanceof DataArrayImpl || nextBlock instanceof DataBlockMixed || nextBlock.atomCount > 1)
             {
                 allScalars = false;
             }

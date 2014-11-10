@@ -137,13 +137,13 @@ public class XmlDataWriter extends AbstractDataWriter
 	
 	
 	@Override
-	protected boolean processBlock(DataComponent blockInfo) throws IOException
+	protected boolean processBlock(DataComponent component) throws IOException
 	{
 		try
 		{
 			closeElements();
 			
-			String eltName = blockInfo.getName();
+			String eltName = component.getName();
             
 			if (namespace != null)
             {
@@ -159,26 +159,26 @@ public class XmlDataWriter extends AbstractDataWriter
 		}
 		catch (XMLStreamException e)
 		{
-			throw new WriterException("Error writing data for block component " + blockInfo.getName(), e);
+			throw new WriterException("Error writing data for block component " + component.getName(), e);
 		}	
 	}
 	
 	
 	@Override
-	protected void processAtom(DataValue scalarInfo) throws IOException
+	protected void processAtom(DataValue component) throws IOException
 	{
 		try
         {
 			closeElements();
-			String localName = scalarInfo.getName();
+			String localName = component.getName();
 			
-			if (localName.equals(SweConstants.ELT_COUNT_NAME))
+			if (localName.equals(AbstractArrayImpl.ELT_COUNT_NAME))
 			{
-				xmlWriter.writeAttribute(localName, scalarInfo.getData().getStringValue());
+				xmlWriter.writeAttribute(localName, component.getData().getStringValue());
 			}
 			else
 			{
-				String eltName = scalarInfo.getName();
+				String eltName = component.getName();
 	            
 	            if (namespace != null)
 	            {
@@ -190,13 +190,13 @@ public class XmlDataWriter extends AbstractDataWriter
 	            else
 	            	xmlWriter.writeStartElement(eltName);
 	            
-	            xmlWriter.writeCharacters(getStringValue(scalarInfo));
+	            xmlWriter.writeCharacters(getStringValue(component));
 	            xmlWriter.writeEndElement();
 	        }
         }
         catch (XMLStreamException e)
         {
-            throw new WriterException("Error writing data for scalar component " + scalarInfo.getName(), e);
+            throw new WriterException("Error writing data for scalar component " + component.getName(), e);
         }
 	}
 }

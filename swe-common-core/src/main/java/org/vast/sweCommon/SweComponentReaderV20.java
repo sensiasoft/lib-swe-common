@@ -432,9 +432,9 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         	dataValue.assignNewDataBlock();
         	try
             {
-                asciiParser.parseToken(dataValue, value, '\0');
+                asciiParser.parseToken(dataValue, value, '.');
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 throw new XMLReaderException(e.getMessage(), scalarElt);
             }
@@ -488,8 +488,8 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
             try
             {
                 String[] vals = valueText.split(" ");
-                asciiParser.parseToken(range, vals[0], '.', range.getData(), 0);
-                asciiParser.parseToken(range, vals[1], '.', range.getData(), 1);
+                asciiParser.parseToken(range.getComponent(0), vals[0], '.');
+                asciiParser.parseToken(range.getComponent(1), vals[1], '.');
             }
             catch (Exception e)
             {

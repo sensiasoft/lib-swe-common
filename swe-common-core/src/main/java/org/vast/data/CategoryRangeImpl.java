@@ -29,6 +29,8 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
     public CategoryRangeImpl()
     {
         this.dataType = DataType.UTF_STRING;
+        this.min = new CategoryImpl();
+        this.max = new CategoryImpl();
     }
     
     

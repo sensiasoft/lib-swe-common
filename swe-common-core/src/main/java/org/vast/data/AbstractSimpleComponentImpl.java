@@ -55,6 +55,22 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
     }
     
     
+    protected void copyTo(AbstractRangeComponentImpl other)
+    {
+        super.copyTo(other);
+        other.dataType = dataType;
+        
+        if (nilValues != null)
+            other.nilValues = nilValues.copy();
+        else
+            other.nilValues = null;
+        
+        qualityList.copyTo(other.qualityList);
+        other.referenceFrame = referenceFrame;
+        other.axisID = axisID;
+    }
+    
+    
     public DataType getDataType()
     {
         return dataType;

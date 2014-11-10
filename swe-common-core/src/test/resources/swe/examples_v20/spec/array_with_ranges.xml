@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<swe:DataArray definition="http://sweet.jpl.nasa.gov/2.0/info.owl#TimeSeries" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/swe/2.0 http://schemas.opengis.net/sweCommon/2.0/swe.xsd">
+	<swe:description>Table of operational ranges</swe:description>
+	<swe:elementCount>
+	  <swe:Count>
+			<swe:value>3</swe:value>
+		</swe:Count>
+	</swe:elementCount>
+	<swe:elementType name="operational_ranges">
+		<swe:DataRecord>
+			<swe:label>Operational Ranges</swe:label>
+			<swe:field name="mode">
+				<swe:Category definition="http://www.opengis.net/def/property/OGC/0/ModeSetting">
+					<swe:label>Mode Name</swe:label>
+				</swe:Category>
+			</swe:field>
+			<swe:field name="temperatureRange">
+				<swe:QuantityRange definition="http://mmisw.org/ont/cf/parameter/air_temperature">
+					<swe:label>Operational Air Temperature</swe:label>
+                    <swe:description>Operational range of air temperature measurements</swe:description>
+					<swe:uom xlink:href="Cel"/>
+				</swe:QuantityRange>
+			</swe:field>
+			<swe:field name="pressureRange">
+				<swe:QuantityRange definition="http://mmisw.org/ont/cf/parameter/air_pressure_at_sea_level">
+					<swe:label>Atmospheric Pressure</swe:label>
+					<swe:description>Operational range of atmospheric pressure measurements</swe:description>
+                    <swe:uom code="mbar"/>
+				</swe:QuantityRange>
+			</swe:field>
+		</swe:DataRecord>
+	</swe:elementType>
+	<swe:encoding>
+		<swe:TextEncoding blockSeparator="&#10;" tokenSeparator="," decimalSeparator="." collapseWhiteSpaces="true"/>
+	</swe:encoding>
+	<swe:values>
+		MODE1,-20.0,60.0,950.0,1050.0
+		MODE2,-30.0,50.0,850.0,1020.0
+        MODE3,-40.0,40.0,850.0,1050.0
+	</swe:values>
+</swe:DataArray>

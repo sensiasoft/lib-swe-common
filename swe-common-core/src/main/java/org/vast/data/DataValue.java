@@ -56,22 +56,6 @@ public abstract class DataValue extends AbstractSimpleComponentImpl
     public abstract DataValue copy();
     
     
-    protected void copyTo(DataValue other)
-    {
-        super.copyTo(other);
-        other.dataType = dataType;
-        
-        if (nilValues != null)
-            other.nilValues = nilValues.copy();
-        else
-            other.nilValues = null;
-        
-        qualityList.copyTo(other.qualityList);
-        other.referenceFrame = referenceFrame;
-        other.axisID = axisID;
-    }
-    
-    
     @Override
     public int getComponentCount()
     {
