@@ -1,13 +1,13 @@
 package org.vast.data;
 
 import java.util.List;
-import org.vast.cdm.common.CDMException;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedValues;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.UnitReference;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -168,14 +168,14 @@ public class QuantityImpl extends DataValue implements Quantity
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
         if (constraint != null && isSetValue())
         {
             AllowedValuesImpl constraint = (AllowedValuesImpl)this.constraint;            
             if (!constraint.isValid(getValue()))
             {
-                errorList.add(new CDMException(getName(), "Value '" + dataBlock.getStringValue() +
+                errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() +
                         "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }

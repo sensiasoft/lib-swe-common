@@ -28,6 +28,7 @@ import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataStream;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -156,7 +157,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
     	// do only if constraints are specified on descendants
     	if (hasConstraints())

@@ -24,6 +24,7 @@ import java.util.List;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.ValidationException;
 
 /**
  * <p>
@@ -244,7 +245,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
     	// do only if constraints are specified on descendants
     	if (hasConstraints())

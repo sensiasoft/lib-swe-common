@@ -1,12 +1,12 @@
 package org.vast.data;
 
 import java.util.List;
-import org.vast.cdm.common.CDMException;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -167,14 +167,14 @@ public class CategoryImpl extends DataValue implements Category
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
         if (constraint != null && isSetValue())
         {
             AllowedTokensImpl constraint = (AllowedTokensImpl)this.constraint;            
             if (!constraint.isValid(getValue()))
             {
-                errorList.add(new CDMException(getName(), "Value '" + dataBlock.getStringValue() + 
+                errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() + 
                     "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }

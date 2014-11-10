@@ -26,6 +26,7 @@ import java.util.*;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -160,7 +161,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
     
     
     @Override
-    public abstract void validateData(List<Exception> errorList);
+    public abstract void validateData(List<ValidationException> errorList);
 	
     
     @Override

@@ -120,7 +120,6 @@ public class BinaryDataWriter extends AbstractDataWriter
 	 * object containing binary encoding information. This also
 	 * forces the DataValues primitive type to be the same as the ones
 	 * specified in the binary encoding section.
-	 * @throws CDMException
 	 */
 	protected void resolveComponentEncodings()
 	{
@@ -154,15 +153,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	{
 		// get encoding info for component
 		BinaryMember binaryInfo = ((AbstractDataComponentImpl)component).getEncodingInfo();
-		
-		try
-        {
-            writeBinaryAtom(component, binaryInfo);
-        }
-        catch (Exception e)
-        {
-            throw new WriterException("Error while writing scalar component " + component.getName(), e);
-        }
+		writeBinaryAtom(component, binaryInfo);
 	}
 	
 	
@@ -171,82 +162,89 @@ public class BinaryDataWriter extends AbstractDataWriter
 	 * Decoded value is assigned to each DataValue
 	 * @param scalarInfo
 	 * @param binaryInfo
-	 * @throws CDMException
+	 * @throws WriterException
 	 */
-	private void writeBinaryAtom(ScalarComponent component, BinaryMember binaryInfo) throws Exception
+	private void writeBinaryAtom(ScalarComponent component, BinaryMember binaryInfo) throws WriterException
 	{
 	    DataType dataType = ((BinaryComponentImpl)binaryInfo).getCdmDataType();
         DataBlock data = component.getData();
         
-        switch (dataType)
+        try
         {
-            case BOOLEAN:
-                boolean boolValue = data.getBooleanValue();
-                dataOutput.writeBoolean(boolValue);                                     
-                break;
-            
-            case BYTE:
-                byte byteValue = data.getByteValue();
-                dataOutput.writeByte(byteValue);
-                break;
+            switch (dataType)
+            {
+                case BOOLEAN:
+                    boolean boolValue = data.getBooleanValue();
+                    dataOutput.writeBoolean(boolValue);                                     
+                    break;
                 
-            case UBYTE:
-                short ubyteValue = data.getShortValue();
-                dataOutput.writeUnsignedByte(ubyteValue);
-                break;
-                
-            case SHORT:
-                short shortValue = data.getShortValue();
-                dataOutput.writeByte(shortValue);
-                break;
-                
-            case USHORT:
-                int ushortValue = data.getIntValue();
-                dataOutput.writeUnsignedShort(ushortValue);
-                break;
-                
-            case INT:
-                int intValue = data.getIntValue();
-                dataOutput.writeInt(intValue);
-                break;
-                
-            case UINT:
-                long uintValue = data.getLongValue();
-                dataOutput.writeUnsignedInt(uintValue);
-                break;
-                
-            case LONG:
-                long longValue = data.getLongValue();
-                dataOutput.writeLong(longValue);
-                break;
-                
-            case ULONG:
-                long ulongValue = data.getLongValue();
-                dataOutput.writeLong(ulongValue);
-                break;
-                
-            case FLOAT:
-                float floatValue = data.getFloatValue();
-                dataOutput.writeFloat(floatValue);
-                break;
-                
-            case DOUBLE:
-                double doubleValue = data.getDoubleValue();
-                dataOutput.writeDouble(doubleValue);
-                break;
-                
-            case UTF_STRING:
-                String utfValue = data.getStringValue();
-                dataOutput.writeUTF(utfValue);
-                break;
-                
-            case ASCII_STRING:
-                String asciiValue = data.getStringValue();
-                dataOutput.writeASCII(asciiValue);
-                break;
-                
-            default:
-                throw new RuntimeException("Unsupported datatype " + dataType);
+                case BYTE:
+                    byte byteValue = data.getByteValue();
+                    dataOutput.writeByte(byteValue);
+                    break;
+                    
+                case UBYTE:
+                    short ubyteValue = data.getShortValue();
+                    dataOutput.writeUnsignedByte(ubyteValue);
+                    break;
+                    
+                case SHORT:
+                    short shortValue = data.getShortValue();
+                    dataOutput.writeByte(shortValue);
+                    break;
+                    
+                case USHORT:
+                    int ushortValue = data.getIntValue();
+                    dataOutput.writeUnsignedShort(ushortValue);
+                    break;
+                    
+                case INT:
+                    int intValue = data.getIntValue();
+                    dataOutput.writeInt(intValue);
+                    break;
+                    
+                case UINT:
+                    long uintValue = data.getLongValue();
+                    dataOutput.writeUnsignedInt(uintValue);
+                    break;
+                    
+                case LONG:
+                    long longValue = data.getLongValue();
+                    dataOutput.writeLong(longValue);
+                    break;
+                    
+                case ULONG:
+                    long ulongValue = data.getLongValue();
+                    dataOutput.writeLong(ulongValue);
+                    break;
+                    
+                case FLOAT:
+                    float floatValue = data.getFloatValue();
+                    dataOutput.writeFloat(floatValue);
+                    break;
+                    
+                case DOUBLE:
+                    double doubleValue = data.getDoubleValue();
+                    dataOutput.writeDouble(doubleValue);
+                    break;
+                    
+                case UTF_STRING:
+                    String utfValue = data.getStringValue();
+                    dataOutput.writeUTF(utfValue);
+                    break;
+                    
+                case ASCII_STRING:
+                    String asciiValue = data.getStringValue();
+                    dataOutput.writeASCII(asciiValue);
+                    break;
+                    
+                default:
+                    throw new RuntimeException("Unsupported datatype " + dataType);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new WriterException("Error while writing scalar component " + component.getName(), e);
         }
 	}
 	

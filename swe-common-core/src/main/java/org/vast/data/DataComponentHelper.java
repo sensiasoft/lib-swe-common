@@ -24,8 +24,8 @@
 ******************************* END LICENSE BLOCK ***************************/
 package org.vast.data;
 
-import net.opengis.swe.v20.DataComponent;
 import org.vast.cdm.common.CDMException;
+import net.opengis.swe.v20.DataComponent;
 
 
 /**

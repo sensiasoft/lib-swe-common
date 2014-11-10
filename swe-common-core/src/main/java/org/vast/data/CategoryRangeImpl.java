@@ -1,12 +1,12 @@
 package org.vast.data;
 
 import java.util.List;
-import org.vast.cdm.common.CDMException;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.CategoryRange;
 import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -155,7 +155,7 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
         if (constraint != null && isSetValue())
         {
@@ -165,7 +165,7 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
             
             if (!constraint.isValid(min) || !constraint.isValid(max))
             {
-                errorList.add(new CDMException(getName(), "Value '[" + min + " " + max + "]" + 
+                errorList.add(new ValidationException(getName(), "Value '[" + min + " " + max + "]" + 
                     "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }        

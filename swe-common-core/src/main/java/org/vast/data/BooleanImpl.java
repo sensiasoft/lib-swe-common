@@ -3,6 +3,7 @@ package org.vast.data;
 import java.util.List;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -86,7 +87,7 @@ public class BooleanImpl extends DataValue implements Boolean
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {        
     }
     

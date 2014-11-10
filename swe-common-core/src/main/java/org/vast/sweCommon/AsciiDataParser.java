@@ -243,8 +243,7 @@ public class AsciiDataParser extends AbstractDataParser
      * @param token
      * @param decimalSep character to be used as the decimal separator. (don't change anything and assume '.' if 0)
      * @param dataBlock the DataBlock to contain the read data
-     * @throws CDMException
-     * @throws NumberFormatException
+     * @throws ReaderException
      */
     protected void parseToken(ScalarComponent component, String token, char decimalSep) throws ReaderException
     {

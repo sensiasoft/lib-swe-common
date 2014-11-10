@@ -1,7 +1,6 @@
 package org.vast.data;
 
 import java.util.List;
-import org.vast.cdm.common.CDMException;
 import org.vast.util.DateTimeFormat;
 import net.opengis.DateTimeDouble;
 import net.opengis.IDateTime;
@@ -12,6 +11,7 @@ import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.TimeRange;
 import net.opengis.swe.v20.UnitReference;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -221,7 +221,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
 
 
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
         if (constraint != null)
         {
@@ -242,7 +242,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
                     maxText = dataBlock.getStringValue(1);
                 }
                 
-                errorList.add(new CDMException(getName(), "Value '[" + minText + " " + maxText + "]" +
+                errorList.add(new ValidationException(getName(), "Value '[" + minText + " " + maxText + "]" +
                         "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }        

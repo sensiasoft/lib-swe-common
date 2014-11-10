@@ -223,7 +223,7 @@ public interface DataComponent extends AbstractSWEIdentifiable, HasCopy
      * No exceptions are thrown, rather they are appended to the provided list.
      * @param errorList list to which validation exceptions will be appended
      */
-    public void validateData(List<Exception> errorList);
+    public void validateData(List<ValidationException> errorList);
     
     
     /**

@@ -24,6 +24,7 @@ import java.util.*;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -208,7 +209,7 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
     	for (int i = 0; i < fieldList.size(); i++)
     	    ((AbstractDataComponentImpl)fieldList.get(i)).validateData(errorList);

@@ -23,7 +23,6 @@ package org.vast.sweCommon;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataSource;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
@@ -69,7 +68,7 @@ public class DataSourceDOM implements DataSource
 	/**
      * Gets the right input stream from href or inline values
      * @return input stream to read data from
-     * @throws CDMException
+     * @throws IOException
      */
     public InputStream getDataStream() throws IOException
     {

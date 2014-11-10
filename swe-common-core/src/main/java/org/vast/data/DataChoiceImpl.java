@@ -27,6 +27,7 @@ import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.DataChoice;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -177,7 +178,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
         ((AbstractDataComponentImpl)itemList.get(selected)).validateData(errorList);
     }

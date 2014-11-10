@@ -164,7 +164,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
      * @param dom
      * @param dataGroup
      * @return
-     * @throws CDMException
+     * @throws XMLWriterException
      */
     private Element writeDataRecord(DOMHelper dom, DataRecord dataGroup, boolean writeInlineData) throws XMLWriterException
     {
@@ -191,7 +191,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
      * @param dom
      * @param vector
      * @return
-     * @throws CDMException
+     * @throws XMLWriterException
      */
     private Element writeVector(DOMHelper dom, Vector vector, boolean writeInlineData) throws XMLWriterException
     {
@@ -218,7 +218,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
      * @param dom
      * @param dataChoice
      * @return
-     * @throws CDMException
+     * @throws XMLWriterException
      */
     private Element writeDataChoice(DOMHelper dom, DataChoice dataChoice, boolean writeInlineData) throws XMLWriterException
     {
@@ -245,7 +245,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
      * @param dom
      * @param dataArray
      * @return
-     * @throws CDMException
+     * @throws XMLWriterException
      */
     private Element writeDataArray(DOMHelper dom, DataArray dataArray, boolean writeInlineData) throws XMLWriterException
     {
@@ -260,7 +260,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
      * @param dom
      * @param dataArray
      * @return
-     * @throws CDMException
+     * @throws XMLWriterException
      */
     private Element writeMatrix(DOMHelper dom, Matrix matrix, boolean writeInlineData) throws XMLWriterException
     {
@@ -311,7 +311,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
      * @param dom
      * @param dataArray
      * @return
-     * @throws CDMException
+     * @throws XMLWriterException
      */
     private Element writeDataList(DOMHelper dom, DataList dataList, boolean writeInlineData) throws XMLWriterException
     {
@@ -357,7 +357,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
      * @param dom
      * @param dataValue
      * @return
-     * @throws CDMException
+     * @throws XMLWriterException
      */
     private Element writeDataValue(DOMHelper dom, DataValue dataValue, boolean writeInlineData) throws XMLWriterException
     {
@@ -391,7 +391,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
      * @param dom
      * @param dataGroup
      * @return
-     * @throws CDMException
+     * @throws XMLWriterException
      */
     private Element writeDataRange(DOMHelper dom, RangeComponent range, boolean writeInlineData) throws XMLWriterException
     {        

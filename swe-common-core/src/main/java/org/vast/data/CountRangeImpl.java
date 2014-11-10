@@ -1,12 +1,12 @@
 package org.vast.data;
 
 import java.util.List;
-import org.vast.cdm.common.CDMException;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedValues;
 import net.opengis.swe.v20.CountRange;
 import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -142,7 +142,7 @@ import net.opengis.swe.v20.DataType;
 
 
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
         if (constraint != null && isSetValue())
         {
@@ -152,7 +152,7 @@ import net.opengis.swe.v20.DataType;
             
             if (!constraint.isValid(min) || !constraint.isValid(max))
             {
-                errorList.add(new CDMException(getName(), "Value '[" + min + " " + max + "]" +
+                errorList.add(new ValidationException(getName(), "Value '[" + min + " " + max + "]" +
                         "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }        

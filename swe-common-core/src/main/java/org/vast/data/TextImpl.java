@@ -1,12 +1,12 @@
 package org.vast.data;
 
 import java.util.List;
-import org.vast.cdm.common.CDMException;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Text;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -127,7 +127,7 @@ public class TextImpl extends DataValue implements Text
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
         if (constraint != null)
         {
@@ -145,7 +145,7 @@ public class TextImpl extends DataValue implements Text
                 return;
             
             // add error if not valid
-            errorList.add(new CDMException(getName(), "Value '" + dataBlock.getStringValue() + 
+            errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() + 
                     "' is not valid for component '" + getName() + "': " + getAssertionMessage()));
         }
     }

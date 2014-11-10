@@ -1,7 +1,6 @@
 package org.vast.data;
 
 import java.util.List;
-import org.vast.cdm.common.CDMException;
 import org.vast.util.DateTimeFormat;
 import net.opengis.DateTimeDouble;
 import net.opengis.IDateTime;
@@ -11,6 +10,7 @@ import net.opengis.swe.v20.AllowedTimes;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.UnitReference;
+import net.opengis.swe.v20.ValidationException;
 
 
 /**
@@ -228,7 +228,7 @@ public class TimeImpl extends DataValue implements Time
     
     
     @Override
-    public void validateData(List<Exception> errorList)
+    public void validateData(List<ValidationException> errorList)
     {
         if (constraint != null)
         {
@@ -241,7 +241,7 @@ public class TimeImpl extends DataValue implements Time
                 else
                     valText = dataBlock.getStringValue();
                 
-                errorList.add(new CDMException(getName(), "Value '" + valText +
+                errorList.add(new ValidationException(getName(), "Value '" + valText +
                     "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }
