@@ -9,11 +9,10 @@ import net.opengis.swe.v20.UnitReference;
  *
  * This is a complex type.
  */
-public class UnitReferenceImpl extends net.opengis.OgcPropertyImpl<Object> implements UnitReference
+public class UnitReferenceImpl extends net.opengis.OgcPropertyImpl<Unit> implements UnitReference
 {
     static final long serialVersionUID = 1L;
     protected String code;
-    protected Unit unitObj;
     
     
     public UnitReferenceImpl()
@@ -68,15 +67,4 @@ public class UnitReferenceImpl extends net.opengis.OgcPropertyImpl<Object> imple
         this.code = code;
     }
 
-
-    public Unit getUnitObject()
-    {
-        return unitObj;
-    }
-
-
-    public void setUnitObject(Unit unitObj)
-    {
-        this.unitObj = unitObj;
-    }
 }

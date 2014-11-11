@@ -1,5 +1,7 @@
 package net.opengis.swe.v20;
 
+import org.vast.unit.Unit;
+
 
 
 /**
@@ -8,7 +10,7 @@ package net.opengis.swe.v20;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface UnitReference extends net.opengis.OgcProperty<Object>
+public interface UnitReference extends net.opengis.OgcProperty<Unit>
 {
     
     /**

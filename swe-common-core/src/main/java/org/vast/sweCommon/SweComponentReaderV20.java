@@ -620,7 +620,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
                 UnitParserUCUM ucumParser = new UnitParserUCUM();
                 Unit unit = ucumParser.getUnit(ucumCode);
                 if (unit != null)
-                    uom.setUnitObject(unit);
+                    uom.setValue(unit);
             }
             catch (Exception e)
             {
