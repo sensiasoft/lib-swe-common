@@ -1,46 +1,6 @@
 package org.vast.data;
 
-import org.vast.data.AllowedTimesImpl;
-import org.vast.data.AllowedTokensImpl;
-import org.vast.data.AllowedValuesImpl;
-import org.vast.data.CategoryRangeImpl;
-import org.vast.data.CountRangeImpl;
-import org.vast.data.NilValueImpl;
-import org.vast.data.QuantityRangeImpl;
-import org.vast.data.ReferenceImpl;
-import org.vast.data.TextEncodingImpl;
-import org.vast.data.TimeRangeImpl;
-import org.vast.data.XMLEncodingImpl;
-import net.opengis.swe.v20.AllowedTimes;
-import net.opengis.swe.v20.AllowedTokens;
-import net.opengis.swe.v20.AllowedValues;
-import net.opengis.swe.v20.BinaryEncoding;
-import net.opengis.swe.v20.BinaryBlock;
-import net.opengis.swe.v20.Boolean;
-import net.opengis.swe.v20.Category;
-import net.opengis.swe.v20.CategoryRange;
-import net.opengis.swe.v20.BinaryComponent;
-import net.opengis.swe.v20.Count;
-import net.opengis.swe.v20.CountRange;
-import net.opengis.swe.v20.DataArray;
-import net.opengis.swe.v20.DataChoice;
-import net.opengis.swe.v20.DataRecord;
-import net.opengis.swe.v20.DataStream;
-import net.opengis.swe.v20.EncodedValues;
-import net.opengis.swe.v20.Matrix;
-import net.opengis.swe.v20.NilValue;
-import net.opengis.swe.v20.NilValues;
-import net.opengis.swe.v20.Quantity;
-import net.opengis.swe.v20.QuantityRange;
-import net.opengis.swe.v20.Reference;
-import net.opengis.swe.v20.Text;
-import net.opengis.swe.v20.TextEncoding;
-import net.opengis.swe.v20.Time;
-import net.opengis.swe.v20.TimeRange;
-import net.opengis.swe.v20.UnitReference;
-import net.opengis.swe.v20.Vector;
-import net.opengis.swe.v20.XMLEncoding;
-import net.opengis.swe.v20.Factory;
+import net.opengis.swe.v20.*;
 
 
 public class DataComponentFactory implements Factory
@@ -137,7 +97,7 @@ public class DataComponentFactory implements Factory
     }
     
     
-    public Boolean newBoolean()
+    public net.opengis.swe.v20.Boolean newBoolean()
     {
         return new BooleanImpl();
     }
@@ -218,11 +178,5 @@ public class DataComponentFactory implements Factory
     public EncodedValues newEncodedValuesProperty()
     {
         return new EncodedValuesImpl();
-    }
-    
-    
-    public Reference newReference()
-    {
-        return new ReferenceImpl();
     }
 }

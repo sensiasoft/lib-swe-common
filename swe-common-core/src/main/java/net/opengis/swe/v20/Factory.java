@@ -87,7 +87,4 @@ public interface Factory
     
     
     public EncodedValues newEncodedValuesProperty();
-    
-    
-    public Reference newReference();
 }

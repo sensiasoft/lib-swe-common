@@ -39,7 +39,6 @@ import net.opengis.swe.v20.NilValue;
 import net.opengis.swe.v20.NilValues;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.QuantityRange;
-import net.opengis.swe.v20.Reference;
 import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.TextEncoding;
@@ -3716,49 +3715,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
                 writer.writeCharacters(text);
         }
     }
-    
-    
-    /**
-     * Read method for Reference complex type
-     */
-    public Reference readReference(XMLStreamReader reader) throws XMLStreamException
-    {
-        Reference bean = factory.newReference();
         
-        Map<String, String> attrMap = collectAttributes(reader);
-        this.readReferenceAttributes(attrMap, bean);
-        
-        return bean;
-    }
-    
-    
-    /**
-     * Reads attributes of Reference complex type
-     */
-    public void readReferenceAttributes(Map<String, String> attrMap, Reference bean) throws XMLStreamException
-    {
-        readPropertyAttributes(attrMap, bean);
-        
-    }
-    
-    
-    /**
-     * Write method for Reference complex type
-     */
-    public void writeReference(XMLStreamWriter writer, Reference bean) throws XMLStreamException
-    {
-        this.writeReferenceAttributes(writer, bean);
-    }
-    
-    
-    /**
-     * Writes attributes of Reference complex type
-     */
-    public void writeReferenceAttributes(XMLStreamWriter writer, Reference bean) throws XMLStreamException
-    {
-        writePropertyAttributes(writer, bean);
-    }
-    
     
     /**
      * Read method for DataRecord elements
