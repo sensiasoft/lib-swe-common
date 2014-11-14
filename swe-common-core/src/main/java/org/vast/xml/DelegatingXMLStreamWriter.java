@@ -42,7 +42,7 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public abstract class DelegatingXMLStreamWriter implements XMLStreamWriter
 {
-    XMLStreamWriter writer;
+    final XMLStreamWriter writer;
 
 
     protected DelegatingXMLStreamWriter(XMLStreamWriter writer)

@@ -57,6 +57,12 @@ public class NamespaceRegister implements NamespaceContext
     }
     
     
+    public Map<String, String> getPrefixMap()
+    {
+        return prefixToUri;
+    }
+    
+    
     public void registerNamespace(String prefix, String namespaceURI)
     {
         prefixToUri.put(prefix, namespaceURI);

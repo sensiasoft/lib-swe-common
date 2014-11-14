@@ -11,8 +11,8 @@
 package net.opengis;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -33,8 +33,10 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
 {
     public final static String ERROR_INVALID_ELT = "Invalid Element: ";
     public final static String XLINK_NS_URI = "http://www.w3.org/1999/xlink";
+        
     boolean needNamespaceDecl = false;
     boolean resolveAllXlinks = false;
+    protected NamespaceRegister nsContext = new NamespaceRegister();    
     protected Map<String, Object> idrefMap = new HashMap<String, Object>();
     
     
@@ -44,15 +46,26 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
+    public void setNamespacePrefixes(XMLStreamWriter writer) throws XMLStreamException
+    {
+        writer.setNamespaceContext(nsContext);
+        
+        for (Entry<String, String> pair: nsContext.getPrefixMap().entrySet())
+        {
+            if (pair.getValue() != null)
+                writer.setPrefix(pair.getKey(), pair.getValue());
+        }
+    }
+    
+    
     protected void writeNamespaces(XMLStreamWriter writer) throws XMLStreamException
     {
         if (needNamespaceDecl)
         {
-            Iterator<String> it = writer.getNamespaceContext().getPrefixes(null);
-            while (it.hasNext())
+            for (Entry<String, String> pair: nsContext.getPrefixMap().entrySet())
             {
-                String prefix = it.next();
-                String uri = writer.getNamespaceContext().getNamespaceURI(prefix);
+                String prefix = pair.getKey();
+                String uri = pair.getValue();
                 if (uri != null)
                     writer.writeNamespace(prefix, uri);
             }

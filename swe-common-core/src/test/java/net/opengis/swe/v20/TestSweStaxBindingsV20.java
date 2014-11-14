@@ -33,7 +33,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import net.opengis.NamespaceRegister;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.AbstractSWE;
 import net.opengis.swe.v20.DataStream;
@@ -41,7 +40,7 @@ import org.custommonkey.xmlunit.Validator;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.data.*;
-import org.vast.sweCommon.SweStaxBindings;
+import org.vast.sweCommon.SWEStaxBindings;
 import org.vast.xml.IndentingXMLStreamWriter;
 import org.xml.sax.InputSource;
 
@@ -78,7 +77,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     
     protected AbstractSWE readSweCommonXml(String path, boolean isDataStream) throws Exception
     {
-        SweStaxBindings sweHelper = new SweStaxBindings();
+        SWEStaxBindings sweHelper = new SWEStaxBindings();
         
         // read from file
         InputStream is = getClass().getResourceAsStream(path);
@@ -99,20 +98,17 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     
     protected void writeSweCommonXmlToStream(AbstractSWE sweObj, OutputStream os, boolean indent) throws Exception
     {
-        SweStaxBindings sweHelper = new SweStaxBindings();
+        SWEStaxBindings sweHelper = new SWEStaxBindings();
         
         XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
         if (os == System.out)
-            System.err.println("Using " + output.getClass().getSimpleName());
-        NamespaceRegister nsContext = new NamespaceRegister();
-        nsContext.registerNamespace("swe", net.opengis.swe.v20.bind.XMLStreamBindings.NS_URI);
-        nsContext.registerNamespace("xlink", net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
+            System.err.println("Using " + output.getClass().getSimpleName());        
         
         XMLStreamWriter writer = output.createXMLStreamWriter(os);
         if (indent)
             writer = new IndentingXMLStreamWriter(writer);
         
-        writer.setNamespaceContext(nsContext);
+        sweHelper.setNamespacePrefixes(writer);
         writer.writeStartDocument();
         sweHelper.declareNamespacesOnRootElement();
         if (sweObj instanceof DataStream)
@@ -249,19 +245,13 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     
     public void testGenerateInstance() throws Exception
     {
-      //net.opengis.swe.v20.Factory sweFactory = new net.opengis.swe.v20.impl.DefaultFactory();
-        net.opengis.swe.v20.Factory sweFactory = new org.vast.data.DataComponentFactory();
-        net.opengis.swe.v20.bind.XMLStreamBindings sweXmlBindings = new net.opengis.swe.v20.bind.XMLStreamBindings(sweFactory);
+        SWEStaxBindings sweXmlBindings = new SWEStaxBindings();
         
         //XMLOutputFactory output = XMLOutputFactory.newInstance();
         //XMLInputFactory input = XMLInputFactory.newInstance();
         XMLOutputFactory output = new com.ctc.wstx.stax.WstxOutputFactory();
         XMLInputFactory input = new com.ctc.wstx.stax.WstxInputFactory();
         System.err.println("Using " + output.getClass().getSimpleName());
-        
-        NamespaceRegister nsContext = new NamespaceRegister();
-        nsContext.registerNamespace("swe", net.opengis.swe.v20.bind.XMLStreamBindings.NS_URI);
-        nsContext.registerNamespace("xlink", net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
         
         UnitReference uom;
         DataRecord rec = new DataRecordImpl();
@@ -353,7 +343,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         // write to byte array
         ByteArrayOutputStream os = new ByteArrayOutputStream(10000);
         XMLStreamWriter writer = new IndentingXMLStreamWriter(output.createXMLStreamWriter(os));
-        writer.setNamespaceContext(nsContext);
+        sweXmlBindings.setNamespacePrefixes(writer);
         writer.writeStartDocument();            
         sweXmlBindings.declareNamespacesOnRootElement();
         sweXmlBindings.writeDataRecord(writer, rec, true);
@@ -375,7 +365,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         
         // write back to sysout
         writer = new IndentingXMLStreamWriter(output.createXMLStreamWriter(System.out));
-        writer.setNamespaceContext(nsContext);
+        sweXmlBindings.setNamespacePrefixes(writer);
         writer.writeStartDocument();
         sweXmlBindings.declareNamespacesOnRootElement();
         sweXmlBindings.writeDataRecord(writer, rec, true);
@@ -391,7 +381,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         {
             os.reset();
             writer = output.createXMLStreamWriter(os);
-            writer.setNamespaceContext(nsContext);            
+            sweXmlBindings.setNamespacePrefixes(writer);        
             
             long t0 = System.nanoTime();
             writer.writeStartDocument();

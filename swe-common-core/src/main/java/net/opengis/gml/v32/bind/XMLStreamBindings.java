@@ -1,0 +1,1959 @@
+package net.opengis.gml.v32.bind;
+
+import java.util.Map;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+import net.opengis.AbstractXMLStreamBindings;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
+import net.opengis.gml.v32.AbstractFeature;
+import net.opengis.gml.v32.AbstractGML;
+import net.opengis.gml.v32.AbstractGeometry;
+import net.opengis.gml.v32.AbstractMetaData;
+import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
+import net.opengis.gml.v32.AbstractTimePrimitive;
+import net.opengis.gml.v32.Code;
+import net.opengis.gml.v32.CodeList;
+import net.opengis.gml.v32.CodeOrNilReasonList;
+import net.opengis.gml.v32.CodeWithAuthority;
+import net.opengis.gml.v32.Envelope;
+import net.opengis.gml.v32.FeatureCollection;
+import net.opengis.gml.v32.Point;
+import net.opengis.gml.v32.Reference;
+import net.opengis.gml.v32.StringOrRef;
+import net.opengis.gml.v32.TimeIndeterminateValue;
+import net.opengis.gml.v32.TimeInstant;
+import net.opengis.gml.v32.TimeIntervalLength;
+import net.opengis.gml.v32.TimePeriod;
+import net.opengis.gml.v32.TimePosition;
+import net.opengis.gml.v32.Factory;
+
+
+public class XMLStreamBindings extends AbstractXMLStreamBindings
+{
+    public final static String NS_URI = "http://www.opengis.net/gml/3.2";
+    
+    Factory factory;
+    
+    
+    public XMLStreamBindings(Factory factory)
+    {
+        this.factory = factory;
+    }
+    
+    
+    /**
+     * Read method for StringOrRefType complex type
+     */
+    public StringOrRef readStringOrRefType(XMLStreamReader reader) throws XMLStreamException
+    {
+        StringOrRef bean = factory.newStringOrRef();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readStringOrRefTypeAttributes(attrMap, bean);
+        
+        String val = reader.getElementText();
+        if (val != null)
+            bean.setValue(val);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of StringOrRefType complex type
+     */
+    public void readStringOrRefTypeAttributes(Map<String, String> attrMap, StringOrRef bean) throws XMLStreamException
+    {
+        readPropertyAttributes(attrMap, bean);
+        
+        String val;
+        
+        // remoteschema
+        val = attrMap.get("remoteSchema");
+        if (val != null)
+            bean.setRemoteSchema(val);
+    }
+    
+    
+    /**
+     * Write method for StringOrRefType complex type
+     */
+    public void writeStringOrRefType(XMLStreamWriter writer, StringOrRef bean) throws XMLStreamException
+    {
+        this.writeStringOrRefTypeAttributes(writer, bean);
+        
+        writer.writeCharacters(getStringValue(bean.getValue()));
+    }
+    
+    
+    /**
+     * Writes attributes of StringOrRefType complex type
+     */
+    public void writeStringOrRefTypeAttributes(XMLStreamWriter writer, StringOrRef bean) throws XMLStreamException
+    {
+        writePropertyAttributes(writer, bean);
+        
+        // remoteSchema
+        if (bean.isSetRemoteSchema())
+            writer.writeAttribute("remoteSchema", getStringValue(bean.getRemoteSchema()));
+    }
+    
+    
+    /**
+     * Reads attributes of AbstractMetaDataType complex type
+     */
+    public void readAbstractMetaDataTypeAttributes(Map<String, String> attrMap, AbstractMetaData bean) throws XMLStreamException
+    {
+        String val;
+        
+        // id
+        val = attrMap.get("id");
+        if (val != null)
+            bean.setId(val);
+    }
+    
+    
+    /**
+     * Writes attributes of AbstractMetaDataType complex type
+     */
+    public void writeAbstractMetaDataTypeAttributes(XMLStreamWriter writer, AbstractMetaData bean) throws XMLStreamException
+    {
+        
+        // id
+        if (bean.isSetId())
+            writer.writeAttribute("id", getStringValue(bean.getId()));
+    }
+    
+    
+    /**
+     * Reads attributes of AbstractFeatureType complex type
+     */
+    public void readAbstractFeatureTypeAttributes(Map<String, String> attrMap, AbstractFeature bean) throws XMLStreamException
+    {
+        this.readAbstractGMLTypeAttributes(attrMap, bean);
+        
+    }
+    
+    
+    /**
+     * Reads elements of AbstractFeatureType complex type
+     */
+    public void readAbstractFeatureTypeElements(XMLStreamReader reader, AbstractFeature bean) throws XMLStreamException
+    {
+        this.readAbstractGMLTypeElements(reader, bean);
+        
+        boolean found;
+        
+        // boundedBy
+        found = checkElementName(reader, "boundedBy");
+        if (found)
+        {
+            reader.nextTag();
+            String localName = reader.getName().getLocalPart();
+            
+            if (localName.equals("Envelope"))
+            {
+                Envelope boundedBy = this.readEnvelope(reader);
+                bean.setBoundedByAsEnvelope(boundedBy);
+            }
+            /*else if (localName.equals("Object"))
+            {
+                Object boundedBy = this.readNull(reader);
+                bean.setBoundedByAsNull(boundedBy);
+            }*/
+            else
+                throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+            
+            reader.nextTag();
+            reader.nextTag();
+        }
+        
+        // location
+        found = checkElementName(reader, "location");
+        if (found)
+        {
+            reader.nextTag();
+            String localName = reader.getName().getLocalPart();
+            
+            if (localName.equals("AbstractGeometry"))
+            {
+                AbstractGeometry location = this.readPoint(reader);
+                bean.setLocationAsAbstractGeometry(location);
+            }
+            else if (localName.equals("Code"))
+            {
+                Code location = this.readLocationKeyWord(reader);
+                bean.setLocationAsLocationKeyWord(location);
+            }
+            else if (localName.equals("StringOrRef"))
+            {
+                StringOrRef location = this.readLocationString(reader);
+                bean.setLocationAsLocationString(location);
+            }
+            /*else if (localName.equals("Object"))
+            {
+                Object location = this.readNull(reader);
+                bean.setLocationAsNull(location);
+            }*/
+            else
+                throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+            
+            reader.nextTag();
+            reader.nextTag();
+        }
+    }
+    
+
+    /**
+     * Writes attributes of AbstractFeatureType complex type
+     */
+    public void writeAbstractFeatureTypeAttributes(XMLStreamWriter writer, AbstractFeature bean) throws XMLStreamException
+    {
+        this.writeAbstractGMLTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of AbstractFeatureType complex type
+     */
+    public void writeAbstractFeatureTypeElements(XMLStreamWriter writer, AbstractFeature bean) throws XMLStreamException
+    {
+        this.writeAbstractGMLTypeElements(writer, bean);
+        
+        // boundedBy
+        if (bean.isSetBoundedBy())
+        {
+            writer.writeStartElement(NS_URI, "boundedBy");
+            this.writeEnvelope(writer, (Envelope)bean.getBoundedBy());
+            writer.writeEndElement();
+        }
+        
+        // location
+        if (bean.isSetLocation())
+        {
+            writer.writeStartElement(NS_URI, "location");
+            writePropertyAttributes(writer, bean.getLocationProperty());
+            
+            if (bean.getLocation() instanceof Point)
+                this.writePoint(writer, (Point)bean.getLocation());
+            else if (bean.getLocation() instanceof Code)
+                this.writeLocationKeyWord(writer, (Code)bean.getLocation());
+            else if (bean.getLocation() instanceof StringOrRef)
+                this.writeLocationString(writer, (StringOrRef)bean.getLocation());
+            
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Reads attributes of AbstractFeatureCollectionType complex type
+     */
+    public void readFeatureCollectionTypeAttributes(Map<String, String> attrMap, FeatureCollection bean) throws XMLStreamException
+    {
+        this.readAbstractFeatureTypeAttributes(attrMap, bean);
+        
+    }
+    
+    
+    /**
+     * Reads elements of AbstractFeatureCollectionType complex type
+     */
+    public void readFeatureCollectionTypeElements(XMLStreamReader reader, FeatureCollection bean) throws XMLStreamException
+    {
+        this.readAbstractFeatureTypeElements(reader, bean);
+        
+        boolean found;
+        
+        // featureMember
+        do
+        {
+            found = checkElementName(reader, "featureMember");
+            if (found)
+            {
+                OgcProperty<AbstractFeature> featureMemberProp = new OgcPropertyImpl<AbstractFeature>();
+                readPropertyAttributes(reader, featureMemberProp);
+                
+                if (featureMemberProp.getHref() == null)
+                {
+                    reader.nextTag();
+                    featureMemberProp.setValue(this.readAbstractFeature(reader));
+                }
+                bean.getFeatureMemberList().add(featureMemberProp);
+                
+                reader.nextTag(); // end property tag
+                reader.nextTag();
+            }
+        }
+        while (found);
+        
+        // featureMembers
+        found = checkElementName(reader, "featureMembers");
+        if (found)
+        {
+            reader.nextTag();
+            AbstractFeature featureMembers = this.readAbstractFeature(reader);
+            if (featureMembers != null)
+                bean.setFeatureMembers(featureMembers);
+            
+            reader.nextTag(); // end property tag
+            reader.nextTag();
+        }
+    }
+    
+    
+    /**
+     * Writes attributes of AbstractFeatureCollectionType complex type
+     */
+    public void writeFeatureCollectionTypeAttributes(XMLStreamWriter writer, FeatureCollection bean) throws XMLStreamException
+    {
+        this.writeAbstractFeatureTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of AbstractFeatureCollectionType complex type
+     */
+    public void writeFeatureCollectionTypeElements(XMLStreamWriter writer, FeatureCollection bean) throws XMLStreamException
+    {
+        this.writeAbstractFeatureTypeElements(writer, bean);
+        int numItems;
+        
+        // featureMember
+        numItems = bean.getFeatureMemberList().size();
+        for (int i = 0; i < numItems; i++)
+        {
+            OgcProperty<AbstractFeature> item = bean.getFeatureMemberList().getProperty(i);
+            writer.writeStartElement(NS_URI, "featureMember");
+            writePropertyAttributes(writer, item);
+            this.writeAbstractFeature(writer, item.getValue());
+            writer.writeEndElement();
+        }
+        
+        // featureMembers
+        if (bean.isSetFeatureMembers())
+        {
+            writer.writeStartElement(NS_URI, "featureMembers");
+            this.writeAbstractFeature(writer, bean.getFeatureMembers());
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Read method for FeatureCollectionType complex type
+     */
+    public FeatureCollection readFeatureCollectionType(XMLStreamReader reader) throws XMLStreamException
+    {
+        FeatureCollection bean = factory.newFeatureCollection();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readFeatureCollectionTypeAttributes(attrMap, bean);
+        
+        reader.nextTag();
+        this.readFeatureCollectionTypeElements(reader, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Write method for FeatureCollectionType complex type
+     */
+    public void writeFeatureCollectionType(XMLStreamWriter writer, FeatureCollection bean) throws XMLStreamException
+    {
+        this.writeFeatureCollectionTypeAttributes(writer, bean);
+        this.writeFeatureCollectionTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Reads attributes of AbstractTimePrimitiveType complex type
+     */
+    public void readAbstractTimePrimitiveTypeAttributes(Map<String, String> attrMap, AbstractTimePrimitive bean) throws XMLStreamException
+    {
+        this.readAbstractGMLTypeAttributes(attrMap, bean);
+        
+    }
+    
+    
+    /**
+     * Reads elements of AbstractTimePrimitiveType complex type
+     */
+    public void readAbstractTimePrimitiveTypeElements(XMLStreamReader reader, AbstractTimePrimitive bean) throws XMLStreamException
+    {
+        this.readAbstractGMLTypeElements(reader, bean);
+        
+        boolean found;
+        
+        // relatedTime
+        do
+        {
+            found = checkElementName(reader, "relatedTime");
+            if (found)
+            {
+                OgcProperty<AbstractTimePrimitive> relatedTimeProp = new OgcPropertyImpl<AbstractTimePrimitive>();
+                readPropertyAttributes(reader, relatedTimeProp);
+                
+                if (relatedTimeProp.getHref() == null)
+                {
+                    reader.nextTag();
+                    relatedTimeProp.setValue(this.readAbstractTimeGeometricPrimitive(reader));
+                }
+                bean.getRelatedTimeList().add(relatedTimeProp);
+                
+                reader.nextTag(); // end property tag
+                reader.nextTag();
+            }
+        }
+        while (found);
+    }
+    
+    
+    /**
+     * Writes attributes of AbstractTimePrimitiveType complex type
+     */
+    public void writeAbstractTimePrimitiveTypeAttributes(XMLStreamWriter writer, AbstractTimePrimitive bean) throws XMLStreamException
+    {
+        this.writeAbstractGMLTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of AbstractTimePrimitiveType complex type
+     */
+    public void writeAbstractTimePrimitiveTypeElements(XMLStreamWriter writer, AbstractTimePrimitive bean) throws XMLStreamException
+    {
+        this.writeAbstractGMLTypeElements(writer, bean);
+        int numItems;
+        
+        // relatedTime
+        numItems = bean.getRelatedTimeList().size();
+        for (int i = 0; i < numItems; i++)
+        {
+            OgcProperty<AbstractTimePrimitive> item = bean.getRelatedTimeList().getProperty(i);
+            writer.writeStartElement(NS_URI, "relatedTime");
+            writePropertyAttributes(writer, item);
+            this.writeAbstractTimeGeometricPrimitive(writer, (AbstractTimeGeometricPrimitive)item.getValue());
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Reads attributes of AbstractTimeGeometricPrimitiveType complex type
+     */
+    public void readAbstractTimeGeometricPrimitiveTypeAttributes(Map<String, String> attrMap, AbstractTimeGeometricPrimitive bean) throws XMLStreamException
+    {
+        this.readAbstractTimePrimitiveTypeAttributes(attrMap, bean);
+        
+        String val;
+        
+        // frame
+        val = attrMap.get("frame");
+        if (val != null)
+            bean.setFrame(val);
+    }
+    
+    
+    /**
+     * Reads elements of AbstractTimeGeometricPrimitiveType complex type
+     */
+    public void readAbstractTimeGeometricPrimitiveTypeElements(XMLStreamReader reader, AbstractTimeGeometricPrimitive bean) throws XMLStreamException
+    {
+        this.readAbstractTimePrimitiveTypeElements(reader, bean);
+        
+    }
+    
+    
+    /**
+     * Writes attributes of AbstractTimeGeometricPrimitiveType complex type
+     */
+    public void writeAbstractTimeGeometricPrimitiveTypeAttributes(XMLStreamWriter writer, AbstractTimeGeometricPrimitive bean) throws XMLStreamException
+    {
+        this.writeAbstractTimePrimitiveTypeAttributes(writer, bean);
+        
+        // frame
+        if (bean.isSetFrame())
+            writer.writeAttribute("frame", getStringValue(bean.getFrame()));
+    }
+    
+    
+    /**
+     * Writes elements of AbstractTimeGeometricPrimitiveType complex type
+     */
+    public void writeAbstractTimeGeometricPrimitiveTypeElements(XMLStreamWriter writer, AbstractTimeGeometricPrimitive bean) throws XMLStreamException
+    {
+        this.writeAbstractTimePrimitiveTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Read method for TimeInstantType complex type
+     */
+    public TimeInstant readTimeInstantType(XMLStreamReader reader) throws XMLStreamException
+    {
+        TimeInstant bean = factory.newTimeInstant();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readTimeInstantTypeAttributes(attrMap, bean);
+        
+        reader.nextTag();
+        this.readTimeInstantTypeElements(reader, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of TimeInstantType complex type
+     */
+    public void readTimeInstantTypeAttributes(Map<String, String> attrMap, TimeInstant bean) throws XMLStreamException
+    {
+        this.readAbstractTimeGeometricPrimitiveTypeAttributes(attrMap, bean);
+        
+    }
+    
+    
+    /**
+     * Reads elements of TimeInstantType complex type
+     */
+    public void readTimeInstantTypeElements(XMLStreamReader reader, TimeInstant bean) throws XMLStreamException
+    {
+        this.readAbstractTimeGeometricPrimitiveTypeElements(reader, bean);
+        
+        boolean found;
+        
+        // timePosition
+        found = checkElementName(reader, "timePosition");
+        if (found)
+        {
+            TimePosition timePosition = this.readTimePositionType(reader);
+            if (timePosition != null)
+                bean.setTimePosition(timePosition);
+            
+            reader.nextTag();
+        }
+    }
+    
+    
+    /**
+     * Write method for TimeInstantType complex type
+     */
+    public void writeTimeInstantType(XMLStreamWriter writer, TimeInstant bean) throws XMLStreamException
+    {
+        this.writeTimeInstantTypeAttributes(writer, bean);
+        this.writeTimeInstantTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Writes attributes of TimeInstantType complex type
+     */
+    public void writeTimeInstantTypeAttributes(XMLStreamWriter writer, TimeInstant bean) throws XMLStreamException
+    {
+        this.writeAbstractTimeGeometricPrimitiveTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of TimeInstantType complex type
+     */
+    public void writeTimeInstantTypeElements(XMLStreamWriter writer, TimeInstant bean) throws XMLStreamException
+    {
+        this.writeAbstractTimeGeometricPrimitiveTypeElements(writer, bean);
+        
+        // timePosition
+        writer.writeStartElement(NS_URI, "timePosition");
+        this.writeTimePositionType(writer, bean.getTimePosition());
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Read method for TimePeriodType complex type
+     */
+    public TimePeriod readTimePeriodType(XMLStreamReader reader) throws XMLStreamException
+    {
+        TimePeriod bean = factory.newTimePeriod();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readTimePeriodTypeAttributes(attrMap, bean);
+        
+        reader.nextTag();
+        this.readTimePeriodTypeElements(reader, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of TimePeriodType complex type
+     */
+    public void readTimePeriodTypeAttributes(Map<String, String> attrMap, TimePeriod bean) throws XMLStreamException
+    {
+        this.readAbstractTimeGeometricPrimitiveTypeAttributes(attrMap, bean);
+        
+    }
+    
+    
+    /**
+     * Reads elements of TimePeriodType complex type
+     */
+    public void readTimePeriodTypeElements(XMLStreamReader reader, TimePeriod bean) throws XMLStreamException
+    {
+        this.readAbstractTimeGeometricPrimitiveTypeElements(reader, bean);
+        
+        boolean found;
+        String val;
+        
+        // beginPosition
+        found = checkElementName(reader, "beginPosition");
+        if (found)
+        {
+            TimePosition beginPosition = this.readTimePositionType(reader);
+            if (beginPosition != null)
+                bean.setBeginPosition(beginPosition);
+            
+            reader.nextTag();
+        }
+        
+        // begin
+        found = checkElementName(reader, "begin");
+        if (found)
+        {
+            OgcProperty<TimeInstant> beginProp = bean.getBeginProperty();
+            readPropertyAttributes(reader, beginProp);
+            
+            if (beginProp.getHref() == null)
+            {
+                reader.nextTag();
+                beginProp.setValue(this.readTimeInstant(reader));
+            }
+            
+            reader.nextTag(); // end property tag
+            reader.nextTag();
+        }
+        
+        // endPosition
+        found = checkElementName(reader, "endPosition");
+        if (found)
+        {
+            TimePosition endPosition = this.readTimePositionType(reader);
+            if (endPosition != null)
+                bean.setEndPosition(endPosition);
+            
+            reader.nextTag();
+        }
+        
+        // end
+        found = checkElementName(reader, "end");
+        if (found)
+        {
+            OgcProperty<TimeInstant> endProp = bean.getEndProperty();
+            readPropertyAttributes(reader, endProp);
+            
+            if (endProp.getHref() == null)
+            {
+                reader.nextTag();
+                endProp.setValue(this.readTimeInstant(reader));
+            }
+            
+            reader.nextTag(); // end property tag
+            reader.nextTag();
+        }
+        
+        // duration
+        found = checkElementName(reader, "duration");
+        if (found)
+        {
+            val = reader.getElementText();
+            if (val != null)
+                bean.setDuration(getDateTimeFromString(val));
+            reader.nextTag();
+        }
+        
+        // timeInterval
+        found = checkElementName(reader, "timeInterval");
+        if (found)
+        {
+            TimeIntervalLength timeInterval = this.readTimeIntervalLengthType(reader);
+            if (timeInterval != null)
+                bean.setTimeInterval(timeInterval);
+            
+            reader.nextTag();
+        }
+    }
+    
+    
+    /**
+     * Write method for TimePeriodType complex type
+     */
+    public void writeTimePeriodType(XMLStreamWriter writer, TimePeriod bean) throws XMLStreamException
+    {
+        this.writeTimePeriodTypeAttributes(writer, bean);
+        this.writeTimePeriodTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Writes attributes of TimePeriodType complex type
+     */
+    public void writeTimePeriodTypeAttributes(XMLStreamWriter writer, TimePeriod bean) throws XMLStreamException
+    {
+        this.writeAbstractTimeGeometricPrimitiveTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of TimePeriodType complex type
+     */
+    public void writeTimePeriodTypeElements(XMLStreamWriter writer, TimePeriod bean) throws XMLStreamException
+    {
+        this.writeAbstractTimeGeometricPrimitiveTypeElements(writer, bean);
+        
+        // beginPosition
+        if (bean.isSetBeginPosition())
+        {
+            writer.writeStartElement(NS_URI, "beginPosition");
+            this.writeTimePositionType(writer, bean.getBeginPosition());
+            writer.writeEndElement();
+        }
+        
+        // begin
+        if (bean.isSetBegin())
+        {
+            writer.writeStartElement(NS_URI, "begin");
+            writePropertyAttributes(writer, bean.getBeginProperty());
+            this.writeTimeInstant(writer, bean.getBegin());
+            writer.writeEndElement();
+        }
+        
+        // endPosition
+        if (bean.isSetEndPosition())
+        {
+            writer.writeStartElement(NS_URI, "endPosition");
+            this.writeTimePositionType(writer, bean.getEndPosition());
+            writer.writeEndElement();
+        }
+        
+        // end
+        if (bean.isSetEnd())
+        {
+            writer.writeStartElement(NS_URI, "end");
+            writePropertyAttributes(writer, bean.getEndProperty());
+            this.writeTimeInstant(writer, bean.getEnd());
+            writer.writeEndElement();
+        }
+        
+        // duration
+        if (bean.isSetDuration())
+        {
+            writer.writeStartElement(NS_URI, "duration");
+            writer.writeCharacters(getStringValue(bean.getDuration()));
+            writer.writeEndElement();
+        }
+        
+        // timeInterval
+        if (bean.isSetTimeInterval())
+        {
+            writer.writeStartElement(NS_URI, "timeInterval");
+            this.writeTimeIntervalLengthType(writer, bean.getTimeInterval());
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Read method for TimePositionType complex type
+     */
+    public TimePosition readTimePositionType(XMLStreamReader reader) throws XMLStreamException
+    {
+        TimePosition bean = factory.newTimePosition();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readTimePositionTypeAttributes(attrMap, bean);
+        
+        String val = reader.getElementText();
+        if (val != null && val.trim().length() > 0)
+            bean.setDateTimeValue(getDateTimeFromString(val));
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of TimePositionType complex type
+     */
+    public void readTimePositionTypeAttributes(Map<String, String> attrMap, TimePosition bean) throws XMLStreamException
+    {
+        String val;
+        
+        // frame
+        val = attrMap.get("frame");
+        if (val != null)
+            bean.setFrame(val);
+        
+        // calendareraname
+        val = attrMap.get("calendarEraName");
+        if (val != null)
+            bean.setCalendarEraName(val);
+        
+        // indeterminateposition
+        val = attrMap.get("indeterminatePosition");
+        if (val != null)
+            bean.setIndeterminatePosition(TimeIndeterminateValue.fromString(val));
+    }
+    
+    
+    /**
+     * Write method for TimePositionType complex type
+     */
+    public void writeTimePositionType(XMLStreamWriter writer, TimePosition bean) throws XMLStreamException
+    {
+        this.writeTimePositionTypeAttributes(writer, bean);
+        if (bean.getDateTimeValue() != null)
+            writer.writeCharacters(getStringValue(bean.getDateTimeValue()));
+    }
+    
+    
+    /**
+     * Writes attributes of TimePositionType complex type
+     */
+    public void writeTimePositionTypeAttributes(XMLStreamWriter writer, TimePosition bean) throws XMLStreamException
+    {
+        
+        // frame
+        if (bean.isSetFrame())
+            writer.writeAttribute("frame", getStringValue(bean.getFrame()));
+        
+        // calendarEraName
+        if (bean.isSetCalendarEraName())
+            writer.writeAttribute("calendarEraName", getStringValue(bean.getCalendarEraName()));
+        
+        // indeterminatePosition
+        if (bean.isSetIndeterminatePosition())
+            writer.writeAttribute("indeterminatePosition", getStringValue(bean.getIndeterminatePosition()));
+    }
+    
+    
+    /**
+     * Read method for TimeIntervalLengthType complex type
+     */
+    public TimeIntervalLength readTimeIntervalLengthType(XMLStreamReader reader) throws XMLStreamException
+    {
+        TimeIntervalLength bean = factory.newTimeIntervalLength();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readTimeIntervalLengthTypeAttributes(attrMap, bean);
+        
+        String val = reader.getElementText();
+        if (val != null)
+            bean.setValue(getDoubleFromString(val));
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of TimeIntervalLengthType complex type
+     */
+    public void readTimeIntervalLengthTypeAttributes(Map<String, String> attrMap, TimeIntervalLength bean) throws XMLStreamException
+    {
+        String val;
+        
+        // unit
+        val = attrMap.get("unit");
+        if (val != null)
+            bean.setUnit(val);
+        
+        // radix
+        val = attrMap.get("radix");
+        if (val != null)
+            bean.setRadix(getIntFromString(val));
+        
+        // factor
+        val = attrMap.get("factor");
+        if (val != null)
+            bean.setFactor(getIntFromString(val));
+    }
+    
+    
+    /**
+     * Write method for TimeIntervalLengthType complex type
+     */
+    public void writeTimeIntervalLengthType(XMLStreamWriter writer, TimeIntervalLength bean) throws XMLStreamException
+    {
+        this.writeTimeIntervalLengthTypeAttributes(writer, bean);
+        
+        writer.writeCharacters(getStringValue(bean.getValue()));
+    }
+    
+    
+    /**
+     * Writes attributes of TimeIntervalLengthType complex type
+     */
+    public void writeTimeIntervalLengthTypeAttributes(XMLStreamWriter writer, TimeIntervalLength bean) throws XMLStreamException
+    {
+        
+        // unit
+        writer.writeAttribute("unit", getStringValue(bean.getUnit()));
+        
+        // radix
+        if (bean.isSetRadix())
+            writer.writeAttribute("radix", getStringValue(bean.getRadix()));
+        
+        // factor
+        if (bean.isSetFactor())
+            writer.writeAttribute("factor", getStringValue(bean.getFactor()));
+    }
+    
+    
+    /**
+     * Reads attributes of AbstractGeometryType complex type
+     */
+    public void readAbstractGeometryTypeAttributes(Map<String, String> attrMap, AbstractGeometry bean) throws XMLStreamException
+    {
+        this.readAbstractGMLTypeAttributes(attrMap, bean);
+        
+        String val;
+        
+        // srsname
+        val = attrMap.get("srsName");
+        if (val != null)
+            bean.setSrsName(val);
+        
+        // srsdimension
+        val = attrMap.get("srsDimension");
+        if (val != null)
+            bean.setSrsDimension(getIntFromString(val));
+        
+        // axislabels
+        val = attrMap.get("axisLabels");
+        if (val != null)
+            bean.setAxisLabels(getStringArrayFromString(val));
+        
+        // uomlabels
+        val = attrMap.get("uomLabels");
+        if (val != null)
+            bean.setUomLabels(getStringArrayFromString(val));
+    }
+    
+    
+    /**
+     * Reads elements of AbstractGeometryType complex type
+     */
+    public void readAbstractGeometryTypeElements(XMLStreamReader reader, AbstractGeometry bean) throws XMLStreamException
+    {
+        this.readAbstractGMLTypeElements(reader, bean);
+        
+    }
+    
+    
+    /**
+     * Writes attributes of AbstractGeometryType complex type
+     */
+    public void writeAbstractGeometryTypeAttributes(XMLStreamWriter writer, AbstractGeometry bean) throws XMLStreamException
+    {
+        this.writeAbstractGMLTypeAttributes(writer, bean);
+        
+        // srsName
+        if (bean.isSetSrsName())
+            writer.writeAttribute("srsName", getStringValue(bean.getSrsName()));
+        
+        // srsDimension
+        if (bean.isSetSrsDimension())
+            writer.writeAttribute("srsDimension", getStringValue(bean.getSrsDimension()));
+        
+        // axisLabels
+        if (bean.isSetAxisLabels())
+            writer.writeAttribute("axisLabels", getStringValue(bean.getAxisLabels()));
+        
+        // uomLabels
+        if (bean.isSetUomLabels())
+            writer.writeAttribute("uomLabels", getStringValue(bean.getUomLabels()));
+    }
+    
+    
+    /**
+     * Writes elements of AbstractGeometryType complex type
+     */
+    public void writeAbstractGeometryTypeElements(XMLStreamWriter writer, AbstractGeometry bean) throws XMLStreamException
+    {
+        this.writeAbstractGMLTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Read method for EnvelopeType complex type
+     */
+    public Envelope readEnvelopeType(XMLStreamReader reader) throws XMLStreamException
+    {
+        Envelope bean = factory.newEnvelope();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readEnvelopeTypeAttributes(attrMap, bean);
+        
+        reader.nextTag();
+        this.readEnvelopeTypeElements(reader, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of EnvelopeType complex type
+     */
+    public void readEnvelopeTypeAttributes(Map<String, String> attrMap, Envelope bean) throws XMLStreamException
+    {
+        String val;
+        
+        // srsname
+        val = attrMap.get("srsName");
+        if (val != null)
+            bean.setSrsName(val);
+        
+        // srsdimension
+        val = attrMap.get("srsDimension");
+        if (val != null)
+            bean.setSrsDimension(getIntFromString(val));
+        
+        // axislabels
+        val = attrMap.get("axisLabels");
+        if (val != null)
+            bean.setAxisLabels(getStringArrayFromString(val));
+        
+        // uomlabels
+        val = attrMap.get("uomLabels");
+        if (val != null)
+            bean.setUomLabels(getStringArrayFromString(val));
+    }
+    
+    
+    /**
+     * Reads elements of EnvelopeType complex type
+     */
+    public void readEnvelopeTypeElements(XMLStreamReader reader, Envelope bean) throws XMLStreamException
+    {
+        boolean found;
+        
+        // lowerCorner
+        found = checkElementName(reader, "lowerCorner");
+        if (found)
+        {
+            String lowerCorner = reader.getElementText();
+            if (lowerCorner != null)
+                bean.setLowerCorner(getDoubleArrayFromString(lowerCorner));
+            
+            reader.nextTag();
+        }
+        
+        // upperCorner
+        found = checkElementName(reader, "upperCorner");
+        if (found)
+        {
+            String upperCorner = reader.getElementText();
+            if (upperCorner != null)
+                bean.setUpperCorner(getDoubleArrayFromString(upperCorner));
+            
+            reader.nextTag();
+        }
+    }
+    
+    
+    /**
+     * Write method for EnvelopeType complex type
+     */
+    public void writeEnvelopeType(XMLStreamWriter writer, Envelope bean) throws XMLStreamException
+    {
+        this.writeEnvelopeTypeAttributes(writer, bean);
+        this.writeEnvelopeTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Writes attributes of EnvelopeType complex type
+     */
+    public void writeEnvelopeTypeAttributes(XMLStreamWriter writer, Envelope bean) throws XMLStreamException
+    {
+        
+        // srsName
+        if (bean.isSetSrsName())
+            writer.writeAttribute("srsName", getStringValue(bean.getSrsName()));
+        
+        // srsDimension
+        if (bean.isSetSrsDimension())
+            writer.writeAttribute("srsDimension", getStringValue(bean.getSrsDimension()));
+        
+        // axisLabels
+        if (bean.isSetAxisLabels())
+            writer.writeAttribute("axisLabels", getStringValue(bean.getAxisLabels()));
+        
+        // uomLabels
+        if (bean.isSetUomLabels())
+            writer.writeAttribute("uomLabels", getStringValue(bean.getUomLabels()));
+    }
+    
+    
+    /**
+     * Writes elements of EnvelopeType complex type
+     */
+    public void writeEnvelopeTypeElements(XMLStreamWriter writer, Envelope bean) throws XMLStreamException
+    {
+        
+        // lowerCorner
+        if (bean.isSetLowerCorner())
+        {
+            writer.writeStartElement(NS_URI, "lowerCorner");
+            writer.writeCharacters(getStringValue(bean.getLowerCorner()));
+            writer.writeEndElement();
+        }
+        
+        // upperCorner
+        if (bean.isSetUpperCorner())
+        {
+            writer.writeStartElement(NS_URI, "upperCorner");
+            writer.writeCharacters(getStringValue(bean.getUpperCorner()));
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Read method for PointType complex type
+     */
+    public Point readPointType(XMLStreamReader reader) throws XMLStreamException
+    {
+        Point bean = factory.newPoint();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readPointTypeAttributes(attrMap, bean);
+        
+        reader.nextTag();
+        this.readPointTypeElements(reader, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of PointType complex type
+     */
+    public void readPointTypeAttributes(Map<String, String> attrMap, Point bean) throws XMLStreamException
+    {
+        this.readAbstractGeometryTypeAttributes(attrMap, bean);
+        
+    }
+    
+    
+    /**
+     * Reads elements of PointType complex type
+     */
+    public void readPointTypeElements(XMLStreamReader reader, Point bean) throws XMLStreamException
+    {
+        this.readAbstractGeometryTypeElements(reader, bean);
+        
+        boolean found;
+        
+        // pos
+        found = checkElementName(reader, "pos");
+        if (found)
+        {
+            String pos = reader.getElementText();
+            if (pos != null)
+                bean.setPos(getDoubleArrayFromString(pos));
+            
+            reader.nextTag();
+        }
+        
+        // coordinates
+        found = checkElementName(reader, "coordinates");
+        if (found)
+        {
+            String pos = reader.getElementText();
+            if (pos != null)
+                bean.setPos(getDoubleArrayFromString(pos));
+            
+            reader.nextTag();
+        }
+    }
+    
+    
+    /**
+     * Write method for PointType complex type
+     */
+    public void writePointType(XMLStreamWriter writer, Point bean) throws XMLStreamException
+    {
+        this.writePointTypeAttributes(writer, bean);
+        this.writePointTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Writes attributes of PointType complex type
+     */
+    public void writePointTypeAttributes(XMLStreamWriter writer, Point bean) throws XMLStreamException
+    {
+        this.writeAbstractGeometryTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of PointType complex type
+     */
+    public void writePointTypeElements(XMLStreamWriter writer, Point bean) throws XMLStreamException
+    {
+        this.writeAbstractGeometryTypeElements(writer, bean);
+        
+        // pos
+        if (bean.isSetPos())
+        {
+            writer.writeStartElement(NS_URI, "pos");
+            writer.writeCharacters(getStringValue(bean.getPos()));
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Reads attributes of AbstractGMLType complex type
+     */
+    public void readAbstractGMLTypeAttributes(Map<String, String> attrMap, AbstractGML bean) throws XMLStreamException
+    {
+        String val;
+        
+        // id
+        val = attrMap.get("id");
+        if (val != null)
+            bean.setId(val);
+    }
+    
+    
+    /**
+     * Reads elements of AbstractGMLType complex type
+     */
+    public void readAbstractGMLTypeElements(XMLStreamReader reader, AbstractGML bean) throws XMLStreamException
+    {
+        boolean found;
+        
+        // metaDataProperty
+        /*do
+        {
+            found = checkElementName(reader, "metaDataProperty");
+            if (found)
+            {
+                OgcProperty<AbstractMetaData> metaDataPropertyProp = new OgcPropertyImpl<AbstractMetaData>();
+                readPropertyAttributes(reader, metaDataPropertyProp);
+                
+                if (metaDataPropertyProp.getHref() == null)
+                {
+                    reader.nextTag();
+                    metaDataPropertyProp.setValue(this.readAbstractMetaData(reader));
+                }
+                bean.getMetaDataPropertyList().add(metaDataPropertyProp);
+                
+                reader.nextTag(); // end property tag
+                reader.nextTag();
+            }
+        }
+        while (found);*/
+        
+        // description
+        found = checkElementName(reader, "description");
+        if (found)
+        {
+            OgcProperty<StringOrRef> descriptionProp = bean.getDescriptionProperty();
+            readPropertyAttributes(reader, descriptionProp);
+            
+            if (descriptionProp.getHref() == null)
+            {
+                descriptionProp.setValue(this.readStringOrRefType(reader));
+            }
+            
+            reader.nextTag();
+        }
+        
+        // descriptionReference
+        found = checkElementName(reader, "descriptionReference");
+        if (found)
+        {
+            Reference descriptionReference = this.readReferenceType(reader);
+            if (descriptionReference != null)
+                bean.setDescriptionReference(descriptionReference);
+            
+            reader.nextTag(); // end property tag
+            reader.nextTag();
+        }
+        
+        // identifier
+        found = checkElementName(reader, "identifier");
+        if (found)
+        {
+            CodeWithAuthority identifier = this.readCodeWithAuthorityType(reader);
+            if (identifier != null)
+                bean.setIdentifier(identifier);
+            
+            reader.nextTag();
+        }
+        
+        // name
+        do
+        {
+            found = checkElementName(reader, "name");
+            if (found)
+            {
+                Code name = this.readCodeType(reader);
+                if (name != null)
+                    bean.addName(name);
+                
+                reader.nextTag();
+            }
+        }
+        while (found);
+    }
+    
+    
+    /**
+     * Writes attributes of AbstractGMLType complex type
+     */
+    public void writeAbstractGMLTypeAttributes(XMLStreamWriter writer, AbstractGML bean) throws XMLStreamException
+    {
+        
+        // id
+        writer.writeAttribute(NS_URI, "id", getStringValue(bean.getId()));
+    }
+    
+    
+    /**
+     * Writes elements of AbstractGMLType complex type
+     */
+    public void writeAbstractGMLTypeElements(XMLStreamWriter writer, AbstractGML bean) throws XMLStreamException
+    {
+        int numItems;
+        
+        // metaDataProperty
+        /*numItems = bean.getMetaDataPropertyList().size();
+        for (int i = 0; i < numItems; i++)
+        {
+            OgcProperty<AbstractMetaData> item = bean.getMetaDataPropertyList().getProperty(i);
+            writer.writeStartElement(NS_URI, "metaDataProperty");
+            writePropertyAttributes(writer, item);
+            this.writeAbstractMetaData(writer, item.getValue());
+            writer.writeEndElement();
+        }*/
+        
+        // description
+        if (bean.isSetDescription())
+        {
+            writer.writeStartElement(NS_URI, "description");
+            writePropertyAttributes(writer, bean.getDescriptionProperty());
+            this.writeStringOrRefType(writer, bean.getDescription());
+            writer.writeEndElement();
+        }
+        
+        // descriptionReference
+        if (bean.isSetDescriptionReference())
+        {
+            writer.writeStartElement(NS_URI, "descriptionReference");
+            this.writeReferenceType(writer, bean.getDescriptionReference());
+            writer.writeEndElement();
+        }
+        
+        // identifier
+        if (bean.isSetIdentifier())
+        {
+            writer.writeStartElement(NS_URI, "identifier");
+            this.writeCodeWithAuthorityType(writer, bean.getIdentifier());
+            writer.writeEndElement();
+        }
+        
+        // name
+        numItems = bean.getNameList().size();
+        for (int i = 0; i < numItems; i++)
+        {
+            Code item = bean.getNameList().get(i);
+            writer.writeStartElement(NS_URI, "name");
+            this.writeCodeType(writer, item);
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Read method for ReferenceType complex type
+     */
+    public Reference readReferenceType(XMLStreamReader reader) throws XMLStreamException
+    {
+        Reference bean = factory.newReference();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readReferenceTypeAttributes(attrMap, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of ReferenceType complex type
+     */
+    public void readReferenceTypeAttributes(Map<String, String> attrMap, Reference bean) throws XMLStreamException
+    {
+        readPropertyAttributes(attrMap, bean);
+        
+        String val;
+        
+        // owns
+        val = attrMap.get("owns");
+        if (val != null)
+            bean.setOwns(getBooleanFromString(val));
+        
+        // remoteschema
+        val = attrMap.get("remoteSchema");
+        if (val != null)
+            bean.setRemoteSchema(val);
+    }
+    
+    
+    /**
+     * Write method for ReferenceType complex type
+     */
+    public void writeReferenceType(XMLStreamWriter writer, Reference bean) throws XMLStreamException
+    {
+        this.writeReferenceTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes attributes of ReferenceType complex type
+     */
+    public void writeReferenceTypeAttributes(XMLStreamWriter writer, Reference bean) throws XMLStreamException
+    {
+        writePropertyAttributes(writer, bean);
+        
+        // owns
+        if (bean.isSetOwns())
+            writer.writeAttribute("owns", getStringValue(bean.getOwns()));
+        
+        // remoteSchema
+        if (bean.isSetRemoteSchema())
+            writer.writeAttribute("remoteSchema", getStringValue(bean.getRemoteSchema()));
+    }
+    
+    
+    /**
+     * Read method for CodeType complex type
+     */
+    public Code readCodeType(XMLStreamReader reader) throws XMLStreamException
+    {
+        Code bean = factory.newCode();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readCodeTypeAttributes(attrMap, bean);
+        
+        String val = reader.getElementText();
+        if (val != null)
+            bean.setValue(val);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of CodeType complex type
+     */
+    public void readCodeTypeAttributes(Map<String, String> attrMap, Code bean) throws XMLStreamException
+    {
+        String val;
+        
+        // codespace
+        val = attrMap.get("codeSpace");
+        if (val != null)
+            bean.setCodeSpace(val);
+    }
+    
+    
+    /**
+     * Write method for CodeType complex type
+     */
+    public void writeCodeType(XMLStreamWriter writer, Code bean) throws XMLStreamException
+    {
+        this.writeCodeTypeAttributes(writer, bean);
+        
+        writer.writeCharacters(getStringValue(bean.getValue()));
+    }
+    
+    
+    /**
+     * Writes attributes of CodeType complex type
+     */
+    public void writeCodeTypeAttributes(XMLStreamWriter writer, Code bean) throws XMLStreamException
+    {
+        
+        // codeSpace
+        if (bean.isSetCodeSpace())
+            writer.writeAttribute("codeSpace", getStringValue(bean.getCodeSpace()));
+    }
+    
+    
+    /**
+     * Read method for CodeWithAuthorityType complex type
+     */
+    public CodeWithAuthority readCodeWithAuthorityType(XMLStreamReader reader) throws XMLStreamException
+    {
+        CodeWithAuthority bean = factory.newCodeWithAuthority();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readCodeWithAuthorityTypeAttributes(attrMap, bean);
+        
+        String val = reader.getElementText();
+        if (val != null)
+            bean.setValue(val);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of CodeWithAuthorityType complex type
+     */
+    public void readCodeWithAuthorityTypeAttributes(Map<String, String> attrMap, CodeWithAuthority bean) throws XMLStreamException
+    {
+        this.readCodeTypeAttributes(attrMap, bean);
+    }
+    
+    
+    /**
+     * Write method for CodeWithAuthorityType complex type
+     */
+    public void writeCodeWithAuthorityType(XMLStreamWriter writer, CodeWithAuthority bean) throws XMLStreamException
+    {
+        this.writeCodeWithAuthorityTypeAttributes(writer, bean);
+        
+        writer.writeCharacters(getStringValue(bean.getValue()));
+    }
+    
+    
+    /**
+     * Writes attributes of CodeWithAuthorityType complex type
+     */
+    public void writeCodeWithAuthorityTypeAttributes(XMLStreamWriter writer, CodeWithAuthority bean) throws XMLStreamException
+    {
+        this.writeCodeTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Read method for CodeListType complex type
+     */
+    public CodeList readCodeListType(XMLStreamReader reader) throws XMLStreamException
+    {
+        CodeList bean = factory.newCodeList();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readCodeListTypeAttributes(attrMap, bean);
+        
+        String val = reader.getElementText();
+        if (val != null)
+            bean.setValue(getStringArrayFromString(val));
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of CodeListType complex type
+     */
+    public void readCodeListTypeAttributes(Map<String, String> attrMap, CodeList bean) throws XMLStreamException
+    {
+        String val;
+        
+        // codespace
+        val = attrMap.get("codeSpace");
+        if (val != null)
+            bean.setCodeSpace(val);
+    }
+    
+    
+    /**
+     * Write method for CodeListType complex type
+     */
+    public void writeCodeListType(XMLStreamWriter writer, CodeList bean) throws XMLStreamException
+    {
+        this.writeCodeListTypeAttributes(writer, bean);
+        
+        writer.writeCharacters(getStringValue(bean.getValue()));
+    }
+    
+    
+    /**
+     * Writes attributes of CodeListType complex type
+     */
+    public void writeCodeListTypeAttributes(XMLStreamWriter writer, CodeList bean) throws XMLStreamException
+    {
+        
+        // codeSpace
+        if (bean.isSetCodeSpace())
+            writer.writeAttribute("codeSpace", getStringValue(bean.getCodeSpace()));
+    }
+    
+    
+    /**
+     * Read method for CodeOrNilReasonListType complex type
+     */
+    public CodeOrNilReasonList readCodeOrNilReasonListType(XMLStreamReader reader) throws XMLStreamException
+    {
+        // TODO readCodeOrNilReasonListType
+        /*CodeOrNilReasonList bean = factory.newCodeOrNilReasonList();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readCodeOrNilReasonListTypeAttributes(attrMap, bean);
+        
+        String val = reader.getElementText();
+        if (val != null)
+            bean.setValue(getObjectArrayFromString(val));
+        
+        return bean;*/
+        return null;
+    }
+    
+    
+    /**
+     * Reads attributes of CodeOrNilReasonListType complex type
+     */
+    public void readCodeOrNilReasonListTypeAttributes(Map<String, String> attrMap, CodeOrNilReasonList bean) throws XMLStreamException
+    {
+        String val;
+        
+        // codespace
+        val = attrMap.get("codeSpace");
+        if (val != null)
+            bean.setCodeSpace(val);
+    }
+    
+    
+    /**
+     * Write method for CodeOrNilReasonListType complex type
+     */
+    public void writeCodeOrNilReasonListType(XMLStreamWriter writer, CodeOrNilReasonList bean) throws XMLStreamException
+    {
+        // TODO writeCodeOrNilReasonListType
+        /*this.writeCodeOrNilReasonListTypeAttributes(writer, bean);
+        
+        writer.writeCharacters(getStringValue(bean.getValue()));*/
+    }
+    
+    
+    /**
+     * Writes attributes of CodeOrNilReasonListType complex type
+     */
+    public void writeCodeOrNilReasonListTypeAttributes(XMLStreamWriter writer, CodeOrNilReasonList bean) throws XMLStreamException
+    {
+        
+        // codeSpace
+        if (bean.isSetCodeSpace())
+            writer.writeAttribute("codeSpace", getStringValue(bean.getCodeSpace()));
+    }
+    
+    
+    /**
+     * Dispatcher method for reading elements derived from AbstractMetaData
+     */
+    /*public AbstractMetaData readAbstractMetaData(XMLStreamReader reader) throws XMLStreamException
+    {
+        String localName = reader.getName().getLocalPart();
+        
+        if (localName.equals("GenericMetaData"))
+            return readGenericMetaData(reader);
+        
+        throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+    }*/
+    
+    
+    /**
+     * Dispatcher method for writing classes derived from AbstractMetaData
+     */
+    /*public void writeAbstractMetaData(XMLStreamWriter writer, AbstractMetaData bean) throws XMLStreamException
+    {
+        if (bean instanceof GenericMetaData)
+            writeGenericMetaData(writer, (GenericMetaData)bean);
+    }*/
+    
+    
+    /**
+     * Dispatcher method for reading elements derived from AbstractTimeGeometricPrimitive
+     */
+    public AbstractTimeGeometricPrimitive readAbstractTimeGeometricPrimitive(XMLStreamReader reader) throws XMLStreamException
+    {
+        String localName = reader.getName().getLocalPart();
+        
+        if (localName.equals("TimeInstant"))
+            return readTimeInstant(reader);
+        else if (localName.equals("TimePeriod"))
+            return readTimePeriod(reader);
+        
+        throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+    }
+    
+    
+    /**
+     * Dispatcher method for writing classes derived from AbstractTimeGeometricPrimitive
+     */
+    public void writeAbstractTimeGeometricPrimitive(XMLStreamWriter writer, AbstractTimeGeometricPrimitive bean) throws XMLStreamException
+    {
+        if (bean instanceof TimeInstant)
+            writeTimeInstant(writer, (TimeInstant)bean);
+        else if (bean instanceof TimePeriod)
+            writeTimePeriod(writer, (TimePeriod)bean);
+    }
+    
+    
+    /**
+     * Read method for TimeInstant elements
+     */
+    public TimeInstant readTimeInstant(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "TimeInstant");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readTimeInstantType(reader);
+    }
+    
+    
+    /**
+     * Write method for TimeInstant element
+     */
+    public void writeTimeInstant(XMLStreamWriter writer, TimeInstant bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "TimeInstant");
+        this.writeNamespaces(writer);
+        this.writeTimeInstantType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Read method for TimePeriod elements
+     */
+    public TimePeriod readTimePeriod(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "TimePeriod");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readTimePeriodType(reader);
+    }
+    
+    
+    /**
+     * Write method for TimePeriod element
+     */
+    public void writeTimePeriod(XMLStreamWriter writer, TimePeriod bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "TimePeriod");
+        this.writeNamespaces(writer);
+        this.writeTimePeriodType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Read method for TimePosition elements
+     */
+    public TimePosition readTimePosition(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "TimePosition");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readTimePositionType(reader);
+    }
+    
+    
+    /**
+     * Write method for TimePosition element
+     */
+    public void writeTimePosition(XMLStreamWriter writer, TimePosition bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "TimePosition");
+        this.writeNamespaces(writer);
+        this.writeTimePositionType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Read method for TimeInterval elements
+     */
+    public TimeIntervalLength readTimeInterval(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "TimeInterval");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readTimeIntervalLengthType(reader);
+    }
+    
+    
+    /**
+     * Write method for TimeInterval element
+     */
+    public void writeTimeInterval(XMLStreamWriter writer, TimeIntervalLength bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "TimeInterval");
+        this.writeNamespaces(writer);
+        this.writeTimeIntervalLengthType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Dispatcher method for reading elements derived from AbstractFeature
+     */
+    public AbstractFeature readAbstractFeature(XMLStreamReader reader) throws XMLStreamException
+    {
+        String localName = reader.getName().getLocalPart();
+        
+        if (localName.equals("FeatureCollection"))
+            return readFeatureCollection(reader);
+        
+        throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+    }
+    
+    
+    /**
+     * Dispatcher method for writing classes derived from AbstractFeature
+     */
+    public void writeAbstractFeature(XMLStreamWriter writer, AbstractFeature bean) throws XMLStreamException
+    {
+        if (bean instanceof FeatureCollection)
+            writeFeatureCollection(writer, (FeatureCollection)bean);
+    }
+    
+    
+    /**
+     * Read method for FeatureCollection elements
+     */
+    public FeatureCollection readFeatureCollection(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "FeatureCollection");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readFeatureCollectionType(reader);
+    }
+    
+    
+    /**
+     * Write method for FeatureCollection element
+     */
+    public void writeFeatureCollection(XMLStreamWriter writer, FeatureCollection bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "FeatureCollection");
+        this.writeNamespaces(writer);
+        this.writeFeatureCollectionType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Read method for Envelope elements
+     */
+    public Envelope readEnvelope(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "Envelope");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readEnvelopeType(reader);
+    }
+    
+    
+    /**
+     * Write method for Envelope element
+     */
+    public void writeEnvelope(XMLStreamWriter writer, Envelope bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "Envelope");
+        this.writeNamespaces(writer);
+        this.writeEnvelopeType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Read method for Point elements
+     */
+    public Point readPoint(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "Point");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readPointType(reader);
+    }
+    
+    
+    /**
+     * Write method for Point element
+     */
+    public void writePoint(XMLStreamWriter writer, Point bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "Point");
+        this.writeNamespaces(writer);
+        this.writePointType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Read method for LocationString elements
+     */
+    public StringOrRef readLocationString(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "LocationString");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readStringOrRefType(reader);
+    }
+    
+    
+    /**
+     * Write method for LocationString element
+     */
+    public void writeLocationString(XMLStreamWriter writer, StringOrRef bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "LocationString");
+        this.writeNamespaces(writer);
+        this.writeStringOrRefType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Read method for LocationKeyWord elements
+     */
+    public Code readLocationKeyWord(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "LocationKeyWord");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readCodeType(reader);
+    }
+    
+    
+    /**
+     * Write method for LocationKeyWord element
+     */
+    public void writeLocationKeyWord(XMLStreamWriter writer, Code bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "LocationKeyWord");
+        this.writeNamespaces(writer);
+        this.writeCodeType(writer, bean);
+        writer.writeEndElement();
+    }
+}

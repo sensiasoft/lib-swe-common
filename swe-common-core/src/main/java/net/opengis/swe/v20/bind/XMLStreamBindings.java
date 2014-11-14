@@ -707,7 +707,8 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         
         // values
         writer.writeStartElement(NS_URI, "values");
-        this.writeEncodedValuesPropertyType(writer, bean, bean.getEncoding(), bean.getValues());
+        if (bean.isSetValues())
+            this.writeEncodedValuesPropertyType(writer, bean, bean.getEncoding(), bean.getValues());
         writer.writeEndElement();
     }
     
@@ -3684,13 +3685,15 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         readPropertyAttributes(attrMap, bean);
         
         String text = reader.getElementText();
-        if (text != null)
+        if (text != null && text.trim().length() > 0)
         {
             if (blockComponent instanceof DataArray)
                 bean.setAsText((DataArray)blockComponent, encoding, text);
             else if (blockComponent instanceof DataStream)
                 bean.setAsText((DataStream)blockComponent, encoding, text);
         }
+        else if (!bean.hasHref())
+            return null;
         
         return bean;
     }

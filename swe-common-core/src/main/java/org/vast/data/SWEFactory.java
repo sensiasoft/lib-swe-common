@@ -3,12 +3,10 @@ package org.vast.data;
 import net.opengis.swe.v20.*;
 
 
-public class DataComponentFactory implements Factory
-{
+public class SWEFactory implements Factory
+{       
     
-    
-    
-    public DataComponentFactory()
+    public SWEFactory()
     {
     }
     

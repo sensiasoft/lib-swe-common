@@ -11,7 +11,7 @@
 package org.vast.sweCommon;
 
 import net.opengis.swe.v20.bind.XMLStreamBindings;
-import org.vast.data.DataComponentFactory;
+import org.vast.data.SWEFactory;
 
 
 /**
@@ -23,12 +23,15 @@ import org.vast.data.DataComponentFactory;
  * @author Alexandre Robin <alex.robin@sensiasoftware.com>
  * @since Sep 25, 2014
  */
-public class SweStaxBindings extends XMLStreamBindings
+public class SWEStaxBindings extends XMLStreamBindings
 {
 
-    public SweStaxBindings()
+    public SWEStaxBindings()
     {
-        super(new DataComponentFactory());
+        super(new SWEFactory());
+        
+        nsContext.registerNamespace("swe", net.opengis.swe.v20.bind.XMLStreamBindings.NS_URI);
+        nsContext.registerNamespace("xlink", net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
     }
     
 }
