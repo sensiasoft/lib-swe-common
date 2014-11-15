@@ -89,15 +89,15 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         String eltName = componentElt.getLocalName();
     	
     	// call the right default method depending on type
-    	if (eltName.equals(SweConstants.DATARECORD_COMPONENT_TAG))
+    	if (eltName.equals(SWEConstants.DATARECORD_COMPONENT_TAG))
         	component = readDataRecord(dom, componentElt);
-    	else if (eltName.equals(SweConstants.VECTOR_COMPONENT_TAG))
+    	else if (eltName.equals(SWEConstants.VECTOR_COMPONENT_TAG))
         	component = readVector(dom, componentElt);
-        else if (eltName.equals(SweConstants.DATAARRAY_COMPONENT_TAG) || eltName.equals(SweConstants.MATRIX_COMPONENT_TAG))
+        else if (eltName.equals(SWEConstants.DATAARRAY_COMPONENT_TAG) || eltName.equals(SWEConstants.MATRIX_COMPONENT_TAG))
             component = readDataArray(dom, componentElt);
-        else if (eltName.equals(SweConstants.DATASTREAM_COMPONENT_TAG))
+        else if (eltName.equals(SWEConstants.DATASTREAM_COMPONENT_TAG))
             component = readDataStream(dom, componentElt);
-        else if (eltName.equals(SweConstants.DATACHOICE_COMPONENT_TAG))
+        else if (eltName.equals(SWEConstants.DATACHOICE_COMPONENT_TAG))
             component = readDataChoice(dom, componentElt);
         else if (eltName.endsWith("Range"))
             component = readRange(dom, componentElt);
@@ -250,7 +250,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
     {
         DataArrayImpl dataArray;
         
-        if (arrayElt.getLocalName().equals(SweConstants.MATRIX_COMPONENT_TAG))
+        if (arrayElt.getLocalName().equals(SWEConstants.MATRIX_COMPONENT_TAG))
             dataArray = new MatrixImpl();
         else
             dataArray = new DataArrayImpl();
@@ -403,17 +403,17 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         String eltName = scalarElt.getLocalName();
         
         // Create DataValue Object with appropriate type
-    	if (eltName.equals(SweConstants.QUANTITY_COMPONENT_TAG) || eltName.equals("ObservableProperty"))
+    	if (eltName.equals(SWEConstants.QUANTITY_COMPONENT_TAG) || eltName.equals("ObservableProperty"))
     	    dataValue = new QuantityImpl();
-    	else if (eltName.equals(SweConstants.TIME_COMPONENT_TAG))
+    	else if (eltName.equals(SWEConstants.TIME_COMPONENT_TAG))
             dataValue = new TimeImpl();
-        else if (eltName.equals(SweConstants.COUNT_COMPONENT_TAG))
+        else if (eltName.equals(SWEConstants.COUNT_COMPONENT_TAG))
             dataValue = new CountImpl();
-        else if (eltName.equals(SweConstants.BOOL_COMPONENT_TAG))
+        else if (eltName.equals(SWEConstants.BOOL_COMPONENT_TAG))
         	dataValue = new BooleanImpl();
-        else if (eltName.equals(SweConstants.CATEGORY_COMPONENT_TAG))
+        else if (eltName.equals(SWEConstants.CATEGORY_COMPONENT_TAG))
         	dataValue = new CategoryImpl();
-        else if (eltName.equals(SweConstants.TEXT_COMPONENT_TAG))
+        else if (eltName.equals(SWEConstants.TEXT_COMPONENT_TAG))
             dataValue = new TextImpl();
         else
             throw new XMLReaderException("Invalid scalar component: " + eltName, scalarElt);
@@ -459,13 +459,13 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         AbstractRangeComponentImpl range;
         
         // Create Data component Object
-        if (eltName.startsWith(SweConstants.QUANTITY_COMPONENT_TAG))
+        if (eltName.startsWith(SWEConstants.QUANTITY_COMPONENT_TAG))
             range = new QuantityRangeImpl();
-        else if (eltName.startsWith(SweConstants.COUNT_COMPONENT_TAG))
+        else if (eltName.startsWith(SWEConstants.COUNT_COMPONENT_TAG))
             range = new CountRangeImpl();
-        else if (eltName.startsWith(SweConstants.TIME_COMPONENT_TAG))
+        else if (eltName.startsWith(SWEConstants.TIME_COMPONENT_TAG))
             range = new TimeRangeImpl();
-        else if (eltName.startsWith(SweConstants.CATEGORY_COMPONENT_TAG))
+        else if (eltName.startsWith(SWEConstants.CATEGORY_COMPONENT_TAG))
             range = new CategoryRangeImpl();
         else
             throw new XMLReaderException("Only Quantity, Time, Count and Category ranges are allowed", rangeElt);

@@ -160,6 +160,16 @@ public abstract class AbstractGMLImpl implements AbstractGML
     
     
     /**
+     * Gets the unique identifier
+     */
+    @Override
+    public String getUniqueIdentifier()
+    {
+        return identifier.getValue();
+    }
+    
+    
+    /**
      * Checks if identifier is set
      */
     @Override
@@ -208,6 +218,15 @@ public abstract class AbstractGMLImpl implements AbstractGML
     }
     
     
+    @Override
+    public String getName()
+    {
+        if (getNumNames() > 0)
+            return nameList.get(0).getValue();
+        return null;
+    }
+    
+    
     /**
      * Adds a new name property
      */
@@ -218,6 +237,13 @@ public abstract class AbstractGMLImpl implements AbstractGML
     }
     
     
+    @Override
+    public void setName(String name)
+    {
+        addName(new CodeImpl(name));
+    }
+    
+
     /**
      * Gets the id property
      */

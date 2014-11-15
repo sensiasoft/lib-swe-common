@@ -31,7 +31,7 @@ package org.vast.sweCommon;
  * @since 5 mars 08
  * @version 1.0
  */
-public class SweConstants
+public class SWEConstants
 {
 	/* component tag names */
     public final static String BOOL_COMPONENT_TAG = "Boolean";

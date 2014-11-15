@@ -19,6 +19,12 @@ public class CodeImpl implements Code
     }
     
     
+    public CodeImpl(String value)
+    {
+        this.value = value;
+    }
+    
+    
     /**
      * Gets the codeSpace property
      */

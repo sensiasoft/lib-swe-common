@@ -109,7 +109,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
      * Adds a new qualityAsQuantity property
      */
     @Override
-    public void addQualityAsQuantity(Quantity quality)
+    public void addQuality(Quantity quality)
     {
         this.qualityList.add(quality);
     }
@@ -119,7 +119,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
      * Adds a new qualityAsQuantityRange property
      */
     @Override
-    public void addQualityAsQuantityRange(QuantityRange quality)
+    public void addQuality(QuantityRange quality)
     {
         this.qualityList.add(quality);
     }
@@ -129,7 +129,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
      * Adds a new qualityAsCategory property
      */
     @Override
-    public void addQualityAsCategory(Category quality)
+    public void addQuality(Category quality)
     {
         this.qualityList.add(quality);
     }
@@ -139,7 +139,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
      * Adds a new qualityAsText property
      */
     @Override
-    public void addQualityAsText(Text quality)
+    public void addQuality(Text quality)
     {
         this.qualityList.add(quality);
     }

@@ -86,6 +86,12 @@ public interface AbstractGML
     
     
     /**
+     * Gets the identifier property
+     */
+    public String getUniqueIdentifier();
+    
+    
+    /**
      * Checks if identifier is set
      */
     public boolean isSetIdentifier();
@@ -119,6 +125,18 @@ public interface AbstractGML
      * Adds a new name property
      */
     public void addName(Code name);
+    
+    
+    /**
+     * Sets the default name 
+     */
+    public void setName(String name);
+    
+    
+    /**
+     * @return the default name
+     */
+    public String getName();
     
     
     /**

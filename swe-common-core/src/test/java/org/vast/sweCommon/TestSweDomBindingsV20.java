@@ -34,6 +34,7 @@ import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.sweCommon.SWECommonUtils;
 import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 
@@ -71,8 +72,10 @@ public class TestSweDomBindingsV20 extends XMLTestCase
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         System.out.println();
-        utils.writeComponent(System.out, data, true, true);
-        utils.writeComponent(os, data, true, false);
+        DOMHelper dom = new DOMHelper();
+        Element domElt = utils.writeComponent(dom, data, true);
+        dom.serialize(domElt, System.out, true);
+        dom.serialize(domElt, os, true);
         os.close();
         
         DOMHelper dom2 = new DOMHelper(new ByteArrayInputStream(os.toByteArray()), false);

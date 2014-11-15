@@ -282,7 +282,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
         uom = new UnitReferenceImpl();
         uom.setCode("%");
         acc.setUom(uom);
-        q1.addQualityAsQuantity(acc);
+        q1.addQuality(acc);
         rec.addField("temp", q1);
         
         Category c1 = new CategoryImpl();        

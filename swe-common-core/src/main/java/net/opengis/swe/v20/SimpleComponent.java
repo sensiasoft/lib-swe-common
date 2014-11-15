@@ -29,25 +29,25 @@ public interface SimpleComponent extends DataComponent
     /**
      * Adds a new qualityAsQuantity property
      */
-    public void addQualityAsQuantity(Quantity quality);
+    public void addQuality(Quantity quality);
     
     
     /**
      * Adds a new qualityAsQuantityRange property
      */
-    public void addQualityAsQuantityRange(QuantityRange quality);
+    public void addQuality(QuantityRange quality);
     
     
     /**
      * Adds a new qualityAsCategory property
      */
-    public void addQualityAsCategory(Category quality);
+    public void addQuality(Category quality);
     
     
     /**
      * Adds a new qualityAsText property
      */
-    public void addQualityAsText(Text quality);
+    public void addQuality(Text quality);
     
     
     /**
