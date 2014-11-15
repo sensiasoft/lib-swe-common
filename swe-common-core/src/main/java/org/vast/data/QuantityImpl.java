@@ -32,6 +32,12 @@ public class QuantityImpl extends DataValue implements Quantity
     }
     
     
+    public QuantityImpl(DataType dataType)
+    {
+        this.dataType = dataType;
+    }
+    
+    
     @Override
     public QuantityImpl copy()
     {

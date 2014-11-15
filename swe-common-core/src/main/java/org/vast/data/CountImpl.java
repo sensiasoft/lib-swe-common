@@ -26,7 +26,13 @@ public class CountImpl extends DataValue implements Count
     
     public CountImpl()
     {
-        this.dataType = DataType.INT;
+        this(DataType.INT);
+    }
+    
+    
+    public CountImpl(DataType dataType)
+    {
+        this.dataType = dataType;
     }
     
     

@@ -29,9 +29,15 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
     
     public QuantityRangeImpl()
     {
-        this.dataType = DataType.DOUBLE;
-        this.min = new QuantityImpl();
-        this.max = new QuantityImpl();
+        this(DataType.DOUBLE);
+    }
+    
+    
+    public QuantityRangeImpl(DataType dataType)
+    {
+        this.dataType = dataType;
+        this.min = new QuantityImpl(dataType);
+        this.max = new QuantityImpl(dataType);
     }
     
     

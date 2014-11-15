@@ -26,9 +26,15 @@ import net.opengis.swe.v20.ValidationException;
     
     public CountRangeImpl()
     {
-        this.dataType = DataType.INT;
-        this.min = new CountImpl();
-        this.max = new CountImpl();
+        this(DataType.INT);
+    }
+    
+    
+    public CountRangeImpl(DataType dataType)
+    {
+        this.dataType = dataType;
+        this.min = new CountImpl(dataType);
+        this.max = new CountImpl(dataType);
     }
     
     

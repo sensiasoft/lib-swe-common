@@ -33,7 +33,13 @@ public class TimeImpl extends DataValue implements Time
     
     public TimeImpl()
     {
-        this.dataType = DataType.DOUBLE;
+        this(DataType.DOUBLE);
+    }
+    
+    
+    public TimeImpl(DataType dataType)
+    {
+        this.dataType = dataType;
     }
     
     
