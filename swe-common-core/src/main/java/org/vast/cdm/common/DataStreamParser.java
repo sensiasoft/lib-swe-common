@@ -34,7 +34,10 @@ import net.opengis.swe.v20.DataComponent;
  * Concrete implementations of this interface are responsible for
  * parsing data with the given encoding format, decoding this data
  * into DataInfo and DecodedData objects if a DataHandler is 
- * registered and sending events to registered handlers.  
+ * registered and sending events to registered handlers. 
+ * 
+ * TODO add parseNextBlock() method taking DataBlock as argument so
+ * the same datablock can be efficiently reused + do impl
  * </p>
  *
  * <p>Copyright (c) 2007</p>
@@ -99,4 +102,7 @@ public interface DataStreamParser
 	
 	
 	public void stop();
+
+
+    void setRenewDataBlock(boolean renewDataBlock);
 }

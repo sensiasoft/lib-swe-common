@@ -43,6 +43,7 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	protected final static String STREAM_ERROR = "Error while parsing data stream";
 	protected final static String CHOICE_ERROR = "Invalid choice selection: ";
 	protected boolean stopParsing = false;
+	protected boolean renewDataBlock = true;
 		
 	
 	public AbstractDataParser()
@@ -69,7 +70,7 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	    super.reset();
 	    
 	    // generate new data block if not parsing to an array
-	    if (parentArray == null)
+	    if (parentArray == null && renewDataBlock)
 	        dataComponents.renewDataBlock();
     }
 	
@@ -110,7 +111,7 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
             }
             while (!componentStack.isEmpty());
             
-            return this.dataComponents.getData();
+            return dataComponents.getData();
         }
         catch (Exception e)
         {
@@ -122,6 +123,17 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	@Override
     public void setDataComponents(DataComponent dataInfo)
     {
-        this.dataComponents = dataInfo.copy();
+        dataComponents = dataInfo.copy();
+    }
+
+
+	@Override
+    public void setRenewDataBlock(boolean renewDataBlock)
+    {
+	    // call reset once so that datablock is properly initialized
+	    if (renewDataBlock == false)
+	        reset();
+	    
+	    this.renewDataBlock = renewDataBlock;
     }
 }

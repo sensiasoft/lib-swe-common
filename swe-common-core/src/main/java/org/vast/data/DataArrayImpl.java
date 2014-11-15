@@ -68,8 +68,9 @@ public class DataArrayImpl extends AbstractArrayImpl
     
     public DataArrayImpl(int arraySize)
     {
-        elementCount.setValue(new CountImpl());
-        updateSizeComponent(arraySize);
+        Count count = new CountImpl();
+        count.setValue(arraySize);
+        elementCount.setValue(count);
     }
 
 
@@ -373,7 +374,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     
     /**
      * Dynamically update size of a VARIABLE SIZE array
-     * Note that sizeData must carry the right value at this time
+     * Note that elementCount component must carry the right value at this time
      */
     public void updateSize()
     {
@@ -429,7 +430,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     	
     	if (newSize >= 0)
         {
-    		int oldSize = this.currentSize; // don't use getComponentCount() because sizeData may have changed already
+    		int oldSize = this.currentSize; // don't use getComponentCount() because elementCount may have changed already
     		updateSizeComponent(newSize);
     		
     		// resize underlying datablock
@@ -449,7 +450,10 @@ public class DataArrayImpl extends AbstractArrayImpl
         	int oldSize = getComponentCount();
     		
     		// set size count to fixed value
-        	updateSizeComponent(newSize);
+        	elementCount.setHref(null);
+        	if (!elementCount.hasValue())
+        	    elementCount.setValue(new CountImpl());
+        	elementCount.getValue().setValue(newSize);
         	
         	// stop here if size is same as before!
         	if (newSize == oldSize)
@@ -488,7 +492,7 @@ public class DataArrayImpl extends AbstractArrayImpl
         }        
         data.setIntValue(newSize);
         
-        // save size so that we can detect if size changes later
+        // save size so that we can detect if it changes later
         // this avoids resizing arrays for nothing if size does not change!
         this.currentSize = newSize;
     }
