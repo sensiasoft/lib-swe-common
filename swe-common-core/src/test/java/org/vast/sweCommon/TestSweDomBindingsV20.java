@@ -71,8 +71,8 @@ public class TestSweDomBindingsV20 extends XMLTestCase
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         System.out.println();
-        utils.writeComponent(System.out, data, true);
-        utils.writeComponent(os, data, true);
+        utils.writeComponent(System.out, data, true, true);
+        utils.writeComponent(os, data, true, false);
         os.close();
         
         DOMHelper dom2 = new DOMHelper(new ByteArrayInputStream(os.toByteArray()), false);

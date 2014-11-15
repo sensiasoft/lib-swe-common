@@ -22,12 +22,16 @@ package org.vast.sweCommon;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLReaderDOM;
 import org.vast.xml.IXMLWriterDOM;
+import org.vast.xml.IndentingXMLStreamWriter;
 import org.vast.xml.XMLReaderException;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
@@ -104,11 +108,23 @@ public class SWECommonUtils
     }
     
     
-    public void writeComponent(OutputStream outputStream, DataComponent dataComponents, boolean writeInlineData) throws XMLWriterException, IOException
+    public void writeComponent(OutputStream os, DataComponent dataComponents, boolean writeInlineData, boolean indent) throws XMLWriterException, IOException
     {
-        DOMHelper dom = new DOMHelper("swe");
-        Element compElt = writeComponent(dom, dataComponents, writeInlineData);
-        dom.serialize(compElt, outputStream, true);
+        try
+        {
+            SWEStaxBindings sweWriter = new SWEStaxBindings();
+            XMLStreamWriter writer = XMLOutputFactory.newFactory().createXMLStreamWriter(os);
+            if (indent)
+                writer = new IndentingXMLStreamWriter(writer);
+            sweWriter.setNamespacePrefixes(writer);
+            sweWriter.declareNamespacesOnRootElement();
+            sweWriter.writeDataComponent(writer, dataComponents, writeInlineData);
+            writer.close();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new XMLWriterException("Error while writing SWE Common document to output stream", e);
+        }
     }
 
 

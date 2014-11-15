@@ -11,11 +11,16 @@ public class StringOrRefImpl extends net.opengis.OgcPropertyImpl<String> impleme
 {
     static final long serialVersionUID = 1L;
     protected String remoteSchema;
-    protected String value;
     
     
     public StringOrRefImpl()
     {
+    }
+    
+    
+    public StringOrRefImpl(String value)
+    {
+        this.value = value;
     }
     
     

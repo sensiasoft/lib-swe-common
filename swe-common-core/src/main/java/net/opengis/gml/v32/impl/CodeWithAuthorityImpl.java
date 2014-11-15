@@ -10,11 +10,17 @@ import net.opengis.gml.v32.CodeWithAuthority;
 public class CodeWithAuthorityImpl extends CodeImpl implements CodeWithAuthority
 {
     static final long serialVersionUID = 1L;
-    protected String codeSpace;
     
     
     public CodeWithAuthorityImpl()
     {
+    }
+    
+    
+    public CodeWithAuthorityImpl(String codeSpace, String value)
+    {
+        this.codeSpace = codeSpace;
+        this.value = value;
     }
     
     

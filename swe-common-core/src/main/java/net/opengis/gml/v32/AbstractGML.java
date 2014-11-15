@@ -56,6 +56,12 @@ public interface AbstractGML
     
     
     /**
+     * Sets the description property
+     */
+    public void setDescription(String description);
+    
+    
+    /**
      * Gets the descriptionReference property
      */
     public Reference getDescriptionReference();
@@ -89,6 +95,12 @@ public interface AbstractGML
      * Sets the identifier property
      */
     public void setIdentifier(CodeWithAuthority identifier);
+    
+    
+    /**
+     * Sets the identifier property
+     */
+    public void setUniqueIdentifier(String identifier);
     
     
     /**

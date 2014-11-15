@@ -17,6 +17,12 @@ public class SWEFactory implements Factory
     }
     
     
+    public DataRecord newDataRecord(int recordSize)
+    {
+        return new DataRecordImpl(recordSize);
+    }
+    
+    
     public Vector newVector()
     {
         return new VectorImpl();
@@ -29,9 +35,21 @@ public class SWEFactory implements Factory
     }
     
     
+    public DataArray newDataArray(int arraySize)
+    {
+        return new DataArrayImpl(arraySize);
+    }
+    
+    
     public Matrix newMatrix()
     {
         return new MatrixImpl();
+    }
+    
+    
+    public Matrix newMatrix(int arraySize)
+    {
+        return new MatrixImpl(arraySize);
     }
     
     
@@ -71,6 +89,12 @@ public class SWEFactory implements Factory
     }
     
     
+    public Count newCount(DataType dataType)
+    {
+        return new CountImpl(dataType);
+    }
+    
+    
     public CategoryRange newCategoryRange()
     {
         return new CategoryRangeImpl();
@@ -83,15 +107,33 @@ public class SWEFactory implements Factory
     }
     
     
+    public QuantityRange newQuantityRange(DataType dataType)
+    {
+        return new QuantityRangeImpl(dataType);
+    }
+    
+    
     public Time newTime()
     {
         return new TimeImpl();
     }
     
     
+    public Time newTime(DataType dataType)
+    {
+        return new TimeImpl(dataType);
+    }
+    
+    
     public TimeRange newTimeRange()
     {
         return new TimeRangeImpl();
+    }
+    
+    
+    public TimeRange newTimeRange(DataType dataType)
+    {
+        return new TimeRangeImpl(dataType);
     }
     
     
@@ -119,9 +161,21 @@ public class SWEFactory implements Factory
     }
     
     
+    public Quantity newQuantity(DataType dataType)
+    {
+        return new QuantityImpl(dataType);
+    }
+    
+    
     public CountRange newCountRange()
     {
         return new CountRangeImpl();
+    }
+    
+    
+    public CountRange newCountRange(DataType dataType)
+    {
+        return new CountRangeImpl(dataType);
     }
     
     

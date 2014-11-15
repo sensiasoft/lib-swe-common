@@ -22,6 +22,7 @@ import net.opengis.gml.v32.StringOrRef;
 public abstract class AbstractGMLImpl implements AbstractGML
 {
     static final long serialVersionUID = 1L;
+    public final static String UUID_CODE = "uid";
     protected OgcPropertyList<AbstractMetaData> metaDataPropertyList = new OgcPropertyList<AbstractMetaData>();
     protected OgcProperty<StringOrRef> description;
     protected Reference descriptionReference;
@@ -111,6 +112,13 @@ public abstract class AbstractGMLImpl implements AbstractGML
     }
     
     
+    @Override
+    public void setDescription(String description)
+    {
+        setDescription(new StringOrRefImpl(description));        
+    }
+    
+    
     /**
      * Gets the descriptionReference property
      */
@@ -170,7 +178,14 @@ public abstract class AbstractGMLImpl implements AbstractGML
         this.identifier = identifier;
     }
     
-    
+
+    @Override
+    public void setUniqueIdentifier(String identifier)
+    {
+        setIdentifier(new CodeWithAuthorityImpl(UUID_CODE, identifier));        
+    }
+
+
     /**
      * Gets the list of name properties
      */

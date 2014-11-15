@@ -22,6 +22,12 @@ public class MatrixImpl extends DataArrayImpl implements Matrix
     }
     
     
+    public MatrixImpl(int arraySize)
+    {
+        super(arraySize);
+    }
+    
+    
     @Override
     public MatrixImpl copy()
     {
