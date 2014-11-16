@@ -237,7 +237,8 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
                 resultElt.appendChild(componentElt);
                 
                 String sweQName = componentElt.getLocalName();
-                resultElt.setAttributeNS(DOMHelper.XSI_NS_URI, "xsi:type", "swe:" + sweQName + "PropertyType");
+                dom.addUserPrefix("xsi", DOMHelper.XSI_NS_URI);
+                dom.setAttributeValue(resultElt, "xsi:type", "swe:" + sweQName + "PropertyType");
             }
             catch (XMLWriterException e)
             {
