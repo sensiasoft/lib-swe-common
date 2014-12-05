@@ -143,7 +143,13 @@ public class TimePositionImpl implements TimePosition
     @Override
     public double getDecimalValue()
     {
-        return decimalValue;
+        if (decimalValue != null)
+            return decimalValue;
+        
+        if (dateTimeValue != null)
+            return dateTimeValue.getAsDouble();
+        
+        return Double.NaN;
     }
     
     
