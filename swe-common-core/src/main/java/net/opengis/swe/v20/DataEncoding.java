@@ -1,5 +1,7 @@
 package net.opengis.swe.v20;
 
+import net.opengis.HasCopy;
+
 
 
 /**
@@ -7,6 +9,6 @@ package net.opengis.swe.v20;
  *
  * This is a complex type.
  */
-public interface DataEncoding extends AbstractSWE
+public interface DataEncoding extends AbstractSWE, HasCopy
 {
 }

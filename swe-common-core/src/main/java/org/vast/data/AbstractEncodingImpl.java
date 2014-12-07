@@ -1,6 +1,5 @@
 package org.vast.data;
 
-import net.opengis.HasCopy;
 import net.opengis.swe.v20.DataEncoding;
 
 
@@ -9,7 +8,7 @@ import net.opengis.swe.v20.DataEncoding;
  *
  * This is a complex type.
  */
-public abstract class AbstractEncodingImpl extends AbstractSWEImpl implements DataEncoding, HasCopy
+public abstract class AbstractEncodingImpl extends AbstractSWEImpl implements DataEncoding
 {
     static final long serialVersionUID = 1L;
     
