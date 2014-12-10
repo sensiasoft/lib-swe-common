@@ -340,7 +340,7 @@ public class AsciiDataParser extends AbstractDataParser
 			try
 			{
 				token = readToken();
-				((DataChoiceImpl)component).setSelectedComponent(token);
+				((DataChoiceImpl)component).setSelectedItem(token);
 			}
 			catch (IllegalStateException e)
 			{

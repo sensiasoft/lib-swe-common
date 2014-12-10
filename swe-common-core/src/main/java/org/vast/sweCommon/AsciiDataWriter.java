@@ -136,7 +136,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 			// write implicit choice token
 			try
 			{
-				token = ((DataChoiceImpl)component).getSelectedComponent().getName();
+				token = ((DataChoiceImpl)component).getSelectedItem().getName();
 				writeToken(token);
 			}
 			catch (IllegalStateException e)

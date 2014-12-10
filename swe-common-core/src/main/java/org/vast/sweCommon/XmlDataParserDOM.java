@@ -213,7 +213,7 @@ public class XmlDataParserDOM extends AbstractDataParser
 		{
 			// figure out choice selection
 			Element firstChild = dom.getFirstChildElement(currentParentElt);
-			((DataChoiceImpl)blockComponent).setSelectedComponent(firstChild.getLocalName());
+			((DataChoiceImpl)blockComponent).setSelectedItem(firstChild.getLocalName());
 		}
 		
 		/* deal with optional block here

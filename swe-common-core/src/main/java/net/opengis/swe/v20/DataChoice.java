@@ -12,6 +12,9 @@ import net.opengis.OgcPropertyList;
 public interface DataChoice extends DataComponent
 {
     
+    @Override
+    public DataChoice copy();
+    
     
     /**
      * Gets the choiceValue property
@@ -53,4 +56,11 @@ public interface DataChoice extends DataComponent
      * Adds a new item property
      */
     public void addItem(String name, DataComponent item);
+    
+    
+    /**
+     * Gets the selected item in this choice
+     * @return the selected component or null if non is selected
+     */
+    public DataComponent getSelectedItem();
 }

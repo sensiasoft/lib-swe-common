@@ -243,7 +243,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 	}
     
     
-    public AbstractDataComponentImpl getSelectedComponent()
+    public AbstractDataComponentImpl getSelectedItem()
     {
     	if (selected < 0)
     		return null;
@@ -289,7 +289,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 	}
 	
 	
-	public void setSelectedComponent(String name)
+	public void setSelectedItem(String name)
 	{
 		int index = getComponentIndex(name);
 		if (index < 0)
@@ -321,7 +321,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 	@Override
 	public boolean hasConstraints()
 	{
-		return getSelectedComponent().hasConstraints();
+		return getSelectedItem().hasConstraints();
 	}
 	
 	

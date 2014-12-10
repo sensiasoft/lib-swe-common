@@ -156,7 +156,7 @@ public abstract class DataTreeVisitor
 		    		// select first child of aggregate
 	    			if (next instanceof DataChoiceImpl)
 	    			{
-	    				DataComponent selectedComponent = ((DataChoiceImpl)next).getSelectedComponent();
+	    				DataComponent selectedComponent = ((DataChoiceImpl)next).getSelectedItem();
 	    				if (selectedComponent != null)
 	    					next = selectedComponent;
 	    				else
