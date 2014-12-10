@@ -9,5 +9,7 @@ package net.opengis.swe.v20;
 public interface DataArray extends BlockComponent
 {
       
+    @Override
+    public DataArray copy();
     
 }

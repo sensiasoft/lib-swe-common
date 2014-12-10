@@ -3,7 +3,6 @@ package org.vast.data;
 import java.util.ArrayList;
 import java.util.List;
 import net.opengis.IDateTime;
-import net.opengis.HasCopy;
 import net.opengis.swe.v20.AllowedTimes;
 
 
@@ -12,7 +11,7 @@ import net.opengis.swe.v20.AllowedTimes;
  *
  * This is a complex type.
  */
-public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes, HasCopy
+public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
 {
     static final long serialVersionUID = 1L;
     protected List<IDateTime> valueList = new ArrayList<IDateTime>();
@@ -25,6 +24,7 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes, H
     }
     
     
+    @Override
     public AllowedTimesImpl copy()
     {
         AllowedTimesImpl newObj = new AllowedTimesImpl();

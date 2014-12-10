@@ -10,6 +10,10 @@ package net.opengis.swe.v20;
 public interface Quantity extends ScalarComponent, HasUom, HasConstraints<AllowedValues>
 {
     
+    @Override
+    public Quantity copy();
+    
+    
     /**
      * Gets the value property
      */

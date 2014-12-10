@@ -2,7 +2,6 @@ package org.vast.data;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.opengis.HasCopy;
 import net.opengis.swe.v20.AllowedValues;
 
 
@@ -11,7 +10,7 @@ import net.opengis.swe.v20.AllowedValues;
  *
  * This is a complex type.
  */
-public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues, HasCopy
+public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
 {
     static final long serialVersionUID = 1L;
     protected List<Double> valueList = new ArrayList<Double>();
@@ -24,6 +23,7 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues,
     }
     
     
+    @Override
     public AllowedValuesImpl copy()
     {
         AllowedValuesImpl newObj = new AllowedValuesImpl();

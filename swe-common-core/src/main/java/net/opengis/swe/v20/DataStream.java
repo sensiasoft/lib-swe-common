@@ -10,6 +10,10 @@ package net.opengis.swe.v20;
 public interface DataStream extends AbstractSWEIdentifiable, BlockComponent
 {
     
+    @Override
+    public DataStream copy();
+    
+    
     /**
      * Checks if elementCount is set
      */

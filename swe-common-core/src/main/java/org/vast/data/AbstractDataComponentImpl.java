@@ -60,11 +60,11 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
 	{	    
 	}
 	
-	
+    
 	@Override
-    public abstract AbstractDataComponentImpl copy();
-    
-    
+	public abstract AbstractDataComponentImpl copy();
+	
+	
 	protected void copyTo(AbstractDataComponentImpl other)
 	{
 	    super.copyTo(other);
@@ -80,7 +80,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
 	@Override
     public AbstractDataComponentImpl clone()
     {
-        AbstractDataComponentImpl newComponent = this.copy();
+        AbstractDataComponentImpl newComponent = (AbstractDataComponentImpl)this.copy();
         if (this.dataBlock != null)
             newComponent.dataBlock = this.dataBlock.clone();
         return newComponent;

@@ -12,6 +12,10 @@ import net.opengis.OgcPropertyList;
 public interface Vector extends DataComponent, HasRefFrames
 {
     
+    @Override
+    public Vector copy();
+    
+    
     /**
      * Gets the list of coordinate properties
      */

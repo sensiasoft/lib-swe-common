@@ -82,6 +82,10 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     }
     
     
+    @Override
+    public abstract AbstractArrayImpl copy();
+    
+    
     protected void copyTo(AbstractArrayImpl other)
     {
         super.copyTo(other);

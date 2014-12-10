@@ -12,6 +12,9 @@ import net.opengis.OgcPropertyList;
 public interface DataRecord extends DataComponent
 {
     
+    @Override
+    public DataRecord copy();
+    
     
     /**
      * Gets the list of field properties

@@ -14,6 +14,10 @@ public interface Time extends ScalarComponent, HasRefFrames, HasUom, HasConstrai
     public static final String ISO_TIME_UNIT = "http://www.opengis.net/def/uom/ISO-8601/0/Gregorian";
     
     
+    @Override
+    public Time copy();
+    
+    
     /**
      * Gets the value property
      */

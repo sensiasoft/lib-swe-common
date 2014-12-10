@@ -10,6 +10,10 @@ package net.opengis.swe.v20;
 public interface Category extends ScalarComponent, HasCodeSpace, HasConstraints<AllowedTokens>
 {
     
+    @Override
+    public Category copy();
+    
+    
     /**
      * Gets the value property
      */

@@ -12,6 +12,10 @@ import net.opengis.IDateTime;
 public interface TimeRange extends RangeComponent, HasRefFrames, HasUom, HasConstraints<AllowedTimes>
 {
     
+    @Override
+    public TimeRange copy();
+    
+    
     /**
      * Gets the value property
      */

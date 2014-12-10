@@ -9,7 +9,11 @@ package net.opengis.swe.v20;
 @SuppressWarnings("javadoc")
 public interface Count extends ScalarComponent, HasConstraints<AllowedValues>
 {
-        
+    
+    @Override
+    public Count copy();
+    
+    
     /**
      * Gets the value property
      */

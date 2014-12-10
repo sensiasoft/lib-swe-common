@@ -9,7 +9,11 @@ package net.opengis.swe.v20;
 @SuppressWarnings("javadoc")
 public interface CountRange extends RangeComponent, HasConstraints<AllowedValues>
 {
-        
+ 
+    @Override
+    public CountRange copy();
+    
+    
     /**
      * Gets the value property
      */

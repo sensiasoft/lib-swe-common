@@ -25,8 +25,10 @@
 
 package net.opengis.swe.v20;
 
+import net.opengis.HasCopy;
 
-public interface DataConstraint
+
+public interface DataConstraint extends HasCopy
 {
 
 }

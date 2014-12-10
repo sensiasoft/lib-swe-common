@@ -10,4 +10,7 @@ package net.opengis.swe.v20;
 public interface Matrix extends DataArray, HasRefFrames
 {        
 
+    @Override
+    public Matrix copy();
+    
 }

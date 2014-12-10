@@ -24,6 +24,7 @@ public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
     }
     
     
+    @Override
     public AllowedTokensImpl copy()
     {
         AllowedTokensImpl newObj = new AllowedTokensImpl();

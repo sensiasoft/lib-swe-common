@@ -10,6 +10,10 @@ package net.opengis.swe.v20;
 public interface Text extends ScalarComponent, HasConstraints<AllowedTokens>
 {
     
+    @Override
+    public Text copy();
+    
+    
     /**
      * Gets the value property
      */

@@ -11,6 +11,9 @@ package net.opengis.swe.v20;
 public interface Boolean extends ScalarComponent
 {
     
+    @Override
+    public Boolean copy();
+    
     
     /**
      * Gets the value property

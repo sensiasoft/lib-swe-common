@@ -9,6 +9,10 @@ package net.opengis.swe.v20;
 @SuppressWarnings("javadoc")
 public interface CategoryRange extends RangeComponent, HasCodeSpace, HasConstraints<AllowedTokens>
 {
+    
+    @Override
+    public CategoryRange copy();
+    
         
     /**
      * Gets the value property

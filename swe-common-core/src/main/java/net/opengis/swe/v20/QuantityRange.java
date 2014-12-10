@@ -10,6 +10,10 @@ package net.opengis.swe.v20;
 public interface QuantityRange extends RangeComponent, HasUom, HasConstraints<AllowedValues>
 {
     
+    @Override
+    public QuantityRange copy();
+    
+    
     /**
      * Gets the value property
      */
