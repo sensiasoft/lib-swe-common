@@ -23,8 +23,8 @@
 
 package org.vast.codec;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import colorspace.ColorSpace;
 import jj2000.j2k.codestream.HeaderInfo;
 import jj2000.j2k.codestream.reader.BitstreamReaderAgent;
@@ -48,7 +48,7 @@ import jj2000.j2k.wavelet.synthesis.InverseWT;
 
 public class JP2KDecoder
 {
-    protected Log log = LogFactory.getLog(JP2KDecoder.class);
+    protected Logger log = LoggerFactory.getLogger(JP2KDecoder.class);
     
     
     public JP2KDecoder()
