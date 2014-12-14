@@ -124,6 +124,9 @@ public class SWEDataTypeUtils
     public final String getStringValue(ScalarComponent component)
     {   
         DataBlock data = component.getData();
+        if (data == null)
+            return null;
+        
         DataType dataType = data.getDataType();
         String val;
         
