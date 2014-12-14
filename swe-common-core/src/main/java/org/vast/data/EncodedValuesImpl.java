@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
-import org.vast.sweCommon.SWEFactory;
+import org.vast.swe.SWEFactory;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BlockComponent;

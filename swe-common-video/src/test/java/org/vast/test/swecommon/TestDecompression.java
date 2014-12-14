@@ -39,7 +39,7 @@ import org.vast.codec.JP2KStreamDecoder;
 import org.vast.data.CountImpl;
 import org.vast.data.DataArrayImpl;
 import org.vast.data.DataRecordImpl;
-import org.vast.sweCommon.DataInputStreamBI;
+import org.vast.swe.DataInputStreamBI;
 
 
 public class TestDecompression

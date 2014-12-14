@@ -25,8 +25,8 @@ package org.vast.ogc.om;
 
 import java.util.Map;
 import org.vast.ogc.gml.IFeature;
-import org.vast.sweCommon.ISweInputDataStream;
-import org.vast.sweCommon.ISweOutputDataStream;
+import org.vast.swe.ISweInputDataStream;
+import org.vast.swe.ISweOutputDataStream;
 import org.vast.util.TimeExtent;
 
 

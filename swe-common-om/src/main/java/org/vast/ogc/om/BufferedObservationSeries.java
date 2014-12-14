@@ -31,7 +31,7 @@ import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataBlock;
 import org.vast.ogc.gml.FeatureImpl;
 import org.vast.ogc.gml.IFeature;
-import org.vast.sweCommon.SWEData;
+import org.vast.swe.SWEData;
 import org.vast.util.TimeExtent;
 
 

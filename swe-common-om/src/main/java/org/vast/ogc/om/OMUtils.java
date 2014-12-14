@@ -28,7 +28,7 @@ import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.GMLUtils;
-import org.vast.sweCommon.SWEFilter;
+import org.vast.swe.SWEFilter;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.vast.xml.IXMLReaderDOM;

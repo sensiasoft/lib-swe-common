@@ -40,7 +40,7 @@ import org.custommonkey.xmlunit.Validator;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.vast.data.*;
-import org.vast.sweCommon.SWEStaxBindings;
+import org.vast.swe.SWEStaxBindings;
 import org.vast.xml.IndentingXMLStreamWriter;
 import org.xml.sax.InputSource;
 

@@ -9,7 +9,7 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "OGC Service Framework".
+ The Original Code is the "SensorML DataProcessing Engine".
  
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
@@ -18,45 +18,63 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ogc.om;
+package org.vast.swe;
 
-import java.io.IOException;
-import java.io.InputStream;
+import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataComponent;
 import org.vast.cdm.common.DataHandler;
-import org.vast.math.Vector3d;
-import org.vast.swe.SWEReader;
 
 
 /**
  * <p>
- * Base interface for Streaming Observation Readers of all versions
+ * Default handler used by SWE Data to read all values
+ * from the data stream to the list within the SWE Data.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
  * @author Alexandre Robin
- * @since May 22, 2008
+ * @since Feb 23, 2007
  * @version 1.0
  */
-public abstract class ObservationStreamReader extends SWEReader
+public class DefaultParserHandler implements DataHandler
 {
+    protected SWEData sweData;
     
-    /**
-     * Reads an Observation object from the given InputStream
-     * @param inputStream
-     * @param dataHandler
-     * @throws IOException
-     */
-    public void readObservationStream(InputStream inputStream, DataHandler dataHandler) throws IOException
+    
+    public DefaultParserHandler(SWEData sweData)
     {
-        parse(inputStream, dataHandler);
+        this.sweData = sweData;
+    }
+    
+    
+    public void endData(DataComponent info, DataBlock data)
+    {
+        sweData.addData(data);
+    }
+    
+    
+    public void beginDataAtom(DataComponent info)
+    {
     }
 
-    
-    public abstract Vector3d getFoiLocation();
+
+    public void endDataAtom(DataComponent info, DataBlock data)
+    {
+    }
 
 
-    public abstract String getObservationName();
+    public void startDataBlock(DataComponent info)
+    {
+    }
 
 
-    public abstract String getProcedure();
+    public void endDataBlock(DataComponent info, DataBlock data)
+    {
+    }
+
+
+    public void startData(DataComponent info)
+    {
+    }
+
 }

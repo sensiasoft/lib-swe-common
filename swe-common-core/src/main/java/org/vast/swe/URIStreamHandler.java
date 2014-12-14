@@ -9,7 +9,7 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "OGC Service Framework".
+ The Original Code is the "SensorML DataProcessing Engine".
  
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
@@ -18,45 +18,42 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ogc.om;
+package org.vast.swe;
 
 import java.io.IOException;
 import java.io.InputStream;
-import org.vast.cdm.common.DataHandler;
-import org.vast.math.Vector3d;
-import org.vast.swe.SWEReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import org.vast.util.URIResolver;
 
 
-/**
- * <p>
- * Base interface for Streaming Observation Readers of all versions
- * </p>
- *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @since May 22, 2008
- * @version 1.0
- */
-public abstract class ObservationStreamReader extends SWEReader
+public class URIStreamHandler
 {
-    
-    /**
-     * Reads an Observation object from the given InputStream
-     * @param inputStream
-     * @param dataHandler
-     * @throws IOException
-     */
-    public void readObservationStream(InputStream inputStream, DataHandler dataHandler) throws IOException
-    {
-        parse(inputStream, dataHandler);
-    }
+	
+	public static synchronized InputStream openStream(String uri) throws IOException
+	{
+		try
+		{
+			URI uriObject = new URI(uri);
+			return URIStreamHandler.openStream(uriObject);
+		}
+		catch (URISyntaxException e)
+		{
+			throw new IOException("Invalid URI syntax");
+		}	
+	}
 
-    
-    public abstract Vector3d getFoiLocation();
-
-
-    public abstract String getObservationName();
-
-
-    public abstract String getProcedure();
+	
+	public static synchronized InputStream openStream(URI uri) throws IOException
+	{
+		try
+		{
+			URIResolver resolver = new URIResolver(uri);
+			return resolver.openStream();
+		}
+		catch (IOException e)
+		{
+			throw new IOException("Error while connecting to the data stream: " + uri);
+		}
+	}
 }

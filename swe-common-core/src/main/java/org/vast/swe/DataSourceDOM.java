@@ -9,7 +9,7 @@
  WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
  for the specific language governing rights and limitations under the License.
  
- The Original Code is the "OGC Service Framework".
+ The Original Code is the "SensorML DataProcessing Engine".
  
  The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
@@ -18,45 +18,62 @@
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.ogc.om;
+package org.vast.swe;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import org.vast.cdm.common.DataHandler;
-import org.vast.math.Vector3d;
-import org.vast.swe.SWEReader;
+import org.vast.cdm.common.DataSource;
+import org.vast.xml.DOMHelper;
+import org.w3c.dom.Element;
 
 
 /**
  * <p>
- * Base interface for Streaming Observation Readers of all versions
+ * This DataSource allows to extract data from an XML DOM tree and
+ * simulate an inputstream so that a low level parser can parse the
+ * content using the common DataStreamParser interface.
  * </p>
  *
  * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
- * @since May 22, 2008
+ * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @since Feb, 28 2008
  * @version 1.0
  */
-public abstract class ObservationStreamReader extends SWEReader
+public class DataSourceDOM implements DataSource
 {
+	protected DOMHelper dom;
+	protected Element parentElt;
+	    
     
-    /**
-     * Reads an Observation object from the given InputStream
-     * @param inputStream
-     * @param dataHandler
+    public DataSourceDOM(DOMHelper dom, Element parentElt)
+    {
+    	this.dom = dom;
+    	this.parentElt = parentElt;
+    }
+    
+    
+    public DOMHelper getDom()
+	{
+		return dom;
+	}
+	
+	
+	public Element getParentElt()
+	{
+		return parentElt;
+	}
+    
+    
+	/**
+     * Gets the right input stream from href or inline values
+     * @return input stream to read data from
      * @throws IOException
      */
-    public void readObservationStream(InputStream inputStream, DataHandler dataHandler) throws IOException
+    public InputStream getDataStream() throws IOException
     {
-        parse(inputStream, dataHandler);
+    	String values = parentElt.getTextContent();
+        return(new ByteArrayInputStream(values.getBytes()));
     }
-
     
-    public abstract Vector3d getFoiLocation();
-
-
-    public abstract String getObservationName();
-
-
-    public abstract String getProcedure();
 }
