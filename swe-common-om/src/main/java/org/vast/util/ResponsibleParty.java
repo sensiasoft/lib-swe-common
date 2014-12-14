@@ -262,4 +262,26 @@ public class ResponsibleParty extends Contact
     {
         return voiceNumbers;
     }
+    
+    
+    public boolean hasAddress()
+    {
+        return (!deliveryPoints.isEmpty() ||
+                city != null ||
+                administrativeArea != null ||
+                postalCode != null ||
+                country != null || 
+                !emails.isEmpty());
+    }
+    
+    
+    public boolean hasContactInfo()
+    {
+        return (hasAddress() ||
+                !voiceNumbers.isEmpty() ||
+                !faxNumbers.isEmpty() ||
+                website != null ||
+                hoursOfService != null ||
+                contactInstructions != null);
+    }
 }
