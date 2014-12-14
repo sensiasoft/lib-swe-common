@@ -61,7 +61,7 @@ public class DateTime extends Date
 	{
 		try
 		{
-			this.setTime((long)(DateTimeFormat.parseIso(iso8601) * 1000));
+			this.setTime((long)(new DateTimeFormat().parseIso(iso8601) * 1000));
 		}
 		catch (ParseException e)
 		{
@@ -78,6 +78,6 @@ public class DateTime extends Date
 	
 	public String formatIso(int timeZone)
 	{
-		return DateTimeFormat.formatIso(getJulianTime(), timeZone);
+		return new DateTimeFormat().formatIso(getJulianTime(), timeZone);
 	}
 }

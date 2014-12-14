@@ -45,7 +45,6 @@ import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataConstraint;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataRecord;
-import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.HasCodeSpace;
 import net.opengis.swe.v20.HasConstraints;
 import net.opengis.swe.v20.HasRefFrames;
@@ -68,7 +67,6 @@ import org.vast.data.DataValue;
 import org.vast.data.TextEncodingImpl;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.xlink.XlinkUtils;
-import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLWriterDOM;
 import org.vast.xml.XMLWriterException;
@@ -86,12 +84,13 @@ import org.w3c.dom.Element;
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin
  * @since Feb 29, 2008
- * @version 1.0
+ * @deprecated use new bindings {@link org.vast.sweCommon.SWEStaxBindings} instead
  */
 public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
 {
 	protected String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
     protected SweEncodingWriterV20 encodingWriter = new SweEncodingWriterV20();
+    protected SWEDataTypeUtils dataTypeUtils = new SWEDataTypeUtils();
     protected Map<String, Object> objectIds;
     protected boolean keepHref = true;
     
@@ -377,7 +376,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
         // write value if necessary    	
     	if (writeInlineData)
     	{
-            String val = getValueAsString(dataValue);
+            String val = dataTypeUtils.getStringValue(dataValue);
             if (val != null)
                 dom.setElementValue(dataValueElt, "swe:value", val);
     	}
@@ -420,30 +419,6 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     }
     
     
-    private String getValueAsString(DataValue dataValue)
-    {
-        DataBlock data = dataValue.getData();
-        if (data == null)
-            return null;
-        
-        String val;
-       
-        if (dataValue instanceof Time)
-        {
-            if (Time.ISO_TIME_UNIT.equals(((Time)dataValue).getUom().getHref()))
-                val = AsciiDataWriter.getDoubleAsString(data.getDoubleValue(), true);
-            else
-                val = AsciiDataWriter.getDoubleAsString(data.getDoubleValue(), false);
-        }
-        else if (dataValue.getDataType() == DataType.DOUBLE)
-            val = AsciiDataWriter.getDoubleAsString(data.getDoubleValue(), false);
-        else
-            val = data.getStringValue();
-        
-        return val;
-    }
-    
-    
     private String getValuePairAsString(RangeComponent range)
     {
         DataBlock data = ((DataComponent)range).getData();
@@ -454,15 +429,15 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
        
         if (range instanceof TimeRange && Time.ISO_TIME_UNIT.equals(((TimeRange)range).getUom().getHref()))
         {
-            buf.append(AsciiDataWriter.getDoubleAsString(data.getDoubleValue(0), true));
+            buf.append(dataTypeUtils.getDoubleOrTimeAsString(data.getDoubleValue(0), true));
             buf.append(' ');
-            buf.append(AsciiDataWriter.getDoubleAsString(data.getDoubleValue(1), true));
+            buf.append(dataTypeUtils.getDoubleOrTimeAsString(data.getDoubleValue(1), true));
         }
         else if (range instanceof TimeRange || range instanceof QuantityRange)
         {
-            buf.append(AsciiDataWriter.getDoubleAsString(data.getDoubleValue(0), false));
+            buf.append(dataTypeUtils.getDoubleOrTimeAsString(data.getDoubleValue(0), false));
             buf.append(' ');
-            buf.append(AsciiDataWriter.getDoubleAsString(data.getDoubleValue(1), false));
+            buf.append(dataTypeUtils.getDoubleOrTimeAsString(data.getDoubleValue(1), false));
         }
         else
         {
@@ -569,7 +544,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
                 if (((Time)dataComponent).isSetReferenceTime())
                 {
                     double refTime = ((Time)dataComponent).getReferenceTime().getAsDouble();
-                    dataComponentElt.setAttribute("referenceTime", DateTimeFormat.formatIso(refTime, 0));
+                    dataComponentElt.setAttribute("referenceTime", dataTypeUtils.getDoubleOrTimeAsString(refTime, true));
                 }
             }
         }
@@ -735,8 +710,8 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     	}
     	else
     	{
-    	    minText = AsciiDataWriter.getDoubleAsString(min, useIso);
-    	    maxText = AsciiDataWriter.getDoubleAsString(max, useIso);
+    	    minText = dataTypeUtils.getDoubleOrTimeAsString(min, useIso);
+    	    maxText = dataTypeUtils.getDoubleOrTimeAsString(max, useIso);
     	}
     	
     	dom.setElementValue(intervalElt, minText + " " + maxText);
@@ -748,7 +723,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
     	if (writeIntegers)
     	    dom.setElementValue(constraintElt, "+swe:value", Integer.toString((int)val));
     	else
-    	    dom.setElementValue(constraintElt, "+swe:value", AsciiDataWriter.getDoubleAsString(val, useIso));
+    	    dom.setElementValue(constraintElt, "+swe:value", dataTypeUtils.getDoubleOrTimeAsString(val, useIso));
     }
     
     
@@ -794,7 +769,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
                 String token = null;
                 Object nilObj = nil.getValue();
                 if (nilObj instanceof Double)
-                    token = AsciiDataWriter.getDoubleAsString((Double)nilObj, false);
+                    token = dataTypeUtils.getDoubleOrTimeAsString((Double)nilObj, false);
                 else
                     token = nilObj.toString();
                 

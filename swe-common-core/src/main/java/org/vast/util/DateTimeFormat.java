@@ -37,14 +37,16 @@ import java.util.*;
  */
 public class DateTimeFormat extends SimpleDateFormat
 {
-	public static final int LOCAL = 255;
-	static final long serialVersionUID = 0;	
-	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    static final long serialVersionUID = 0;
+    
+    public static final int LOCAL = 255;
+	public static int SECONDS_IN_MINUTES = 60;
+	
     
 	
 	public DateTimeFormat()
 	{
-		super();
+		super("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 	}
 	
 	
@@ -60,7 +62,7 @@ public class DateTimeFormat extends SimpleDateFormat
      * @return length of period in seconds 
      * @throws ParseException
      */
-    static public double parseIsoPeriod(String iso8601) throws ParseException
+    public double parseIsoPeriod(String iso8601) throws ParseException
     {
         if (iso8601.charAt(0) != 'P')
             return 0;
@@ -147,7 +149,7 @@ public class DateTimeFormat extends SimpleDateFormat
      * @return unix/julian time stamp
      * @throws ParseException
      */
-	static public double parseIso(String iso8601) throws ParseException
+	public double parseIso(String iso8601) throws ParseException
 	{
 		try
 		{
@@ -213,49 +215,71 @@ public class DateTimeFormat extends SimpleDateFormat
     /**
      * Formats a period in seconds to ISO8601 time period standard
      * using only seconds
-     * @param periodSeconds
-     * @return
+     * @param periodInSeconds
+     * @return ISO string representing the period
      */
-    static public String formatIsoPeriod(double periodSeconds)
+    public String formatIsoPeriod(double periodInSeconds)
     {
-        return "PT" + (int)periodSeconds + "S";
+        StringBuffer buf = new StringBuffer(10);
+        if (periodInSeconds < 0)
+            buf.append('-');
+        periodInSeconds = Math.abs(periodInSeconds);
+        buf.append("PT");
+        buf.append((int)periodInSeconds);
+        buf.append('S');
+        return buf.toString();
     }
     
     
     /**
      * Formats a period in seconds to ISO8601 period standard
      * starting with the given unit and going down as much as required
-     * @param periodSeconds
-     * @param startWithUnit
-     * @return
+     * @param periodInSeconds
+     * @param biggestUnit
+     * @return ISO string representing the period
      */
-    static public String formatIsoPeriod(double periodSeconds, char biggestUnit)
+    public String formatIsoPeriod(double periodInSeconds, char biggestUnit)
     {
-        // TODO implement formatIsoPeriod(seconds, startUnit)
-        return "PT" + periodSeconds + "S";
+        /*StringBuffer buf = new StringBuffer(20);
+        if (periodInSeconds < 0)
+            buf.append('-');
+        buf.append('P');
+        int totalSeconds = (int)Math.abs(periodInSeconds);
+        
+        buf.append((int)periodInSeconds);
+        buf.append('S');
+        
+        return buf.toString();
+        
+        
+        int totalSeconds = (int)periodSeconds;
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        return "PT" + periodSeconds + "S";*/
+        return formatIsoPeriod(periodInSeconds);
     }
     
     
     /**
-     * Formats a julianTime to ISO8601 standard
-     * @param julianTime
-     * @param timeZone
-     * @return
+     * Formats a julian time to ISO8601 standard
+     * @param julianTime Julian time with 1970 base
+     * @param timeZone time zone to use in the ISO string
+     * @return ISO string representing the date/time
      */
-    static synchronized public String formatIso(double julianTime, int timeZone)
+    public String formatIso(double julianTime, int timeZone)
 	{
 		if (timeZone != LOCAL)
 		{
 			if (timeZone >= 0)
-				formatter.setTimeZone(TimeZone.getTimeZone("GMT+" + timeZone));
+				setTimeZone(TimeZone.getTimeZone("GMT+" + timeZone));
 			else
-				formatter.setTimeZone(TimeZone.getTimeZone("GMT" + timeZone));
+				setTimeZone(TimeZone.getTimeZone("GMT" + timeZone));
 		}
 		
 		StringBuffer isoString = new StringBuffer(30);
 		
 		long time = (long)(julianTime*1e3);
-		formatter.format(new Date(time), isoString, new FieldPosition(0));
+		format(new Date(time), isoString, new FieldPosition(0));
 		
 		// add the : in the zone (seems to be XML schema way)
 		if (isoString.length() > 24)

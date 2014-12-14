@@ -49,6 +49,7 @@ import org.w3c.dom.Element;
 public class GMLFeatureWriter implements IXMLWriterDOM<IFeature>
 {
     private GMLGeometryWriter geometryWriter = new GMLGeometryWriter();
+    DateTimeFormat timeFormat = new DateTimeFormat();
     private String gmlNsUri;
     
     
@@ -102,7 +103,7 @@ public class GMLFeatureWriter implements IXMLWriterDOM<IFeature>
             else if (val instanceof Date)
             {
                 double julian = ((Date)val).getTime() / 1000.0;
-                String propVal = DateTimeFormat.formatIso(julian, 0);
+                String propVal = timeFormat.formatIso(julian, 0);
                 dom.setElementValue(propElt, propVal);
             }
             else if (val instanceof Vector3d)

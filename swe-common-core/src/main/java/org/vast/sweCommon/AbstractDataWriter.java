@@ -24,11 +24,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
-import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.ScalarComponent;
-import net.opengis.swe.v20.Time;
 import org.vast.cdm.common.DataStreamWriter;
-import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
 
 
@@ -48,7 +45,8 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	protected final static String CHOICE_ERROR = "Invalid choice selection: ";
 	protected final static String NO_HANDLER_ERROR = "A DataHandler must be registered";
 	
-	protected boolean stopWriting = false;
+	protected SWEDataTypeUtils dataTypeUtils = new SWEDataTypeUtils();
+    protected boolean stopWriting = false;
 	
 	
 	public AbstractDataWriter()
@@ -121,48 +119,9 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	}
 	
 	
-	/**
-	 * Retrieve string representation of value of component
-	 * This will convert to an ISO string for appropriate time components
-	 * @param component
-	 * @return
-	 */
-	protected String getStringValue(ScalarComponent component)
-	{	
-	    DataBlock data = component.getData();
-	    DataType dataType = data.getDataType();
-        String val;
-	    
-        // case of time component
-	    String uom = null;
-		if (component instanceof Time)
-		    uom = ((Time)component).getUom().getHref();
-				
-		if (uom != null && uom.equals(Time.ISO_TIME_UNIT))
-			val = getDoubleAsString(data.getDoubleValue(), true);
-		else if (dataType == DataType.DOUBLE || dataType == DataType.FLOAT)
-		    val = getDoubleAsString(data.getDoubleValue(), false);
-		else
-			val = data.getStringValue();
-		
-		return val;
-	}
-	
-	
 	@Override
 	public void setDataComponents(DataComponent dataInfo)
     {
         this.dataComponents = dataInfo.copy();
     }
-	
-	
-	public static String getDoubleAsString(double doubleVal, boolean useIso)
-	{
-	    if (Double.isInfinite(doubleVal))
-            return (doubleVal == Double.POSITIVE_INFINITY) ? "+INF" : "-INF";
-	    else if (useIso)
-            return DateTimeFormat.formatIso(doubleVal, 0);
-        else
-            return Double.toString(doubleVal);
-	}
 }

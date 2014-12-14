@@ -51,7 +51,7 @@ import org.w3c.dom.NodeList;
  * <p>Copyright (c) 2008</p>
  * @author Alexandre Robin (Spot Image)
  * @since Feb 1, 2008
- * @version 1.0
+ * @deprecated use new bindings {@link org.vast.sweCommon.SWEStaxBindings} instead
  */
 public class SweEncodingReaderV20 implements IXMLReaderDOM<DataEncoding>
 {

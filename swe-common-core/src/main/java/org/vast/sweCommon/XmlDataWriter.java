@@ -192,7 +192,7 @@ public class XmlDataWriter extends AbstractDataWriter
 	            else
 	            	xmlWriter.writeStartElement(eltName);
 	            
-	            xmlWriter.writeCharacters(getStringValue(component));
+	            xmlWriter.writeCharacters(dataTypeUtils.getStringValue(component));
 	            xmlWriter.writeEndElement();
 	        }
         }

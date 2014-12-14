@@ -40,8 +40,9 @@ import org.w3c.dom.Element;
  */
 public class GMLTimeReader
 {
-    protected final static String invalidISO = "Invalid ISO time: ";
-    protected double now;
+    final static String invalidISO = "Invalid ISO time: ";
+    DateTimeFormat timeFormat = new DateTimeFormat();
+    double now;
     
     
     public GMLTimeReader()
@@ -55,7 +56,7 @@ public class GMLTimeReader
      * @param dom
      * @param timeElt
      * @return
-     * @throws GMLException
+     * @throws XMLReaderException 
      */
     public TimeExtent readTimePrimitive(DOMHelper dom, Element timeElt) throws XMLReaderException
     {
@@ -65,8 +66,6 @@ public class GMLTimeReader
             return readTimeInstant(dom, timeElt);
         else if (eltName.equals("TimePeriod"))
             return readTimePeriod(dom, timeElt);
-        else if (eltName.equals("TimeGrid"))
-            return readTimeGrid(dom, timeElt);
         
         throw new XMLReaderException("Unsupported Time Primitive: " + eltName, timeElt);
     }
@@ -77,7 +76,7 @@ public class GMLTimeReader
      * @param dom
      * @param timeElt
      * @return
-     * @throws GMLException
+     * @throws XMLReaderException
      */
     public TimeExtent readTimeInstant(DOMHelper dom, Element timeElt) throws XMLReaderException
     {
@@ -98,7 +97,7 @@ public class GMLTimeReader
         {
             try
             {
-                time.setBaseTime(DateTimeFormat.parseIso(isoTime));
+                time.setBaseTime(timeFormat.parseIso(isoTime));
             }
             catch (ParseException e)
             {
@@ -114,8 +113,8 @@ public class GMLTimeReader
      * Reads a gml:TimePeriod
      * @param dom
      * @param timePeriodElt
-     * @return
-     * @throws GMLException
+     * @return TimeExtent containing period
+     * @throws XMLReaderException
      */
     public TimeExtent readTimePeriod(DOMHelper dom, Element timePeriodElt) throws XMLReaderException
     {
@@ -142,7 +141,7 @@ public class GMLTimeReader
                     startUnknown = true;
             }
             else
-                timeInfo.setStartTime(DateTimeFormat.parseIso(isoStartTime));
+                timeInfo.setStartTime(timeFormat.parseIso(isoStartTime));
             
             // read endPosition intederminatePosition attribute
             if (stopAtt != null)
@@ -153,12 +152,12 @@ public class GMLTimeReader
                     stopUnknown = true;
             }
             else
-                timeInfo.setStopTime(DateTimeFormat.parseIso(isoStopTime));
+                timeInfo.setStopTime(timeFormat.parseIso(isoStopTime));
             
             // handle case of period specified with unknown start or stop time
             if (startUnknown || stopUnknown)
             {
-                double dT = DateTimeFormat.parseIsoPeriod(duration);
+                double dT = timeFormat.parseIsoPeriod(duration);
                 
                 if (startUnknown)
                     timeInfo.setLagTimeDelta(dT);
@@ -168,7 +167,7 @@ public class GMLTimeReader
             
             // also parse step time
             if (timeStep != null)
-                timeInfo.setTimeStep(DateTimeFormat.parseIsoPeriod(timeStep));
+                timeInfo.setTimeStep(timeFormat.parseIsoPeriod(timeStep));
         }
         catch (ParseException e)
         {
@@ -181,19 +180,6 @@ public class GMLTimeReader
         }
         
         return timeInfo;
-    }
-    
-    
-    /**
-     * Reads a gml:TimeGrid with step size
-     * @param dom
-     * @param timePeriodElt
-     * @return
-     * @throws GMLException
-     */
-    public TimeExtent readTimeGrid(DOMHelper dom, Element timeGridElt) throws XMLReaderException
-    {
-        return null;
     }
 
 

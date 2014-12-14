@@ -573,17 +573,19 @@ public class TimeExtent
     
     public String getIsoString(int zone)
     {
+        DateTimeFormat timeFormat = new DateTimeFormat();
+        
         if (baseAtNow)
         {
             String start = beginNow ? "now" : "unknown";
             String stop = endNow ? "now" : "unknown";
-            String duration = DateTimeFormat.formatIsoPeriod(getTimeRange());
+            String duration = timeFormat.formatIsoPeriod(getTimeRange());
             return start + "/" + stop + "/" + duration;
         }
         else
         {
-            String start = beginNow ? "now" : DateTimeFormat.formatIso(getStartTime(), zone);
-            String stop = endNow ? "now" : DateTimeFormat.formatIso(getStopTime(), zone);
+            String start = beginNow ? "now" : timeFormat.formatIso(getStartTime(), zone);
+            String stop = endNow ? "now" : timeFormat.formatIso(getStopTime(), zone);
             return start + "/" + stop;
         }
     }

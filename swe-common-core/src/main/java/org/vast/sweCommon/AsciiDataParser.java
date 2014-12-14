@@ -28,7 +28,6 @@ import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.TextEncoding;
 import org.vast.data.*;
-import org.vast.util.DateTimeFormat;
 import org.vast.util.ReaderException;
 
 
@@ -306,7 +305,7 @@ public class AsciiDataParser extends AbstractDataParser
                     break;
                     
                 case DOUBLE:
-                    double doubleValue = parseDoubleOrInfOrIsoTime(token);
+                    double doubleValue = dataTypeUtils.parseDoubleOrInfOrIsoTime(token);
                     data.setDoubleValue(doubleValue);                     
                     break;
                     
@@ -356,67 +355,5 @@ public class AsciiDataParser extends AbstractDataParser
     public void close() throws IOException
     {
         reader.close();
-    }
-    
-    
-    /**
-     * Improves on Java Double.parseDouble() method to include +INF/-INF
-     * This is needed because Java Infinity is not allowed by XML schema
-     * @param text string to decode value from
-     * @return decoded value
-     * @throws NumberFormatException if argument doesn't contain a valid double string
-     */
-    public static double parseDoubleOrInf(String text) throws NumberFormatException
-    {
-        double val;
-        
-        try
-        {
-            val = Double.parseDouble(text);
-        }
-        catch (NumberFormatException e)
-        {
-            if (text.equalsIgnoreCase("-INF"))
-                val = Double.NEGATIVE_INFINITY;
-            else if (text.equalsIgnoreCase("INF") || text.equalsIgnoreCase("+INF"))
-                val = Double.POSITIVE_INFINITY;
-            else
-                throw e; 
-        }
-        
-        return val;
-    }
-    
-    
-    /**
-     * Allows parsing a double or ISO encoded date/time value
-     * @param text string to decode value from
-     * @return decoded value
-     * @throws NumberFormatException 
-     */
-    public static double parseDoubleOrInfOrIsoTime(String text) throws NumberFormatException
-    {
-        double val;
-        
-        try
-        {
-            val = parseDoubleOrInf(text);
-        }
-        catch (NumberFormatException e)
-        {
-            try
-            {
-                val = DateTimeFormat.parseIso(text);
-            }
-            catch (ParseException e1)
-            {
-                if (text.equals("NO_DATA"))
-                    return Double.NaN;
-                else
-                    throw e;
-            } 
-        }
-        
-        return val;
     }
 }

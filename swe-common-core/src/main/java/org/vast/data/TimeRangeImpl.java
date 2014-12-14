@@ -239,8 +239,9 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
                 String minText, maxText;                
                 if (Time.ISO_TIME_UNIT.equals(uom.getHref()))
                 {
-                    minText = DateTimeFormat.formatIso(dataBlock.getDoubleValue(0), 0);
-                    maxText = DateTimeFormat.formatIso(dataBlock.getDoubleValue(1), 0);
+                    DateTimeFormat isoFormat = new DateTimeFormat();
+                    minText = isoFormat.formatIso(dataBlock.getDoubleValue(0), 0);
+                    maxText = isoFormat.formatIso(dataBlock.getDoubleValue(1), 0);
                 }
                 else
                 {
@@ -268,8 +269,9 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
             double max = dataBlock.getDoubleValue(1);
             if (Time.ISO_TIME_UNIT.equals(uom.getHref()))
             {
-                text.append(DateTimeFormat.formatIso(min, 0)).append(' ');
-                text.append(DateTimeFormat.formatIso(max, 0));
+                DateTimeFormat isoFormat = new DateTimeFormat();
+                text.append(isoFormat.formatIso(min, 0)).append(' ');
+                text.append(isoFormat.formatIso(max, 0));
             }
             else
             {

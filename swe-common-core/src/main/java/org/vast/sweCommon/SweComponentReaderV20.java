@@ -45,7 +45,6 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
-import org.vast.util.DateTimeFormat;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLReaderDOM;
 import org.vast.xml.XMLReaderException;
@@ -61,18 +60,19 @@ import org.vast.xml.XMLReaderException;
  * </p>
  *
  * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin (Spot Image)
+ * @author Alexandre Robin
  * @since Feb 1, 2008
- * @version 1.0
+ * @deprecated use new bindings {@link org.vast.sweCommon.SWEStaxBindings} instead
  */
 public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
 {
 	public final static String SWE_NS = OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0");
 	protected Hashtable<String, DataComponent> componentIds;
+	protected SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
+    protected SWEDataTypeUtils dataTypeUtils = new SWEDataTypeUtils();
     protected AsciiDataParser asciiParser;
-    protected SweEncodingReaderV20 encodingReader = new SweEncodingReaderV20();
     
-    
+        
     public SweComponentReaderV20()
     {
         componentIds = new Hashtable<String, DataComponent>();
@@ -559,7 +559,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
         {
             String refTime = dom.getAttributeValue(componentElt, "referenceTime");
             if (refTime != null && dataComponent instanceof TimeImpl)
-                ((TimeImpl)dataComponent).setReferenceTime(new DateTimeDouble(DateTimeFormat.parseIso(refTime)));
+                ((TimeImpl)dataComponent).setReferenceTime(new DateTimeDouble(dataTypeUtils.parseIsoTime(refTime)));
         }
         catch (ParseException e)
         {
@@ -718,7 +718,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
                         break;
                         
                     case DOUBLE:
-                        val = AsciiDataParser.parseDoubleOrInfOrIsoTime(token);              
+                        val = dataTypeUtils.parseDoubleOrInfOrIsoTime(token);              
                         break;
                         
                     case UTF_STRING:
@@ -794,7 +794,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
 	    			String valText = dom.getElementValue((Element)valueElts.item(i));
     				try
 		        	{
-		    			double val = AsciiDataParser.parseDoubleOrInfOrIsoTime(valText);
+		    			double val = dataTypeUtils.parseDoubleOrInfOrIsoTime(valText);
 		    			constraint.addValue(new DateTimeDouble(val));
 		        	}
                     catch (Exception e)
@@ -822,7 +822,7 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
 	    			String valText = dom.getElementValue((Element)valueElts.item(i));
     				try
 		        	{
-		    			double val = AsciiDataParser.parseDoubleOrInf(valText);
+		    			double val = dataTypeUtils.parseDoubleOrInf(valText);
 		    			constraint.addValue(val);
 		    		}
 					catch (Exception e)
@@ -846,8 +846,8 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
 		try
 		{
 			String[] rangeValues = rangeText.split(" ");
-			double min = AsciiDataParser.parseDoubleOrInf(rangeValues[0]);
-			double max = AsciiDataParser.parseDoubleOrInf(rangeValues[1]);
+			double min = dataTypeUtils.parseDoubleOrInf(rangeValues[0]);
+			double max = dataTypeUtils.parseDoubleOrInf(rangeValues[1]);
 			constraint.addInterval(new double[] {min, max});
 		}
 		catch (Exception e)
@@ -864,8 +864,8 @@ public class SweComponentReaderV20 implements IXMLReaderDOM<DataComponent>
 		try
 		{
 			String[] rangeValues = rangeText.split(" ");
-			double min = AsciiDataParser.parseDoubleOrInfOrIsoTime(rangeValues[0]);
-			double max = AsciiDataParser.parseDoubleOrInfOrIsoTime(rangeValues[1]);
+			double min = dataTypeUtils.parseDoubleOrInfOrIsoTime(rangeValues[0]);
+			double max = dataTypeUtils.parseDoubleOrInfOrIsoTime(rangeValues[1]);
 			constraint.addInterval(new IDateTime[] {new DateTimeDouble(min), new DateTimeDouble(max)});
 		}
 		catch (Exception e)

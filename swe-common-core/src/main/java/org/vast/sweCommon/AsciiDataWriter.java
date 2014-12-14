@@ -44,11 +44,11 @@ import org.vast.util.WriterException;
  */
 public class AsciiDataWriter extends AbstractDataWriter
 {
-	String nextToken;
-	int tupleSize;
-	char[] tokenSep, blockSep;
-    boolean firstToken, appendBlockSeparator;
-    Writer outputWriter;
+    protected String nextToken;
+    protected int tupleSize;
+    protected char[] tokenSep, blockSep;
+    protected boolean firstToken, appendBlockSeparator;
+    protected Writer outputWriter;
     
 	
 	public AsciiDataWriter()
@@ -95,7 +95,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 	{
         try
         {
-            String val = getStringValue((DataValue)component);
+            String val = dataTypeUtils.getStringValue((DataValue)component);
             writeToken(val);
         }
         catch (IOException e)

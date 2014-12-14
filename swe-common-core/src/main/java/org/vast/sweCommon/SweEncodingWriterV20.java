@@ -47,7 +47,7 @@ import org.w3c.dom.Element;
  * <p>Copyright (c) 2005</p>
  * @author Alexandre Robin
  * @since Feb 10, 2006
- * @version 1.0
+ * @deprecated use new bindings {@link org.vast.sweCommon.SWEStaxBindings} instead
  */
 public class SweEncodingWriterV20 implements IXMLWriterDOM<DataEncoding>
 {

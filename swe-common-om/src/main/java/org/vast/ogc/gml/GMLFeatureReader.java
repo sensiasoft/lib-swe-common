@@ -47,6 +47,7 @@ import org.w3c.dom.NodeList;
 public class GMLFeatureReader implements IXMLReaderDOM<IFeature>
 {
     GMLGeometryReader geometryReader = new GMLGeometryReader();
+    DateTimeFormat timeFormat = new DateTimeFormat();
     
     
     public GMLFeatureReader()
@@ -126,7 +127,7 @@ public class GMLFeatureReader implements IXMLReaderDOM<IFeature>
                                     if (propVal.equalsIgnoreCase("true") || propVal.equalsIgnoreCase("false"))
                                         value = Boolean.parseBoolean(propVal);
                                     else
-                                        DateTimeFormat.parseIso(propVal);
+                                        timeFormat.parseIso(propVal);
                                 }
                                 catch (ParseException e2)
                                 {

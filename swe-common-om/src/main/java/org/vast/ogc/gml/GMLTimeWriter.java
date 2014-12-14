@@ -44,6 +44,7 @@ public class GMLTimeWriter
     private String gmlNsUri;
     private int currentId;
     private NumberFormat idFormatter;
+    private DateTimeFormat timeFormat = new DateTimeFormat();
     
     
     public GMLTimeWriter(String gmlVersion)
@@ -83,7 +84,7 @@ public class GMLTimeWriter
             if (timeInfo.isBeginNow() || timeInfo.isEndNow() || timeInfo.isBaseAtNow())
                 dom.setAttributeValue(timeElt, "gml:timePosition/@indeterminatePosition", "now");
             else
-                dom.setElementValue(timeElt, "gml:timePosition", DateTimeFormat.formatIso(timeInfo.getStartTime(), zone));
+                dom.setElementValue(timeElt, "gml:timePosition", timeFormat.formatIso(timeInfo.getStartTime(), zone));
         }
         else
         {
@@ -94,20 +95,20 @@ public class GMLTimeWriter
             {
                 if (timeInfo.getLeadTimeDelta() > 0.0 && timeInfo.getLagTimeDelta() > 0.0)
                 {
-                    dom.setElementValue(timeElt, "gml:beginPosition", DateTimeFormat.formatIso(now - timeInfo.getLagTimeDelta(), zone));
-                    dom.setElementValue(timeElt, "gml:endPosition", DateTimeFormat.formatIso(now + timeInfo.getLeadTimeDelta(), zone));
+                    dom.setElementValue(timeElt, "gml:beginPosition", timeFormat.formatIso(now - timeInfo.getLagTimeDelta(), zone));
+                    dom.setElementValue(timeElt, "gml:endPosition", timeFormat.formatIso(now + timeInfo.getLeadTimeDelta(), zone));
                 }
                 else if (timeInfo.getLagTimeDelta() == 0.0)
                 {
                     dom.setAttributeValue(timeElt, "gml:beginPosition/@indeterminatePosition", "now");
                     dom.setAttributeValue(timeElt, "gml:endPosition/@indeterminatePosition", "unknown");
-                    dom.setElementValue(timeElt, "gml:timeInterval", DateTimeFormat.formatIsoPeriod(timeInfo.getLeadTimeDelta()));
+                    dom.setElementValue(timeElt, "gml:timeInterval", timeFormat.formatIsoPeriod(timeInfo.getLeadTimeDelta()));
                 }
                 else if (timeInfo.getLeadTimeDelta() == 0.0)
                 {
                     dom.setAttributeValue(timeElt, "gml:beginPosition/@indeterminatePosition", "unknown");
                     dom.setAttributeValue(timeElt, "gml:endPosition/@indeterminatePosition", "now");
-                    dom.setElementValue(timeElt, "gml:timeInterval", DateTimeFormat.formatIsoPeriod(timeInfo.getLagTimeDelta()));
+                    dom.setElementValue(timeElt, "gml:timeInterval", timeFormat.formatIsoPeriod(timeInfo.getLagTimeDelta()));
                 }             
             }
             
@@ -117,18 +118,18 @@ public class GMLTimeWriter
                 if (timeInfo.isBeginNow())
                     dom.setAttributeValue(timeElt, "gml:beginPosition/@indeterminatePosition", "now");
                 else
-                    dom.setElementValue(timeElt, "gml:beginPosition", DateTimeFormat.formatIso(timeInfo.getStartTime(), zone));
+                    dom.setElementValue(timeElt, "gml:beginPosition", timeFormat.formatIso(timeInfo.getStartTime(), zone));
                 
                 if (timeInfo.isEndNow())
                     dom.setAttributeValue(timeElt, "gml:endPosition/@indeterminatePosition", "now");
                 else
-                    dom.setElementValue(timeElt, "gml:endPosition", DateTimeFormat.formatIso(timeInfo.getStopTime(), zone));
+                    dom.setElementValue(timeElt, "gml:endPosition", timeFormat.formatIso(timeInfo.getStopTime(), zone));
             }            
             
             // handle time step if specified (i.e. not 0)
             if (timeInfo.getTimeStep() != 0)
             {
-                dom.setElementValue(timeElt, "gml:timeStep", DateTimeFormat.formatIsoPeriod(timeInfo.getTimeStep()));
+                dom.setElementValue(timeElt, "gml:timeStep", timeFormat.formatIsoPeriod(timeInfo.getTimeStep()));
             }
         }
         

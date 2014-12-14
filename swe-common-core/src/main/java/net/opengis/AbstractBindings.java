@@ -14,6 +14,16 @@ import java.text.ParseException;
 import org.vast.util.DateTimeFormat;
 
 
+/**
+ * <p>
+ * Base for all bindings, provide utility methods.
+ * This class is not thread safe.
+ * </p>
+ *
+ * <p>Copyright (c) 2014 Sensia Software LLC</p>
+ * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @since Dec 14, 2014
+ */
 public abstract class AbstractBindings
 {
     static String PLUS_INFINITY = "+INF";
@@ -21,6 +31,7 @@ public abstract class AbstractBindings
     static String TIME_NOW = "now";
     
     StringBuilder sb = new StringBuilder();
+    DateTimeFormat isoFormat = new DateTimeFormat();
     
             
     public AbstractBindings()
@@ -88,7 +99,7 @@ public abstract class AbstractBindings
         {
             try
             {
-                time = DateTimeFormat.parseIso(val);
+                time = isoFormat.parseIso(val);
             }
             catch (ParseException e1)
             {
@@ -163,7 +174,7 @@ public abstract class AbstractBindings
         if (dateTime.isNow())
             return TIME_NOW;
                     
-        return DateTimeFormat.formatIso(dateTime.getAsDouble(), dateTime.getTimeZoneOffset());
+        return isoFormat.formatIso(dateTime.getAsDouble(), dateTime.getTimeZoneOffset());
     }
 
 

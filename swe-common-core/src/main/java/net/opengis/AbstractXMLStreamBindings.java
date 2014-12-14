@@ -32,6 +32,7 @@ import javax.xml.stream.XMLStreamWriter;
 public abstract class AbstractXMLStreamBindings extends AbstractBindings
 {
     public final static String ERROR_INVALID_ELT = "Invalid Element: ";
+    public final static String ERROR_UNSUPPORTED_TYPE = "Unsupported Type: ";
     public final static String XLINK_NS_URI = "http://www.w3.org/1999/xlink";
         
     boolean needNamespaceDecl = false;
@@ -75,7 +76,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
-    protected Map<String, String> collectAttributes(XMLStreamReader reader) throws XMLStreamException
+    protected final Map<String, String> collectAttributes(XMLStreamReader reader) throws XMLStreamException
     {
         Map<String, String> attrMap = new HashMap<String, String>();
         for (int i=0; i<reader.getAttributeCount(); i++)
@@ -84,7 +85,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
-    protected boolean checkElementName(XMLStreamReader reader, String localName) throws XMLStreamException
+    protected final boolean checkElementName(XMLStreamReader reader, String localName) throws XMLStreamException
     {
         // check if tag has right local name
         if (reader.getEventType() == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals(localName))
@@ -94,7 +95,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
-    protected boolean checkElementQName(XMLStreamReader reader, String nsUri, String localName) throws XMLStreamException
+    protected final boolean checkElementQName(XMLStreamReader reader, String nsUri, String localName) throws XMLStreamException
     {
         // check if tag has right local name and namespace URI
         if (reader.getEventType() == XMLStreamConstants.START_ELEMENT 
@@ -105,21 +106,21 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
-    protected String errorLocationString(XMLStreamReader reader) throws XMLStreamException
+    protected final String errorLocationString(XMLStreamReader reader) throws XMLStreamException
     {
         Location loc = reader.getLocation();
         return " at line " + loc.getLineNumber() + ", col " + loc.getColumnNumber();
     }
     
     
-    public void readPropertyAttributes(XMLStreamReader reader, OgcProperty<?> prop) throws XMLStreamException
+    protected final void readPropertyAttributes(XMLStreamReader reader, OgcProperty<?> prop) throws XMLStreamException
     {
         Map<String, String> attrMap = collectAttributes(reader);
         readPropertyAttributes(attrMap, prop);
     }
     
     
-    public void readPropertyAttributes(Map<String, String> attrMap, OgcProperty<?> prop) throws XMLStreamException
+    protected void readPropertyAttributes(Map<String, String> attrMap, OgcProperty<?> prop) throws XMLStreamException
     {
         prop.setName(attrMap.get("name"));
         prop.setHref(attrMap.get("href"));
@@ -128,7 +129,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
-    public void writePropertyAttributes(XMLStreamWriter writer, OgcProperty<?> prop) throws XMLStreamException
+    protected void writePropertyAttributes(XMLStreamWriter writer, OgcProperty<?> prop) throws XMLStreamException
     {
         String val;
         
@@ -150,9 +151,13 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
-    public Object readExtension(XMLStreamReader reader) throws XMLStreamException
+    /**
+     * Call this to skip an element and its children and keep parsing
+     * @param reader
+     * @throws XMLStreamException
+     */
+    protected final void skipElementAndAllChildren(XMLStreamReader reader) throws XMLStreamException
     {
-        // default = skip next element and all its children
         int eventCode;
         int levelCount = 1;
         while (levelCount > 0)
@@ -163,7 +168,13 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
             if (eventCode == XMLStreamConstants.END_ELEMENT)
                 levelCount--;
         }
-        
+    }
+    
+    
+    public Object readExtension(XMLStreamReader reader) throws XMLStreamException
+    {
+        // by default we skip the extension element and all its children
+        skipElementAndAllChildren(reader);        
         return null;
     }
     

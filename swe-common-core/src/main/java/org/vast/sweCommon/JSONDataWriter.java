@@ -188,7 +188,7 @@ public class JSONDataWriter extends AbstractDataWriter
 			        jsonWriter.write(':');
 			    }
 			    
-			    jsonWriter.write(getStringValue(component));
+			    jsonWriter.write(dataTypeUtils.getStringValue(component));
 			    
 	            Record parentRecord = componentStack.get(componentStack.size()-2);
 	            if (parentRecord.index < parentRecord.count-1)

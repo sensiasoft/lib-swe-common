@@ -243,7 +243,7 @@ public class TimeImpl extends DataValue implements Time
             {
                 String valText;                
                 if (Time.ISO_TIME_UNIT.equals(uom.getHref()))
-                    valText = DateTimeFormat.formatIso(dataBlock.getDoubleValue(), 0);
+                    valText = new DateTimeFormat().formatIso(dataBlock.getDoubleValue(), 0);
                 else
                     valText = dataBlock.getStringValue();
                 
@@ -264,7 +264,7 @@ public class TimeImpl extends DataValue implements Time
         {
             text.append(" = ");
             if (Time.ISO_TIME_UNIT.equals(uom.getHref()))
-                text.append(DateTimeFormat.formatIso(dataBlock.getDoubleValue(), 0));
+                text.append(new DateTimeFormat().formatIso(dataBlock.getDoubleValue(), 0));
             else
                 text.append(dataBlock.getDoubleValue());
         }

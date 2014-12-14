@@ -42,9 +42,11 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 {
 	protected final static String STREAM_ERROR = "Error while parsing data stream";
 	protected final static String CHOICE_ERROR = "Invalid choice selection: ";
+	
+	protected SWEDataTypeUtils dataTypeUtils = new SWEDataTypeUtils();
 	protected boolean stopParsing = false;
 	protected boolean renewDataBlock = true;
-		
+	
 	
 	public AbstractDataParser()
 	{

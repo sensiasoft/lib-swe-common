@@ -16,7 +16,7 @@ import org.vast.data.SWEFactory;
 
 /**
  * <p>
- * Helper wrapping the auto-generated XML stream bindings
+ * Helper wrapping the auto-generated SWE Common StAX bindings
  * </p>
  *
  * <p>Copyright (c) 2014 Sensia Software LLC</p>
