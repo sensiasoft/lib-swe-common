@@ -40,9 +40,12 @@ public class DateTimeFormat extends SimpleDateFormat
     static final long serialVersionUID = 0;
     
     public static final int LOCAL = 255;
-	public static int SECONDS_IN_MINUTES = 60;
+	public static int SECONDS_IN_MINUTE = 60;
+	public static int SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE;
+	public static int SECONDS_IN_DAY = 24 * SECONDS_IN_HOUR;
+	public static int SECONDS_IN_MONTH = 30 * SECONDS_IN_DAY;
+	public static int SECONDS_IN_YEAR = 365 * SECONDS_IN_MONTH;
 	
-    
 	
 	public DateTimeFormat()
 	{
@@ -235,28 +238,87 @@ public class DateTimeFormat extends SimpleDateFormat
      * Formats a period in seconds to ISO8601 period standard
      * starting with the given unit and going down as much as required
      * @param periodInSeconds
-     * @param biggestUnit
+     * @param biggestUnit largest unit to use in encoded string (one of Y, M, D, H, m, S)
      * @return ISO string representing the period
      */
     public String formatIsoPeriod(double periodInSeconds, char biggestUnit)
     {
-        /*StringBuffer buf = new StringBuffer(20);
+        StringBuffer buf = new StringBuffer(20);
         if (periodInSeconds < 0)
             buf.append('-');
         buf.append('P');
         int totalSeconds = (int)Math.abs(periodInSeconds);
+        int secondsLeft = totalSeconds;
         
-        buf.append((int)periodInSeconds);
-        buf.append('S');
+        if (biggestUnit == 'Y')
+        {
+            int months = totalSeconds / SECONDS_IN_YEAR;
+            if (months > 0)
+            {
+                buf.append(months);
+                buf.append('M');
+            }
+            secondsLeft = totalSeconds % SECONDS_IN_YEAR;
+            biggestUnit = 'M';
+        }        
+        
+        if (biggestUnit == 'M')
+        {
+            int months = totalSeconds / SECONDS_IN_MONTH;
+            if (months > 0)
+            {
+                buf.append(months);
+                buf.append('M');
+            }
+            secondsLeft = totalSeconds % SECONDS_IN_MONTH;
+            biggestUnit = 'D';
+        }
+        
+        if (biggestUnit == 'D')
+        {
+            int days = totalSeconds / SECONDS_IN_DAY;
+            if (days > 0)
+            {
+                buf.append(days);
+                buf.append('D');
+            }
+            secondsLeft = totalSeconds % SECONDS_IN_DAY;
+            biggestUnit = 'H';
+        }
+        
+        if (secondsLeft > 0)
+            buf.append('T');
+        
+        if (biggestUnit == 'H')
+        {
+            int hours = secondsLeft / SECONDS_IN_HOUR;
+            if (hours > 0)
+            {
+                buf.append(hours);
+                buf.append('H');
+            }
+            secondsLeft = totalSeconds % SECONDS_IN_HOUR;
+            biggestUnit = 'm';
+        }
+        
+        if (biggestUnit == 'm')
+        {
+            int minutes = secondsLeft / SECONDS_IN_MINUTE;
+            if (minutes > 0)
+            {
+                buf.append(minutes);
+                buf.append('M');
+            }
+            secondsLeft = totalSeconds % SECONDS_IN_MINUTE;
+        }
+        
+        if (secondsLeft > 0)
+        {
+            buf.append(secondsLeft);
+            buf.append('S');
+        }
         
         return buf.toString();
-        
-        
-        int totalSeconds = (int)periodSeconds;
-        int seconds = totalSeconds % 60;
-        int minutes = (totalSeconds / 60) % 60;
-        return "PT" + periodSeconds + "S";*/
-        return formatIsoPeriod(periodInSeconds);
     }
     
     
