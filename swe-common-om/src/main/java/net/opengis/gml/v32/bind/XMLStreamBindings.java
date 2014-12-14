@@ -1,5 +1,6 @@
 package net.opengis.gml.v32.bind;
 
+import java.util.ArrayList;
 import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -7,10 +8,13 @@ import javax.xml.stream.XMLStreamWriter;
 import net.opengis.AbstractXMLStreamBindings;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
+import net.opengis.gml.v32.AbstractCurve;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGML;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.AbstractMetaData;
+import net.opengis.gml.v32.AbstractRing;
+import net.opengis.gml.v32.AbstractSurface;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.AbstractTimePrimitive;
 import net.opengis.gml.v32.Code;
@@ -19,7 +23,10 @@ import net.opengis.gml.v32.CodeOrNilReasonList;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.FeatureCollection;
+import net.opengis.gml.v32.LineString;
+import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Point;
+import net.opengis.gml.v32.Polygon;
 import net.opengis.gml.v32.Reference;
 import net.opengis.gml.v32.StringOrRef;
 import net.opengis.gml.v32.TimeIndeterminateValue;
@@ -30,6 +37,7 @@ import net.opengis.gml.v32.TimePosition;
 import net.opengis.gml.v32.Factory;
 
 
+@SuppressWarnings("javadoc")
 public class XMLStreamBindings extends AbstractXMLStreamBindings
 {
     public final static String NS_URI = "http://www.opengis.net/gml/3.2";
@@ -1218,6 +1226,337 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     
     /**
+     * Read method for LineStringType complex type
+     */
+    public LineString readLineStringType(XMLStreamReader reader) throws XMLStreamException
+    {
+        LineString bean = factory.newLineString();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readLineStringTypeAttributes(attrMap, bean);
+        
+        reader.nextTag();
+        this.readLineStringTypeElements(reader, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of LineStringType complex type
+     */
+    public void readLineStringTypeAttributes(Map<String, String> attrMap, LineString bean) throws XMLStreamException
+    {
+        this.readAbstractGeometryTypeAttributes(attrMap, bean);
+        
+    }
+    
+    
+    /**
+     * Reads elements of LineStringType complex type
+     */
+    public void readLineStringTypeElements(XMLStreamReader reader, LineString bean) throws XMLStreamException
+    {
+        this.readAbstractGeometryTypeElements(reader, bean);
+        bean.setPosList(readPositionElements(reader));
+    }
+    
+    
+    /**
+     * Reads coordinate array from a choice of pos/posList/coordinates properties
+     * @param reader
+     * @return
+     * @throws XMLStreamException
+     */
+    public double[] readPositionElements(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found;
+        double[] posList = null;
+        
+        // pos 0..*
+        found = checkElementName(reader, "pos");
+        if (found)
+        {
+            ArrayList<double[]> tmpList = new ArrayList<double[]>();
+            int arraySize = 0;
+            
+            do
+            {
+                found = checkElementName(reader, "pos");
+                if (found)
+                {
+                    String pos = reader.getElementText();
+                    if (pos != null)
+                    {
+                        double[] values = getDoubleArrayFromString(pos);
+                        arraySize += values.length;
+                        tmpList.add(values);
+                    }
+                    
+                    reader.nextTag();
+                }
+            }
+            while (found);
+        
+            // aggregate to a single array
+            posList = new double[arraySize];
+            int i = 0;
+            for (double[] pos: tmpList)
+            {
+                System.arraycopy(pos, 0, posList, i, pos.length);
+                i += pos.length;
+            }
+        }
+        
+        // pointProperty
+        do
+        {
+            found = checkElementName(reader, "pointProperty");
+            if (found)
+            {
+                skipElementAndAllChildren(reader);
+                reader.nextTag();
+            }
+        }
+        while (found);
+        
+        // pointRep
+        do
+        {
+            found = checkElementName(reader, "pointRep");
+            if (found)
+            {
+                skipElementAndAllChildren(reader);
+                reader.nextTag();
+            }
+        }
+        while (found);
+        
+        // posList
+        found = checkElementName(reader, "posList");
+        if (found)
+        {
+            String posString = reader.getElementText();
+            if (posString != null)
+                posList = getDoubleArrayFromString(posString);
+            
+            reader.nextTag();
+        }
+        
+        // coordinates
+        found = checkElementName(reader, "coordinates");
+        if (found)
+        {
+            String posString = reader.getElementText();
+            if (posString != null)
+                posList = getDoubleArrayFromString(posString);
+            
+            reader.nextTag();
+        }
+        
+        return posList;
+    }
+    
+    
+    /**
+     * Write method for LineStringType complex type
+     */
+    public void writeLineStringType(XMLStreamWriter writer, LineString bean) throws XMLStreamException
+    {
+        this.writeLineStringTypeAttributes(writer, bean);
+        this.writeLineStringTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Writes attributes of LineStringType complex type
+     */
+    public void writeLineStringTypeAttributes(XMLStreamWriter writer, LineString bean) throws XMLStreamException
+    {
+        this.writeAbstractGeometryTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of LineStringType complex type
+     */
+    public void writeLineStringTypeElements(XMLStreamWriter writer, LineString bean) throws XMLStreamException
+    {
+        this.writeAbstractGeometryTypeElements(writer, bean);
+        
+        // posList
+        if (bean.isSetPosList())
+        {
+            writer.writeStartElement(NS_URI, "posList");
+            writer.writeCharacters(getStringValue(bean.getPosList()));
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Read method for PolygonType complex type
+     */
+    public Polygon readPolygonType(XMLStreamReader reader) throws XMLStreamException
+    {
+        Polygon bean = factory.newPolygon();
+        
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readPolygonTypeAttributes(attrMap, bean);
+        
+        reader.nextTag();
+        this.readPolygonTypeElements(reader, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads attributes of PolygonType complex type
+     */
+    public void readPolygonTypeAttributes(Map<String, String> attrMap, Polygon bean) throws XMLStreamException
+    {
+        this.readAbstractGeometryTypeAttributes(attrMap, bean);
+        
+    }
+    
+    
+    /**
+     * Reads elements of PolygonType complex type
+     */
+    public void readPolygonTypeElements(XMLStreamReader reader, Polygon bean) throws XMLStreamException
+    {
+        this.readAbstractGeometryTypeElements(reader, bean);
+        
+        boolean found;
+        
+        // exterior
+        found = checkElementName(reader, "exterior");
+        if (found)
+        {
+            reader.nextTag();
+            AbstractRing exterior = this.readAbstractRing(reader);
+            if (exterior != null)
+                bean.setExterior(exterior);
+            
+            reader.nextTag(); // end property tag
+            reader.nextTag();
+        }
+        
+        // interior
+        do
+        {
+            found = checkElementName(reader, "interior");
+            if (found)
+            {
+                reader.nextTag();
+                AbstractRing interior = this.readAbstractRing(reader);
+                if (interior != null)
+                    bean.addInterior(interior);
+                
+                reader.nextTag(); // end property tag
+                reader.nextTag();
+            }
+        }
+        while (found);
+    }
+    
+    
+    /**
+     * Write method for PolygonType complex type
+     */
+    public void writePolygonType(XMLStreamWriter writer, Polygon bean) throws XMLStreamException
+    {
+        this.writePolygonTypeAttributes(writer, bean);
+        this.writePolygonTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Writes attributes of PolygonType complex type
+     */
+    public void writePolygonTypeAttributes(XMLStreamWriter writer, Polygon bean) throws XMLStreamException
+    {
+        this.writeAbstractGeometryTypeAttributes(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of PolygonType complex type
+     */
+    public void writePolygonTypeElements(XMLStreamWriter writer, Polygon bean) throws XMLStreamException
+    {
+        this.writeAbstractGeometryTypeElements(writer, bean);
+        int numItems;
+        
+        // exterior
+        if (bean.isSetExterior())
+        {
+            writer.writeStartElement(NS_URI, "exterior");
+            this.writeAbstractRing(writer, bean.getExterior());
+            writer.writeEndElement();
+        }
+        
+        // interior
+        numItems = bean.getInteriorList().size();
+        for (int i = 0; i < numItems; i++)
+        {
+            AbstractRing item = bean.getInteriorList().get(i);
+            writer.writeStartElement(NS_URI, "interior");
+            this.writeAbstractRing(writer, item);
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
+     * Read method for LinearRingType complex type
+     */
+    public LinearRing readLinearRingType(XMLStreamReader reader) throws XMLStreamException
+    {
+        LinearRing bean = factory.newLinearRing();
+        
+        reader.nextTag();
+        this.readLinearRingTypeElements(reader, bean);
+        
+        return bean;
+    }
+    
+    
+    /**
+     * Reads elements of LinearRingType complex type
+     */
+    public void readLinearRingTypeElements(XMLStreamReader reader, LinearRing bean) throws XMLStreamException
+    {
+        bean.setPosList(readPositionElements(reader));
+    }
+    
+    
+    /**
+     * Write method for LinearRingType complex type
+     */
+    public void writeLinearRingType(XMLStreamWriter writer, LinearRing bean) throws XMLStreamException
+    {
+        this.writeLinearRingTypeElements(writer, bean);
+    }
+    
+    
+    /**
+     * Writes elements of LinearRingType complex type
+     */
+    public void writeLinearRingTypeElements(XMLStreamWriter writer, LinearRing bean) throws XMLStreamException
+    {
+        // posList
+        if (bean.isSetPosList())
+        {
+            writer.writeStartElement(NS_URI, "posList");
+            writer.writeCharacters(getStringValue(bean.getPosList()));
+            writer.writeEndElement();
+        }
+    }
+    
+    
+    /**
      * Reads attributes of AbstractGMLType complex type
      */
     public void readAbstractGMLTypeAttributes(Map<String, String> attrMap, AbstractGML bean) throws XMLStreamException
@@ -1859,6 +2198,116 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     
     /**
+     * Dispatcher method for reading elements derived from AbstractGeometry
+     */
+    public AbstractGeometry readAbstractGeometry(XMLStreamReader reader) throws XMLStreamException
+    {
+        String localName = reader.getName().getLocalPart();
+        
+        /*if (localName.equals("GeometricComplex"))
+            return readGeometricComplex(reader);
+        else if (localName.equals("CompositeCurve"))
+            return readCompositeCurve(reader);
+        else if (localName.equals("CompositeSurface"))
+            return readCompositeSurface(reader);
+        else if (localName.equals("CompositeSolid"))
+            return readCompositeSolid(reader);
+        else if (localName.equals("Grid"))
+            return readGrid(reader);
+        else if (localName.equals("RectifiedGrid"))
+            return readRectifiedGrid(reader);
+        else if (localName.equals("MultiGeometry"))
+            return readMultiGeometry(reader);
+        else if (localName.equals("MultiPoint"))
+            return readMultiPoint(reader);
+        else if (localName.equals("MultiCurve"))
+            return readMultiCurve(reader);
+        else if (localName.equals("MultiSurface"))
+            return readMultiSurface(reader);
+        else if (localName.equals("MultiSolid"))
+            return readMultiSolid(reader);
+        else */if (localName.equals("Point"))
+            return readPoint(reader);
+        else if (localName.equals("LineString"))
+            return readLineString(reader);
+        /*else if (localName.equals("Curve"))
+            return readCurve(reader);
+        else if (localName.equals("OrientableCurve"))
+            return readOrientableCurve(reader);
+        else if (localName.equals("Surface"))
+            return readSurface(reader);
+        else if (localName.equals("OrientableSurface"))
+            return readOrientableSurface(reader);
+        else if (localName.equals("Surface"))
+            return readSurface(reader);
+        else if (localName.equals("Surface"))
+            return readSurface(reader);
+        else if (localName.equals("Tin"))
+            return readTin(reader);
+        else if (localName.equals("Solid"))
+            return readSolid(reader);*/
+        else if (localName.equals("Polygon"))
+            return readPolygon(reader);
+        
+        throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+    }
+    
+    
+    /**
+     * Dispatcher method for writing classes derived from AbstractGeometry
+     */
+    public void writeAbstractGeometry(XMLStreamWriter writer, AbstractGeometry bean) throws XMLStreamException
+    {
+        /*if (bean instanceof GeometricComplex)
+            writeGeometricComplex(writer, (GeometricComplex)bean);
+        else if (bean instanceof CompositeCurve)
+            writeCompositeCurve(writer, (CompositeCurve)bean);
+        else if (bean instanceof CompositeSurface)
+            writeCompositeSurface(writer, (CompositeSurface)bean);
+        else if (bean instanceof CompositeSolid)
+            writeCompositeSolid(writer, (CompositeSolid)bean);
+        else if (bean instanceof Grid)
+            writeGrid(writer, (Grid)bean);
+        else if (bean instanceof RectifiedGrid)
+            writeRectifiedGrid(writer, (RectifiedGrid)bean);
+        else if (bean instanceof MultiGeometry)
+            writeMultiGeometry(writer, (MultiGeometry)bean);
+        else if (bean instanceof MultiPoint)
+            writeMultiPoint(writer, (MultiPoint)bean);
+        else if (bean instanceof MultiCurve)
+            writeMultiCurve(writer, (MultiCurve)bean);
+        else if (bean instanceof MultiSurface)
+            writeMultiSurface(writer, (MultiSurface)bean);
+        else if (bean instanceof MultiSolid)
+            writeMultiSolid(writer, (MultiSolid)bean);
+        else if (bean instanceof Curve)
+            writeCurve(writer, (Curve)bean);
+        else if (bean instanceof OrientableCurve)
+            writeOrientableCurve(writer, (OrientableCurve)bean);
+        else if (bean instanceof Surface)
+            writeSurface(writer, (Surface)bean);
+        else if (bean instanceof OrientableSurface)
+            writeOrientableSurface(writer, (OrientableSurface)bean);
+        else if (bean instanceof Surface)
+            writeSurface(writer, (Surface)bean);
+        else if (bean instanceof Surface)
+            writeSurface(writer, (Surface)bean);
+        else if (bean instanceof Tin)
+            writeTin(writer, (Tin)bean);
+        else if (bean instanceof Solid)
+            writeSolid(writer, (Solid)bean);*/
+        if (bean instanceof Point)
+            writePoint(writer, (Point)bean);
+        else if (bean instanceof LineString)
+            writeLineString(writer, (LineString)bean);
+        else if (bean instanceof Polygon)
+            writePolygon(writer, (Polygon)bean);
+        else
+            throw new XMLStreamException(ERROR_UNSUPPORTED_TYPE + bean.getClass().getCanonicalName());
+    }
+    
+    
+    /**
      * Read method for Envelope elements
      */
     public Envelope readEnvelope(XMLStreamReader reader) throws XMLStreamException
@@ -1904,6 +2353,199 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         writer.writeStartElement(NS_URI, "Point");
         this.writeNamespaces(writer);
         this.writePointType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Dispatcher method for reading elements derived from AbstractCurve
+     */
+    public AbstractCurve readAbstractCurve(XMLStreamReader reader) throws XMLStreamException
+    {
+        String localName = reader.getName().getLocalPart();
+        
+        /*if (localName.equals("CompositeCurve"))
+            return readCompositeCurve(reader);
+        else if (localName.equals("Curve"))
+            return readCurve(reader);
+        else if (localName.equals("OrientableCurve"))
+            return readOrientableCurve(reader);*/
+        if (localName.equals("LineString"))
+            return readLineString(reader);
+            
+        throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+    }
+    
+    
+    /**
+     * Dispatcher method for writing classes derived from AbstractCurve
+     */
+    public void writeAbstractCurve(XMLStreamWriter writer, AbstractCurve bean) throws XMLStreamException
+    {
+        /*if (bean instanceof CompositeCurve)
+            writeCompositeCurve(writer, (CompositeCurve)bean);
+        else if (bean instanceof Curve)
+            writeCurve(writer, (Curve)bean);
+        else if (bean instanceof OrientableCurve)
+            writeOrientableCurve(writer, (OrientableCurve)bean);*/
+        if (bean instanceof LineString)
+            writeLineString(writer, (LineString)bean);
+        else
+            throw new XMLStreamException(ERROR_UNSUPPORTED_TYPE + bean.getClass().getCanonicalName());
+    }
+    
+    
+    /**
+     * Read method for LineString elements
+     */
+    public LineString readLineString(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "LineString");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readLineStringType(reader);
+    }
+    
+    
+    /**
+     * Write method for LineString element
+     */
+    public void writeLineString(XMLStreamWriter writer, LineString bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "LineString");
+        this.writeNamespaces(writer);
+        this.writeLineStringType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Dispatcher method for reading elements derived from AbstractSurface
+     */
+    public AbstractSurface readAbstractSurface(XMLStreamReader reader) throws XMLStreamException
+    {
+        String localName = reader.getName().getLocalPart();
+        
+        /*if (localName.equals("CompositeSurface"))
+            return readCompositeSurface(reader);
+        else if (localName.equals("Surface"))
+            return readSurface(reader);
+        else if (localName.equals("OrientableSurface"))
+            return readOrientableSurface(reader);
+        else if (localName.equals("Surface"))
+            return readSurface(reader);
+        else if (localName.equals("Surface"))
+            return readSurface(reader);
+        else if (localName.equals("Tin"))
+            return readTin(reader);*/
+        if (localName.equals("Polygon"))
+            return readPolygon(reader);
+        
+        throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+    }
+    
+    
+    /**
+     * Dispatcher method for writing classes derived from AbstractSurface
+     */
+    public void writeAbstractSurface(XMLStreamWriter writer, AbstractSurface bean) throws XMLStreamException
+    {
+        /*if (bean instanceof CompositeSurface)
+            writeCompositeSurface(writer, (CompositeSurface)bean);
+        else if (bean instanceof Surface)
+            writeSurface(writer, (Surface)bean);
+        else if (bean instanceof OrientableSurface)
+            writeOrientableSurface(writer, (OrientableSurface)bean);
+        else if (bean instanceof Surface)
+            writeSurface(writer, (Surface)bean);
+        else if (bean instanceof Surface)
+            writeSurface(writer, (Surface)bean);
+        else if (bean instanceof Tin)
+            writeTin(writer, (Tin)bean);*/
+        if (bean instanceof Polygon)
+            writePolygon(writer, (Polygon)bean);
+        else
+            throw new XMLStreamException(ERROR_UNSUPPORTED_TYPE + bean.getClass().getCanonicalName());
+    }
+    
+    
+    /**
+     * Read method for Polygon elements
+     */
+    public Polygon readPolygon(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "Polygon");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readPolygonType(reader);
+    }
+    
+    
+    /**
+     * Write method for Polygon element
+     */
+    public void writePolygon(XMLStreamWriter writer, Polygon bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "Polygon");
+        this.writeNamespaces(writer);
+        this.writePolygonType(writer, bean);
+        writer.writeEndElement();
+    }
+    
+    
+    /**
+     * Dispatcher method for reading elements derived from AbstractRing
+     */
+    public AbstractRing readAbstractRing(XMLStreamReader reader) throws XMLStreamException
+    {
+        String localName = reader.getName().getLocalPart();
+        
+        /*if (localName.equals("Ring"))
+            return readRing(reader);*/
+        if (localName.equals("LinearRing"))
+            return readLinearRing(reader);
+        
+        throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+    }
+    
+    
+    /**
+     * Dispatcher method for writing classes derived from AbstractRing
+     */
+    public void writeAbstractRing(XMLStreamWriter writer, AbstractRing bean) throws XMLStreamException
+    {
+        /*if (bean instanceof Ring)
+            writeRing(writer, (Ring)bean);*/
+        if (bean instanceof LinearRing)
+            writeLinearRing(writer, (LinearRing)bean);
+        else
+            throw new XMLStreamException(ERROR_UNSUPPORTED_TYPE + bean.getClass().getCanonicalName());
+    }
+    
+    
+    /**
+     * Read method for LinearRing elements
+     */
+    public LinearRing readLinearRing(XMLStreamReader reader) throws XMLStreamException
+    {
+        boolean found = checkElementName(reader, "LinearRing");
+        if (!found)
+            throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+        
+        return this.readLinearRingType(reader);
+    }
+    
+    
+    /**
+     * Write method for LinearRing element
+     */
+    public void writeLinearRing(XMLStreamWriter writer, LinearRing bean) throws XMLStreamException
+    {
+        writer.writeStartElement(NS_URI, "LinearRing");
+        this.writeNamespaces(writer);
+        this.writeLinearRingType(writer, bean);
         writer.writeEndElement();
     }
     

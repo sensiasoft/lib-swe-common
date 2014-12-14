@@ -8,7 +8,7 @@ import net.opengis.gml.v32.AbstractGeometry;
  *
  * This is a complex type.
  */
-public abstract class AbstractGeometryImpl extends AbstractGMLImpl implements AbstractGeometry
+public class AbstractGeometryImpl extends AbstractGMLImpl implements AbstractGeometry
 {
     static final long serialVersionUID = 1L;
     protected String srsName;

@@ -29,6 +29,9 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.geom.Polygon;
 
 
 /**
@@ -43,9 +46,11 @@ import org.w3c.dom.Element;
  */
 public class GMLGeometryWriter
 {
+    private static String DEFAULT_CRS_URI_PREFIX = "http://www.opengis.net/def/crs/EPSG/0/";
     private String gmlNsUri;
     protected int currentId;
     protected NumberFormat idFormatter;
+    protected StringBuilder buf = new StringBuilder();
     
     
     public GMLGeometryWriter()
@@ -81,5 +86,73 @@ public class GMLGeometryWriter
         pointElt.setAttribute("gml:id", nextId);
         
         return pointElt;
+    }
+    
+    
+    public Element writePoint(DOMHelper dom, Point pos) throws XMLWriterException
+    {
+        dom.addUserPrefix("gml", gmlNsUri);
+        Element pointElt = dom.createElement("gml:Point");
+        
+        if (pos.getSRID() != 0)
+            dom.setAttributeValue(pointElt, "srsName", DEFAULT_CRS_URI_PREFIX + pos.getSRID());
+        
+        Coordinate coords = pos.getCoordinate();
+        String text = coords.x + " " + coords.y;
+        if (!Double.isNaN(coords.z))
+            text += " " + coords.z;
+        dom.setElementValue(pointElt, "gml:coordinates", text);
+        
+        // assign ID
+        String nextId = "P" + idFormatter.format(currentId++);
+        pointElt.setAttribute("gml:id", nextId);
+        
+        return pointElt;
+    }
+    
+    
+    public Element writePolygon(DOMHelper dom, Polygon poly) throws XMLWriterException
+    {
+        dom.addUserPrefix("gml", gmlNsUri);
+        Element polyElt = dom.createElement("gml:Polygon");
+        
+        // exterior
+        fillBufferWithCoordinates(poly.getExteriorRing().getCoordinates());
+        dom.setElementValue(polyElt, "gml:exterior/gml:LinearRing/gml:posList", buf.toString());
+                
+        // interiors
+        for (int i=0; i<poly.getNumInteriorRing(); i++)
+        {
+            fillBufferWithCoordinates(poly.getInteriorRingN(i).getCoordinates());
+            dom.setElementValue(polyElt, "+gml:interior/gml:LinearRing/gml:posList", buf.toString());
+        }
+        
+        // assign ID
+        String nextId = "P" + idFormatter.format(currentId++);
+        polyElt.setAttribute("gml:id", nextId);
+        
+        return polyElt;
+    }
+    
+    
+    protected void fillBufferWithCoordinates(Coordinate[] coordinates)
+    {
+        buf.setLength(0);
+                
+        for (Coordinate coord: coordinates)
+        {
+            buf.append(coord.x);
+            buf.append(' ');
+            buf.append(coord.y);
+            buf.append(' ');
+            if (!Double.isNaN(coord.z))
+            {
+                buf.append(coord.x);
+                buf.append(' ');                
+            }
+        }
+        
+        // remove last space
+        buf.setLength(buf.length()-1);
     }
 }

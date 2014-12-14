@@ -6,7 +6,10 @@ import net.opengis.gml.v32.CodeOrNilReasonList;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.FeatureCollection;
+import net.opengis.gml.v32.LineString;
+import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Point;
+import net.opengis.gml.v32.Polygon;
 import net.opengis.gml.v32.Reference;
 import net.opengis.gml.v32.StringOrRef;
 import net.opengis.gml.v32.TimeInstant;
@@ -18,6 +21,8 @@ import net.opengis.gml.v32.Factory;
 
 public class GMLFactory implements Factory
 {
+    boolean useJTS;
+    
     
     public GMLFactory()
     {
@@ -99,6 +104,27 @@ public class GMLFactory implements Factory
     public CodeOrNilReasonList newCodeOrNilReasonList()
     {
         return new CodeOrNilReasonListImpl();
+    }
+
+
+    @Override
+    public LinearRing newLinearRing()
+    {
+        return new LinearRingImpl();
+    }
+
+
+    @Override
+    public Polygon newPolygon()
+    {
+        return new PolygonImpl();
+    }
+
+
+    @Override
+    public LineString newLineString()
+    {
+        return new LineStringImpl();
     }
 
 }

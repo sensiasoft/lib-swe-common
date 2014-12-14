@@ -27,6 +27,15 @@ public interface Factory
     public Point newPoint();
     
     
+    public LinearRing newLinearRing();
+
+
+    public Polygon newPolygon();
+
+
+    public LineString newLineString();
+    
+    
     public Reference newReference();
     
     
@@ -43,4 +52,5 @@ public interface Factory
 
 
     public FeatureCollection newFeatureCollection();
+    
 }
