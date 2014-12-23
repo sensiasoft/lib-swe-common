@@ -13,6 +13,7 @@ package net.opengis;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -44,6 +45,23 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     public void declareNamespacesOnRootElement()
     {
         needNamespaceDecl = true;
+    }
+    
+    
+    public QName getQNameFromString(String qname)
+    {
+        /*String[] parts = qname.split(":");
+        String prefix = parts[0];
+        String uri = nsContext.getNamespaceURI(prefix);
+        String local = parts[1];
+        return new QName(uri, local, prefix);*/
+        return QName.valueOf(qname);
+    }
+    
+    
+    protected String getStringValue(QName qname)
+    {
+        return qname.getPrefix() + ":" + qname.getLocalPart();
     }
     
     
@@ -152,7 +170,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     
     
     /**
-     * Call this to skip an element and its children and keep parsing
+     * Call this to skip an element and all its children and keep parsing
      * @param reader
      * @throws XMLStreamException
      */
@@ -162,18 +180,21 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
         int levelCount = 1;
         while (levelCount > 0)
         {
-            eventCode = reader.nextTag();
+            eventCode = reader.next();            
             if (eventCode == XMLStreamConstants.START_ELEMENT)
                 levelCount++;
-            if (eventCode == XMLStreamConstants.END_ELEMENT)
+            else if (eventCode == XMLStreamConstants.END_ELEMENT)
                 levelCount--;
         }
+        
+        reader.nextTag();
     }
     
     
     public Object readExtension(XMLStreamReader reader) throws XMLStreamException
     {
         // by default we skip the extension element and all its children
+        // sub-classes can override to implement some extensions
         skipElementAndAllChildren(reader);        
         return null;
     }
@@ -189,5 +210,17 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     public boolean canWriteExtension(Object obj)
     {
         return false;
+    }
+
+
+    public NamespaceRegister getNamespaceContext()
+    {
+        return nsContext;
+    }
+
+
+    public void setNamespaceContext(NamespaceRegister nsContext)
+    {
+        this.nsContext = nsContext;
     }
 }

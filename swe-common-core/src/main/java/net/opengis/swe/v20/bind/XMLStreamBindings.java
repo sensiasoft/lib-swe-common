@@ -3429,7 +3429,6 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
                     Object extension = this.readExtension(reader);
                     if (extension != null)
                         bean.addExtension(extension);
-                    reader.nextTag(); // end property tag
                 }
                 
                 reader.nextTag();
@@ -3443,8 +3442,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
      * Writes attributes of AbstractSWEType complex type
      */
     public void writeAbstractSWETypeAttributes(XMLStreamWriter writer, AbstractSWE bean) throws XMLStreamException
-    {
-        
+    {        
         // id
         if (bean.isSetId())
             writer.writeAttribute("id", getStringValue(bean.getId()));

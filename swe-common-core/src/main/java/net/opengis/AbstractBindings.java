@@ -42,36 +42,44 @@ public abstract class AbstractBindings
     
     protected boolean getBooleanFromString(String val)
     {
-        return Boolean.parseBoolean(val);
+        return Boolean.parseBoolean(val.trim());
     }
     
     
     protected byte getByteFromString(String val)
     {
-        return Byte.parseByte(val);
+        return Byte.parseByte(val.trim());
     }
     
     
     protected short getShortFromString(String val)
     {
-        return Short.parseShort(val);
+        return Short.parseShort(val.trim());
     }
     
     
     protected int getIntFromString(String val)
     {
-        return Integer.parseInt(val);
+        return Integer.parseInt(val.trim());
     }
     
     
     protected long getLongFromString(String val)
     {
-        return Long.parseLong(val);
+        return Long.parseLong(val.trim());
     }
     
     
     protected float getFloatFromString(String val)
     {
+        val = val.trim();
+        
+        if (val.equals(MINUS_INFINITY))
+            return Float.NEGATIVE_INFINITY;
+        
+        if (val.equals("INF") || val.equals(PLUS_INFINITY))
+            return Float.POSITIVE_INFINITY;
+            
         return Float.parseFloat(val);
     }
     
@@ -99,7 +107,7 @@ public abstract class AbstractBindings
         {
             try
             {
-                time = isoFormat.parseIso(val);
+                time = isoFormat.parseIso(val.trim());
             }
             catch (ParseException e1)
             {
@@ -113,7 +121,7 @@ public abstract class AbstractBindings
     
     protected boolean[] getBooleanArrayFromString(String val)
     {
-        String[] items = val.split(" ");
+        String[] items = val.trim().split(" ");
         boolean[] ret = new boolean[items.length];
         for (int i=0; i<items.length; i++)
             ret[i] = getBooleanFromString(items[i]);
@@ -123,7 +131,7 @@ public abstract class AbstractBindings
     
     protected int[] getIntArrayFromString(String val)
     {
-        String[] items = val.split(" ");
+        String[] items = val.trim().split(" ");
         int[] ret = new int[items.length];
         for (int i=0; i<items.length; i++)
             ret[i] = getIntFromString(items[i]);
@@ -133,7 +141,7 @@ public abstract class AbstractBindings
     
     protected double[] getDoubleArrayFromString(String val)
     {
-        String[] items = val.split(" ");
+        String[] items = val.trim().split(" ");
         double[] ret = new double[items.length];
         for (int i=0; i<items.length; i++)
             ret[i] = getDoubleFromString(items[i]);
@@ -143,13 +151,13 @@ public abstract class AbstractBindings
     
     protected String[] getStringArrayFromString(String val)
     {
-        return val.split(" ");
+        return val.trim().split(" ");
     }
     
     
     protected IDateTime[] getDateTimeArrayFromString(String val)
     {
-        String[] items = val.split(" ");
+        String[] items = val.trim().split(" ");
         IDateTime[] ret = new IDateTime[items.length];
         for (int i=0; i<items.length; i++)
             ret[i] = getDateTimeFromString(items[i]);
