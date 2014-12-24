@@ -236,4 +236,26 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
     {
         this.timeInterval = timeInterval;
     }
+    
+    
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof TimePeriod))
+            return false;
+        
+        if (beginPosition != null && !beginPosition.equals(((TimePeriod)obj).getBeginPosition()))
+            return false;
+        
+        if (endPosition != null && !endPosition.equals(((TimePeriod)obj).getEndPosition()))
+            return false;
+        
+        if (isSetBegin() && !begin.getValue().equals(((TimePeriod)obj).getBegin()))
+            return false;
+        
+        if (end != null && !end.getValue().equals(((TimePeriod)obj).getEnd()))
+            return false;
+        
+        return true;
+    }
 }

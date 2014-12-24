@@ -186,4 +186,22 @@ public class TimePositionImpl implements TimePosition
     {
         this.textValue = value;        
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof TimePosition))
+            return false;
+        
+        TimePosition other = (TimePosition)obj;
+        
+        if (getDecimalValue() != other.getDecimalValue())
+            return false;
+        
+        if (getTextValue() != other.getTextValue())
+            return false;
+        
+        return true;
+    }
 }

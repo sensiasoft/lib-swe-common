@@ -11,7 +11,7 @@ import net.opengis.gml.v32.Polygon;
  *
  * This is a complex type.
  */
-public class PolygonImpl extends AbstractSurfaceImpl implements Polygon
+public class PolygonImpl extends AbstractGeometryImpl implements Polygon
 {
     static final long serialVersionUID = 1L;
     protected AbstractRing exterior;

@@ -28,7 +28,13 @@ public class GMLStaxBindings extends XMLStreamBindings
 
     public GMLStaxBindings()
     {
-        super(new GMLFactory());
+        this(false);
+    }
+    
+    
+    public GMLStaxBindings(boolean useJTS)
+    {
+        super(new GMLFactory(useJTS));
         
         nsContext.registerNamespace("gml", net.opengis.gml.v32.bind.XMLStreamBindings.NS_URI);
         nsContext.registerNamespace("xlink", net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);

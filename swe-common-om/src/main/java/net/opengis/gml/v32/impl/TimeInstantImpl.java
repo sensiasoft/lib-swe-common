@@ -38,4 +38,17 @@ public class TimeInstantImpl extends AbstractTimeGeometricPrimitiveImpl implemen
     {
         this.timePosition = timePosition;
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof TimeInstant))
+            return false;
+        
+        if (!timePosition.equals(((TimeInstant)obj).getTimePosition()))
+            return false;
+        
+        return true;
+    }
 }
