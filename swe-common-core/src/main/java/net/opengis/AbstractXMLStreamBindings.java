@@ -50,12 +50,11 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     
     public QName getQNameFromString(String qname)
     {
-        /*String[] parts = qname.split(":");
+        String[] parts = qname.split(":");
         String prefix = parts[0];
         String uri = nsContext.getNamespaceURI(prefix);
         String local = parts[1];
-        return new QName(uri, local, prefix);*/
-        return QName.valueOf(qname);
+        return new QName(uri, local, prefix);
     }
     
     
