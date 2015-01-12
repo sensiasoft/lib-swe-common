@@ -84,10 +84,10 @@ public class BinaryDataWriter extends AbstractDataWriter
         }
         
         // create right data output stream
-        if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.BIG_ENDIAN)
-            dataOutput = new DataOutputStreamBI(new BufferedOutputStream(outputStream));
-        else if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.LITTLE_ENDIAN)
+        if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.LITTLE_ENDIAN)
             dataOutput = new DataOutputStreamLI(new BufferedOutputStream(outputStream));
+        else
+            dataOutput = new DataOutputStreamBI(new BufferedOutputStream(outputStream));
 	}
 	
 		

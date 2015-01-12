@@ -169,7 +169,7 @@ public class SweEncodingWriterV20 implements IXMLWriterDOM<DataEncoding>
         binaryEncElt.setAttribute("ref", binaryOptions.getRef());
         
         // write block compression if any
-        if(binaryOptions.isSetEncryption())
+        if(binaryOptions.isSetCompression())
         	binaryEncElt.setAttribute("compression", binaryOptions.getCompression());
                 
         // write block byteLength if any
