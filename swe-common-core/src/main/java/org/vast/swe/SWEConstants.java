@@ -50,5 +50,8 @@ public class SWEConstants
 	/* property values defined in SWE Common standards */
 	public static final String DEF_SAMPLING_TIME = "http://www.opengis.net/def/property/OGC/0/SamplingTime";
 	public static final String DEF_SAMPLING_LOC = "http://www.opengis.net/def/property/OGC/0/SamplingLocation";
+	
+	/* compression algorithms */
+	public final static String COMP_MP4 = "http://www.opengis.net/def//ISO/MPEG4";
     
 }

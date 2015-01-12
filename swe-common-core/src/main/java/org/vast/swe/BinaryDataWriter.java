@@ -37,6 +37,7 @@ import org.vast.util.WriterException;
 import org.vast.cdm.common.DataOutputExt;
 import org.vast.data.AbstractDataComponentImpl;
 import org.vast.data.BinaryComponentImpl;
+import org.vast.data.DataBlockCompressed;
 import org.vast.data.DataChoiceImpl;
 
 
@@ -278,6 +279,25 @@ public class BinaryDataWriter extends AbstractDataWriter
 	{
 	    try
         {
+	        DataBlock data = blockComponent.getData();
+	        
+	        // in case of data block compressed
+	        if (data instanceof DataBlockCompressed)
+	        {
+	            DataBlockCompressed compressedBlock = (DataBlockCompressed)data;
+	            
+	            // if same codec as requested in encoding options, write as-is 
+	            if (binaryInfo.getCompression() != null) // && binaryInfo.getCodec().equals(compressedBlock.getCompressionType()))
+	                dataOutput.write(((DataBlockCompressed)data).getUnderlyingObject());
+	            
+	            // otherwise decompress or transcode to desired codec
+	            else
+	            {
+	                compressedBlock.ensureUncompressed();
+	                // TODO write uncompressed data
+	            }
+	        }	            
+	        	        
 	        // TODO implement writeBinaryBlock: call special compressed writer
         }
         catch (Exception e)
