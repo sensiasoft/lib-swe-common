@@ -54,14 +54,10 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
         super.copyTo(newObj);
         
         if (uom != null)
-            newObj.uom = uom.copy();
-        else
-            newObj.uom = null;
+            newObj.setUom(uom.copy());
         
         if (constraint != null)
             newObj.constraint = constraint.copy();
-        else
-            newObj.constraint = null;
         
         newObj.referenceTime = referenceTime;
         newObj.localFrame = localFrame;
@@ -87,6 +83,8 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     public void setUom(UnitReference uom)
     {
         this.uom = (UnitReferenceImpl)uom;
+        ((Time)this.min).setUom(uom);
+        ((Time)this.max).setUom(uom);
     }
     
     
