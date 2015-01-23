@@ -23,7 +23,6 @@ package org.vast.xml;
 import org.vast.util.ExceptionSystem;
 import org.vast.util.URIResolver;
 import org.w3c.dom.*;
-import org.w3c.dom.ls.LSSerializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -1027,19 +1026,6 @@ public class DOMHelper
             return true;
         else
             return false;
-    }
-    
-    
-    /**
-     * Helper method to serialize this DOM node to a stream using the provided serializer
-     * @param node
-     * @param out
-     * @param serializer
-     * @throws IOException
-     */
-    public void serialize(Node node, OutputStream out, LSSerializer serializer) throws IOException
-    {
-        getParentDocument(node).serialize(node, out, serializer);
     }
     
     

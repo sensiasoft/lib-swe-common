@@ -24,8 +24,6 @@
 package org.vast.ogc.gml;
 
 import java.io.InputStream;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.dom.DOMResult;
@@ -35,6 +33,7 @@ import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.om.OMUtils;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
+import org.vast.xml.XMLImplFinder;
 import org.vast.xml.XMLReaderException;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
@@ -90,7 +89,7 @@ public class GMLUtils
         try
         {
             DOMSource source = new DOMSource(geomElt);
-            XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(source);
+            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(source);
             reader.nextTag();
             return gmlBindings.readAbstractGeometry(reader);
         }
@@ -106,7 +105,7 @@ public class GMLUtils
         try
         {
             DOMResult result = new DOMResult(dom.createElement("fragment"));
-            XMLStreamWriter writer = XMLOutputFactory.newInstance().createXMLStreamWriter(result);
+            XMLStreamWriter writer = XMLImplFinder.getStaxOutputFactory().createXMLStreamWriter(result);
             gmlBindings.setNamespacePrefixes(writer);
             gmlBindings.declareNamespacesOnRootElement();
             gmlBindings.writeAbstractGeometry(writer, geom);

@@ -23,7 +23,6 @@ package org.vast.xml;
 import java.util.*;
 import java.util.Map.Entry;
 import org.w3c.dom.*;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSOutput;
@@ -35,6 +34,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 
 /**
@@ -66,37 +73,18 @@ public class XMLDocument
     /** Hashtable linking NS Prefix (String) to a NS URI (String) */
     protected Hashtable<String, String> nsPrefixToUri = new Hashtable<String, String>();
     
-
-    public static DOMImplementation getDOMImplementation()
-    {
-        if (domImpl == null)
-        {
-            try
-            {
-                DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
-                domImpl = registry.getDOMImplementation("LS");
-            }
-            catch (Exception e)
-            {
-                throw new IllegalStateException("Impossible to initialize DOM 3.0 LS implementation");
-            }
-        }
-        
-        return domImpl;
-    }
-    
     
 	public XMLDocument()
 	{
         // HACK because createDocument(null, null, null) throws an exception with some DOM impl
-		domDocument = getDOMImplementation().createDocument(null, "root", null);
+		domDocument = XMLImplFinder.getDOMImplementation().createDocument(null, "root", null);
 		domDocument.removeChild(domDocument.getDocumentElement());
 	}
     
     
     public XMLDocument(QName qname)
     {    
-        domDocument = getDOMImplementation().createDocument(qname.nsUri, qname.getFullName(), null);
+        domDocument = XMLImplFinder.getDOMImplementation().createDocument(qname.nsUri, qname.getFullName(), null);
         addNS(qname.prefix, qname.nsUri);
     }
 
@@ -150,6 +138,7 @@ public class XMLDocument
 	 * Retrieve a node from the unique ID
 	 * @param id Node identifier
 	 * @return the corresponding Node object
+	 * @throws DOMHelperException if no node with the given ID belongs to the document
 	 */
 	public Element getElementByID(String id) throws DOMHelperException
 	{
@@ -186,7 +175,7 @@ public class XMLDocument
     
     /**
      * Retrieves the namespace table
-     * @return
+     * @return map of namespace prefix to URI
      */
     public Hashtable<String, String> getNSTable()
     {
@@ -230,18 +219,40 @@ public class XMLDocument
 	{
 		this.uri = uri;
 	}
-
-
-    /**
-     * Launch the W3C Xerces DOM Parser
-     * @param inputSource Stream containing XML file we want to parse
+	
+	
+	/**
+	 * Parse DOM from given input stream
+	 * @param inputSource Stream containing XML file we want to parse
      * @param validation boolean if true force the validation process with the schema
      * @return The XMLDocument object created
      * @throws DOMHelperException if a problem occur during parsing
-     */
-    protected Document parseDOM(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws DOMHelperException
+	 */
+	protected Document parseDOM(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws DOMHelperException
     {
-        DOMImplementationLS impl = ((DOMImplementationLS)getDOMImplementation());
+	    try
+        {
+            // use LS implementation when available
+            DOMImplementation impl = XMLImplFinder.getDOMImplementation();            
+            if (impl instanceof DOMImplementationLS)
+                return parseDOM_LS(inputStream, validate, schemaLocations);
+            else
+                return parseDOM_JAXP(inputStream, validate, schemaLocations);
+        }
+	    catch (DOMHelperException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new DOMHelperException("Error while reading XML document", e);
+        }
+    }
+
+
+    protected Document parseDOM_LS(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws Exception
+    {
+        DOMImplementationLS impl = ((DOMImplementationLS)XMLImplFinder.getDOMImplementation());
         
         // wrap input stream
         LSInput input = impl.createLSInput();
@@ -320,68 +331,34 @@ public class XMLDocument
         //domParser.setFeature("http://apache.org/xml/features/dom/defer-node-expansion", false);
         
         // start parsing
-        try
-        {
-            Document document = parser.parse(input);
-            
-            if (errors.length() > 0)
-                throw new DOMHelperException("Validation errors detected while parsing XML document:\n" + errors.toString());
-            
-            readIdentifiers(document.getDocumentElement(), false);
-            readNamespaces(document.getDocumentElement(), false);
-            inputStream.close();
-            return document;
-        }
-        catch (DOMHelperException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new DOMHelperException("Error while reading XML document", e);
-        }
+        Document document = parser.parse(input);        
+        if (errors.length() > 0)
+            throw new DOMHelperException("Validation errors detected while parsing XML document:\n" + errors.toString());
+        inputStream.close();
+        
+        // also read IDs and namespaces on root element
+        readIdentifiers(document.getDocumentElement(), false);
+        readNamespaces(document.getDocumentElement(), false);
+                
+        return document;
     }
     
     
-    /**
-     * Helper method to serialize this DOM node to a stream using the provided serializer
-     * @param node
-     * @param out
-     * @param serializer
-     * @throws IOException
-     */
-    public void serialize(Node node, OutputStream out, LSSerializer serializer) throws IOException
+    protected Document parseDOM_JAXP(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws Exception
     {
-        // select root element to serialize
-        Element elt = null;
-        if (node.getNodeType() == Node.ELEMENT_NODE)
-            elt = (Element)node;
-        else if (node.getNodeType() == Node.DOCUMENT_NODE)
-            elt = ((Document)node).getDocumentElement();
-        else
-            return;
-
-        // wrap output stream
-        DOMImplementationLS impl = (DOMImplementationLS)getDOMImplementation();
-        LSOutput output = impl.createLSOutput();
-        output.setByteStream(out);
+        // create document builder
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
         
-        // add namespaces xmlns attributes
-        Enumeration<String> nsEnum = nsUriToPrefix.keys();
-        while (nsEnum.hasMoreElements())
-        {
-            String uri = (String)nsEnum.nextElement();
-            String prefix = getNSPrefix(uri);
-            
-            // add namespace attributes to root element
-            String attName = "xmlns";
-            if (!prefix.equals(QName.DEFAULT_PREFIX))
-                attName += ":" + prefix;
-            elt.setAttributeNS("http://www.w3.org/2000/xmlns/", attName, uri);
-        }
+        // launch parser
+        Document document = builder.parse(inputStream);
         
-        // launch serialization
-        serializer.write(elt, output);
+        // scan all IDs and namespaces in doc
+        readIdentifiers(document.getDocumentElement(), true);
+        readNamespaces(document.getDocumentElement(), true);
+                
+        return document;
     }
     
     
@@ -396,28 +373,82 @@ public class XMLDocument
     {
         try
         {
-            DOMImplementationLS impl = (DOMImplementationLS)XMLDocument.getDOMImplementation();
+            // select root element to serialize
+            Element elt = null;
+            if (node.getNodeType() == Node.ELEMENT_NODE)
+                elt = (Element)node;
+            else if (node.getNodeType() == Node.DOCUMENT_NODE)
+                elt = ((Document)node).getDocumentElement();
+            else
+                return;
             
-            // init and configure serializer
-            LSSerializer serializer = impl.createLSSerializer();
-            DOMConfiguration config = serializer.getDomConfig();
-            config.setParameter("format-pretty-print", pretty);
+            // add namespaces xmlns attributes
+            Enumeration<String> nsEnum = nsUriToPrefix.keys();
+            while (nsEnum.hasMoreElements())
+            {
+                String uri = (String)nsEnum.nextElement();
+                String prefix = getNSPrefix(uri);
+                
+                // add namespace attributes to root element
+                String attName = "xmlns";
+                if (!prefix.equals(QName.DEFAULT_PREFIX))
+                    attName += ":" + prefix;
+                elt.setAttributeNS("http://www.w3.org/2000/xmlns/", attName, uri);
+            }
             
-            serialize(node, out, serializer);
+            // use LS implementation when available
+            DOMImplementation impl = XMLImplFinder.getDOMImplementation();            
+            if (impl instanceof DOMImplementationLS)
+                serializeDOM_LS(elt, out, pretty);
+            else
+                serializeDOM_JAXP(elt, out, pretty);
         }
         catch (Exception e)
         {
-            throw new IllegalStateException("Impossible to initilize DOM implementation for serialization", e);
+            throw new IllegalStateException("Impossible to initialize DOM implementation for serialization", e);
         }
+    }
+    
+    
+    protected void serializeDOM_LS(Element elt, OutputStream out, boolean pretty) throws Exception
+    {
+        DOMImplementationLS impl = (DOMImplementationLS)XMLImplFinder.getDOMImplementation(); 
+        
+        // init and configure serializer
+        LSSerializer serializer = impl.createLSSerializer();
+        DOMConfiguration config = serializer.getDomConfig();
+        config.setParameter("format-pretty-print", pretty);
+        
+        // wrap output stream
+        LSOutput output = impl.createLSOutput();
+        output.setByteStream(out);
+        
+        // launch serialization
+        serializer.write(elt, output);
+    }
+    
+    
+    protected void serializeDOM_JAXP(Element elt, OutputStream out, boolean pretty) throws Exception
+    {
+        // create transformer
+        Transformer serializer = TransformerFactory.newInstance().newTransformer();
+        serializer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
+        
+        // set inputs/outputs
+        Source input = new DOMSource(elt);
+        Result output = new StreamResult(out);
+        
+        // launch transformer
+        serializer.transform(input, output);
     }
     
     
     /**
      * This function looks and stores all identifiers attributes found in the document<br>
-     * <br>This adds every id it found to the corresponding hashtable in the given XMLDocument<br>
+     * <br>This adds every id it founds to the corresponding hashtable in the given XMLDocument<br>
      * <br>This is called recursively for each child node
-     * @param xmlDocument The document where the search is done
-     * @param node The node from which we start the search (if null, we use the root element)
+     * @param elt the DOM element where to start the search
+     * @param recursive if true, all children elements are also processed recursively
      */
     public void readIdentifiers(Element elt, boolean recursive)
     {
@@ -438,14 +469,17 @@ public class XMLDocument
         }
 
         // call the function for all the child nodes
-        NodeList children = elt.getChildNodes();
-        if (children != null && recursive)
+        if (recursive)
         {
-            for (int i = 0; i < children.getLength(); i++)
+            NodeList children = elt.getChildNodes();
+            if (children != null)
             {
-                Node nextNode = children.item(i);
-                if (nextNode instanceof Element)
-                    readIdentifiers((Element) children.item(i), recursive);
+                for (int i = 0; i < children.getLength(); i++)
+                {
+                    Node nextNode = children.item(i);
+                    if (nextNode instanceof Element)
+                        readIdentifiers((Element) children.item(i), recursive);
+                }
             }
         }
     }
@@ -453,7 +487,8 @@ public class XMLDocument
 
     /**
      * Reads all the namespace prefix:domain pairs and store them in the hashtable of the XMLDocument
-     * @param xmlDocument document to read the namespaces from
+     * @param elt the DOM element where to start the search
+     * @param recursive if true, all children elements are also processed recursively
      */
     public void readNamespaces(Element elt, boolean recursive)
     {
@@ -475,14 +510,17 @@ public class XMLDocument
         }
         
         // call the function for all the child nodes
-        NodeList children = elt.getChildNodes();
-        if (children != null && recursive)
+        if (recursive)
         {
-            for (int i = 0; i < children.getLength(); i++)
+            NodeList children = elt.getChildNodes();
+            if (children != null)
             {
-                Node nextNode = children.item(i);
-                if (nextNode instanceof Element)
-                    readNamespaces((Element) children.item(i), recursive);
+                for (int i = 0; i < children.getLength(); i++)
+                {
+                    Node nextNode = children.item(i);
+                    if (nextNode instanceof Element)
+                        readNamespaces((Element) children.item(i), recursive);
+                }
             }
         }
     }

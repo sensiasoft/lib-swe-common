@@ -32,6 +32,7 @@ import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLReaderDOM;
 import org.vast.xml.IXMLWriterDOM;
 import org.vast.xml.IndentingXMLStreamWriter;
+import org.vast.xml.XMLImplFinder;
 import org.vast.xml.XMLReaderException;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
@@ -113,7 +114,8 @@ public class SWECommonUtils
         try
         {
             SWEStaxBindings sweWriter = new SWEStaxBindings();
-            XMLStreamWriter writer = XMLOutputFactory.newFactory().createXMLStreamWriter(os);
+            XMLOutputFactory factory = XMLImplFinder.getStaxOutputFactory();
+            XMLStreamWriter writer = factory.createXMLStreamWriter(os);
             if (indent)
                 writer = new IndentingXMLStreamWriter(writer);
             sweWriter.setNamespacePrefixes(writer);
