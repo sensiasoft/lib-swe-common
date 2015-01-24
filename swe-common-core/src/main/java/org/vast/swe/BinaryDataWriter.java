@@ -34,11 +34,13 @@ import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.ScalarComponent;
 import org.vast.util.WriterException;
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataOutputExt;
 import org.vast.data.AbstractDataComponentImpl;
 import org.vast.data.BinaryComponentImpl;
 import org.vast.data.DataBlockCompressed;
 import org.vast.data.DataChoiceImpl;
+import org.vast.data.DataComponentHelper;
 
 
 /**
@@ -94,8 +96,15 @@ public class BinaryDataWriter extends AbstractDataWriter
 	@Override
 	public void reset()
 	{
-		if (!componentEncodingResolved)
-			resolveComponentEncodings();
+		try
+        {
+            if (!componentEncodingResolved)
+            	resolveComponentEncodings();
+        }
+        catch (CDMException e)
+        {
+            throw new IllegalStateException("Invalid binary encoding mapping", e);
+        }
 		
 		super.reset();
 	}
@@ -122,27 +131,14 @@ public class BinaryDataWriter extends AbstractDataWriter
 	 * forces the DataValues primitive type to be the same as the ones
 	 * specified in the binary encoding section.
 	 */
-	protected void resolveComponentEncodings()
+	protected void resolveComponentEncodings() throws CDMException
 	{
 		List<BinaryMember> encodingList = ((BinaryEncoding)dataEncoding).getMemberList();
 		
 	    for (BinaryMember binaryOpts: encodingList)
 		{
-			String [] dataPath = binaryOpts.getRef().split("/");
-			DataComponent dataComponent = dataComponents;
-			
-			// find component in tree
-            for (int j=0; j<dataPath.length; j++)
-            {
-                dataComponent = dataComponent.getComponent(dataPath[j]);                
-                if (dataComponent == null)
-                {
-                    System.err.println("Unknown component " + dataPath[j]);
-                    continue;
-                }
-            }
-			
-			((AbstractDataComponentImpl)dataComponent).setEncodingInfo(binaryOpts);	
+	        DataComponent comp = DataComponentHelper.findComponentByPath(binaryOpts.getRef(), dataComponents);
+            ((AbstractDataComponentImpl)comp).setEncodingInfo(binaryOpts);
 		}
 		
 		componentEncodingResolved = true;
@@ -285,10 +281,14 @@ public class BinaryDataWriter extends AbstractDataWriter
 	        if (data instanceof DataBlockCompressed)
 	        {
 	            DataBlockCompressed compressedBlock = (DataBlockCompressed)data;
-	            
+	            byte[] bytes = (byte[])data.getUnderlyingObject();
+	                    
 	            // if same codec as requested in encoding options, write as-is 
 	            if (binaryInfo.getCompression() != null) // && binaryInfo.getCodec().equals(compressedBlock.getCompressionType()))
-	                dataOutput.write(((DataBlockCompressed)data).getUnderlyingObject());
+	            {
+	                dataOutput.write(bytes.length);
+	                dataOutput.write(bytes);
+	            }
 	            
 	            // otherwise decompress or transcode to desired codec
 	            else

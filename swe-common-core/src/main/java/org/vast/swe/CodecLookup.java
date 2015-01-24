@@ -64,12 +64,16 @@ public class CodecLookup
     
     public CompressedStreamParser createDecoder(String compressionType)
     {
+        if (factory == null)
+            return null;
         return factory.createDecoder(compressionType);
     }
 
     
     public CompressedStreamWriter createEncoder(String compressionType)
     {
+        if (factory == null)
+            return null;
         return factory.createEncoder(compressionType);
     }    
 }

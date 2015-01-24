@@ -179,10 +179,14 @@ public class BinaryEncodingImpl extends AbstractEncodingImpl implements BinaryEn
             DataComponent[] nextPath = it.nextPath();
             DataValue nextScalar = (DataValue)nextPath[nextPath.length-1];
             
-            // build path
+            // build path (just use / for root)
             StringBuffer pathString = new StringBuffer();
-            for (DataComponent component: nextPath)
-                pathString.append(component.getName() + '/');
+            pathString.append(DataComponentHelper.PATH_SEPARATOR);
+            for (int i = 1; i < nextPath.length; i++)
+            {
+                pathString.append(nextPath[i].getName());
+                pathString.append(DataComponentHelper.PATH_SEPARATOR);
+            }
             
             BinaryComponentImpl binaryOpts = new BinaryComponentImpl();
             binaryOpts.setCdmDataType(nextScalar.getDataType());

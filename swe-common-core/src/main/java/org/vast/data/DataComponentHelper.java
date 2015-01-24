@@ -41,7 +41,8 @@ import net.opengis.swe.v20.DataComponent;
  */
 public class DataComponentHelper
 {
-
+    public final static String PATH_SEPARATOR = "/";
+    
 
 	public static DataComponent findParameterByName(DataComponent parent, String name)
 	{
@@ -93,7 +94,14 @@ public class DataComponentHelper
 	
 	public static DataComponent findComponentByPath(String path, DataComponent parent) throws CDMException
 	{
-	    return findComponentByPath(path.split("/"), parent);
+	    try
+        {
+            return findComponentByPath(path.split(PATH_SEPARATOR), parent);
+        }
+        catch (CDMException e)
+        {
+            throw new CDMException("Unknown component " + path);
+        }
 	}
 	
 	
@@ -103,9 +111,13 @@ public class DataComponentHelper
         
         for (int i=0; i<dataPath.length; i++)
         {
-            data = data.getComponent(dataPath[i]);            
+            String pathElt = dataPath[i];
+            if (pathElt.length() == 0) // a leading '/' create an empty array element
+                continue;
+            
+            data = data.getComponent(pathElt);
             if (data == null)
-                throw new CDMException("Unknown component " + dataPath[i]);
+                throw new CDMException("Unknown component " + pathElt);
         }
         
         return data;

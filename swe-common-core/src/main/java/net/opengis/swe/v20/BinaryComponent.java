@@ -113,4 +113,10 @@ public interface BinaryComponent extends AbstractSWE, BinaryMember
      */
     public void setDataType(String dataType);
     
+    
+    public DataType getCdmDataType();
+    
+    
+    public void setCdmDataType(DataType cdmDataType);
+    
 }

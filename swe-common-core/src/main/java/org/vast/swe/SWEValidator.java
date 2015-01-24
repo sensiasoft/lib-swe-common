@@ -135,7 +135,7 @@ public class SWEValidator
                 }
                 else if (opts instanceof BinaryBlock)
                 {
-                    if (!(childComp instanceof DataRecord && childComp instanceof DataArray && childComp instanceof DataChoice))
+                    if (!(childComp instanceof DataRecord || childComp instanceof DataArray || childComp instanceof DataChoice))
                     {
                         errors.add(new CDMException("Cannot use block binary options for scalar component " + componentPath));
                     }
