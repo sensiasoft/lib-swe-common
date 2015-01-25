@@ -39,7 +39,9 @@ public class Base64Decoder extends FilterInputStream
 {
     private byte[] charBuf = new byte[4];
     private byte[] byteBuf = new byte[2];
+    private byte[] byteBufSave = new byte[2];
     private int unusedBytes = 0;
+    private int unusedBytesSave = 0;
     private static byte[] base64ToVal = new byte[256];
 
     
@@ -194,5 +196,25 @@ public class Base64Decoder extends FilterInputStream
     public int read(byte[] b) throws IOException
     {
         return read(b, 0, b.length);
+    }
+
+
+    @Override
+    public synchronized void mark(int readlimit)
+    {
+        byteBufSave[0] = byteBuf[0];
+        byteBufSave[0] = byteBuf[1];
+        unusedBytesSave = unusedBytes;
+        super.mark(readlimit);
+    }
+
+
+    @Override
+    public synchronized void reset() throws IOException
+    {
+        byteBuf[0] = byteBufSave[0];
+        byteBuf[1] = byteBufSave[0];
+        unusedBytes = unusedBytesSave;
+        super.reset();
     }   
 }

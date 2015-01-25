@@ -20,7 +20,6 @@
 
 package org.vast.swe;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteOrder;
@@ -59,8 +58,7 @@ import org.vast.util.ReaderException;
  */
 public class BinaryDataParser extends AbstractDataParser
 {
-	protected static String BLOCK_READER = "BLOCK_READER";
-    protected DataInputExt dataInput;
+	protected DataInputExt dataInput;
     protected InputStream input;
 	protected boolean componentEncodingResolved = false;
 	
@@ -91,9 +89,9 @@ public class BinaryDataParser extends AbstractDataParser
 		
 		// create data input stream
 		if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.BIG_ENDIAN)
-		    input = new DataInputStreamBI(new BufferedInputStream(dataIn));
+		    input = new DataInputStreamBI(dataIn);
         else if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.LITTLE_ENDIAN)
-            input = new DataInputStreamLI(new BufferedInputStream(dataIn));
+            input = new DataInputStreamLI(dataIn);
 		
 		dataInput = (DataInputExt)input;
 	}
@@ -213,26 +211,19 @@ public class BinaryDataParser extends AbstractDataParser
         
         for (BinaryMember binaryOpts: encodingList)
         {
-            try
+            AbstractDataComponentImpl dataComponent = (AbstractDataComponentImpl)DataComponentHelper.findComponentByPath(binaryOpts.getRef(), dataComponents);
+            
+            // add binary info to component
+            if (binaryOpts instanceof BinaryComponent)
             {
-                AbstractDataComponentImpl dataComponent = (AbstractDataComponentImpl)DataComponentHelper.findComponentByPath(binaryOpts.getRef(), dataComponents);
-                
-                // add binary info to component
-                if (binaryOpts instanceof BinaryComponent)
-                {
-                    ((DataValue)dataComponent).setDataType(((BinaryComponentImpl)binaryOpts).getCdmDataType());
-                    dataComponent.setEncodingInfo(binaryOpts);
-                }
-                else if(binaryOpts instanceof BinaryBlock)
-                {
-                    dataComponent.setEncodingInfo(binaryOpts);
-                    initBlockReader(dataComponent, (BinaryBlockImpl)binaryOpts);
-                }                
+                ((DataValue)dataComponent).setDataType(((BinaryComponentImpl)binaryOpts).getCdmDataType());
+                dataComponent.setEncodingInfo(binaryOpts);
             }
-            catch (CDMException e)
+            else if(binaryOpts instanceof BinaryBlock)
             {
-                throw new IllegalStateException(e.getMessage());
-            }   
+                dataComponent.setEncodingInfo(binaryOpts);
+                initBlockReader(dataComponent, (BinaryBlockImpl)binaryOpts);
+            } 
         }
         
         componentEncodingResolved = true;
@@ -251,7 +242,7 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	
 	@Override
-	protected void processAtom(ScalarComponent scalarComponent) throws CDMException
+	protected void processAtom(ScalarComponent scalarComponent) throws CDMException, IOException
 	{
 		// get next encoding block
 	    BinaryMember binaryInfo = ((AbstractDataComponentImpl)scalarComponent).getEncodingInfo();
@@ -262,7 +253,7 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	
 	@Override
-	protected boolean processBlock(DataComponent blockComponent) throws CDMException
+	protected boolean processBlock(DataComponent blockComponent) throws CDMException, IOException
 	{
 		if (blockComponent instanceof DataChoiceImpl)
 		{
@@ -335,7 +326,7 @@ public class BinaryDataParser extends AbstractDataParser
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void parseBinaryAtom(ScalarComponent scalarInfo, BinaryMember binaryInfo) throws CDMException
+	private void parseBinaryAtom(ScalarComponent scalarInfo, BinaryMember binaryInfo) throws CDMException, IOException
 	{
 		DataType dataType = ((BinaryComponentImpl)binaryInfo).getCdmDataType();
 		
@@ -416,10 +407,6 @@ public class BinaryDataParser extends AbstractDataParser
 		{
             throw new CDMException("Error while parsing component " + scalarInfo.getName(), e);
 		}
-		catch (IOException e)
-		{
-			throw new CDMException("Error while reading binary stream", e);
-		}
 	}
 
 	
@@ -430,7 +417,7 @@ public class BinaryDataParser extends AbstractDataParser
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void parseBinaryBlock(DataComponent blockComponent, BinaryBlockImpl binaryInfo) throws CDMException
+	private void parseBinaryBlock(DataComponent blockComponent, BinaryBlockImpl binaryInfo) throws CDMException, IOException
 	{
 		// TODO: PADDING IS TAKEN CARE OF HERE... 
 	    
@@ -444,7 +431,14 @@ public class BinaryDataParser extends AbstractDataParser
 	    // otherwise keep compressed data
 	    else
 	    {
-	        DataBlockCompressed dataBlock = new DataBlockCompressed();
+	        // read block size
+	        int blockSize = dataInput.readInt();
+	        byte[] bytes = new byte[blockSize];
+	        dataInput.readFully(bytes);
+	        
+	        DataBlockCompressed dataBlock = new DataBlockCompressed(bytes);
+	        // TODO set compression type
+	        // dataBlock.setCompressionType(compressionType);
 	        blockComponent.setData(dataBlock);
 	    }
 	}

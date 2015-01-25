@@ -83,7 +83,7 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	public void parse(String uri) throws IOException
 	{
 		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
+		this.parse(new BufferedInputStream(in));
 	}
 
 	
@@ -93,7 +93,7 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	public void parse(URI uri) throws IOException
 	{
 		InputStream in = URIStreamHandler.openStream(uri);
-		this.parse(in);
+		this.parse(new BufferedInputStream(in));
 	}
 	
 	

@@ -20,7 +20,6 @@
 
 package org.vast.swe;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteOrder;
@@ -87,9 +86,9 @@ public class BinaryDataWriter extends AbstractDataWriter
         
         // create right data output stream
         if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.LITTLE_ENDIAN)
-            dataOutput = new DataOutputStreamLI(new BufferedOutputStream(outputStream));
+            dataOutput = new DataOutputStreamLI(outputStream);
         else
-            dataOutput = new DataOutputStreamBI(new BufferedOutputStream(outputStream));
+            dataOutput = new DataOutputStreamBI(outputStream);
 	}
 	
 		

@@ -39,7 +39,6 @@ public class AsciiDataParser extends AbstractDataParser
 	protected boolean collapseWhiteSpaces = true;
 	protected StringBuffer tokenBuf = new StringBuffer();
 	protected String lastToken;
-	//protected Reader reader;
 	protected InputStream reader;
     boolean consecutiveTokenSep = false;
     
@@ -51,8 +50,7 @@ public class AsciiDataParser extends AbstractDataParser
 	
 	public void setInput(InputStream inputStream) throws IOException
 	{
-		//reader = new BufferedReader(new InputStreamReader(inputStream));
-	    reader = new BufferedInputStream(inputStream);
+		reader = inputStream;
 		tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator().toCharArray();
 		blockSep = ((TextEncoding)dataEncoding).getBlockSeparator().toCharArray();
 		decimalSep = ((TextEncoding)dataEncoding).getDecimalSeparator().charAt(0);
