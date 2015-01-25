@@ -421,25 +421,26 @@ public class BinaryDataParser extends AbstractDataParser
 	{
 		// TODO: PADDING IS TAKEN CARE OF HERE... 
 	    
-	    // if decoder is specified, uncompress data now
-	    CompressedStreamParser reader = binaryInfo.getBlockReader();
-	    if (reader != null)
-	    {
-	        reader.decode(dataInput, blockComponent);
-	    }
+	    DataBlock dataBlock = blockComponent.getData();
 	    
-	    // otherwise keep compressed data
-	    else
+	    if (dataBlock instanceof DataBlockCompressed)
 	    {
 	        // read block size
-	        int blockSize = dataInput.readInt();
-	        byte[] bytes = new byte[blockSize];
-	        dataInput.readFully(bytes);
-	        
-	        DataBlockCompressed dataBlock = new DataBlockCompressed(bytes);
-	        // TODO set compression type
-	        // dataBlock.setCompressionType(compressionType);
-	        blockComponent.setData(dataBlock);
+            int blockSize = dataInput.readInt();
+            byte[] bytes = new byte[blockSize];
+            dataInput.readFully(bytes);            
+            dataBlock.setUnderlyingObject(bytes);
+	    }
+	    
+	    // otherwise need to uncompress on-the-fly
+	    else
+	    {
+	        // if decoder is specified, uncompress data now
+    	    CompressedStreamParser reader = binaryInfo.getBlockReader();
+    	    if (reader != null)
+    	    {
+    	        reader.decode(dataInput, blockComponent);
+    	    }
 	    }
 	}
 	

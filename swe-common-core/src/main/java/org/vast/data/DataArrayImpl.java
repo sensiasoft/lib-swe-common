@@ -21,6 +21,7 @@
 package org.vast.data;
 
 import java.util.List;
+import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
@@ -273,15 +274,23 @@ public class DataArrayImpl extends AbstractArrayImpl
     @Override
     public AbstractDataBlock createDataBlock()
     {
-    	AbstractDataBlock childBlock = getArrayComponent().createDataBlock();
+        AbstractDataBlock childBlock = getArrayComponent().createDataBlock();
     	AbstractDataBlock newBlock = null;
     	int arraySize = getComponentCount();
         int newSize = 0;
         
     	if (arraySize >= 0)
     	{
-	    	// if child is parallel block, create bigger parallel block
-	        if (childBlock instanceof DataBlockParallel)
+    	    // if we want to keep compressed data as-is
+            // TODO improve dealing with compressed data
+            if (encodingInfo != null && ((BinaryBlock)encodingInfo).getCompression() != null) // && keepCompressed)
+            {
+                newBlock = new DataBlockCompressed();
+                newSize = childBlock.atomCount * arraySize;
+            }
+            
+    	    // if child is parallel block, create bigger parallel block
+            else if (childBlock instanceof DataBlockParallel)
 	        {
 	        	newBlock = childBlock.copy();
                 newSize = childBlock.atomCount * arraySize;

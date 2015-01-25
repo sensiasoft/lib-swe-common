@@ -285,7 +285,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	            // if same codec as requested in encoding options, write as-is 
 	            if (binaryInfo.getCompression() != null) // && binaryInfo.getCodec().equals(compressedBlock.getCompressionType()))
 	            {
-	                dataOutput.write(bytes.length);
+	                dataOutput.writeInt(bytes.length);
 	                dataOutput.write(bytes);
 	            }
 	            

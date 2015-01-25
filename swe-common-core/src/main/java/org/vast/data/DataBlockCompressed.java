@@ -50,9 +50,9 @@ public class DataBlockCompressed extends AbstractDataBlock
 	}
 	
 	
-	public DataBlockCompressed(int size)
+	public DataBlockCompressed(byte[] compressedData)
 	{
-		resize(size);
+		this.compressedData = compressedData;
 	}
 	
 	
@@ -79,8 +79,8 @@ public class DataBlockCompressed extends AbstractDataBlock
     public DataBlockCompressed clone()
     {
         DataBlockCompressed newBlock = new DataBlockCompressed();
-        newBlock.compressedData = new byte[this.compressedData.length];
-        System.arraycopy(this.compressedData, 0, newBlock.compressedData, 0, this.compressedData.length);
+        if (compressedData != null)
+            newBlock.compressedData = this.compressedData.clone();
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }
@@ -124,21 +124,25 @@ public class DataBlockCompressed extends AbstractDataBlock
 
     public void resize(int size)
     {
-        throwUnsupportedException();
+        if (uncompressedData != null)
+            uncompressedData.resize(size);
+        this.atomCount = size;
     }
 	
 	
 	public DataType getDataType()
 	{
-	    ensureUncompressed();
-        return uncompressedData.getDataType();
+	    if (uncompressedData != null)
+	        return uncompressedData.getDataType();
+	    return DataType.MIXED;
 	}
 
 
 	public DataType getDataType(int index)
 	{
-	    ensureUncompressed();
-        return uncompressedData.getDataType(index);
+	    if (uncompressedData != null)
+            return uncompressedData.getDataType(index);
+        return DataType.MIXED;
 	}
 	
 	
