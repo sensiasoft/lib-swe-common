@@ -74,7 +74,7 @@ public class Base64Encoder extends FilterOutputStream
         int byteIndex = off;
         int byteLeft = len;
 
-        while (byteLeft >= 3)
+        while ((unusedByte + byteLeft) >= 3)
         {
             byte b1, b2, b3;
             
@@ -116,14 +116,14 @@ public class Base64Encoder extends FilterOutputStream
             charBuf[2] = ValToBase64[(int)(c3&0xFF)];
             charBuf[3] = ValToBase64[(int)(c4&0xFF)];
 
-            out.write(charBuf, 0, 4);            
+            out.write(charBuf, 0, 4);
             addCR();
         }
         
         // keep unused bytes in local buffer
-        unusedByte = byteLeft;       
         for (int i=0; i<byteLeft; i++)
-            byteBuf[i] = b[byteIndex + i];
+            byteBuf[unusedByte+i] = b[byteIndex+i];
+        unusedByte += byteLeft;
     }
 
 

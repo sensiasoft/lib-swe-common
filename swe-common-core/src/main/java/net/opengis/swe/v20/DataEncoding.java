@@ -11,4 +11,6 @@ import net.opengis.HasCopy;
  */
 public interface DataEncoding extends AbstractSWE, HasCopy
 {
+    @Override
+    public DataEncoding copy();
 }

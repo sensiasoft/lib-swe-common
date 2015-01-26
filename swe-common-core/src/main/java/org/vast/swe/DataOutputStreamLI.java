@@ -39,7 +39,9 @@ import org.vast.cdm.common.DataOutputExt;
  */
 public class DataOutputStreamLI extends FilterOutputStream implements DataOutputExt
 {
-	
+    byte[] tmpBuf = new byte[8];
+    
+    
 	public DataOutputStreamLI(OutputStream is)
 	{
 		super(is);
@@ -79,71 +81,61 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
     
     public void writeShort(short v) throws IOException
     {
-        byte[] b = new byte[2];
-        
         // LSB first
-        b[1] = (byte)(0xff & (v >> 8));
-        b[0] = (byte)(0xff & v);
+        tmpBuf[1] = (byte)(0xff & (v >> 8));
+        tmpBuf[0] = (byte)(0xff & v);
         
-        this.write(b);
+        this.write(tmpBuf, 0, 2);
     }
     
     
     public void writeUnsignedShort(int v) throws IOException
     {
-        byte[] b = new byte[2];
-        
         // LSB first
-        b[1] = (byte)(0xff & (v >> 8));
-        b[0] = (byte)(0xff & v);
+        tmpBuf[1] = (byte)(0xff & (v >> 8));
+        tmpBuf[0] = (byte)(0xff & v);
         
-        this.write(b);
+        this.write(tmpBuf, 0, 2);
     }
     
     
     public void writeInt(int v) throws IOException
     {
-        byte[] b = new byte[4];
-        
         // LSB first
-        b[3] = (byte)(0xff & (v >> 24));
-        b[2] = (byte)(0xff & (v >> 16));
-        b[1] = (byte)(0xff & (v >> 8));
-        b[0] = (byte)(0xff & v);
+        tmpBuf[3] = (byte)(0xff & (v >> 24));
+        tmpBuf[2] = (byte)(0xff & (v >> 16));
+        tmpBuf[1] = (byte)(0xff & (v >> 8));
+        tmpBuf[0] = (byte)(0xff & v);
         
-        this.write(b);
+        this.write(tmpBuf, 0, 4);
     }
     
     
 	public void writeUnsignedInt(long v) throws IOException
 	{
-	    byte[] b = new byte[4];
-	    
 	    // LSB first
-        b[3] = (byte)(0xff & (v >> 24));
-        b[2] = (byte)(0xff & (v >> 16));
-        b[1] = (byte)(0xff & (v >> 8));
-        b[0] = (byte)(0xff & v);
+	    tmpBuf[3] = (byte)(0xff & (v >> 24));
+	    tmpBuf[2] = (byte)(0xff & (v >> 16));
+	    tmpBuf[1] = (byte)(0xff & (v >> 8));
+	    tmpBuf[0] = (byte)(0xff & v);
         
-        this.write(b);
+        this.write(tmpBuf, 0, 4);
 	}
 	
 	
 	public void writeLong(long v) throws IOException
     {
-	    byte[] b = new byte[8];
-        
-        // LSB first
-	    b[7] = (byte)(0xff & (v >> 56));
-	    b[6] = (byte)(0xff & (v >> 48));
-	    b[5] = (byte)(0xff & (v >> 40));
-	    b[4] = (byte)(0xff & (v >> 32));
-	    b[3] = (byte)(0xff & (v >> 24));
-	    b[2] = (byte)(0xff & (v >> 16));
-	    b[1] = (byte)(0xff & (v >> 8));
-	    b[0] = (byte)(0xff & v);
+	    // LSB first
+	    tmpBuf[7] = (byte)(0xff & (v >> 56));
+	    tmpBuf[6] = (byte)(0xff & (v >> 48));
+	    tmpBuf[5] = (byte)(0xff & (v >> 40));
+	    tmpBuf[4] = (byte)(0xff & (v >> 32));
+	    tmpBuf[3] = (byte)(0xff & (v >> 24));
+	    tmpBuf[2] = (byte)(0xff & (v >> 16));
+	    tmpBuf[1] = (byte)(0xff & (v >> 8));
+	    tmpBuf[0] = (byte)(0xff & v);
 
-	    this.write(b);
+	    this.write(tmpBuf, 0, 8);
     }
 	
 	

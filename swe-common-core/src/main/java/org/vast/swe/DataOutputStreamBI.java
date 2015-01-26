@@ -40,7 +40,9 @@ import org.vast.cdm.common.DataOutputExt;
  */
 public class DataOutputStreamBI extends DataOutputStream implements DataOutputExt
 {
-	
+    byte[] tmpBuf = new byte[4];
+    
+    
 	public DataOutputStreamBI(OutputStream is)
 	{
 		super(is);
@@ -56,27 +58,23 @@ public class DataOutputStreamBI extends DataOutputStream implements DataOutputEx
     
     public void writeUnsignedShort(int v) throws IOException
     {
-        byte[] b = new byte[2];
-        
         // MSB first
-        b[0] = (byte)(0xff & (v >> 8) & 0xff);
-        b[1] = (byte)(0xff & v);
+        tmpBuf[0] = (byte)(0xff & (v >> 8) & 0xff);
+        tmpBuf[1] = (byte)(0xff & v);
         
-        this.write(b);
+        this.write(tmpBuf, 0, 2);
     }
     
     
 	public void writeUnsignedInt(long v) throws IOException
 	{
-	    byte[] b = new byte[4];
-	    
 	    // MSB first
-        b[0] = (byte)(0xff & (v >> 24));
-        b[1] = (byte)(0xff & (v >> 16));
-        b[2] = (byte)(0xff & (v >> 8));
-        b[3] = (byte)(0xff & v);
-        
-        this.write(b);
+	    tmpBuf[0] = (byte)(0xff & (v >> 24));
+	    tmpBuf[1] = (byte)(0xff & (v >> 16));
+	    tmpBuf[2] = (byte)(0xff & (v >> 8));
+	    tmpBuf[3] = (byte)(0xff & v);
+	    
+        this.write(tmpBuf, 0, 4);
 	}
 		
 
