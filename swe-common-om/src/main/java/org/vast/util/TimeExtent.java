@@ -28,9 +28,9 @@ package org.vast.util;
  */
 public class TimeExtent
 {
-    public final static double NOW_ACCURACY = 1000;
-    public final static double NOW = Double.MIN_VALUE;
+    public final static double NOW_ACCURACY = 1000;    
     public final static double UNKNOWN = Double.MAX_VALUE;
+    public final static double NOW = Double.MIN_VALUE;
     
     protected double baseTime = Double.NaN;
     protected double timeBias = 0;
@@ -43,9 +43,17 @@ public class TimeExtent
     protected int timeZone = 0;
     
     
+    public static TimeExtent getNowInstant()
+    {
+        TimeExtent time = new TimeExtent();
+        time.setBaseAtNow(true);
+        return time;
+    }
+    
+    
     public TimeExtent()
     {        
-    }
+    }    
 
 
     public TimeExtent(double baseJulianTime)
@@ -127,13 +135,14 @@ public class TimeExtent
 
 
     /**
-     * To get baseTime without bias applied (unless baseAtNow is true)
-     * @return
+     * To get baseTime without bias applied.
+     * If baseAtNow is set, this retrieves the system's current time
+     * @return base time as julian time in seconds (1970 based)
      */
     public double getBaseTime()
     {
         if (baseAtNow)
-            return getNow() + timeBias;
+            return getNow();
         else
             return baseTime;
     }
@@ -141,11 +150,7 @@ public class TimeExtent
 
     /**
      * To get baseTime or absTime with bias applied
-     * @return
-     * NOTE:  Check the logic here.  This applies timeBias twice if baseAtNow == true.
-     *       Is this even needed anymore.  Only two refs in project (including one in STT
-     *       from my timeWidget, which I think I can remove)
-     *       Consider removing and replacing with calls to getBaseTime();
+     * @return base time + bias as julian time in seconds (1970 based)
      */
     public double getAdjustedTime()
     {
@@ -238,8 +243,7 @@ public class TimeExtent
 
 
     /**
-     * Returns number of full time steps
-     * @return
+     * @return number of full time steps
      */
     public int getNumberOfSteps()
     {
@@ -254,6 +258,7 @@ public class TimeExtent
      * Calculates times based on current time settings, always assuring
      * that both endpoints are included even if an uneven time step occurs
      * at the end
+     * @return time grid spliting the time period evenly
      */
     public double[] getTimes()
     {
@@ -315,7 +320,7 @@ public class TimeExtent
      * Checks if time extents are equal (no null check)
      * (i.e. stop=stop AND start=start)
      * @param timeExtent
-     * @return
+     * @return true if time extents are equal
      */
     public boolean equals(TimeExtent timeExtent)
     {
@@ -346,9 +351,9 @@ public class TimeExtent
     
     
     /**
-     * Checks if this timeExtent contains the given time
+     * Checks if this TimeExtent contains the given time
      * @param time
-     * @return
+     * @return true if it contains the given time point
      */
     public boolean contains(double time)
     {
@@ -366,9 +371,9 @@ public class TimeExtent
     
     
     /**
-     * Checks if this timeExtent contains the given timeExtent
+     * Checks if this TimeExtent contains the given TimeExtent
      * @param timeExtent
-     * @return
+     * @return true if it contains the given TimeExtent
      */
     public boolean contains(TimeExtent timeExtent)
     {
@@ -396,7 +401,7 @@ public class TimeExtent
     /**
      * Checks if this timeExtent intersects the given timeExtent
      * @param timeExtent
-     * @return
+     * @return true if both TimeExtents intersects
      */
     public boolean intersects(TimeExtent timeExtent)
     {
@@ -420,7 +425,7 @@ public class TimeExtent
     
     /**
      * Check if time is null (i.e. baseTime is not set)
-     * @return
+     * @return true if no base time has been set
      */
     public boolean isNull()
     {
@@ -430,16 +435,25 @@ public class TimeExtent
     
     /**
      * Check if this is a single point in time
-     * @return
+     * @return true if this is a time instant
      */
 	public boolean isTimeInstant()
 	{
-        return (leadTimeDelta == 0 && lagTimeDelta == 0);
+        if (leadTimeDelta != 0)
+            return false;
+        
+        if (lagTimeDelta != 0)
+            return false;
+        
+        if (beginNow != endNow)
+            return false;
+        
+        return true;
 	}
     
     
     /**
-     * Resets all variables so that extent is null
+     * Resets all variables so that extent is null (i.e. unset)
      */
     public void nullify()
     {
@@ -477,23 +491,21 @@ public class TimeExtent
     
     /**
      * Return latest value for now. This would return a new 'now' value
-     * only if previous call was made more than 1 second ago.
-     * @return
+     * only if previous call was made more than NOW_ACCURACY second ago.
      */
     private double now = 0;
     private double getNow()
     {
         double exactNow = System.currentTimeMillis()/1000;
         if (exactNow - now > NOW_ACCURACY)
-            now = exactNow;
-        
+            now = exactNow;        
         return now;
     }
     
     
     /**
      * Helper method to get start time
-     * @return
+     * @return start time as julian time in seconds (1970 based)
      */
     public double getStartTime()
     {
@@ -503,7 +515,7 @@ public class TimeExtent
     
     /**
      * Helper method to set start time
-     * @param startTime
+     * @param startTime start time as julian time in seconds (1970 based)
      */
     public void setStartTime(double startTime)
     {
@@ -533,7 +545,7 @@ public class TimeExtent
 
     /**
      * Helper method to get stop time
-     * @return
+     * @return stop time as julian time in seconds (1970 based)
      */
     public double getStopTime()
     {
@@ -543,7 +555,7 @@ public class TimeExtent
     
     /**
      * Helper method to set stop time
-     * @param stopTime
+     * @param stopTime stop time as julian time in seconds (1970 based)
      */
     public void setStopTime(double stopTime)
     {
