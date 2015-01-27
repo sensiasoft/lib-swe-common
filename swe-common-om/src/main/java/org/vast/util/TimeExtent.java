@@ -587,12 +587,10 @@ public class TimeExtent
     {
         DateTimeFormat timeFormat = new DateTimeFormat();
         
-        if (baseAtNow)
+        if (isTimeInstant())
         {
-            String start = beginNow ? "now" : "unknown";
-            String stop = endNow ? "now" : "unknown";
-            String duration = timeFormat.formatIsoPeriod(getTimeRange());
-            return start + "/" + stop + "/" + duration;
+            String time = baseAtNow ? "now" : timeFormat.formatIso(getBaseTime(), zone);
+            return time;
         }
         else
         {
