@@ -54,18 +54,18 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
     public String getAssertionMessage()
     {
         StringBuffer msg = new StringBuffer();
+        msg.append("It should ");
         
         if (valueList.size() > 0)
         {
             msg.append("be one of {");
             int i = 0;
-            int lastItem = valueList.size() - 1;
             
             for (IDateTime allowedValue: valueList)
             {
+                if (i++ > 0)
+                    msg.append(", ");    
                 msg.append(Double.toString(allowedValue.getAsDouble()));
-                if (i < lastItem)
-                    msg.append(", ");
             }
             
             msg.append('}');
@@ -78,17 +78,16 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
                 
             msg.append("be within one of {");
             int i = 0;
-            int lastItem = intervalList.size() - 1;
             
             for (IDateTime[] allowedRange: intervalList)
             {
+                if (i++ > 0)
+                    msg.append(", ");    
                 msg.append('[');
                 msg.append(Double.toString(allowedRange[0].getAsDouble()));
                 msg.append(' ');
                 msg.append(Double.toString(allowedRange[1].getAsDouble()));
                 msg.append(']');
-                if (i < lastItem)
-                    msg.append(", ");
             }
             
             msg.append('}');

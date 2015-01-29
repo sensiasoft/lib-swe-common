@@ -127,7 +127,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     @Override
     public boolean hasConstraints()
     {
-        return ((DataValue) elementType.getValue()).hasConstraints();
+        return ((DataComponent)elementType.getValue()).hasConstraints();
     }
 
 

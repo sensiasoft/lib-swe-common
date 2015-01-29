@@ -171,16 +171,16 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
     @Override
     public boolean hasConstraints()
     {
-        return (constraint != null);
+        return isSetConstraint();
     }
     
     
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-        if (constraint != null)
+        if (isSetConstraint())
         {
-            AllowedValuesImpl constraint = (AllowedValuesImpl)this.constraint;
+            AllowedValuesImpl constraint = (AllowedValuesImpl)getConstraint();
             double min = dataBlock.getDoubleValue(0);
             double max = dataBlock.getDoubleValue(1);
             

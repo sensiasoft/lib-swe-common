@@ -150,16 +150,16 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
     @Override
     public boolean hasConstraints()
     {
-        return (constraint != null);
+        return isSetConstraint();
     }
     
     
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-        if (constraint != null && isSetValue())
+        if (isSetConstraint() && isSetValue())
         {
-            AllowedTokensImpl constraint = (AllowedTokensImpl)this.constraint;
+            AllowedTokensImpl constraint = (AllowedTokensImpl)getConstraint();
             String min = dataBlock.getStringValue(0);
             String max = dataBlock.getStringValue(1);
             

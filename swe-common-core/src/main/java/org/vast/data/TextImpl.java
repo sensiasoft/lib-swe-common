@@ -122,52 +122,23 @@ public class TextImpl extends DataValue implements Text
     @Override
     public boolean hasConstraints()
     {
-        return (constraint != null);
+        return isSetConstraint();
     }
     
     
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-        if (constraint != null)
+        if (isSetConstraint())
         {
-            // validate value against constraint
-            String value = dataBlock.getStringValue();
-            List<String> allowedValues = constraint.getValue().getValueList();
-            for (String allowedVal: allowedValues)
-                if (allowedVal.equals(value))
-                    return;
-            
-            // check against pattern
-            // TODO precompile pattern
-            String pattern = constraint.getValue().getPattern();
-            if (pattern != null && value.matches(pattern))
-                return;
-            
-            // add error if not valid
-            errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() + 
-                    "' is not valid for component '" + getName() + "': " + getAssertionMessage()));
+            AllowedTokensImpl constraint = (AllowedTokensImpl)getConstraint();
+            if (!constraint.isValid(getValue()))
+            {
+                // add error if not valid
+                errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() + 
+                        "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
+            }
         }
-    }
-    
-    
-    protected String getAssertionMessage()
-    {
-        StringBuffer msg = new StringBuffer();
-        msg.append("be one of {");
-        
-        int i = 0;
-        List<String> allowedValues = constraint.getValue().getValueList();
-        int lastItem = allowedValues.size() - 1; 
-        for (String allowedValue: allowedValues)
-        {
-            msg.append(allowedValue);
-            if (i < lastItem)
-                msg.append(", ");
-        }
-        
-        msg.append('}');
-        return msg.toString();
     }
     
     

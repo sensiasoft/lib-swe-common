@@ -229,16 +229,16 @@ public class TimeImpl extends DataValue implements Time
     @Override
     public boolean hasConstraints()
     {
-        return (constraint != null);
+        return isSetConstraint();
     }
     
     
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-        if (constraint != null)
+        if (isSetConstraint())
         {
-            AllowedTimesImpl constraint = (AllowedTimesImpl)this.constraint;            
+            AllowedTimesImpl constraint = (AllowedTimesImpl)getConstraint();            
             if (!constraint.isValid(getValue()))
             {
                 String valText;                

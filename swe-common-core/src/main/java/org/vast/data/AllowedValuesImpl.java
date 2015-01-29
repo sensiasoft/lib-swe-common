@@ -53,18 +53,18 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
     public String getAssertionMessage()
     {
         StringBuffer msg = new StringBuffer();
+        msg.append("It should ");
         
         if (valueList.size() > 0)
         {
-            msg.append("be one of {");            
-            int i = 0;            
-            int lastItem = valueList.size() - 1;
+            msg.append("be one of {");  
+            int i = 0;
             
             for (double allowedValue: valueList)
             {
-                msg.append(Double.toString(allowedValue));
-                if (i < lastItem)
-                    msg.append(", ");
+                if (i++ > 0)
+                    msg.append(", ");    
+                msg.append(Double.toString(allowedValue));                
             }
             
             msg.append('}');
@@ -77,17 +77,16 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
                 
             msg.append("be within one of {");
             int i = 0;
-            int lastItem = intervalList.size() - 1;
             
             for (double[] allowedRange: intervalList)
             {
+                if (i++ > 0)
+                    msg.append(", ");    
                 msg.append('[');
                 msg.append(Double.toString(allowedRange[0]));
                 msg.append(' ');
                 msg.append(Double.toString(allowedRange[1]));
                 msg.append(']');
-                if (i < lastItem)
-                    msg.append(", ");
             }
             
             msg.append('}');

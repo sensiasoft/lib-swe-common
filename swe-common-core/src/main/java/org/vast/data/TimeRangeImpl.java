@@ -220,16 +220,16 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     @Override
     public boolean hasConstraints()
     {
-        return (constraint != null);
+        return isSetConstraint();
     }
 
 
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-        if (constraint != null)
+        if (isSetConstraint())
         {
-            AllowedTimesImpl constraint = (AllowedTimesImpl)this.constraint;
+            AllowedTimesImpl constraint = (AllowedTimesImpl)getConstraint();
             IDateTime[] val = getValue();
             
             if (!constraint.isValid(val[0]) || !constraint.isValid(val[1]))

@@ -143,16 +143,16 @@ import net.opengis.swe.v20.ValidationException;
     @Override
     public boolean hasConstraints()
     {
-        return (constraint != null);
+        return isSetConstraint();
     }
 
 
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-        if (constraint != null && isSetValue())
+        if (isSetConstraint() && isSetValue())
         {
-            AllowedValuesImpl constraint = (AllowedValuesImpl)this.constraint;
+            AllowedValuesImpl constraint = (AllowedValuesImpl)getConstraint();
             int min = dataBlock.getIntValue(0);
             int max = dataBlock.getIntValue(1);
             

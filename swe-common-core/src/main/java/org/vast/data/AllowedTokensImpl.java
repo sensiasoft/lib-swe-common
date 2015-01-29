@@ -58,18 +58,33 @@ public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
     protected String getAssertionMessage()
     {
         StringBuffer msg = new StringBuffer();
-        msg.append("be one of {");
-        
-        int i = 0;
-        int lastItem = valueList.size() - 1; 
-        for (String allowedValue: valueList)
+        msg.append("It should ");
+                
+        if (valueList.size() > 0)
         {
-            msg.append(allowedValue);
-            if (i < lastItem)
-                msg.append(", ");
+            msg.append("be one of {");
+            
+            int i = 0;
+            for (String allowedValue: valueList)
+            {
+                if (i++ > 0)
+                    msg.append(", ");    
+                msg.append(allowedValue);
+            }
+            
+            msg.append('}');
         }
         
-        msg.append('}');
+        if (pattern != null)
+        {
+            if (valueList.size() > 0)
+                msg.append(" OR ");
+                
+            msg.append("match the pattern '");
+            msg.append(pattern);
+            msg.append("'");
+        }
+        
         return msg.toString();
     }
     

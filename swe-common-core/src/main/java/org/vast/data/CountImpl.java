@@ -142,16 +142,16 @@ public class CountImpl extends DataValue implements Count
     @Override
     public boolean hasConstraints()
     {
-        return (constraint != null);
+        return isSetConstraint();
     }
     
     
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-        if (constraint != null && isSetValue())
+        if (isSetConstraint() && isSetValue())
         {
-            AllowedValuesImpl constraint = (AllowedValuesImpl)this.constraint;            
+            AllowedValuesImpl constraint = (AllowedValuesImpl)getConstraint();            
             if (!constraint.isValid(getValue()))
             {
                 errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() +

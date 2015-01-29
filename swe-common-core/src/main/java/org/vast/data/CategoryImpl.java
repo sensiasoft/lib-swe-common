@@ -162,16 +162,16 @@ public class CategoryImpl extends DataValue implements Category
     @Override
     public boolean hasConstraints()
     {
-        return (constraint != null);
+        return isSetConstraint();
     }
     
     
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-        if (constraint != null && isSetValue())
+        if (isSetConstraint() && isSetValue())
         {
-            AllowedTokensImpl constraint = (AllowedTokensImpl)this.constraint;            
+            AllowedTokensImpl constraint = (AllowedTokensImpl)getConstraint();            
             if (!constraint.isValid(getValue()))
             {
                 errorList.add(new ValidationException(getName(), "Value '" + dataBlock.getStringValue() + 
