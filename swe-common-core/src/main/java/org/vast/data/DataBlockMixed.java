@@ -20,6 +20,7 @@
 
 package org.vast.data;
 
+import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataType;
 
 
@@ -59,6 +60,14 @@ public class DataBlockMixed extends AbstractDataBlock
 		blockArray = new AbstractDataBlock[numBlocks];
 		this.atomCount = atomCount;
 	}
+	
+	
+	public DataBlockMixed(AbstractDataBlock... childBlocks)
+    {
+        blockArray = childBlocks;
+        for (DataBlock dataBlock: childBlocks)
+            this.atomCount += dataBlock.getAtomCount();
+    }
 	
 	
 	public DataBlockMixed copy()
