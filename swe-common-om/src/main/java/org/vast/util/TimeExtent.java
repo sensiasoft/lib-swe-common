@@ -51,6 +51,15 @@ public class TimeExtent
     }
     
     
+    public static TimeExtent getNowToFutureDatePeriod(double stopTime)
+    {
+        TimeExtent time = new TimeExtent();
+        time.setBeginNow(true);
+        time.setStopTime(stopTime);
+        return time;
+    }
+    
+    
     public TimeExtent()
     {        
     }    
