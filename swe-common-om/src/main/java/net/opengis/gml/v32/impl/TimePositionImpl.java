@@ -1,5 +1,6 @@
 package net.opengis.gml.v32.impl;
 
+import net.opengis.DateTimeDouble;
 import net.opengis.IDateTime;
 import net.opengis.gml.v32.TimeIndeterminateValue;
 import net.opengis.gml.v32.TimePosition;
@@ -21,7 +22,6 @@ public class TimePositionImpl implements TimePosition
     protected TimeIndeterminateValue indeterminatePosition;
     protected IDateTime dateTimeValue;
     protected String textValue;
-    protected Double decimalValue;
     
     
     public TimePositionImpl()
@@ -143,9 +143,6 @@ public class TimePositionImpl implements TimePosition
     @Override
     public double getDecimalValue()
     {
-        if (decimalValue != null)
-            return decimalValue;
-        
         if (dateTimeValue != null)
             return dateTimeValue.getAsDouble();
         
@@ -154,16 +151,9 @@ public class TimePositionImpl implements TimePosition
     
     
     @Override
-    public boolean isSetDecimalValue()
-    {
-        return (decimalValue != null);
-    }
-    
-    
-    @Override
     public void setDecimalValue(double value)
     {
-        this.decimalValue = value;        
+        this.dateTimeValue = new DateTimeDouble(value);        
     }
 
 

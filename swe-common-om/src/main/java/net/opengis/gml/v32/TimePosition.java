@@ -79,7 +79,6 @@ public interface TimePosition
     public void setDateTimeValue(IDateTime value);
     
     public double getDecimalValue();
-    public boolean isSetDecimalValue();
     public void setDecimalValue(double value);
     
     public String getTextValue();
