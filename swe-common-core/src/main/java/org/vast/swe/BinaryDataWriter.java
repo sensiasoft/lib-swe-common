@@ -23,7 +23,6 @@ package org.vast.swe;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteOrder;
-import java.util.List;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BinaryMember;
@@ -121,25 +120,12 @@ public class BinaryDataWriter extends AbstractDataWriter
 	public void flush() throws IOException
     {
 	    dataOutput.flush();
-    }
+    }	
 	
-	
-	/**
-	 * Maps a given scalar component to the corresponding BinaryValue
-	 * object containing binary encoding information. This also
-	 * forces the DataValues primitive type to be the same as the ones
-	 * specified in the binary encoding section.
-	 */
+
 	protected void resolveComponentEncodings() throws CDMException
 	{
-		List<BinaryMember> encodingList = ((BinaryEncoding)dataEncoding).getMemberList();
-		
-	    for (BinaryMember binaryOpts: encodingList)
-		{
-	        DataComponent comp = DataComponentHelper.findComponentByPath(binaryOpts.getRef(), dataComponents);
-            ((AbstractDataComponentImpl)comp).setEncodingInfo(binaryOpts);
-		}
-		
+		DataComponentHelper.resolveComponentEncodings(dataComponents, (BinaryEncoding)dataEncoding);
 		componentEncodingResolved = true;
 	}
 	

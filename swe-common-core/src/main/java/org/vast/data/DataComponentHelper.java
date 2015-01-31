@@ -25,6 +25,9 @@
 package org.vast.data;
 
 import org.vast.cdm.common.CDMException;
+import net.opengis.swe.v20.BinaryComponent;
+import net.opengis.swe.v20.BinaryEncoding;
+import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.DataComponent;
 
 
@@ -121,5 +124,27 @@ public class DataComponentHelper
         }
         
         return data;
+    }
+	
+	
+	/**
+     * Maps binary components and blocks definitions to the actual data component.
+     * This sets the encodingInfo attribute of the component so it can be used.
+     * For scalars, it also sets the default data type so it is the same as in the encoded stream.
+	 * @param dataComponents 
+	 * @param dataEncoding 
+	 * @throws CDMException 
+     */
+    public static void resolveComponentEncodings(DataComponent dataComponents, BinaryEncoding dataEncoding) throws CDMException
+    {
+        for (BinaryMember binaryOpts: dataEncoding.getMemberList())
+        {
+            DataComponent comp = DataComponentHelper.findComponentByPath(binaryOpts.getRef(), dataComponents);
+            ((AbstractDataComponentImpl)comp).setEncodingInfo(binaryOpts);
+            
+            // for scalars, also set default data type
+            if (binaryOpts instanceof BinaryComponent)
+                ((AbstractSimpleComponentImpl)comp).setDataType(((BinaryComponentImpl)binaryOpts).getCdmDataType());
+        }
     }
 }

@@ -21,6 +21,7 @@
 package org.vast.data;
 
 import java.util.*;
+import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataType;
@@ -265,8 +266,16 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
         	previousType = currentType;
         }
         
+        // if we want to keep compressed data as-is
+        // TODO improve dealing with compressed data
+        if (encodingInfo != null && ((BinaryBlock)encodingInfo).getCompression() != null) // && keepCompressed)
+        {
+            newBlock = new DataBlockCompressed();
+            newBlock.atomCount = totalSize;
+        }
+        
         // if everything was of same type, create a big shared primitive block
-        if (allScalars && sameType)
+        else if (allScalars && sameType)
         {
         	newBlock = nextBlock.copy();
         	newBlock.resize(totalSize);

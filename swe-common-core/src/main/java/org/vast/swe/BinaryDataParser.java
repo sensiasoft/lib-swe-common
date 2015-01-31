@@ -23,9 +23,6 @@ package org.vast.swe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteOrder;
-import java.util.List;
-import net.opengis.swe.v20.BinaryBlock;
-import net.opengis.swe.v20.BinaryComponent;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.DataBlock;
@@ -41,7 +38,6 @@ import org.vast.data.BinaryComponentImpl;
 import org.vast.data.DataBlockCompressed;
 import org.vast.data.DataChoiceImpl;
 import org.vast.data.DataComponentHelper;
-import org.vast.data.DataValue;
 import org.vast.util.ReaderException;
 
 
@@ -207,25 +203,8 @@ public class BinaryDataParser extends AbstractDataParser
 	 */
 	protected void resolveComponentEncodings() throws CDMException
 	{
-	    List<BinaryMember> encodingList = ((BinaryEncoding)dataEncoding).getMemberList();
-        
-        for (BinaryMember binaryOpts: encodingList)
-        {
-            AbstractDataComponentImpl dataComponent = (AbstractDataComponentImpl)DataComponentHelper.findComponentByPath(binaryOpts.getRef(), dataComponents);
-            
-            // add binary info to component
-            if (binaryOpts instanceof BinaryComponent)
-            {
-                ((DataValue)dataComponent).setDataType(((BinaryComponentImpl)binaryOpts).getCdmDataType());
-                dataComponent.setEncodingInfo(binaryOpts);
-            }
-            else if(binaryOpts instanceof BinaryBlock)
-            {
-                dataComponent.setEncodingInfo(binaryOpts);
-                initBlockReader(dataComponent, (BinaryBlockImpl)binaryOpts);
-            } 
-        }
-        
+	    // TODO need to also call initBlockReader(dataComponent, (BinaryBlockImpl)binaryOpts);
+	    DataComponentHelper.resolveComponentEncodings(dataComponents, (BinaryEncoding)dataEncoding);
         componentEncodingResolved = true;
 	}
 	
