@@ -172,8 +172,8 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     public void clearData()
     {
         this.dataBlock = null;
-        for (net.opengis.swe.v20.DataComponent component: itemList)
-            ((AbstractDataComponentImpl)component).clearData();
+        for (DataComponent item: itemList)
+            item.clearData();
     }
     
     
@@ -321,7 +321,13 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 	@Override
 	public boolean hasConstraints()
 	{
-		return getSelectedItem().hasConstraints();
+	    for (DataComponent item: itemList)
+        {
+            if (item.hasConstraints())
+                return true;
+        }
+        
+        return false;
 	}
 	
 	

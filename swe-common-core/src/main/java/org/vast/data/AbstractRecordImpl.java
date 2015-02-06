@@ -201,19 +201,16 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
     public void clearData()
     {
         this.dataBlock = null;
-        for (int i = 0; i < fieldList.size(); i++)
-        {
-            AbstractDataComponentImpl nextComponent = ((AbstractDataComponentImpl)fieldList.get(i));
-            nextComponent.clearData();
-        }
+        for (DataComponent field: fieldList)
+            field.clearData();
     }
     
     
     @Override
     public void validateData(List<ValidationException> errorList)
     {
-    	for (int i = 0; i < fieldList.size(); i++)
-    	    ((AbstractDataComponentImpl)fieldList.get(i)).validateData(errorList);
+        for (DataComponent field: fieldList)
+    	    ((AbstractDataComponentImpl)field).validateData(errorList);
     }
     
     
@@ -363,11 +360,11 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
 	@Override
 	public boolean hasConstraints()
 	{
-		for (int i = 0; i < fieldList.size(); i++)
-		{
-			if (getComponent(i).hasConstraints())
-				return true;
-		}
+	    for (DataComponent field: fieldList)
+        {
+            if (field.hasConstraints())
+                return true;
+        }
 		
 		return false;
 	}
