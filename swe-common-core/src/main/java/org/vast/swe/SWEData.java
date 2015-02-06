@@ -57,6 +57,16 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
     
     
     @Override
+    public SWEData copy()
+    {
+        SWEData newObj = new SWEData();
+        copyTo(newObj);
+        newObj.dataSource = this.dataSource;
+        return newObj;
+    }
+    
+    
+    @Override
     public DataComponent getNextElement()
     {
         return nextComponent();

@@ -79,8 +79,15 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     public DataList copy()
     {
         DataList newObj = new DataList();
-        copyTo(newObj);
+        copyTo(newObj);        
         return newObj;
+    }
+    
+    
+    protected void copyTo(DataList other)
+    {
+        super.copyTo(other);
+        other.tempComponent = this.tempComponent.copy();
     }
     
     
