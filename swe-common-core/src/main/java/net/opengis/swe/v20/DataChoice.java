@@ -63,4 +63,11 @@ public interface DataChoice extends DataComponent
      * @return the selected component or null if non is selected
      */
     public DataComponent getSelectedItem();
+    
+    
+    /**
+     * Sets the choice selection to the item with the given name
+     * @param name
+     */
+    public void setSelectedItem(String name);
 }
