@@ -20,6 +20,7 @@
 
 package org.vast.swe;
 
+import net.opengis.swe.v20.ByteEncoding;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.JSONEncoding;
@@ -32,6 +33,11 @@ import org.vast.cdm.common.DataStreamWriter;
 public class SWEFactory
 {
         
+    /**
+     * Helper method to instantiate the proper parser for the given encoding
+     * @param encoding
+     * @return instance of parser capable of handling the given encoding
+     */
     public static DataStreamParser createDataParser(DataEncoding encoding)
     {
         DataStreamParser parser = null;
@@ -50,6 +56,11 @@ public class SWEFactory
     }
     
     
+    /**
+     * Helper method to instantiate the proper writer for the given encoding
+     * @param encoding
+     * @return instance of writer capable of handling the given encoding
+     */
     public static DataStreamWriter createDataWriter(DataEncoding encoding)
     {
         DataStreamWriter writer = null;
@@ -65,5 +76,24 @@ public class SWEFactory
         
         writer.setDataEncoding(encoding);
         return writer;
+    }
+    
+    
+    /**
+     * Ajusts encoding settings to ensures that data produced with the encoding
+     * can be embedded in XML (e.g. for binary encoding this enforces base64)
+     * @param encoding
+     * @return copy of encoding, reconfigured appropriately
+     */
+    public static DataEncoding ensureXmlCompatible(DataEncoding encoding)
+    {
+        // if binary data, ensure encoding is set to base64
+        if (encoding instanceof BinaryEncoding)
+        {
+            encoding = encoding.copy();
+            ((BinaryEncoding) encoding).setByteEncoding(ByteEncoding.BASE_64);
+        }
+        
+        return encoding;
     }
 }

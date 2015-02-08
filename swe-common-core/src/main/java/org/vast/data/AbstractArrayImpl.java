@@ -51,7 +51,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     
     protected OgcPropertyImpl<Count> elementCount = new OgcPropertyImpl<Count>();
     protected OgcPropertyImpl<DataComponent> elementType;
-    protected AbstractEncodingImpl encoding;
+    protected DataEncoding encoding;
     protected EncodedValues values;
 
 

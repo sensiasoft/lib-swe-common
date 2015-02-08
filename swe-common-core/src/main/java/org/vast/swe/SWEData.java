@@ -159,8 +159,13 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
         }
         else
         {
-        	DataStreamParser parser = getDataParser();
-        	parser.setDataHandler(new DefaultParserHandler(this));        
+            if (dataSource instanceof DataSourceDOM)
+                encoding = SWEFactory.ensureXmlCompatible(encoding);
+       
+            DataStreamParser parser = SWEFactory.createDataParser(encoding);
+            parser.setDataComponents((DataComponent)getElementType());
+        	parser.setDataHandler(new DefaultParserHandler(this));
+        	
         	InputStream dataStream = dataSource.getDataStream();
         	parser.parse(dataStream);
         }
@@ -188,8 +193,13 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
         }
         else
         {
-        	DataStreamWriter writer = getDataWriter();
-            writer.setDataHandler(new DefaultWriterHandler(this, writer));            
+            if (dataSink instanceof DataSinkDOM)
+                encoding = SWEFactory.ensureXmlCompatible(encoding);
+            
+            DataStreamWriter writer = SWEFactory.createDataWriter(encoding);
+            writer.setDataComponents((DataComponent)getElementType());
+            writer.setDataHandler(new DefaultWriterHandler(this, writer));
+            
         	OutputStream dataStream = dataSink.getDataStream();
             writer.write(dataStream);
             writer.flush();

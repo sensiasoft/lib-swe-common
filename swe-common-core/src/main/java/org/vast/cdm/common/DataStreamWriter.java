@@ -83,6 +83,9 @@ public interface DataStreamWriter
     public void flush() throws IOException;
     
     
+    public void close() throws IOException;
+    
+    
     public void reset();
 
 
