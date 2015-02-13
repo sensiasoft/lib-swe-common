@@ -29,11 +29,9 @@ import org.w3c.dom.*;
  * and a base element node
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 3, 2005
- * @version 1.0
- */
+ * */
 public class XMLFragment
 {
 	protected XMLDocument xmlDocument = null;

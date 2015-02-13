@@ -25,11 +25,9 @@ package org.vast.util;
  * SensorML Contact
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 16, 2006
- * @version 1.0
- */
+ * */
 public abstract class Contact
 {
     protected String role;

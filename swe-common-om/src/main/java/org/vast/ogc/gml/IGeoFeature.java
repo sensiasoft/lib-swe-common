@@ -31,11 +31,9 @@ import org.vast.math.Vector3d;
  * Interface for geographic features with a location and bounding box
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 28, 2012
- * @version 1.0
- */
+ * */
 public interface IGeoFeature extends IFeature
 {
     /**

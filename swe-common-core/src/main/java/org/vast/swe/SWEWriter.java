@@ -42,11 +42,9 @@ import org.vast.cdm.common.OutputStreamProvider;
  * suited for the given encoding.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 10, 2006
- * @version 1.0
- */
+ * */
 public abstract class SWEWriter implements OutputStreamProvider
 {
 	protected DataEncoding dataEncoding;

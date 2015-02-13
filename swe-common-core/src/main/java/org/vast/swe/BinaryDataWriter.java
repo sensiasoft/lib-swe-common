@@ -48,11 +48,9 @@ import org.vast.data.DataComponentHelper;
  * binary and base64 for now.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin & Gregoire Berthiau
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 10, 2006
- * @version 1.0
- */
+ * */
 public class BinaryDataWriter extends AbstractDataWriter
 {
     protected DataOutputExt dataOutput;

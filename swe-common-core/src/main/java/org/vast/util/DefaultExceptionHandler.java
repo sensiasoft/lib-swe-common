@@ -25,11 +25,9 @@ package org.vast.util;
  * Default exception handler prints exception stack to System.err 
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Apr 29, 2006
- * @version 1.0
- */
+ * */
 public class DefaultExceptionHandler implements ExceptionHandler
 {
 

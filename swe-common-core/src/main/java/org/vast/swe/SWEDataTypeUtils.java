@@ -38,8 +38,7 @@ import net.opengis.swe.v20.Time;
  * Helper methods to read/write complex data types (e.g. unions)
  * </p>
  *
- * <p>Copyright (c) 2014 Sensia Software LLC</p>
- * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Dec 14, 2014
  */
 public class SWEDataTypeUtils

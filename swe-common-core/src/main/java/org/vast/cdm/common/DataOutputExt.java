@@ -30,11 +30,9 @@ import java.io.IOException;
  * short, int and long values as well as ASCII (0 terminated) strings.
  * </p>
  *
- * <p>Copyright (c) 2009</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Jan 10, 2009
- * @version 1.0
- */
+ * */
 public interface DataOutputExt extends DataOutput
 {
     

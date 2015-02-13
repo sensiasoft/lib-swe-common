@@ -31,11 +31,9 @@ import org.w3c.dom.Element;
  * TODO GMLUnitReader type description
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 9, 2007
- * @version 1.0
- */
+ * */
 public class GMLUnitReader
 {
     protected final static String invalidISO = "Invalid Unit: ";

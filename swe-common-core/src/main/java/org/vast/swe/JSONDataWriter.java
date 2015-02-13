@@ -42,11 +42,9 @@ import org.vast.util.WriterException;
  * Writes SWE data stream in JSON format
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 2, 2014
- * @version 1.0
- */
+ * */
 public class JSONDataWriter extends AbstractDataWriter
 {
 	protected Writer jsonWriter;

@@ -34,8 +34,7 @@ import javax.xml.stream.XMLStreamWriter;
  * Wrapper providing indenting support for any stream writer
  * </p>
  *
- * <p>Copyright (c) 2014 Sensia Software LLC</p>
- * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 10, 2014
  */
 public class IndentingXMLStreamWriter extends DelegatingXMLStreamWriter

@@ -29,11 +29,9 @@ package org.vast.ogc.om;
  * Interface for arrays of procedures (homogeneous or not)
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 30, 2012
- * @version 1.0
- */
+ * */
 public interface IProcedureArray extends IProcedure
 {
     public IProcedure getProcedureByIndex(int index);

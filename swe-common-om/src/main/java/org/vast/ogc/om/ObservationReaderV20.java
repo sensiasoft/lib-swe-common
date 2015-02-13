@@ -47,11 +47,9 @@ import org.w3c.dom.*;
  * Reader for O&M observations v2.0
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 30, 2012
- * @version 1.0
- */
+ * */
 public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
 {
 	protected SWEFilter streamFilter;

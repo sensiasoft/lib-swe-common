@@ -48,8 +48,7 @@ import org.w3c.dom.NodeList;
  * This is for version 2.0 of the SWECommon standard.
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin (Spot Image)
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 1, 2008
  * @deprecated use new bindings {@link org.vast.swe.SWEStaxBindings} instead
  */

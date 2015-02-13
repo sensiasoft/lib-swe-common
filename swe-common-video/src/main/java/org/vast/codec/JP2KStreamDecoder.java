@@ -44,11 +44,9 @@ import org.vast.data.DataValue;
  * Decoder used by the BinaryDataParser to decode a binary block compressed in JPEG 2000.
  * </p>
  *
- * <p>Copyright (c) 2009</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 16, 2009
- * @version 1.0
- */
+ * */
 public class JP2KStreamDecoder implements CompressedStreamParser
 {
     protected JP2KDecoder jp2kDecoder;

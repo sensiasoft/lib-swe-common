@@ -32,11 +32,9 @@ import org.vast.swe.SWEReader;
  * Base interface for Streaming Observation Readers of all versions
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since May 22, 2008
- * @version 1.0
- */
+ * */
 public abstract class ObservationStreamReader extends SWEReader
 {
     

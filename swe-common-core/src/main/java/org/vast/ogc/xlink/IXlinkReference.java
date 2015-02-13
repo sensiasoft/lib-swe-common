@@ -30,11 +30,9 @@ package org.vast.ogc.xlink;
  * @param <TargetType> Type of the link target object
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 28, 2012
- * @version 1.0
- */
+ * */
 public interface IXlinkReference<TargetType>
 {
     public String getHref();

@@ -34,11 +34,9 @@ import org.w3c.dom.NodeList;
  * obtains the default mappings from the OGCRegistry.xml file. 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Jan 16, 2007
- * @version 1.0
- */
+ * */
 public class OGCRegistry
 {
     public final static String XLINK = "XLINK";

@@ -20,11 +20,9 @@ package org.vast.util;
  * This mainly includes enveloppe coordinates and a crs.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 15, 2005
- * @version 1.0
- */
+ * */
 public class SpatialExtent
 {
 	protected String crs;

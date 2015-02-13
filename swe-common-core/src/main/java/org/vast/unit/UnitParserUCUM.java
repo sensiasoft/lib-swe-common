@@ -39,11 +39,9 @@ import org.w3c.dom.NodeList;
  * a Unit object with the right scale factors and powers.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since May 4, 2006
- * @version 1.0
- */
+ * */
 public class UnitParserUCUM implements UnitParser
 {
 	private static Hashtable<String, Double> prefixTable;

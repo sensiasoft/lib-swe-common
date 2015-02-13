@@ -26,11 +26,9 @@ package org.vast.ogc;
  * Enumeration for all supported OGC service types
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 2, 2007
- * @version 1.0
- */
+ * */
 public enum ServiceType
 {
     // Possible values

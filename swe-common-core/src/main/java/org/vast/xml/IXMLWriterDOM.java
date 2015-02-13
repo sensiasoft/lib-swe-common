@@ -31,11 +31,9 @@ import org.w3c.dom.Element;
  * Interface for XML writer converting Java objects to a DOM element
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 30, 2012
- * @version 1.0
- * @param <ObjectType> Type of object this writer can serialize
+ * * @param <ObjectType> Type of object this writer can serialize
  */
 public interface IXMLWriterDOM<ObjectType>
 {

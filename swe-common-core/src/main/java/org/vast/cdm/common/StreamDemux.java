@@ -28,11 +28,9 @@ package org.vast.cdm.common;
  * a given parser will be used for a given cluster ID.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 12, 2005
- * @version 1.0
- */
+ * */
 public interface StreamDemux
 {
 	public void addDataParser(String clusterID, DataStreamParser dataParser);

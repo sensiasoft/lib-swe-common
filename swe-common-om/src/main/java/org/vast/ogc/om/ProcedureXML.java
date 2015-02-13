@@ -36,11 +36,9 @@ import org.w3c.dom.Element;
  * object.
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 30, 2012
- * @version 1.0
- */
+ * */
 public class ProcedureXML implements IProcedure
 {
     protected Element domElt;

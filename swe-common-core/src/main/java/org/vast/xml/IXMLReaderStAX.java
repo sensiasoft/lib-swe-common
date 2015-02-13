@@ -31,11 +31,9 @@ import javax.xml.stream.XMLStreamReader;
  * Interface for all XML readers implemented using StAX
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 30, 2012
- * @version 1.0
- */
+ * */
 public interface IXMLReaderStAX<ObjectType>
 {
     public ObjectType deserialize(ObjectType existingObj, XMLStreamReader xmlReader) throws XMLReaderException;

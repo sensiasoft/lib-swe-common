@@ -26,11 +26,9 @@ package org.vast.unit;
  * 
  * </p>
  * 
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 19, 2005
- * @version 1.0
- */
+ * */
 public interface UnitConverter
 {
 	public double convert(double value);

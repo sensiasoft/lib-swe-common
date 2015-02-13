@@ -42,11 +42,9 @@ import org.vast.util.TimeExtent;
  * Implementation of a single observation
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 20, 2007
- * @version 1.0
- */
+ * */
 public class ObservationImpl extends FeatureImpl implements IObservation
 {
     protected List<IXlinkReference<IObservation>> relatedObservations;

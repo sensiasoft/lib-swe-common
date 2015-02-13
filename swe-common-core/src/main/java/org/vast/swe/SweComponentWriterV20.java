@@ -81,8 +81,7 @@ import org.w3c.dom.Element;
  * 11-2014: Modified to work with new auto-generated SWE Common classes
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 29, 2008
  * @deprecated use new bindings {@link org.vast.swe.SWEStaxBindings} instead
  */

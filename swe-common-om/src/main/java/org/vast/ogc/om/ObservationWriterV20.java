@@ -48,11 +48,9 @@ import org.w3c.dom.Element;
  * Observation Writer for O&M version 2.0
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 30, 2012
- * @version 1.0
- */
+ * */
 public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
 {
     private static String GML_VERSION = "3.2";

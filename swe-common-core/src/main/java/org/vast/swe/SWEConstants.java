@@ -26,11 +26,9 @@ package org.vast.swe;
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since 5 mars 08
- * @version 1.0
- */
+ * */
 public class SWEConstants
 {
 	/* component tag names */

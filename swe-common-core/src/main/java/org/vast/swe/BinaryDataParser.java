@@ -47,11 +47,9 @@ import org.vast.util.ReaderException;
  * and the binary encoding information.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin & Gregoire Berthiau
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 22, 2005
- * @version 1.0
- */
+ * */
 public class BinaryDataParser extends AbstractDataParser
 {
 	protected DataInputExt dataInput;

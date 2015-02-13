@@ -26,11 +26,9 @@ package org.vast.unit;
  * TODO UnitParser type description
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since May 4, 2006
- * @version 1.0
- */
+ * */
 public interface UnitParser
 {
 	public Unit getUnit(String unitString);

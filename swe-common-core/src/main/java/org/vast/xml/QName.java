@@ -26,11 +26,9 @@ package org.vast.xml;
  * Utility class to store element name with namespace prefix and URI.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Dec 15, 2006
- * @version 1.0
- */
+ * */
 public class QName
 {
     public final static String DEFAULT_PREFIX = "_NIL_";

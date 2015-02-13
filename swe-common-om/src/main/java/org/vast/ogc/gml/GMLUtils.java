@@ -45,8 +45,7 @@ import org.w3c.dom.Element;
  * This class is not thread-safe.
  * </p>
  *
- * <p>Copyright (c) 2014 Sensia Software LLC</p>
- * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 8, 2014
  */
 public class GMLUtils

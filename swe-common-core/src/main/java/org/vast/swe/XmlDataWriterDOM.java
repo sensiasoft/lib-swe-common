@@ -40,11 +40,9 @@ import org.w3c.dom.Element;
  * structure directly inside a DOM.
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 29, 2008
- * @version 1.0
- */
+ * */
 public class XmlDataWriterDOM extends AbstractDataWriter
 {
 	protected DOMHelper dom;

@@ -45,11 +45,9 @@ import org.vast.util.URIResolver;
  * This enables fetching and instantiating the target object lazily.
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 28, 2012
- * @version 1.0
- */
+ * */
 public class ObservationRef extends FeatureRef implements IObservation
 {
 

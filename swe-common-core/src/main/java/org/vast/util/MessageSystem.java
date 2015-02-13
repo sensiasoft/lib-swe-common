@@ -26,11 +26,9 @@ package org.vast.util;
  * TODO MessageHandler type description
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Apr 28, 2006
- * @version 1.0
- */
+ * */
 public class MessageSystem
 {
     private static MessageHandler displayHandler;

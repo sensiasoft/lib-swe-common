@@ -31,11 +31,9 @@ import org.w3c.dom.Element;
  * Used to serialize Bbox objects to GML.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 25, 2006
- * @version 1.0
- */
+ * */
 public class GMLEnvelopeWriter
 {
     private String gmlNsUri;

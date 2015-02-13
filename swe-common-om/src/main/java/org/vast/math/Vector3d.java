@@ -31,11 +31,9 @@ package org.vast.math;
  * math routines for 3D transformations.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 29, 2005
- * @version 1.0
- */
+ * */
 public class Vector3d extends javax.vecmath.Vector3d
 {
 	private static final long serialVersionUID = -2905506681710125806L;

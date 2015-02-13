@@ -44,8 +44,7 @@ import org.w3c.dom.Element;
  * This class handles ASCIIBlock and BinaryBlock.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 10, 2006
  * @deprecated use new bindings {@link org.vast.swe.SWEStaxBindings} instead
  */

@@ -31,11 +31,9 @@ package org.vast.util;
  * Simple structure for OGC-style bbox info.
  * </p>
  *
- * <p>Copyright: Copyright (c) 2005</p>
  * @author Tony Cook, Alex Robin
  * @since Aug 16, 2005
- * @version 1.0
- */
+ * */
 public class Bbox extends SpatialExtent
 {
    

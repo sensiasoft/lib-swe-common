@@ -41,11 +41,9 @@ import org.w3c.dom.Element;
  * This class can serialize simple properties of type Boolean, Number, String or Date.
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 18, 2012
- * @version 1.0
- */
+ * */
 public class GMLFeatureWriter implements IXMLWriterDOM<IFeature>
 {
     private GMLGeometryWriter geometryWriter = new GMLGeometryWriter();

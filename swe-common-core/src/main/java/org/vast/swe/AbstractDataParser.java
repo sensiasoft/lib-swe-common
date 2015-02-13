@@ -33,11 +33,9 @@ import org.vast.util.ReaderException;
  * Abstract class for parsing a CDM data stream
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 16, 2005
- * @version 1.0
- */
+ * */
 public abstract class AbstractDataParser extends DataTreeVisitor implements DataStreamParser
 {
 	protected final static String STREAM_ERROR = "Error while parsing data stream";

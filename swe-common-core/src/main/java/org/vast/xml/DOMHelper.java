@@ -37,11 +37,9 @@ import java.util.*;
  * TODO try to avoid calls to xerces specific classes
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 3, 2005
- * @version 1.0
- */
+ * */
 public class DOMHelper
 {
     public final static String XSI_NS_URI = "http://www.w3.org/2001/XMLSchema-instance";

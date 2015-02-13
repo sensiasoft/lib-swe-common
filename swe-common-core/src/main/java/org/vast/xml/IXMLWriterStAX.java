@@ -31,11 +31,9 @@ import javax.xml.stream.XMLStreamWriter;
  * Interface for all XML readers implemented using StAX
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 30, 2012
- * @version 1.0
- */
+ * */
 public interface IXMLWriterStAX<ObjectType>
 {
     public void serialize(ObjectType existingObj, XMLStreamWriter xmlWriter) throws XMLWriterException;

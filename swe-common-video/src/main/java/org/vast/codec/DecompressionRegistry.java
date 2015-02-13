@@ -33,11 +33,9 @@ import org.w3c.dom.NodeList;
  * to decompress streams, e.g. JPEG, JPEG2K... 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
  * @since Sep 15, 2008
- * @version 1.0
- */
+ * */
 public class DecompressionRegistry
 {
 

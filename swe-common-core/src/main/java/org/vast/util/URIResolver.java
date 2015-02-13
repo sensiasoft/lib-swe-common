@@ -31,11 +31,9 @@ import java.net.*;
  * class if the URI is already a URL.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 19, 2005
- * @version 1.0
- */
+ * */
 public class URIResolver
 {
     URI uri, baseUri, resolvedUri;

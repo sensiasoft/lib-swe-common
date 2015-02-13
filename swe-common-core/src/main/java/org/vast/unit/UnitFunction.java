@@ -27,11 +27,9 @@ package org.vast.unit;
  * Example of functions are log, ln, degF, degC, etc...
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 9, 2007
- * @version 1.0
- */
+ * */
 public abstract class UnitFunction
 {
     protected String printSymbol;

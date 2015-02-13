@@ -31,11 +31,9 @@ import java.io.OutputStream;
  * buffer or an XML element.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 12, 2005
- * @version 1.0
- */
+ * */
 public interface OutputStreamProvider
 {
 	public OutputStream getDataStream() throws IOException;

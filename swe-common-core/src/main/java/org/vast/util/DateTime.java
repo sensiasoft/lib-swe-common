@@ -29,11 +29,9 @@ import java.util.Date;
  * Extension of java Date to provide julian time output as a double.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 29, 2005
- * @version 1.0
- */
+ * */
 public class DateTime extends Date
 {
 	private static final long serialVersionUID = -237455813885095232L;

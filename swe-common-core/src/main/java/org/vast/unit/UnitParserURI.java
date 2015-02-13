@@ -26,11 +26,9 @@ package org.vast.unit;
  * the corresponding Unit object ready for conversion.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since May 4, 2006
- * @version 1.0
- */
+ * */
 public class UnitParserURI implements UnitParser
 {
     protected UnitParserUCUM ucumParser = new UnitParserUCUM();

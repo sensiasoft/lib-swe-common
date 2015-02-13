@@ -28,11 +28,9 @@ package org.vast.math;
  * math routines for 3D transformations.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Jul 19, 2006
- * @version 1.0
- */
+ * */
 public class Matrix4d extends javax.vecmath.Matrix4d
 {
     static final long serialVersionUID = 0;

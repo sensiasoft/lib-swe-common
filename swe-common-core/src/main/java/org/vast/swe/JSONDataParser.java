@@ -33,11 +33,9 @@ import net.opengis.swe.v20.ScalarComponent;
  * Reads SWE data streams in JSON format
  * </p>
  *
- * <p>Copyright (c) 2014</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov, 2 2014
- * @version 1.0
- */
+ * */
 public class JSONDataParser extends AbstractDataParser
 {
 

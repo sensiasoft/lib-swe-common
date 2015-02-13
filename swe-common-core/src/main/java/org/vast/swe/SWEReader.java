@@ -40,11 +40,9 @@ import org.vast.cdm.common.*;
  * suited for a given encoding.
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 16, 2005
- * @version 1.0
- */
+ * */
 public abstract class SWEReader implements InputStreamProvider
 {
 	protected DataEncoding dataEncoding;

@@ -38,11 +38,9 @@ import org.vast.util.TimeExtent;
  * The procedure can be a homogeneous sensor array.
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 28, 2012
- * @version 1.0
- */
+ * */
 public interface IObservationSeries extends IFeature, ISweInputDataStream, ISweOutputDataStream
 {
     /**

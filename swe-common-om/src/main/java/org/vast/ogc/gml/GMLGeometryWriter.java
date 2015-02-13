@@ -39,11 +39,9 @@ import com.vividsolutions.jts.geom.Polygon;
  * Writer for GML geometries
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 26, 2012
- * @version 1.0
- */
+ * */
 public class GMLGeometryWriter
 {
     private static String DEFAULT_CRS_URI_PREFIX = "http://www.opengis.net/def/crs/EPSG/0/";

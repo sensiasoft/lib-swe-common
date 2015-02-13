@@ -34,11 +34,9 @@ import org.w3c.dom.Text;
  * 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since 6 oct. 2008
- * @version 1.0
- */
+ * */
 public class DataSinkDOM implements DataSink
 {
 	protected ByteArrayOutputStream textData;

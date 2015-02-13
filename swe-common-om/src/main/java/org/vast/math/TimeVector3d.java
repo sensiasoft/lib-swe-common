@@ -30,11 +30,9 @@ package org.vast.math;
  * Extension of Vector3d to add a time coordinate
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since 28 ao�t 08
- * @version 1.0
- */
+ * */
 public class TimeVector3d extends Vector3d
 {
 	private static final long serialVersionUID = 1538029865321858257L;

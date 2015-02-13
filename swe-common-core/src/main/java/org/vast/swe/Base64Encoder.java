@@ -30,11 +30,9 @@ import java.io.*;
  * Commons Base64 encoder/decoder class.  
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 14, 2006
- * @version 1.0
- */
+ * */
 public class Base64Encoder extends FilterOutputStream
 {
     private byte[] charBuf = new byte[4];

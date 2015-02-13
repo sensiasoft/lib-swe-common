@@ -27,11 +27,9 @@ package org.vast.math;
  * routines.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Nov 29, 2005
- * @version 1.0
- */
+ * */
 public class Quat4d extends javax.vecmath.Quat4d
 {
     static final long serialVersionUID = 0;

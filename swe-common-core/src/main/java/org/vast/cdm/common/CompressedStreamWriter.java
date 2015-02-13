@@ -19,8 +19,7 @@ import net.opengis.swe.v20.DataComponent;
  * Interface for all SWE compressed block encoders
  * </p>
  *
- * <p>Copyright (c) 2013</p>
- * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 9, 2013
  */
 public interface CompressedStreamWriter

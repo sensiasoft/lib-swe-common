@@ -28,11 +28,9 @@ import java.util.List;
  * SensorML ResponsibleParty
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 16, 2006
- * @version 1.0
- */
+ * */
 public class ResponsibleParty extends Contact
 {
     protected String individualName;

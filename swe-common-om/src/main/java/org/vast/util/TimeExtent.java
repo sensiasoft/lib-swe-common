@@ -21,11 +21,9 @@ package org.vast.util;
  * time step, and lead/lag time deltas.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
  * @author Tony Cook, Mike Botts, Alexandre Robin
  * @since Nov 15, 2005
- * @version 1.0
- */
+ * */
 public class TimeExtent
 {
     public final static double NOW_ACCURACY = 1000;    

@@ -32,11 +32,9 @@ import org.w3c.dom.NodeList;
  * Reads GML envelope (coords + CRS)
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Oct 25, 2006
- * @version 1.0
- */
+ * */
 public class GMLEnvelopeReader
 {
     protected final static String invalidCoordinates = "Invalid Coordinates: ";

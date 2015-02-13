@@ -33,11 +33,9 @@ import org.vast.cdm.common.DataOutputExt;
  * is for big endian order (i.e. Most Significant Byte first)
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 10, 2006
- * @version 1.0
- */
+ * */
 public class DataOutputStreamBI extends DataOutputStream implements DataOutputExt
 {
     byte[] tmpBuf = new byte[4];

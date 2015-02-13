@@ -28,11 +28,9 @@ import org.vast.data.DataValue;
  * that is compressed in JPEG and TIFF, PNG, ... 
  * </p>
  *
- * <p>Copyright (c) 2007</p>
  * @author Gregoire Berthiau
  * @since Jul 16, 2008
- * @version 1.0
- */
+ * */
 public class CommonImageIODecoder implements CompressedStreamParser
 {
     protected String imageUrl;

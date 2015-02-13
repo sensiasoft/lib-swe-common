@@ -30,11 +30,9 @@ import java.io.InputStream;
  * read the CDM data according to the previously obtained description.
  * </p>
  *
- * <p>Copyright (c) 2007</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 12, 2005
- * @version 1.0
- */
+ * */
 public interface InputStreamProvider
 {
 	public InputStream getDataStream() throws IOException;

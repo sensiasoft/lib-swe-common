@@ -27,11 +27,9 @@ package org.vast.unit;
  * and custom functions.
  * </p>
  *
- * <p>Copyright (c) 2005</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since May 4, 2006
- * @version 1.0
- */
+ * */
 public class GenericUnitConverter extends AbstractUnitConverter
 {
     protected double conversionFactor = 1.0;

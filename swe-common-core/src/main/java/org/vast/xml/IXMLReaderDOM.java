@@ -31,11 +31,9 @@ import org.w3c.dom.Element;
  * Interface for XML readers converting a DOM tree to Java objects
  * </p>
  *
- * <p>Copyright (c) 2012</p>
- * @author Alexandre Robin
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 30, 2012
- * @version 1.0
- * @param <ObjectType> Type of object this reader can deserialize
+ * * @param <ObjectType> Type of object this reader can deserialize
  */
 public interface IXMLReaderDOM<ObjectType>
 {

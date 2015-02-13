@@ -1,27 +1,17 @@
 /***************************** BEGIN LICENSE BLOCK ***************************
 
- The contents of this file are subject to the Mozilla Public License Version
- 1.1 (the "License"); you may not use this file except in compliance with
- the License. You may obtain a copy of the License at
- http://www.mozilla.org/MPL/MPL-1.1.html
- 
- Software distributed under the License is distributed on an "AS IS" basis,
- WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
- for the specific language governing rights and limitations under the License.
- 
- The Original Code is the "SensorML DataProcessing Engine".
- 
- The Initial Developer of the Original Code is the VAST team at the
- University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
- Portions created by the Initial Developer are Copyright (C) 2007
- the Initial Developer. All Rights Reserved.
+The contents of this file are subject to the Mozilla Public License, v. 2.0.
+If a copy of the MPL was not distributed with this file, You can obtain one
+at http://mozilla.org/MPL/2.0/.
 
- Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+for the specific language governing rights and limitations under the License.
  
- Contributor(s): 
-    Alexandre Robin <alexandre.robin@spotimage.com>
+Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
+
 package org.vast.data;
 
 import org.vast.cdm.common.CDMException;
@@ -37,11 +27,9 @@ import net.opengis.swe.v20.DataComponent;
  * definition, full path, etc...
  * </p>
  *
- * <p>Copyright (c) 2008</p>
- * @author Alexandre Robin <alexandre.robin@spotimage.fr>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Mar, 11 2008
- * @version 1.0
- */
+ * */
 public class DataComponentHelper
 {
     public final static String PATH_SEPARATOR = "/";

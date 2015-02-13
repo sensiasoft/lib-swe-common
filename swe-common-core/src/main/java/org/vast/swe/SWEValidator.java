@@ -53,8 +53,7 @@ import org.vast.data.TimeImpl;
  * This checks things that cannot be validated with XML schema.
  * </p>
  *
- * <p>Copyright (c) 2014 Sensia Software LLC</p>
- * @author Alexandre Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Mar 5, 2014
  */
 public class SWEValidator
