@@ -82,10 +82,10 @@ public class BinaryDataParser extends AbstractDataParser
 		}
 		
 		// create data input stream
-		if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.BIG_ENDIAN)
-		    input = new DataInputStreamBI(dataIn);
-        else if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.LITTLE_ENDIAN)
+		if (((BinaryEncoding)dataEncoding).getByteOrder() == ByteOrder.LITTLE_ENDIAN)
             input = new DataInputStreamLI(dataIn);
+		else
+		    input = new DataInputStreamBI(dataIn);
 		
 		dataInput = (DataInputExt)input;
 	}
