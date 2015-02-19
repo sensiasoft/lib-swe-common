@@ -40,6 +40,7 @@ import org.w3c.dom.NodeList;
 public class OGCRegistry
 {
     public final static String XLINK = "XLINK";
+    protected final static String DEFAULT_OWS_VERSION = "1.0";
     protected static Hashtable<String, Class<?>> readerClasses;
     protected static Hashtable<String, Class<?>> writerClasses;
     protected static Hashtable<String, String> namespaces;
@@ -101,7 +102,7 @@ public class OGCRegistry
     	String owsVersion = owsVersions.get(spec + "_" + normalizeVersionString(version));
     	
     	if (owsVersion == null)
-        	throw new IllegalStateException("Unsupported Specification: " + spec + " v" + version);
+    	    return DEFAULT_OWS_VERSION;
     	
     	return owsVersion;
     }
