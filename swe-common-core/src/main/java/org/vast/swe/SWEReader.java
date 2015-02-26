@@ -96,7 +96,7 @@ public abstract class SWEReader implements InputStreamProvider
 	
 	protected DataStreamParser createDataParser() throws IOException
 	{
-	    DataStreamParser parser = SWEFactory.createDataParser(dataEncoding);
+	    DataStreamParser parser = SWEHelper.createDataParser(dataEncoding);
 	    parser.setDataComponents(this.dataComponents);
 	    parser.reset();
         return parser;

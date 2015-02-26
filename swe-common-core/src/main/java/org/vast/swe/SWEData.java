@@ -104,7 +104,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
      */
     public DataStreamParser getDataParser()
     {
-        DataStreamParser parser = SWEFactory.createDataParser(getEncoding());
+        DataStreamParser parser = SWEHelper.createDataParser(getEncoding());
         parser.setDataComponents((DataComponent)getElementType());
         return parser;
     }
@@ -117,7 +117,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
      */
     public DataStreamWriter getDataWriter()
     {
-        DataStreamWriter writer = SWEFactory.createDataWriter(getEncoding());
+        DataStreamWriter writer = SWEHelper.createDataWriter(getEncoding());
         writer.setDataComponents((DataComponent)getElementType());
         return writer;
     }
@@ -158,9 +158,9 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
         else
         {
             if (dataSource instanceof DataSourceDOM)
-                encoding = SWEFactory.ensureXmlCompatible(encoding);
+                encoding = SWEHelper.ensureXmlCompatible(encoding);
        
-            DataStreamParser parser = SWEFactory.createDataParser(encoding);
+            DataStreamParser parser = SWEHelper.createDataParser(encoding);
             parser.setDataComponents((DataComponent)getElementType());
         	parser.setDataHandler(new DefaultParserHandler(this));
         	
@@ -192,9 +192,9 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
         else
         {
             if (dataSink instanceof DataSinkDOM)
-                encoding = SWEFactory.ensureXmlCompatible(encoding);
+                encoding = SWEHelper.ensureXmlCompatible(encoding);
             
-            DataStreamWriter writer = SWEFactory.createDataWriter(encoding);
+            DataStreamWriter writer = SWEHelper.createDataWriter(encoding);
             writer.setDataComponents((DataComponent)getElementType());
             writer.setDataHandler(new DefaultWriterHandler(this, writer));
             

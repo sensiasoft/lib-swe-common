@@ -405,7 +405,7 @@ public class BinaryDataParser extends AbstractDataParser
 	        // read block size
             int blockSize = dataInput.readInt();
             byte[] bytes = new byte[blockSize];
-            dataInput.readFully(bytes);            
+            dataInput.readFully(bytes);
             dataBlock.setUnderlyingObject(bytes);
 	    }
 	    

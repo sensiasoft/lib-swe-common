@@ -352,6 +352,7 @@ public class AsciiDataParser extends AbstractDataParser
     @Override
     public void close() throws IOException
     {
-        reader.close();
+        if (reader != null)
+            reader.close();
     }
 }

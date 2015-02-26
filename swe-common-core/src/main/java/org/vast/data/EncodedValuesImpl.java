@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
-import org.vast.swe.SWEFactory;
+import org.vast.swe.SWEHelper;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BlockComponent;
@@ -56,7 +56,7 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
     {
         try
         {
-            DataStreamParser parser = SWEFactory.createDataParser(encoding);
+            DataStreamParser parser = SWEHelper.createDataParser(encoding);
             parser.setParentArray(array);
             InputStream is = new ByteArrayInputStream(text.getBytes());
             parser.parse(is);
@@ -79,7 +79,7 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
         // write values with proper encoding to byte array
         try
         {
-            DataStreamWriter writer = SWEFactory.createDataWriter(encoding);
+            DataStreamWriter writer = SWEHelper.createDataWriter(encoding);
             writer.setDataComponents(array.getElementType().copy());
             writer.setOutput(os);
             

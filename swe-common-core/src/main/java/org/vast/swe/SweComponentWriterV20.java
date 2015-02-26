@@ -587,7 +587,7 @@ public class SweComponentWriterV20 implements IXMLWriterDOM<DataComponent>
         // write values with proper encoding to byte array
         try
         {
-            DataStreamWriter writer = SWEFactory.createDataWriter(encoding);
+            DataStreamWriter writer = SWEHelper.createDataWriter(encoding);
             writer.setDataComponents(elementType.copy());
             writer.setOutput(os);
             

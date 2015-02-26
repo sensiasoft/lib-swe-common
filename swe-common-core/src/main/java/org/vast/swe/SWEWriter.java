@@ -58,7 +58,7 @@ public abstract class SWEWriter implements OutputStreamProvider
 	
 	public DataStreamWriter getDataWriter() throws CDMException
 	{
-        DataStreamWriter writer = SWEFactory.createDataWriter(dataEncoding);
+        DataStreamWriter writer = SWEHelper.createDataWriter(dataEncoding);
         writer.setDataComponents(this.dataComponents);
         writer.reset();
         return writer;
