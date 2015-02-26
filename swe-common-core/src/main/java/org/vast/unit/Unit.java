@@ -92,7 +92,7 @@ public class Unit
      * given unit, which also means that it is possible to
      * convert from one to the other and vice versa.
      * @param unit
-     * @return
+     * @return true if unit is compatible with this unit
      */
     public boolean isCompatible(Unit unit)
     {
@@ -126,10 +126,8 @@ public class Unit
     
     
     /**
-     * Checks if this unit is equivalent to the given unit
-     * TODO isEquivalent method description
      * @param unit
-     * @return
+     * @return true if this unit is equivalent to this unit
      */
     public boolean isEquivalent(Unit unit)
     {

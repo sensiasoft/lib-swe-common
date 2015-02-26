@@ -52,7 +52,7 @@ public class GenericUnitConverter extends AbstractUnitConverter
     /**
      * Default constructor using given units as source and destination
      * @param srcUnit
-     * @param destinationUnit
+     * @param destUnit
      */
     public GenericUnitConverter(Unit srcUnit, Unit destUnit)
 	{

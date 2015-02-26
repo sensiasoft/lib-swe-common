@@ -39,7 +39,7 @@ public class UnitConversion
     /**
      * Helper mehod to get the converter directly from the uom string
      * @param uom
-     * @return
+     * @return converter instance
      */
     public static UnitConverter createConverterToSI(String uom)
     {
@@ -62,7 +62,7 @@ public class UnitConversion
      * the specified source and destination units.
      * @param sourceUnit
      * @param destUnit
-     * @return
+     * @return converter instance
      */
     public static UnitConverter getConverter(Unit sourceUnit, Unit destUnit)
     {
