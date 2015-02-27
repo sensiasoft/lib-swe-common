@@ -69,7 +69,7 @@ public class DataBlockUByte extends AbstractDataBlock
         DataBlockUByte newBlock = new DataBlockUByte();
         //newBlock.primitiveArray = this.primitiveArray.clone();
         newBlock.primitiveArray = new byte[this.atomCount];
-        System.arraycopy(this.primitiveArray, 0, newBlock.primitiveArray, 0, this.atomCount);
+        System.arraycopy(this.primitiveArray, this.startIndex, newBlock.primitiveArray, 0, this.atomCount);
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }

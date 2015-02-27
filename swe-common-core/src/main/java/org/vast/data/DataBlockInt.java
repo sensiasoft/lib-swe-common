@@ -68,7 +68,7 @@ public class DataBlockInt extends AbstractDataBlock
         DataBlockInt newBlock = new DataBlockInt();
         //newBlock.primitiveArray = this.primitiveArray.clone();
         newBlock.primitiveArray = new int[this.atomCount];
-        System.arraycopy(this.primitiveArray, 0, newBlock.primitiveArray, 0, this.atomCount);
+        System.arraycopy(this.primitiveArray, this.startIndex, newBlock.primitiveArray, 0, this.atomCount);
         newBlock.atomCount = this.atomCount;
         return newBlock;
     }
