@@ -38,9 +38,9 @@ import org.w3c.dom.NodeList;
  * */
 public class DecompressionRegistry
 {
-
     protected static Hashtable<String, Class<?>> readerClasses;
 
+    
     static
     {
         readerClasses = new Hashtable<String, Class<?>>();
@@ -49,9 +49,9 @@ public class DecompressionRegistry
     }
 
     /**
-     * Instantiates a reader object for the specified content type, subtype and version
+     * Instantiates a reader object for the specified compression type
      * @param compressionType
-     * @return
+     * @return new reader instance
      * @throws IllegalStateException
      */
     public static Object createReader(String compressionType) throws IllegalStateException
@@ -61,12 +61,12 @@ public class DecompressionRegistry
 
 
     /**
-     * Registers a reader class for given content type and version
+     * Registers a reader class for given compression type
      * @param compressionType
      * @param className
      * @throws IllegalStateException
      */
-    public static void addReaderClass(String type, String compressionType, String className) throws IllegalStateException
+    public static void addReaderClass(String compressionType, String className) throws IllegalStateException
     {
         addClass(readerClasses, compressionType, className);
     }
@@ -75,7 +75,7 @@ public class DecompressionRegistry
     /**
      * Retrieves a registered reader class
      * @param compressionType
-     * @return null if none found
+     * @return reader class or null if none found
      */
     public static Class<?> getReaderClass(String compressionType)
     {
@@ -83,12 +83,8 @@ public class DecompressionRegistry
     }
 
 
-    /**
+    /*
      * Handles registration of reader/writer classes into the tables
-     * @param table
-     * @param compressionType
-     * @param className
-     * @throws IllegalStateException
      */
     private static void addClass(Hashtable<String, Class<?>> table, String compressionType, String className) throws IllegalStateException
     {
@@ -113,12 +109,8 @@ public class DecompressionRegistry
     }
 
 
-    /**
+    /*
      * Handles the retrieval of class objects from tables
-     * @param table
-     * @param compressionType
-     * @return
-     * @throws IllegalStateException
      */
     private static Class<?> getClass(Hashtable<String, Class<?>> table, String compressionType) throws IllegalStateException
     {
@@ -137,11 +129,8 @@ public class DecompressionRegistry
     }
 
 
-    /**
+    /*
      * Handles the instantiation of reader/writer classes
-     * @param table
-     * @param compressionType
-     * @return
      */
     private static Object createObject(Hashtable<String, Class<?>> table, String compressionType) throws IllegalStateException
     {
@@ -210,16 +199,6 @@ public class DecompressionRegistry
             return type.toUpperCase();
         else
             return null;
-    }
-
-
-    /**
-     * Provides direct access to the readerClasses hashtable
-     * @return
-     */
-    public static Hashtable<String, Class<?>> getReaderClasses()
-    {
-        return readerClasses;
     }
 
 }
