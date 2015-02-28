@@ -30,6 +30,12 @@ public interface OgcProperty<ValueType> extends IXlinkReference<ValueType>
     public void setName(String name);
     
     
+    public String getTitle();
+
+
+    public void setTitle(String title);
+    
+    
     public String getNilReason();
 
 

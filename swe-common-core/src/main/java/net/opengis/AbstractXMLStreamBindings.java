@@ -143,6 +143,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     protected void readPropertyAttributes(Map<String, String> attrMap, OgcProperty<?> prop) throws XMLStreamException
     {
         prop.setName(attrMap.get("name"));
+        prop.setTitle(attrMap.get("title"));
         prop.setHref(attrMap.get("href"));
         prop.setRole(attrMap.get("role"));
         prop.setArcRole(attrMap.get("arcrole"));
@@ -156,6 +157,10 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
         val = prop.getName();
         if (val != null)
             writer.writeAttribute("name", val);
+        
+        val = prop.getTitle();
+        if (val != null)
+            writer.writeAttribute(XLINK_NS_URI, "title", val);
         
         val = prop.getRole();
         if (val != null)

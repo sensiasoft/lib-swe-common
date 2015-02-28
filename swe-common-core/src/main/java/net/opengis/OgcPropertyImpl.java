@@ -21,6 +21,7 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
 {
     protected ValueType value;
     protected String name;
+    protected String title;
     protected String href;
     protected String role;
     protected String arcRole;
@@ -70,9 +71,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
     
     
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#getName()
-     */
     @Override
     public String getName()
     {
@@ -80,9 +78,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
 
 
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#setName(java.lang.String)
-     */
     @Override
     public void setName(String name)
     {
@@ -90,9 +85,20 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
 
 
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#getHref()
-     */
+    @Override
+    public String getTitle()
+    {
+        return title;
+    }
+
+
+    @Override
+    public void setTitle(String title)
+    {
+        this.title = title;        
+    }
+
+
     @Override
     public String getHref()
     {
@@ -100,9 +106,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
 
 
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#setHref(java.lang.String)
-     */
     @Override
     public void setHref(String href)
     {
@@ -113,9 +116,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
     
     
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#hasHref()
-     */
     @Override
     public boolean hasHref()
     {
@@ -123,9 +123,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
 
 
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#getRole()
-     */
     @Override
     public String getRole()
     {
@@ -133,9 +130,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
 
 
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#setRole(java.lang.String)
-     */
     @Override
     public void setRole(String role)
     {
@@ -143,9 +137,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
     
     
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#getArcRole()
-     */
     @Override
     public String getArcRole()
     {
@@ -153,9 +144,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
     
     
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#setArcRole(java.lang.String)
-     */
     @Override
     public void setArcRole(String role)
     {
@@ -163,9 +151,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
     
     
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#getNilReason()
-     */
     @Override
     public String getNilReason()
     {
@@ -173,9 +158,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
 
 
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#setNilReason(java.lang.String)
-     */
     @Override
     public void setNilReason(String nilReason)
     {
@@ -183,9 +165,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
 
 
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#getValue()
-     */
     @Override
     public ValueType getValue()
     {
@@ -203,9 +182,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
     
     
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#hasValue()
-     */
     @Override
     public boolean hasValue()
     {
@@ -213,9 +189,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
     
     
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#setValue(ValueType)
-     */
     @Override
     public void setValue(ValueType value)
     {
@@ -226,9 +199,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
     
     
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#setHrefResolver(HrefResolver)
-     */
     @Override
     public void setHrefResolver(HrefResolver hrefResolver)
     {
@@ -236,9 +206,6 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
 
 
-    /* (non-Javadoc)
-     * @see net.opengis.OgcProperty#resolveHref()
-     */
     @Override
     public boolean resolveHref() throws IOException
     {
