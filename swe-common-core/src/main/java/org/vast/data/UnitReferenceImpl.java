@@ -15,6 +15,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import org.vast.unit.Unit;
+import org.vast.unit.UnitParserUCUM;
+import org.vast.unit.UnitParserURI;
 import net.opengis.swe.v20.UnitReference;
 
 
@@ -79,6 +81,21 @@ public class UnitReferenceImpl extends net.opengis.OgcPropertyImpl<Unit> impleme
     public void setCode(String code)
     {
         this.code = code;
+    }
+
+
+    @Override
+    public Unit getValue()
+    {
+        if (value == null)
+        {
+            if (isSetCode() && !code.equalsIgnoreCase(ANY_UNIT_CODE))
+                value = new UnitParserUCUM().getUnit(code);
+            else if (hasHref() && !href.equalsIgnoreCase(ANY_UNIT_URI))
+                value = new UnitParserURI().getUnit(href);
+        }
+        
+        return value;
     }
 
 }
