@@ -28,7 +28,7 @@ public class TextEncodingImpl extends AbstractEncodingImpl implements TextEncodi
     protected Boolean collapseWhiteSpaces = true;
     protected String decimalSeparator = ".";
     protected String tokenSeparator = ",";
-    protected String blockSeparator = " ";
+    protected String blockSeparator = "\n";
     
     
     public TextEncodingImpl()
