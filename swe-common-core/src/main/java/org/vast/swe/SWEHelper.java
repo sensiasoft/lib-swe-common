@@ -36,6 +36,7 @@ import net.opengis.swe.v20.XMLEncoding;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.data.SWEFactory;
+import org.vast.data.TextEncodingImpl;
 
 
 /**
@@ -205,6 +206,14 @@ public class SWEHelper
         
         writer.setDataEncoding(encoding);
         return writer;
+    }
+    
+    
+    public static DataEncoding getDefaultEncoding(DataComponent component)
+    {
+        // TODO scan to see if there is a large array and use binary encoding in that case
+        
+        return new TextEncodingImpl();
     }
     
     
