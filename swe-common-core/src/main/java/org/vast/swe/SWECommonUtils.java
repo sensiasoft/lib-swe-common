@@ -21,9 +21,11 @@
 package org.vast.swe;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
@@ -91,8 +93,8 @@ public class SWECommonUtils
         IXMLReaderDOM<DataEncoding> reader = getDataEncodingReader(dom, componentElement);
         return reader.read(dom, componentElement);
     }
-
-
+    
+    
     public Element writeComponent(DOMHelper dom, DataComponent dataComponents) throws XMLWriterException
     {
         IXMLWriterDOM<DataComponent> writer = getDataComponentWriter();
@@ -104,6 +106,45 @@ public class SWECommonUtils
     {
         IXMLWriterDOM<DataComponent> writer = getDataComponentWriter();
         return writer.write(dom, dataComponents);
+    }
+    
+    
+    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws XMLWriterException
+    {
+        IXMLWriterDOM<DataEncoding> writer = getDataEncodingWriter();
+        return writer.write(dom, dataEncoding);
+    }
+    
+    
+    public DataComponent readComponent(InputStream is) throws XMLReaderException
+    {
+        try
+        {
+            SWEStaxBindings staxReader = new SWEStaxBindings();
+            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(is);
+            reader.nextTag();
+            return staxReader.readDataComponent(reader);
+        }
+        catch (XMLStreamException e)
+        {
+            throw new XMLReaderException("Error while reading SWE Common Component", e);
+        }
+    }
+    
+    
+    public DataEncoding readEncoding(InputStream is) throws XMLReaderException
+    {
+        try
+        {
+            SWEStaxBindings staxReader = new SWEStaxBindings();
+            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(is);
+            reader.nextTag();
+            return staxReader.readAbstractEncoding(reader);
+        }
+        catch (XMLStreamException e)
+        {
+            throw new XMLReaderException("Error while reading SWE Common Encoding", e);
+        }
     }
     
     
@@ -123,18 +164,32 @@ public class SWECommonUtils
         }
         catch (XMLStreamException e)
         {
-            throw new XMLWriterException("Error while writing SWE Common document to output stream", e);
+            throw new XMLWriterException("Error while writing SWE Common Component", e);
+        }
+    }
+    
+    
+    public void writeEncoding(OutputStream os, DataEncoding dataEncoding, boolean indent) throws XMLWriterException, IOException
+    {
+        try
+        {
+            SWEStaxBindings sweWriter = new SWEStaxBindings();
+            XMLOutputFactory factory = XMLImplFinder.getStaxOutputFactory();
+            XMLStreamWriter writer = factory.createXMLStreamWriter(os);
+            if (indent)
+                writer = new IndentingXMLStreamWriter(writer);
+            sweWriter.setNamespacePrefixes(writer);
+            sweWriter.declareNamespacesOnRootElement();
+            sweWriter.writeAbstractEncoding(writer, dataEncoding);
+            writer.close();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new XMLWriterException("Error while writing SWE Common Encoding", e);
         }
     }
 
 
-    public Element writeEncoding(DOMHelper dom, DataEncoding dataEncoding) throws XMLWriterException
-    {
-        IXMLWriterDOM<DataEncoding> writer = getDataEncodingWriter();
-        return writer.write(dom, dataEncoding);
-    }
-    
-    
     /**
      * Reuses or creates the DataComponent reader corresponding to
      * the version specified by the SWE namespace URI
@@ -217,7 +272,7 @@ public class SWECommonUtils
         else
         {
             IXMLWriterDOM<DataEncoding> writer = 
-                (IXMLWriterDOM<DataEncoding>)OGCRegistry.createWriter(SWECOMMON, DATACOMPONENT, this.version);
+                (IXMLWriterDOM<DataEncoding>)OGCRegistry.createWriter(SWECOMMON, DATAENCODING, this.version);
             encodingWriter = writer;
             versionChanged = false;
             return writer;
