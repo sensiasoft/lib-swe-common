@@ -35,7 +35,7 @@ public class BinaryEncodingImpl extends AbstractEncodingImpl implements BinaryEn
 {
     static final long serialVersionUID = 1L;
     protected List<BinaryMember> memberList = new ArrayList<BinaryMember>();
-    protected ByteOrder byteOrder;
+    protected ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
     protected ByteEncoding byteEncoding;
     protected Long byteLength;
     
