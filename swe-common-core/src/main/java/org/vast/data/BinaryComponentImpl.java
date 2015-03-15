@@ -377,4 +377,19 @@ public class BinaryComponentImpl extends AbstractSWEImpl implements BinaryCompon
                 throw new RuntimeException("Unsupported datatype " + dataType);
         }
     }
+    
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append("Component:");
+        buf.append(" ref=").append(ref).append(',');
+        buf.append(" dataType=").append(cdmDataType).append(',');
+        buf.append(" significantBits=").append(significantBits).append(',');
+        buf.append(" bitLength=").append(bitLength).append(',');
+        buf.append(" byteLength=").append(byteLength).append(',');
+        buf.append(" encryption=").append(encryption);
+        return buf.toString();
+    }
 }

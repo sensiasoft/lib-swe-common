@@ -163,4 +163,17 @@ public class TextEncodingImpl extends AbstractEncodingImpl implements TextEncodi
     {
         this.blockSeparator = blockSeparator;
     }
+
+
+    @Override
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append("TextEncoding:");
+        buf.append(" blockSep=").append(blockSeparator).append(',');
+        buf.append(" tokenSep=").append(tokenSeparator).append(',');
+        buf.append(" decimalSep=").append(decimalSeparator).append(',');
+        buf.append(" collapseWS=").append(collapseWhiteSpaces);
+        return buf.toString();
+    }
 }

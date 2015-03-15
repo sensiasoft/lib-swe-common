@@ -273,4 +273,19 @@ public class BinaryBlockImpl extends AbstractSWEImpl implements BinaryBlock, Has
     {
         this.reader = reader;
     }
+    
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append("Block:");
+        buf.append(" ref=").append(ref).append(',');
+        buf.append(" byteLength=").append(byteLength).append(',');
+        buf.append(" compression=").append(compression).append(',');
+        buf.append(" encryption=").append(encryption).append(',');
+        buf.append(" paddingBefore=").append(paddingBytesBefore).append(',');
+        buf.append(" paddingAfter=").append(paddingBytesAfter);
+        return buf.toString();
+    }
 }

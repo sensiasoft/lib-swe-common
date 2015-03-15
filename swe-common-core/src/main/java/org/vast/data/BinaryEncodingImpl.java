@@ -23,7 +23,6 @@ import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.ByteEncoding;
 import net.opengis.swe.v20.BinaryComponent;
-import net.opengis.swe.v20.DataComponent;
 
 
 /**
@@ -180,36 +179,16 @@ public class BinaryEncodingImpl extends AbstractEncodingImpl implements BinaryEn
     }
     
     
-    public static BinaryEncodingImpl getDefaultEncoding(DataComponent dataComponents)
+    @Override
+    public String toString()
     {
-        BinaryEncodingImpl encoding = new BinaryEncodingImpl();
-        encoding.byteEncoding = ByteEncoding.RAW;
-        encoding.byteOrder = ByteOrder.BIG_ENDIAN;
-        
-        // use default encoding info for each data value
-        ScalarIterator it = new ScalarIterator(dataComponents);
-        while (it.hasNext())
-        {
-            DataComponent[] nextPath = it.nextPath();
-            DataValue nextScalar = (DataValue)nextPath[nextPath.length-1];
-            
-            // build path (just use / for root)
-            StringBuffer pathString = new StringBuffer();
-            pathString.append(DataComponentHelper.PATH_SEPARATOR);
-            for (int i = 1; i < nextPath.length; i++)
-            {
-                pathString.append(nextPath[i].getName());
-                pathString.append(DataComponentHelper.PATH_SEPARATOR);
-            }
-            
-            BinaryComponentImpl binaryOpts = new BinaryComponentImpl();
-            binaryOpts.setCdmDataType(nextScalar.getDataType());
-            binaryOpts.setRef(pathString.substring(0, pathString.length()-1));
-            
-            encoding.addMemberAsComponent(binaryOpts);
-            nextScalar.setEncodingInfo(binaryOpts);
-        }
-        
-        return encoding;
+        StringBuilder buf = new StringBuilder();
+        buf.append("BinaryEncoding:");
+        buf.append(" byteEncoding=").append(byteEncoding).append(',');
+        buf.append(" byteOrder=").append(byteOrder).append(',');
+        buf.append(" byteLength=").append(byteLength).append('\n');
+        for (BinaryMember m: memberList)
+            buf.append(m).append('\n');
+        return buf.toString();
     }
 }
