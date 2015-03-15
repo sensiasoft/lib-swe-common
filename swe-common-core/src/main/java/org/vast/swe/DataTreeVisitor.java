@@ -21,6 +21,7 @@
 package org.vast.swe;
 
 import java.util.Stack;
+import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.DataComponent;
@@ -31,7 +32,6 @@ import org.vast.cdm.common.RawDataHandler;
 import org.vast.data.AbstractArrayImpl;
 import org.vast.data.DataArrayImpl;
 import org.vast.data.DataChoiceImpl;
-import org.vast.data.CountImpl;
 
 
 public abstract class DataTreeVisitor
@@ -48,7 +48,6 @@ public abstract class DataTreeVisitor
     protected boolean newBlock = true;
 	protected boolean endOfArray = false;
 	protected boolean parsing = true;
-	protected CountImpl sizeValue; // for holding implicit array size
 	
     
 	protected class Record
@@ -70,8 +69,6 @@ public abstract class DataTreeVisitor
 	{
 		this.parsing = parsing;
 		this.componentStack = new Stack<Record>();
-		this.sizeValue = new CountImpl();
-		this.sizeValue.assignNewDataBlock();
 	}
 	
 	
@@ -125,7 +122,9 @@ public abstract class DataTreeVisitor
 	    		{
 	    			if (((DataArrayImpl)next).isImplicitSize())
 	    			{
-	    				// read implicit array size (when parsing)
+	    				Count sizeValue = ((DataArrayImpl)next).getArraySizeComponent();
+	    				        
+	    			    // read implicit array size (when parsing)
 	    				if (parsing)
 	        			{
 	    					processAtom(sizeValue);

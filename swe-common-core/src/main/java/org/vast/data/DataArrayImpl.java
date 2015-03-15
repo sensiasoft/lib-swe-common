@@ -42,7 +42,7 @@ public class DataArrayImpl extends AbstractArrayImpl
 {
     private static final long serialVersionUID = -585236845658753642L;
     protected final static String errorBlockMixed = "Error: DataArrays should never contain a DataBlockMixed";
-    public final static String ARRAY_SIZE_FIELD = "ArraySize";
+    public final static String ARRAY_SIZE_FIELD = "elementCount";
     
     protected int currentSize;
     protected CountImpl implicitElementCount;
@@ -178,6 +178,9 @@ public class DataArrayImpl extends AbstractArrayImpl
     @Override
     public AbstractDataComponentImpl getComponent(String name)
 	{
+		if (name.equals(ARRAY_SIZE_FIELD) && isImplicitSize())
+		    return getArraySizeComponent();
+        
 		if (!name.equals(elementType.getName()))
 			return null;
 		
@@ -550,7 +553,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     }
     
     
-    protected final CountImpl getArraySizeComponent()
+    public final CountImpl getArraySizeComponent()
     {
 	    // case of implicit size
         if (isImplicitSize())

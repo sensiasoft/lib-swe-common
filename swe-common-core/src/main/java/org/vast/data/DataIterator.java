@@ -55,7 +55,8 @@ public class DataIterator implements Iterator<DataComponent>
     
 	public DataIterator(DataComponent rootComponent)
 	{
-		this.componentStack = new Stack<Record>();
+		this.rootComponent = rootComponent;
+	    this.componentStack = new Stack<Record>();
 		this.componentStack.push(new Record(rootComponent));
 	}
 	

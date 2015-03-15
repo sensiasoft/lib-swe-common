@@ -57,7 +57,7 @@ public class ScalarIterator extends DataIterator
             componentList.add(nextComponent);
             nextComponent = nextComponent.getParent();
         }
-        while (nextComponent != null);
+        while (nextComponent != rootComponent);
         
         Collections.reverse(componentList);
         
