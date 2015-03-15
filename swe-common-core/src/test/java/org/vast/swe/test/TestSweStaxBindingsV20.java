@@ -14,21 +14,28 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.test;
 
+import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteOrder;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.AllowedValues;
+import net.opengis.swe.v20.BinaryEncoding;
+import net.opengis.swe.v20.BlockComponent;
+import net.opengis.swe.v20.ByteEncoding;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
+import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.AbstractSWE;
+import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.NilValue;
@@ -39,7 +46,10 @@ import net.opengis.swe.v20.UnitReference;
 import org.custommonkey.xmlunit.Validator;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
+import org.vast.cdm.common.DataStreamParser;
+import org.vast.cdm.common.DataStreamWriter;
 import org.vast.data.*;
+import org.vast.swe.SWEHelper;
 import org.vast.swe.SWEStaxBindings;
 import org.vast.xml.IndentingXMLStreamWriter;
 import org.xml.sax.InputSource;
@@ -122,18 +132,71 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     
     protected void readWriteCompareSweCommonXml(String path, boolean isDataStream) throws Exception
     {
-        AbstractSWE sweObj = readSweCommonXml(path, isDataStream);
-        
-        // write back to stdout and buffer
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        writeSweCommonXmlToStream(sweObj, os, false);
-        writeSweCommonXmlToStream(sweObj, System.out, true);
-        System.out.println('\n');
-        
-        // compare with original
-        InputSource src1 = new InputSource(getClass().getResourceAsStream(path));
-        InputSource src2 = new InputSource(new ByteArrayInputStream(os.toByteArray()));
-        assertXMLEqual(src1, src2);
+        try
+        {
+            AbstractSWE sweObj = readSweCommonXml(path, isDataStream);
+            
+            // write back to stdout and buffer
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            writeSweCommonXmlToStream(sweObj, os, false);
+            writeSweCommonXmlToStream(sweObj, System.out, true);
+            System.out.println('\n');
+            
+            // compare with original
+            InputSource src1 = new InputSource(getClass().getResourceAsStream(path));
+            InputSource src2 = new InputSource(new ByteArrayInputStream(os.toByteArray()));
+            assertXMLEqual(src1, src2);
+        }
+        catch (Throwable e)
+        {
+            throw new Exception("Failed test " + path, e);
+        }
+    }
+    
+    
+    protected void readWriteCompareSweEncodedData(String testName, DataComponent dataStruct, DataEncoding encoding, boolean writeToStdOut) throws Exception
+    {
+        try
+        {
+            // write encoded data
+            DataStreamWriter dataWriter = SWEHelper.createDataWriter(encoding);
+            dataWriter.setDataComponents(dataStruct);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            dataWriter.setOutput(os);
+                        
+            // write to buffer
+            for (int i=0; i<5; i++)
+            {
+                DataBlock data = dataStruct.createDataBlock();
+                // change values randomly
+                for (int b=0; b<data.getAtomCount(); b++)
+                    data.setDoubleValue(b, Math.random()*255.);
+                dataWriter.write(data);
+            }
+            System.out.println("Data written to buffer. Size=" + os.size());
+            //if (writeToStdOut)
+                //System.out.println(Arrays.toString(os.toByteArray()));
+                
+            // read and write back to other buffer
+            DataStreamParser dataParser = SWEHelper.createDataParser(encoding);
+            dataParser.setDataComponents(dataStruct);
+            ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+            dataParser.setInput(is);            
+            dataWriter = SWEHelper.createDataWriter(encoding);
+            dataWriter.setDataComponents(dataStruct);
+            ByteArrayOutputStream os2 = new ByteArrayOutputStream();
+            dataWriter.setOutput(os2);            
+            DataBlock data;
+            while ((data = dataParser.parseNextBlock()) != null)
+                dataWriter.write(data);
+            
+            // compare with original
+            assertArrayEquals(os.toByteArray(), os2.toByteArray());
+        }
+        catch (Throwable e)
+        {
+            throw new Exception("Failed test " + testName, e);
+        }
     }
     
     
@@ -210,7 +273,34 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     
     public void testReadWriteArrayBinary() throws Exception
     {        
+        String path = "examples_v20/spec/enc_binary_image.xml";
+        DataComponent imgArray = (DataComponent)readSweCommonXml(path, false);
+        BinaryEncoding encoding;
+        if (imgArray instanceof BlockComponent && ((BlockComponent) imgArray).isSetEncoding())
+            encoding = (BinaryEncoding)((BlockComponent) imgArray).getEncoding();
+        else
+            encoding = BinaryEncodingImpl.getDefaultEncoding(imgArray);
+        String testName;
         
+        encoding.setByteEncoding(ByteEncoding.RAW);
+        encoding.setByteOrder(ByteOrder.BIG_ENDIAN);
+        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
+        readWriteCompareSweEncodedData(testName, imgArray, encoding, false);
+        
+        encoding.setByteEncoding(ByteEncoding.RAW);
+        encoding.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
+        readWriteCompareSweEncodedData(testName, imgArray, encoding, false);
+        
+        encoding.setByteEncoding(ByteEncoding.BASE_64);
+        encoding.setByteOrder(ByteOrder.BIG_ENDIAN);
+        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
+        readWriteCompareSweEncodedData(testName, imgArray, encoding, true);
+        
+        encoding.setByteEncoding(ByteEncoding.BASE_64);
+        encoding.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
+        readWriteCompareSweEncodedData(testName, imgArray, encoding, true);
     }
     
     

@@ -201,9 +201,9 @@ public class Base64Decoder extends FilterInputStream
     public synchronized void mark(int readlimit)
     {
         byteBufSave[0] = byteBuf[0];
-        byteBufSave[0] = byteBuf[1];
+        byteBufSave[1] = byteBuf[1];
         unusedBytesSave = unusedBytes;
-        super.mark(readlimit);
+        super.mark(readlimit+3);
     }
 
 
@@ -211,7 +211,7 @@ public class Base64Decoder extends FilterInputStream
     public synchronized void reset() throws IOException
     {
         byteBuf[0] = byteBufSave[0];
-        byteBuf[1] = byteBufSave[0];
+        byteBuf[1] = byteBufSave[1];
         unusedBytes = unusedBytesSave;
         super.reset();
     }   
