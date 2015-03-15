@@ -240,7 +240,7 @@ public class BinaryDataParser extends AbstractDataParser
 			try
 			{
 				choiceIndex = dataInput.readByte();
-				((DataChoiceImpl)blockComponent).setSelected(choiceIndex);
+				((DataChoiceImpl)blockComponent).setSelectedItem(choiceIndex);
 			}
 			catch (IllegalStateException e)
 			{

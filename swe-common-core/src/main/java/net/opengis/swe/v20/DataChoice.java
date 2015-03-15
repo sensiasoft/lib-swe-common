@@ -84,4 +84,11 @@ public interface DataChoice extends DataComponent
      * @param name
      */
     public void setSelectedItem(String name);
+    
+    
+    /**
+     * Sets the choice selection to the item with the given index
+     * @param name
+     */
+    public void setSelectedItem(int index);
 }

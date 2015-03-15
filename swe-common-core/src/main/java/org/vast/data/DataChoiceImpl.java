@@ -235,6 +235,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 	}
     
     
+    @Override
     public AbstractDataComponentImpl getSelectedItem()
     {
     	if (selected < 0)
@@ -244,7 +245,8 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     }
     
 
-	public void setSelected(int index)
+    @Override
+    public void setSelectedItem(int index)
 	{
 		checkIndex(index);
 		this.selected = index;
@@ -269,27 +271,27 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 	}
 	
 	
-	public void unselect()
-	{
-		this.selected = UNSELECTED;
-		if (this.dataBlock != null)
-		{
-			((DataBlockMixed)dataBlock).blockArray[0].setIntValue(UNSELECTED);
-			((DataBlockMixed)dataBlock).blockArray[1] = null;
-			dataBlock.atomCount = 1;
-		}
-	}
-	
-	
+	@Override
 	public void setSelectedItem(String name)
 	{
 		int index = getComponentIndex(name);
 		if (index < 0)
 			throw new IllegalStateException("Invalid component: " + name);
 		
-		setSelected(index);
+		setSelectedItem(index);
 	}
+
 	
+    public void unselect()
+    {
+        this.selected = UNSELECTED;
+        if (this.dataBlock != null)
+        {
+            ((DataBlockMixed)dataBlock).blockArray[0].setIntValue(UNSELECTED);
+            ((DataBlockMixed)dataBlock).blockArray[1] = null;
+            dataBlock.atomCount = 1;
+        }
+    }
 
 
     public String toString(String indent)
