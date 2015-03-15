@@ -23,7 +23,7 @@ package org.vast.swe;
 
 /**
  * <p>
- * 
+ * Constants defined by SWE Common standard
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
@@ -45,11 +45,11 @@ public class SWEConstants
     public final static String DATASTREAM_COMPONENT_TAG = "DataStream";
     public final static String DATACHOICE_COMPONENT_TAG = "DataChoice"; 	
 	
-	/* property values defined in SWE Common standards */
+	/* definition URIs */
 	public static final String DEF_SAMPLING_TIME = "http://www.opengis.net/def/property/OGC/0/SamplingTime";
 	public static final String DEF_SAMPLING_LOC = "http://www.opengis.net/def/property/OGC/0/SamplingLocation";
-	
-	/* compression algorithms */
-	public final static String COMP_MP4 = "http://www.opengis.net/def//ISO/MPEG4";
-    
+	public static final String DEF_SENSOR_LOC = "http://www.opengis.net/def/property/OGC/0/SensorLocation";
+	public static final String DEF_SENSOR_ORIENT = "http://www.opengis.net/def/property/OGC/0/SensorOrientation";
+	public static final String DEF_PLATFORM_LOC = "http://www.opengis.net/def/property/OGC/0/PlatformLocation";
+    public static final String DEF_PLATFORM_ORIENT = "http://www.opengis.net/def/property/OGC/0/PlatformOrientation";
 }

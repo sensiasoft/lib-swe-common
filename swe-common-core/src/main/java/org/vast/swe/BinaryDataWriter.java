@@ -38,7 +38,6 @@ import org.vast.data.AbstractDataComponentImpl;
 import org.vast.data.BinaryComponentImpl;
 import org.vast.data.DataBlockCompressed;
 import org.vast.data.DataChoiceImpl;
-import org.vast.data.DataComponentHelper;
 
 
 /**
@@ -123,7 +122,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 
 	protected void resolveComponentEncodings() throws CDMException
 	{
-		DataComponentHelper.resolveComponentEncodings(dataComponents, (BinaryEncoding)dataEncoding);
+		SWEHelper.assignBinaryEncoding(dataComponents, (BinaryEncoding)dataEncoding);
 		componentEncodingResolved = true;
 	}
 	

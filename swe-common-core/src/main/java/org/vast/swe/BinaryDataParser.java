@@ -20,6 +20,7 @@
 
 package org.vast.swe;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteOrder;
@@ -37,7 +38,6 @@ import org.vast.data.BinaryBlockImpl;
 import org.vast.data.BinaryComponentImpl;
 import org.vast.data.DataBlockCompressed;
 import org.vast.data.DataChoiceImpl;
-import org.vast.data.DataComponentHelper;
 import org.vast.util.ReaderException;
 
 
@@ -70,7 +70,7 @@ public class BinaryDataParser extends AbstractDataParser
 		switch (((BinaryEncoding)dataEncoding).getByteEncoding())
 		{
 			case BASE_64:
-				dataIn = new Base64Decoder(inputStream);
+				dataIn = new BufferedInputStream(new Base64Decoder(inputStream), 1024);
 				break;
 				
 			case RAW:
@@ -202,7 +202,7 @@ public class BinaryDataParser extends AbstractDataParser
 	protected void resolveComponentEncodings() throws CDMException
 	{
 	    // TODO need to also call initBlockReader(dataComponent, (BinaryBlockImpl)binaryOpts);
-	    DataComponentHelper.resolveComponentEncodings(dataComponents, (BinaryEncoding)dataEncoding);
+	    SWEHelper.assignBinaryEncoding(dataComponents, (BinaryEncoding)dataEncoding);
         componentEncodingResolved = true;
 	}
 	

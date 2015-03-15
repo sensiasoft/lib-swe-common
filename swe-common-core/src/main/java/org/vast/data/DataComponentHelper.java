@@ -15,9 +15,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import org.vast.cdm.common.CDMException;
-import net.opengis.swe.v20.BinaryComponent;
-import net.opengis.swe.v20.BinaryEncoding;
-import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.DataComponent;
 
 
@@ -35,7 +32,7 @@ public class DataComponentHelper
     public final static String PATH_SEPARATOR = "/";
     
 
-	public static DataComponent findParameterByName(DataComponent parent, String name)
+	public static DataComponent findComponentByName(DataComponent parent, String name)
 	{
 		if (parent instanceof DataArrayImpl)
 			parent = ((DataArrayImpl)parent).getArrayComponent();
@@ -50,7 +47,7 @@ public class DataComponentHelper
 				return child;
 			
 			// try to find it recursively!
-			DataComponent desiredParam = findParameterByName(child, name);
+			DataComponent desiredParam = findComponentByName(child, name);
 			if (desiredParam != null)
 				return desiredParam;
 		}
@@ -59,7 +56,7 @@ public class DataComponentHelper
 	}
 
 
-	public static DataComponent findParameterByDefinition(DataComponent parent, String defUri)
+	public static DataComponent findComponentByDefinition(DataComponent parent, String defUri)
 	{
 		if (parent instanceof DataArrayImpl)
 			parent = ((DataArrayImpl)parent).getArrayComponent();
@@ -74,7 +71,7 @@ public class DataComponentHelper
 				return child;
 			
 			// try to find it recursively!
-			DataComponent desiredParam = findParameterByDefinition(child, defUri);
+			DataComponent desiredParam = findComponentByDefinition(child, defUri);
 			if (desiredParam != null)
 				return desiredParam;
 		}
@@ -112,27 +109,5 @@ public class DataComponentHelper
         }
         
         return data;
-    }
-	
-	
-	/**
-     * Maps binary components and blocks definitions to the actual data component.
-     * This sets the encodingInfo attribute of the component so it can be used.
-     * For scalars, it also sets the default data type so it is the same as in the encoded stream.
-	 * @param dataComponents 
-	 * @param dataEncoding 
-	 * @throws CDMException 
-     */
-    public static void resolveComponentEncodings(DataComponent dataComponents, BinaryEncoding dataEncoding) throws CDMException
-    {
-        for (BinaryMember binaryOpts: dataEncoding.getMemberList())
-        {
-            DataComponent comp = DataComponentHelper.findComponentByPath(binaryOpts.getRef(), dataComponents);
-            ((AbstractDataComponentImpl)comp).setEncodingInfo(binaryOpts);
-            
-            // for scalars, also set default data type
-            if (binaryOpts instanceof BinaryComponent)
-                ((AbstractSimpleComponentImpl)comp).setDataType(((BinaryComponentImpl)binaryOpts).getCdmDataType());
-        }
     }
 }
