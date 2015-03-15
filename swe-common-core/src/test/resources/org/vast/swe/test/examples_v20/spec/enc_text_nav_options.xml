@@ -35,30 +35,6 @@
 		</swe:DataRecord>
 	</swe:elementType>
 	<swe:encoding>
-		<swe:XMLEncoding/>
+		<swe:TextEncoding blockSeparator="@@&#10;" tokenSeparator="," decimalSeparator="." collapseWhiteSpaces="true"/>
 	</swe:encoding>
-	<swe:values xmlns:ns="urn:myorg:dataset:X156822">
-		<ns:navData>
-			<ns:time>2007-10-23T15:46:12Z</ns:time>
-			<ns:speed>15.3</ns:speed>
-			<ns:location>
-				<ns:lat>45.3</ns:lat>
-				<ns:lon>-90.5</ns:lon>
-				<ns:alt>311</ns:alt>
-			</ns:location>
-		</ns:navData>
-		<ns:navData>
-			<ns:time>2007-10-23T15:46:22Z</ns:time>
-			<ns:speed>25.3</ns:speed>
-		</ns:navData>
-		<ns:navData>
-			<ns:time>2007-10-23T15:46:32Z</ns:time>
-			<ns:speed>20.6</ns:speed>
-			<ns:location>
-				<ns:lat>45.3</ns:lat>
-				<ns:lon>-90.6</ns:lon>
-				<ns:alt>312</ns:alt>
-			</ns:location>
-		</ns:navData>
-	</swe:values>
 </swe:DataStream>

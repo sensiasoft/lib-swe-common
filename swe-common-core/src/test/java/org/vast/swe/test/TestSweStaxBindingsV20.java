@@ -33,6 +33,7 @@ import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
+import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.AbstractSWE;
 import net.opengis.swe.v20.DataEncoding;
@@ -154,7 +155,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     }
     
     
-    protected void readWriteCompareSweEncodedData(String testName, DataComponent dataStruct, DataEncoding encoding, boolean writeToStdOut) throws Exception
+    protected void readWriteCompareSweEncodedData(String testName, DataComponent dataStruct, DataEncoding encoding) throws Exception
     {
         try
         {
@@ -167,15 +168,24 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
             // write to buffer
             for (int i=0; i<5; i++)
             {
+                // select item randomly
+                if (dataStruct instanceof DataChoice)
+                {
+                    int randomItem = (int)(Math.random() * dataStruct.getComponentCount());
+                    ((DataChoice) dataStruct).setSelectedItem(randomItem);
+                }
+                
                 DataBlock data = dataStruct.createDataBlock();
-                // change values randomly
-                for (int b=0; b<data.getAtomCount(); b++)
+                
+                // change values randomly (start at 1 so choice item is not changed)
+                for (int b=1; b<data.getAtomCount(); b++)
                     data.setDoubleValue(b, Math.random()*255.);
+                
                 dataWriter.write(data);
             }
+            dataWriter.close();
             System.out.println("Data written to buffer. Size=" + os.size());
-            //if (writeToStdOut)
-                //System.out.println(Arrays.toString(os.toByteArray()));
+            //System.out.println(os);
                 
             // read and write back to other buffer
             DataStreamParser dataParser = SWEHelper.createDataParser(encoding);
@@ -189,6 +199,8 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
             DataBlock data;
             while ((data = dataParser.parseNextBlock()) != null)
                 dataWriter.write(data);
+            dataParser.close();
+            dataWriter.close();
             
             // compare with original
             assertArrayEquals(os.toByteArray(), os2.toByteArray());
@@ -246,6 +258,14 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     }
     
     
+    public void testReadWriteVector() throws Exception
+    {
+        readWriteCompareSweCommonXml("examples_v20/spec/vector_location.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/vector_quaternion.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/vector_velocity.xml");
+    }
+    
+    
     public void testReadWriteArrayNoData() throws Exception
     {        
         readWriteCompareSweCommonXml("examples_v20/spec/array_trajectory.xml");
@@ -271,39 +291,6 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     }*/
     
     
-    public void testReadWriteArrayBinary() throws Exception
-    {        
-        String path = "examples_v20/spec/enc_binary_image.xml";
-        DataComponent imgArray = (DataComponent)readSweCommonXml(path, false);
-        BinaryEncoding encoding;
-        if (imgArray instanceof BlockComponent && ((BlockComponent) imgArray).isSetEncoding())
-            encoding = (BinaryEncoding)((BlockComponent) imgArray).getEncoding();
-        else
-            encoding = BinaryEncodingImpl.getDefaultEncoding(imgArray);
-        String testName;
-        
-        encoding.setByteEncoding(ByteEncoding.RAW);
-        encoding.setByteOrder(ByteOrder.BIG_ENDIAN);
-        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
-        readWriteCompareSweEncodedData(testName, imgArray, encoding, false);
-        
-        encoding.setByteEncoding(ByteEncoding.RAW);
-        encoding.setByteOrder(ByteOrder.LITTLE_ENDIAN);
-        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
-        readWriteCompareSweEncodedData(testName, imgArray, encoding, false);
-        
-        encoding.setByteEncoding(ByteEncoding.BASE_64);
-        encoding.setByteOrder(ByteOrder.BIG_ENDIAN);
-        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
-        readWriteCompareSweEncodedData(testName, imgArray, encoding, true);
-        
-        encoding.setByteEncoding(ByteEncoding.BASE_64);
-        encoding.setByteOrder(ByteOrder.LITTLE_ENDIAN);
-        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
-        readWriteCompareSweEncodedData(testName, imgArray, encoding, true);
-    }
-    
-    
     public void testReadWriteDataChoice() throws Exception
     {
         readWriteCompareSweCommonXml("examples_v20/spec/choice_stream.xml");
@@ -322,6 +309,78 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     public void testReadWriteDataStreamWithChoice() throws Exception
     {
         readWriteCompareSweCommonXml("examples_v20/spec/enc_text_choice_stream.xml", true);
+    }
+    
+    
+    protected void testReadWriteBinaryData(String path, boolean isDataStream, boolean encodeArrayElt) throws Exception
+    {        
+        String testName;
+        DataComponent dataStruct = (DataComponent)readSweCommonXml(path, isDataStream);
+        if (encodeArrayElt)
+            dataStruct = ((BlockComponent)dataStruct).getElementType();
+        
+        // try to use binary encoding defined in XML
+        BinaryEncoding encoding = null;
+        if (dataStruct instanceof BlockComponent && ((BlockComponent)dataStruct).isSetEncoding())
+        {
+            DataEncoding encodingInXml = ((BlockComponent)dataStruct).getEncoding();
+            if (encodingInXml instanceof BinaryEncoding)
+                encoding = (BinaryEncoding)encodingInXml;
+        }
+        
+        // otherwise use default binary encoding
+        if (encoding == null)
+            encoding = SWEHelper.getDefaultBinaryEncoding(dataStruct);
+                
+        // test 4 combinations of raw/base64 and littleEndian/bigEndian
+        encoding.setByteEncoding(ByteEncoding.RAW);
+        encoding.setByteOrder(ByteOrder.BIG_ENDIAN);
+        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
+        readWriteCompareSweEncodedData(testName, dataStruct, encoding);
+        
+        encoding.setByteEncoding(ByteEncoding.RAW);
+        encoding.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
+        readWriteCompareSweEncodedData(testName, dataStruct, encoding);
+        
+        encoding.setByteEncoding(ByteEncoding.BASE_64);
+        encoding.setByteOrder(ByteOrder.BIG_ENDIAN);
+        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
+        readWriteCompareSweEncodedData(testName, dataStruct, encoding);
+        
+        encoding.setByteEncoding(ByteEncoding.BASE_64);
+        encoding.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+        testName = path + ", Binary " + encoding.getByteEncoding() + ", " + encoding.getByteOrder();
+        readWriteCompareSweEncodedData(testName, dataStruct, encoding);
+    }
+    
+    
+    public void testReadWriteBinaryArrayData() throws Exception
+    { 
+        testReadWriteBinaryData("examples_v20/spec/enc_binary_image.xml", false, false);
+        testReadWriteBinaryData("examples_v20/spec/enc_text_stress_matrix.xml", false, false);
+        testReadWriteBinaryData("examples_v20/spec/matrix_rotation.xml", false, false);
+    }
+    
+    
+    public void testReadWriteBinaryArrayDataImplicitVarSize() throws Exception
+    { 
+        testReadWriteBinaryData("examples_v20/spec/enc_text_profile_series.xml", false, true);
+    }
+    
+    
+    public void testReadWriteBinaryRecordData() throws Exception
+    { 
+        testReadWriteBinaryData("examples_v20/spec/array_weather.xml", false, true);
+        testReadWriteBinaryData("examples_v20/spec/enc_text_nav_options.xml", true, true);
+        testReadWriteBinaryData("examples_v20/spec/vector_location.xml", false, false);
+        testReadWriteBinaryData("examples_v20/spec/vector_quaternion.xml", false, false);
+    }
+    
+    
+    public void testReadWriteBinaryChoiceData() throws Exception
+    { 
+        testReadWriteBinaryData("examples_v20/spec/enc_text_choice_stream.xml", true, true);
     }
     
     
