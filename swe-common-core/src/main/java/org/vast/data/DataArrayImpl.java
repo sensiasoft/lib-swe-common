@@ -470,18 +470,6 @@ public class DataArrayImpl extends AbstractArrayImpl
     
     
     /**
-     * Sets the size component to use (for variable size array).
-     * The component must have an id and exist up the data component tree
-     * @param sizeComponent Count component to obtain array size from
-     */
-    public void setVariableSizeComponent(CountImpl sizeComponent)
-    {
-        assert(sizeComponent.isSetId());
-        this.elementCount.setHref("#" + sizeComponent.getId());
-    }
-    
-    
-    /**
      * Simply update value in size data component w/o resizing datablock
      * @param newSize
      */
@@ -595,7 +583,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     }
 	
 	
-	final protected AbstractDataComponentImpl getArrayComponent()
+	private final AbstractDataComponentImpl getArrayComponent()
 	{
 	    return (AbstractDataComponentImpl)elementType.getValue();
 	}

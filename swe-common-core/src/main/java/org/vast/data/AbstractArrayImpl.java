@@ -140,12 +140,31 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
 
 
     /**
-     * Sets the elementCount property
+     * Sets the elementCount property<br/>
+     * If the Count object has a parent, it will used as an external variable size component
      */
     @Override
     public void setElementCount(Count elementCount)
     {
-        this.elementCount.setValue(elementCount);
+        // case of variable size component
+        if (elementCount.getParent() != null)
+            setVariableSizeComponent(elementCount);
+        
+        // case of fixed size
+        else
+            this.elementCount.setValue(elementCount);
+    }
+    
+    
+    /**
+     * Sets the size component to use (for variable size array).
+     * The component must have an id and exist up the data component tree
+     * @param sizeComponent Count component to obtain array size from
+     */
+    public void setVariableSizeComponent(Count sizeComponent)
+    {
+        assert(sizeComponent.isSetId());
+        this.elementCount.setHref("#" + sizeComponent.getId());
     }
 
 
