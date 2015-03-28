@@ -29,7 +29,7 @@ import net.opengis.swe.v20.DataComponent;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 19, 2013
  */
-public class DataIterator implements Iterator<DataComponent>
+public class DataIterator implements Iterator<DataComponent>, Iterable<DataComponent>
 {
 	protected DataComponent rootComponent;
 	protected Stack<Record> componentStack;
@@ -56,8 +56,14 @@ public class DataIterator implements Iterator<DataComponent>
 	public DataIterator(DataComponent rootComponent)
 	{
 		this.rootComponent = rootComponent;
+		reset();
+	}
+	
+	
+	public void reset()
+	{
 	    this.componentStack = new Stack<Record>();
-		this.componentStack.push(new Record(rootComponent));
+        this.componentStack.push(new Record(rootComponent));
 	}
 	
 	
@@ -89,7 +95,7 @@ public class DataIterator implements Iterator<DataComponent>
             // select next child of aggregate
             DataComponent child;
             if (current instanceof DataArrayImpl)
-                child = ((DataArrayImpl)current).getArrayComponent();
+                child = ((DataArrayImpl)current).getElementType();
             else
                 child = current.getComponent(currentRecord.index);
             currentRecord.index++;
@@ -132,5 +138,13 @@ public class DataIterator implements Iterator<DataComponent>
     public void remove()
     {
         throw new UnsupportedOperationException();
+    }
+
+
+    @Override
+    public Iterator<DataComponent> iterator()
+    {
+        reset();
+        return this;
     }
 }

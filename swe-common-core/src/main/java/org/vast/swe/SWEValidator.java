@@ -41,7 +41,6 @@ import org.vast.data.BinaryComponentImpl;
 import org.vast.data.BooleanImpl;
 import org.vast.data.CategoryImpl;
 import org.vast.data.CountImpl;
-import org.vast.data.DataComponentHelper;
 import org.vast.data.QuantityImpl;
 import org.vast.data.TextImpl;
 import org.vast.data.TimeImpl;
@@ -90,7 +89,7 @@ public class SWEValidator
         {
             try
             {
-                DataComponent childComp = DataComponentHelper.findComponentByPath(opts.getRef(), component);
+                DataComponent childComp = SWEHelper.findComponentByPath(component, opts.getRef());
                 String componentPath = opts.getRef();
                 
                 if (opts instanceof BinaryComponentImpl)

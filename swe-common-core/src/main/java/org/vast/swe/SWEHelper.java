@@ -21,9 +21,12 @@
 package org.vast.swe;
 
 import java.nio.ByteOrder;
+import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.BinaryComponent;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.ByteEncoding;
+import net.opengis.swe.v20.Category;
+import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
@@ -32,6 +35,7 @@ import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.JSONEncoding;
 import net.opengis.swe.v20.Quantity;
+import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.Vector;
@@ -45,7 +49,6 @@ import org.vast.data.BinaryComponentImpl;
 import org.vast.data.BinaryEncodingImpl;
 import org.vast.data.CountImpl;
 import org.vast.data.DataArrayImpl;
-import org.vast.data.DataComponentHelper;
 import org.vast.data.DataIterator;
 import org.vast.data.DataValue;
 import org.vast.data.SWEFactory;
@@ -55,7 +58,8 @@ import org.vast.data.TextEncodingImpl;
 
 /**
  * <p>
- * Helper class for creating common data structures and encodings
+ * Helper class for creating common data structures and encodings and browsing 
+ * a data component tree.
  * </p>
  *
  * @author Alex Robin>
@@ -63,47 +67,237 @@ import org.vast.data.TextEncodingImpl;
  */
 public class SWEHelper extends SWEFactory
 {  
-    public static final String DEFAULT_TIME_REF = "http://www.opengis.net/def/trs/BIPM/0/UTC";
-    public static final String DEF_IMAGE = "http://www.opengis.net/def/property/OGC/0/Image";
+    public final static String PATH_SEPARATOR = "/";
+    
+    // temporal reference systems
+    public static final String TIME_REF_UTC = "http://www.opengis.net/def/trs/BIPM/0/UTC";
+    public static final String TIME_REF_GPS = "http://www.opengis.net/def/trs/USNO/0/GPS";
+    
+    // EPSG crs URI prefix
+    public static final String EPSG_URI_PREFIX = "http://www.opengis.net/def/crs/EPSG/0/";
+    public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
+    
+    // other spatial reference frames
+    public static final String REF_FRAME_LLA = getEpsgUri(4979);
+    public static final String REF_FRAME_ECEF = getEpsgUri(4978);
+    public static final String REF_FRAME_ENU = "http://www.opengis.net/def/crs/OGC/0/ENU";
+    public static final String REF_FRAME_NED = "http://www.opengis.net/def/crs/OGC/0/NED";
+    
+    // component definitions
+    public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
+    public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";
+    public static final String DEF_LOCATION = SWE_PROP_URI_PREFIX + "Location";
+    public static final String DEF_ORIENTATION = SWE_PROP_URI_PREFIX + "Orientation";
+    public static final String DEF_IMAGE = SWE_PROP_URI_PREFIX + "Image";
     
     
     /**
-     * Wraps the given component(s) into a record with an ISO time stamp
-     * @param subComponents 
-     * @return new DataRecord instance containing time stamp and all other components
+     * @param epsgCode
+     * @return the CRS URI for the given EPSG integer code
      */
-    public DataRecord wrapWithIsoTimeStamp(DataComponent... subComponents)
+    public static String getEpsgUri(int epsgCode)
     {
-        return wrapWithTimeStamp(Time.ISO_TIME_UNIT, false, DEFAULT_TIME_REF, subComponents);
+        return EPSG_URI_PREFIX + epsgCode;
+    }
+    
+    
+    public static String getPropertyUri(String propName)
+    {
+        return SWE_PROP_URI_PREFIX + propName;
     }
     
     
     /**
-     * Wraps the given component(s) into a record with a local relative (on-board) time stamp
-     * @param uomCode unit of local time stamp (must be a valid time unit)
-     * @param subComponents 
-     * @return new DataRecord instance containing time stamp and all other components
+     * Creates a new boolean component
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long)
+     * @return the new Boolean component object
      */
-    public DataRecord wrapWithOnBoardTimeStamp(String uomCode, DataComponent... subComponents)
+    public Boolean newBoolean(String definition, String label, String description)
     {
-        return wrapWithTimeStamp(uomCode, true, DEFAULT_TIME_REF, subComponents);
+        Boolean b = newBoolean();
+        b.setDefinition(definition);
+        b.setLabel(label);
+        b.setDescription(description);
+        return b;
     }
     
     
-    protected DataRecord wrapWithTimeStamp(String uom, boolean isUomCode, String timeRef, DataComponent... subComponents)
+    /**
+     * Creates a new Text component
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long)
+     * @return the new Text component object
+     */
+    public Text newText(String definition, String label, String description)
     {
-        DataRecord rec = newDataRecord(subComponents.length + 1);
+        Text tx = newText();
+        tx.setDefinition(definition);
+        tx.setLabel(label);
+        tx.setDescription(description);
+        return tx;
+    }
+    
+    
+    /**
+     * Creates a new count (integer) component
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long)
+     * @param dataType data type to use for this component (if null, {@link DataType#INT} will be used)
+     * @return the new Count component object
+     */
+    public Count newCount(String definition, String label, String description, DataType dataType)
+    {
+        if (dataType == null)
+            dataType = DataType.INT;
         
-        Time c1 = newTime();
+        Count c = newCount(dataType);
+        c.setDefinition(definition);
+        c.setLabel(label);
+        c.setDescription(description);
+        return c;
+    }
+    
+    
+    /**
+     * Creates a new count (integer) component
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long)
+     * @return the new Count component object
+     */
+    public Count newCount(String definition, String label, String description)
+    {
+        return newCount(definition, label, null, DataType.INT);
+    }
+    
+    
+    /**
+     * Creates a new category component
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long) or null
+     * @param codeSpace URI of this category code space
+     * @return the new Category component object
+     */
+    public Category newCategory(String definition, String label, String description, String codeSpace)
+    {
+        Category c = newCategory();
+        c.setDefinition(definition);
+        c.setLabel(label);
+        c.setDescription(description);
+        c.setCodeSpace(codeSpace);        
+        return c;
+    }
+    
+    
+    /**
+     * Creates a new quantity (decimal) component
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long) or null
+     * @param uomCode UCUM code for this decimal quantity's unit of measure
+     * @param dataType data type to use for this component (if null, {@link DataType#DOUBLE} will be used)
+     * @return the new Quantity component object
+     */
+    public Quantity newQuantity(String definition, String label, String description, String uomCode, DataType dataType)
+    {
+        if (dataType == null)
+            dataType = DataType.DOUBLE;
+        
+        Quantity q = newQuantity(dataType);
+        q.setDefinition(definition);
+        q.setLabel(label);
+        q.setDescription(description);
+        q.getUom().setCode(uomCode);
+        
+        return q;
+    }
+    
+    
+    /**
+     * Creates a new quantity (decimal) component with default data type
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long) or null
+     * @param uomCode UCUM code for this decimal quantity's unit of measure
+     * @return the new Quantity component object
+     */
+    public Quantity newQuantity(String definition, String label, String description, String uomCode)
+    {
+        return newQuantity(definition, label, description, uomCode, DataType.DOUBLE);
+    }
+    
+    
+    /**
+     * Creates a new sampling time component
+     * @param uom unit of time stamp
+     * @param isUomCode true if uom is a UCUM code, false if it is a URI
+     * @param timeRef URI of temporal reference frame for this time stamp
+     * @return the new Time component object
+     */
+    public Time newTimeStamp(String uom, boolean isUomCode, String timeRef)
+    {
+        Time ts = newTime();
+        ts.setLabel("Sampling Time");
         
         if (isUomCode)
-            c1.getUom().setCode(uom);
+            ts.getUom().setCode(uom);
         else
-            c1.getUom().setHref(Time.ISO_TIME_UNIT);
+            ts.getUom().setHref(uom);
         
-        c1.setDefinition(SWEConstants.DEF_SAMPLING_TIME);
-        c1.setReferenceFrame(timeRef);
-        rec.addComponent("time", c1);
+        ts.setDefinition(SWEConstants.DEF_SAMPLING_TIME);
+        ts.setReferenceFrame(timeRef);
+        
+        return ts;
+    }
+    
+    
+    /**
+     * Creates a new sampling time component with ISO calendar and UTC time frame
+     * @return the new Time component object
+     */
+    public Time newTimeStampIsoUTC()
+    {
+        return newTimeStamp(Time.ISO_TIME_UNIT, false, TIME_REF_UTC);
+    }
+    
+    
+    /**
+     * Creates a new sampling time component with ISO calendar and UTC time frame
+     * @return the new Time component object
+     */
+    public Time newTimeStampIsoGPS()
+    {
+        return newTimeStamp(Time.ISO_TIME_UNIT, false, TIME_REF_GPS);
+    }
+    
+    
+    /**
+     * Creates a new sampling time component 
+     * @param uomCode time unit used for this onboard time stamp (e.g. 's', 'ms', 'ns', etc.)
+     * @param timeRef URI of temporal reference frame for this time stamp (e.g. missionStart, etc.)
+     * @return the new Time component object
+     */
+    public Time newTimeStampOnBoardClock(String uomCode, String timeRef)
+    {
+        return newTimeStamp(uomCode, true, timeRef);
+    }
+    
+    
+    /**
+     * Wraps the given component(s) into a record with a time stamp
+     * @param timeStamp Time component representing the time stamp
+     * @param subComponents list of components to wrap with the time stamp
+     * @return new DataRecord instance containing the time stamp and all other components
+     */    
+    public DataRecord wrapWithTimeStamp(Time timeStamp, DataComponent... subComponents)
+    {
+        DataRecord rec = newDataRecord(subComponents.length + 1);
+        rec.addComponent("time", timeStamp);
         
         for (DataComponent childComp: subComponents)
             rec.addComponent(childComp.getName(), childComp);
@@ -113,11 +307,213 @@ public class SWEHelper extends SWEFactory
     
     
     /**
-     * Builds a 2D-array component representing an RGB image
+     * Creates a component for carrying system ID (e.g. station ID, sensor ID, device ID, etc...)
+     * @return new Text instance
+     */
+    public Text newSystemIdComponent()
+    {
+        Text t = newText();
+        t.setDefinition(DEF_SYSTEM_ID);
+        return t;
+    }
+  
+    
+    /**
+     * Creates a 3D vector component with the specified CRS and axes
+     * @param def definition of the whole vector
+     * @param crs reference frame of the vector
+     * @param names array containing name of each individual vector element
+     * @param uoms array containing unit of measure of each individual vector element
+     * @param axes array containing axis name of each individual vector element
+     * @return the new Vector component object
+     */
+    public Vector newVector(String def, String crs, String[] names, String[] uoms, String[] axes)
+    {
+        Vector loc = newVector();
+        loc.setDefinition(def);
+        loc.setReferenceFrame(crs);
+
+        Quantity c;        
+        for (int i = 0; i < names.length; i++)
+        {
+            c = newQuantity(DataType.DOUBLE);
+            c.setDefinition(DEF_COORD);
+            c.getUom().setCode(uoms[i]);
+            c.setAxisID(axes[i]);
+            loc.addComponent(names[i], c);
+        }
+        
+        return loc;
+    }
+    
+    
+    /**
+     * Creates a 3D location vector with latitude/longitude/altitude axes (EPSG 4979) 
+     * @param def semantic definition of location vector (if null, {@value #DEF_LOCATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newLocationVectorLLA(String def)
+    {
+        if (def == null)
+            def = DEF_LOCATION;
+        
+        return newVector(
+                def,
+                REF_FRAME_LLA,
+                new String[] {"lat", "lon", "alt"},
+                new String[] {"deg", "deg", "m"},
+                new String[] {"Lat", "Long", "h"});
+    }
+    
+    
+    /**
+     * Creates a 3D location vector with ECEF X/Y/Z axes (EPSG 4978) 
+     * @param def semantic definition of location vector (if null, {@value #DEF_LOCATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newLocationVectorECEF(String def)
+    {
+        if (def == null)
+            def = DEF_LOCATION;
+        
+        return newVector(
+                def,
+                REF_FRAME_ECEF,
+                new String[] {"x", "y", "z"},
+                new String[] {"m", "m", "m"},
+                new String[] {"X", "Y", "Z"});
+    }
+    
+    
+    /**
+     * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
+     * East-North-Up (ENU) frame (order of rotations is Z, X, Y)
+     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newEulerOrientationENU(String def)
+    {
+        if (def == null)
+            def = DEF_ORIENTATION;
+        
+        return newVector(
+                def,
+                REF_FRAME_ENU,
+                new String[] {"yaw", "pitch", "roll"},
+                new String[] {"deg", "deg", "deg"},
+                new String[] {"Z", "X", "Y"});
+    }
+    
+    
+    /**
+     * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
+     * North-East-Down (NED) frame (order of rotations is Z, Y, X)
+     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newEulerOrientationNED(String def)
+    {
+        if (def == null)
+            def = DEF_ORIENTATION;
+        
+        return newVector(
+                def,
+                REF_FRAME_ENU,
+                new String[] {"yaw", "pitch", "roll"},
+                new String[] {"deg", "deg", "deg"},
+                new String[] {"Z", "Y", "X"});
+    }
+    
+    
+    /**
+     * Creates an orientation vector component composed of 3 Euler angles expressed in
+     * Earth-Centered-Earth-Fixed (ECEF) frame (order of rotations is X, Y, Z)
+     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newEulerOrientationECEF(String def)
+    {
+        if (def == null)
+            def = DEF_ORIENTATION;
+        
+        return newVector(
+                def,
+                REF_FRAME_ECEF,
+                new String[] {"x", "y", "z"},
+                new String[] {"deg", "deg", "deg"},
+                new String[] {"X", "Y", "Z"});
+    }
+    
+    
+    protected Vector newQuatOrientation(String def, String crs)
+    {
+        if (def == null)
+            def = DEF_ORIENTATION;
+        
+        return newVector(
+                def,
+                crs,
+                new String[] {"q0", "qx", "qy", "qz"},
+                new String[] {"1", "1", "1", "1"},
+                new String[] {null, "X", "Y", "Z"});
+    }
+    
+    
+    /**
+     * Creates a  vector representing an orientation quaternion expressed in ENU frame.
+     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newQuatOrientationENU(String def)
+    {
+        return newQuatOrientation(def, REF_FRAME_ENU);
+    }
+    
+    
+    /**
+     * Creates a  vector representing an orientation quaternion expressed in NED frame.
+     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newQuatOrientationNED(String def)
+    {
+        return newQuatOrientation(def, REF_FRAME_NED);
+    }
+    
+    
+    /**
+     * Creates a  vector representing an orientation quaternion expressed in ECEF frame.
+     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newQuatOrientationECEF(String def)
+    {
+        return newQuatOrientation(def, REF_FRAME_ECEF);
+    }
+    
+    
+    /**
+     * Creates a variable size 1D array
+     * @param sizeComponent
+     * @param eltName
+     * @param elementType
+     * @return the new DataArray component object
+     */
+    public DataArray newArray(Count sizeComponent, String eltName, DataComponent elementType)
+    {
+        DataArray array = newDataArray();
+        ((DataArrayImpl)array).setVariableSizeComponent(sizeComponent);
+        array.setElementType(eltName, elementType);
+        return array;
+    }
+    
+    
+    /**
+     * Creates a fixed size 2D-array component representing an RGB image
      * @param width
      * @param height
      * @param dataType
-     * @return new DataArray instance
+     * @return the new DataArray component object
      */
     public DataArray newRgbImage(int width, int height, DataType dataType)
     {
@@ -145,39 +541,9 @@ public class SWEHelper extends SWEFactory
     }
     
     
-    /**
-     * Builds a vector component with the specified axes
-     * @param def Definition of the whole vector
-     * @param crs reference frame of the vector
-     * @param names array containing name of each individual vector element
-     * @param defs array containing semantic definition of each individual vector element
-     * @param uoms array containing unit of measure of each individual vector element
-     * @param axes array containing axis name of each individual vector element
-     * @return new Vector component instance
-     */
-    public Vector newLocationVector(String def, String crs, String[] names, String[] defs, String[] uoms, String[] axes)
-    {
-        Vector loc = newVector();
-        loc.setDefinition(def);
-        loc.setReferenceFrame(crs);
-
-        Quantity c;        
-        for (int i = 0; i < names.length; i++)
-        {
-            c = newQuantity(DataType.DOUBLE);
-            c.getUom().setCode(uoms[i]);
-            c.setDefinition(defs[i]);
-            c.setAxisID(axes[i]);
-            loc.addComponent(names[i], c);
-        }
-        
-        return loc;
-    }
-    
-    
-    /* ******************************** */
-    /* Encoding and parser/writer stuff */
-    /* ******************************** */
+    //////////////////////////////////////
+    // Encoding and parser/writer stuff //
+    //////////////////////////////////////
     
     /**
      * Helper method to instantiate the proper parser for the given encoding
@@ -225,10 +591,27 @@ public class SWEHelper extends SWEFactory
     }
     
     
+    /**
+     * Gets the default encoding for the given data structure.<br/>
+     * This uses BinaryEncoding if data structure contains a large array and TextEncoding
+     * otherwise. 
+     * @param dataComponents
+     * @return an appropriately configured encoding
+     */
     public static DataEncoding getDefaultEncoding(DataComponent dataComponents)
     {
-        // TODO scan to see if there is a large array and use binary encoding in that case
+        // check if one of the children is a large array
+        for (DataComponent c: new DataIterator(dataComponents))
+        {
+            if (c instanceof DataArray)
+            {
+                DataArrayImpl array = (DataArrayImpl)c;
+                if (array.isVariableSize() || (array.getElementCount() != null && array.getElementCount().getValue() > 10))
+                    return getDefaultBinaryEncoding(dataComponents);
+            }
+        }
         
+        // otherwise return default text encoding
         return new TextEncodingImpl();
     }
     
@@ -254,11 +637,11 @@ public class SWEHelper extends SWEFactory
             
             // build path (just use / for root)
             StringBuffer pathString = new StringBuffer();
-            pathString.append(DataComponentHelper.PATH_SEPARATOR);
+            pathString.append(PATH_SEPARATOR);
             for (int i = 0; i < nextPath.length; i++)
             {
                 pathString.append(nextPath[i].getName());
-                pathString.append(DataComponentHelper.PATH_SEPARATOR);
+                pathString.append(PATH_SEPARATOR);
             }
             
             BinaryComponentImpl binaryOpts = new BinaryComponentImpl();
@@ -304,7 +687,7 @@ public class SWEHelper extends SWEFactory
     {
         for (BinaryMember binaryOpts: encoding.getMemberList())
         {
-            DataComponent comp = DataComponentHelper.findComponentByPath(binaryOpts.getRef(), dataComponents);
+            DataComponent comp = findComponentByPath(dataComponents, binaryOpts.getRef());
             ((AbstractDataComponentImpl)comp).setEncodingInfo(binaryOpts);
             
             // for scalars, also set default data type
@@ -328,5 +711,116 @@ public class SWEHelper extends SWEFactory
                 }
             }
         }
+    }
+    
+    
+    
+    ///////////////////////////////////////////////// 
+    // Methods for looking up components in a tree //
+    ///////////////////////////////////////////////// 
+    
+    /**
+     * Finds a component in the component tree using its name (property name)
+     * @param parent component from which to start the search
+     * @param name component name to look for
+     * @return the first component with the specified name
+     */
+    public static DataComponent findComponentByName(DataComponent parent, String name)
+    {
+        if (parent instanceof DataArrayImpl)
+            parent = ((DataArrayImpl)parent).getElementType();
+        
+        int childCount = parent.getComponentCount();
+        for (int i=0; i<childCount; i++)
+        {
+            DataComponent child = parent.getComponent(i);
+            String childName = child.getName();
+            
+            if (childName.equals(name))
+                return child;
+            
+            // try to find it recursively!
+            DataComponent desiredParam = findComponentByName(child, name);
+            if (desiredParam != null)
+                return desiredParam;
+        }
+        
+        return null;
+    }
+
+
+    /**
+     * Finds a component in the component tree using its definition
+     * @param parent component from which to start the search
+     * @param defUri definition URI to look for
+     * @return the first component with the specified definition
+     */
+    public static DataComponent findComponentByDefinition(DataComponent parent, String defUri)
+    {
+        if (parent instanceof DataArrayImpl)
+            parent = ((DataArrayImpl)parent).getElementType();
+        
+        int childCount = parent.getComponentCount();
+        for (int i=0; i<childCount; i++)
+        {
+            DataComponent child = parent.getComponent(i);
+            String childDef = ((DataComponent)child).getDefinition();
+            
+            if (childDef != null && childDef.equals(defUri))
+                return child;
+            
+            // try to find it recursively!
+            DataComponent desiredParam = findComponentByDefinition(child, defUri);
+            if (desiredParam != null)
+                return desiredParam;
+        }
+        
+        return null;
+    }
+    
+    
+    /**
+     * Finds a component in a component tree using a path 
+     * @param parent component from which to start the search
+     * @param path desired path as a String composed of component names separated by {@value #PATH_SEPARATOR} characters
+     * @return the component with the given path
+     * @throws CDMException if the specified path is incorrect
+     */
+    public static DataComponent findComponentByPath(DataComponent parent, String path) throws CDMException
+    {
+        try
+        {
+            return findComponentByPath(parent, path.split(PATH_SEPARATOR));
+        }
+        catch (CDMException e)
+        {
+            throw new CDMException("Unknown component " + path);
+        }
+    }
+    
+    
+    /**
+     * Finds a component in a component tree using a path 
+     * @param parent component from which to start the search
+     * @param path desired path as a String array cotnaining a sequence of component names
+     * @return the component with the given path
+     * @throws CDMException if the specified path is incorrect
+     */
+    public static DataComponent findComponentByPath(DataComponent parent, String [] path) throws CDMException
+    {
+        DataComponent data = parent;
+        
+        for (int i=0; i<path.length; i++)
+        {
+            String pathElt = path[i];
+            if (pathElt.length() == 0) // a leading '/' create an empty array element
+                continue;
+            
+            data = data.getComponent(pathElt);
+            if (data == null)
+                throw new CDMException("Unknown component " + pathElt);
+        }
+        
+        return data;
     }
 }
