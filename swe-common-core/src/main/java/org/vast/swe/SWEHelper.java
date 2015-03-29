@@ -546,6 +546,36 @@ public class SWEHelper extends SWEFactory
     //////////////////////////////////////
     
     /**
+     * Creates a text encoding with the specified separators.<br/>
+     * Since no escaping is supported, it is up to the programmer to make sure that
+     * separator characters are not present within the encoded data.
+     * @param tokenSep separator used between tokens
+     * @param blockSep separator used to delimit complete tuples
+     * @return the configured TextEncoding instance
+     */
+    public TextEncoding newTextEncoding(String tokenSep, String blockSep)
+    {
+        return new TextEncodingImpl(tokenSep, blockSep);
+    }
+    
+    
+    /**
+     * Creates a binary encoding with the specified options
+     * @param byteOrder byte ordering (endianness) of the byte stream 
+     * @param byteEncoding byte encoding used (raw or base64)
+     * @return the BinaryEncoding instance (not that it is not fully configured 
+     * since data types of all fields have to be specified)
+     */
+    public BinaryEncoding newBinaryEncoding(ByteOrder byteOrder, ByteEncoding byteEncoding)
+    {
+        BinaryEncodingImpl encoding = new BinaryEncodingImpl();
+        encoding.setByteOrder(byteOrder);
+        encoding.setByteEncoding(byteEncoding);
+        return encoding;
+    }
+    
+    
+    /**
      * Helper method to instantiate the proper parser for the given encoding
      * @param encoding
      * @return instance of parser capable of handling the given encoding
