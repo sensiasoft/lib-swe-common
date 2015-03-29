@@ -44,7 +44,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
     }
     
     
-    protected void copyTo(AbstractRangeComponentImpl other)
+    protected void copyTo(AbstractSimpleComponentImpl other)
     {
         super.copyTo(other);
         other.dataType = dataType;
