@@ -87,6 +87,7 @@ public class SWEHelper extends SWEFactory
     public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
     public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";
     public static final String DEF_LOCATION = SWE_PROP_URI_PREFIX + "Location";
+    public static final String DEF_VELOCITY = SWE_PROP_URI_PREFIX + "Velocity";
     public static final String DEF_ORIENTATION = SWE_PROP_URI_PREFIX + "Orientation";
     public static final String DEF_IMAGE = SWE_PROP_URI_PREFIX + "Image";
     
@@ -337,7 +338,7 @@ public class SWEHelper extends SWEFactory
         for (int i = 0; i < names.length; i++)
         {
             c = newQuantity(DataType.DOUBLE);
-            c.setDefinition(DEF_COORD);
+            //c.setDefinition(DEF_COORD);
             c.getUom().setCode(uoms[i]);
             c.setAxisID(axes[i]);
             loc.addComponent(names[i], c);
@@ -345,7 +346,7 @@ public class SWEHelper extends SWEFactory
         
         return loc;
     }
-    
+       
     
     /**
      * Creates a 3D location vector with latitude/longitude/altitude axes (EPSG 4979) 
@@ -382,6 +383,63 @@ public class SWEHelper extends SWEFactory
                 new String[] {"x", "y", "z"},
                 new String[] {"m", "m", "m"},
                 new String[] {"X", "Y", "Z"});
+    }
+    
+    
+    /**
+     * Creates a 3D velocity vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of velocity vector (if null, {@value #DEF_VELOCITY} is used)
+     * @param refFrame reference frame within which the vector is expressed
+     * @param uomCode unit of velocity to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newVelocityVector(String def, String refFrame, String uomCode)
+    {
+        if (def == null)
+            def = DEF_VELOCITY;
+        
+        return newVector(
+                def,
+                refFrame,
+                new String[] {"vx", "vy", "vz"},
+                new String[] {uomCode, uomCode, uomCode},
+                new String[] {"X", "Y", "Z"});
+    }
+    
+    
+    /**
+     * Creates a 3D velocity with ECEF X/Y/Z axes (EPSG 4978) 
+     * @param def semantic definition of velocity vector (if null, {@value #DEF_VELOCITY} is used)
+     * @param uomCode unit of velocity to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newVelocityVectorECEF(String def, String uomCode)
+    {
+        return newVelocityVector(def, REF_FRAME_ECEF, uomCode);
+    }
+    
+    
+    /**
+     * Creates a 3D velocity with ENU X/Y/Z axes
+     * @param def semantic definition of velocity vector (if null, {@value #DEF_VELOCITY} is used)
+     * @param uomCode unit of velocity to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newVelocityVectorENU(String def, String uomCode)
+    {
+        return newVelocityVector(def, REF_FRAME_ENU, uomCode);
+    }
+    
+    
+    /**
+     * Creates a 3D velocity with NED X/Y/Z axes
+     * @param def semantic definition of velocity vector (if null, {@value #DEF_VELOCITY} is used)
+     * @param uomCode unit of velocity to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newVelocityVectorNED(String def, String uomCode)
+    {
+        return newVelocityVector(def, REF_FRAME_NED, uomCode);
     }
     
     
