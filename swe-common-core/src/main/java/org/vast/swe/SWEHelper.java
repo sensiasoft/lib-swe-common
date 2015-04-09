@@ -808,12 +808,12 @@ public class SWEHelper extends SWEFactory
     ///////////////////////////////////////////////// 
     
     /**
-     * Finds a component in the component tree using its name (property name)
+     * Finds the first component in the tree matching the given filter
      * @param parent component from which to start the search
-     * @param name component name to look for
-     * @return the first component with the specified name
+     * @param filter component filter instance (must not be null)
+     * @return the first component matching the filter
      */
-    public static DataComponent findComponentByName(DataComponent parent, String name)
+    public static DataComponent findComponent(DataComponent parent, IComponentFilter filter)
     {
         if (parent instanceof DataArrayImpl)
             parent = ((DataArrayImpl)parent).getElementType();
@@ -822,18 +822,38 @@ public class SWEHelper extends SWEFactory
         for (int i=0; i<childCount; i++)
         {
             DataComponent child = parent.getComponent(i);
-            String childName = child.getName();
             
-            if (childName.equals(name))
+            if (filter.accept(child))
                 return child;
             
             // try to find it recursively!
-            DataComponent desiredParam = findComponentByName(child, name);
+            DataComponent desiredParam = findComponent(child, filter);
             if (desiredParam != null)
                 return desiredParam;
         }
         
         return null;
+    }
+    
+    
+    /**
+     * Finds a component in the component tree using its name (property name)
+     * @param parent component from which to start the search
+     * @param name component name to look for
+     * @return the first component with the specified name
+     */
+    public static DataComponent findComponentByName(final DataComponent parent, final String name)
+    {
+        return findComponent(parent, new IComponentFilter() {
+            @Override
+            public boolean accept(DataComponent comp)
+            {
+                String childName = comp.getName();
+                if (childName != null && childName.equals(name))
+                    return true;
+                return false;
+            }            
+        });
     }
 
 
@@ -843,27 +863,18 @@ public class SWEHelper extends SWEFactory
      * @param defUri definition URI to look for
      * @return the first component with the specified definition
      */
-    public static DataComponent findComponentByDefinition(DataComponent parent, String defUri)
+    public static DataComponent findComponentByDefinition(final DataComponent parent, final String defUri)
     {
-        if (parent instanceof DataArrayImpl)
-            parent = ((DataArrayImpl)parent).getElementType();
-        
-        int childCount = parent.getComponentCount();
-        for (int i=0; i<childCount; i++)
-        {
-            DataComponent child = parent.getComponent(i);
-            String childDef = ((DataComponent)child).getDefinition();
-            
-            if (childDef != null && childDef.equals(defUri))
-                return child;
-            
-            // try to find it recursively!
-            DataComponent desiredParam = findComponentByDefinition(child, defUri);
-            if (desiredParam != null)
-                return desiredParam;
-        }
-        
-        return null;
+        return findComponent(parent, new IComponentFilter() {
+            @Override
+            public boolean accept(DataComponent comp)
+            {
+                String childDef = comp.getDefinition();
+                if (childDef != null && childDef.equals(defUri))
+                    return true;
+                return false;
+            }            
+        });
     }
     
     
@@ -894,7 +905,7 @@ public class SWEHelper extends SWEFactory
      * @return the component with the given path
      * @throws CDMException if the specified path is incorrect
      */
-    public static DataComponent findComponentByPath(DataComponent parent, String [] path) throws CDMException
+    public static DataComponent findComponentByPath(DataComponent parent, String[] path) throws CDMException
     {
         DataComponent data = parent;
         
