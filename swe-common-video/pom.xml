@@ -1,12 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <artifactId>swe-common-video</artifactId>
+  <name>SWE Common Image &amp; Video Extensions</name>
   <parent>
     <groupId>org.vast.opengis</groupId>
     <artifactId>swe-common-all</artifactId>
     <version>1.0</version>
     <relativePath>../swe-common-all/pom.xml</relativePath>
   </parent>
-  <artifactId>swe-common-video</artifactId>
   <dependencies>
      <dependency>
         <groupId>org.vast.opengis</groupId>
