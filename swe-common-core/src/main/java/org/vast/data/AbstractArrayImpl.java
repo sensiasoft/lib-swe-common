@@ -117,6 +117,18 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     {
         return ((DataComponent)elementType.getValue()).hasConstraints();
     }
+    
+    
+    public final boolean isVariableSize()
+    {
+        return elementCount.hasHref() || isImplicitSize();
+    }
+    
+    
+    public final boolean isImplicitSize()
+    {
+        return !elementCount.hasHref() && elementCount.hasValue() && !elementCount.getValue().isSetValue();
+    }
 
 
     /**

@@ -26,4 +26,10 @@ public interface DataArray extends BlockComponent
     @Override
     public DataArray copy();
     
+    
+    public boolean isVariableSize();
+    
+    
+    public boolean isImplicitSize();
+    
 }

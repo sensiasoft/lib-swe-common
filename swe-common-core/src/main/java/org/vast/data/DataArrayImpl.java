@@ -489,18 +489,6 @@ public class DataArrayImpl extends AbstractArrayImpl
         this.currentSize = newSize;
     }
     
-    
-    public final boolean isVariableSize()
-    {
-        return elementCount.hasHref() || isImplicitSize();
-    }
-    
-    
-    public final boolean isImplicitSize()
-    {
-        return !elementCount.hasHref() && elementCount.hasValue() && !elementCount.getValue().isSetValue();
-    }
-    
 
     @Override
     public int getComponentCount()
