@@ -35,6 +35,7 @@ import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.JSONEncoding;
 import net.opengis.swe.v20.Quantity;
+import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.Time;
@@ -921,5 +922,19 @@ public class SWEHelper extends SWEFactory
         }
         
         return data;
+    }
+    
+    
+    /**
+     * Retrieves an indexer for the first time stamp component found in the parent structure
+     * @param parent
+     * @return indexer instance for the time stamp component or null if no time stamp could be found
+     */
+    public static ScalarIndexer getTimeStampIndexer(DataComponent parent)
+    {
+        ScalarComponent timeStamp = (ScalarComponent)findComponentByDefinition(parent, SWEConstants.DEF_SAMPLING_TIME);
+        if (timeStamp == null)
+            return null;
+        return new ScalarIndexer(parent, timeStamp);
     }
 }
