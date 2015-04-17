@@ -139,7 +139,7 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
     	
     	// HACK makes sure scalar count was properly computed
         if (scalarCount < 0)
-            this.assignNewDataBlock();
+            createDataBlock();
         
     	this.dataBlock = (AbstractDataBlock)dataBlock;
 
