@@ -57,6 +57,7 @@ public class SWECommonUtils
     public final static String DATACOMPONENT = "DataComponent";
     public final static String DATAENCODING = "DataEncoding";
     private String version = "2.0";
+    private String encoding = "UTF-8";
     private boolean versionChanged;
     private DOMHelper previousDom;
     private IXMLReaderDOM<DataComponent> componentReader = null;
@@ -121,7 +122,7 @@ public class SWECommonUtils
         try
         {
             SWEStaxBindings staxReader = new SWEStaxBindings();
-            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(is);
+            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(is, encoding);
             reader.nextTag();
             return staxReader.readDataComponent(reader);
         }
@@ -137,7 +138,7 @@ public class SWECommonUtils
         try
         {
             SWEStaxBindings staxReader = new SWEStaxBindings();
-            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(is);
+            XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(is, encoding);
             reader.nextTag();
             return staxReader.readAbstractEncoding(reader);
         }
@@ -154,7 +155,7 @@ public class SWECommonUtils
         {
             SWEStaxBindings sweWriter = new SWEStaxBindings();
             XMLOutputFactory factory = XMLImplFinder.getStaxOutputFactory();
-            XMLStreamWriter writer = factory.createXMLStreamWriter(os);
+            XMLStreamWriter writer = factory.createXMLStreamWriter(os, encoding);
             if (indent)
                 writer = new IndentingXMLStreamWriter(writer);
             sweWriter.setNamespacePrefixes(writer);
@@ -175,7 +176,7 @@ public class SWECommonUtils
         {
             SWEStaxBindings sweWriter = new SWEStaxBindings();
             XMLOutputFactory factory = XMLImplFinder.getStaxOutputFactory();
-            XMLStreamWriter writer = factory.createXMLStreamWriter(os);
+            XMLStreamWriter writer = factory.createXMLStreamWriter(os, encoding);
             if (indent)
                 writer = new IndentingXMLStreamWriter(writer);
             sweWriter.setNamespacePrefixes(writer);
@@ -310,5 +311,15 @@ public class SWECommonUtils
     {
         this.version = version;
         this.versionChanged = true;
+    }
+    
+    
+    /**
+     * To set output encoding (defaults to UTF-8)
+     * @param encoding
+     */
+    public void setEncoding(String encoding)
+    {
+        this.encoding = encoding;
     }
 }

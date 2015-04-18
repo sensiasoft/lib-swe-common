@@ -7,6 +7,10 @@
   <name>SWE Common Data Framework</name>
   <url>https://github.com/sensiasoft/lib-swe-common/tree/master/swe-common-all</url>
   <description>Java bindings and associated data components for the SWE Common Data Model language</description>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
   <licenses>
     <license>
       <name>Mozilla Public License Version 1.1</name>
