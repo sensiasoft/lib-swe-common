@@ -63,7 +63,7 @@ public class TestSweDomBindingsV20 extends XMLTestCase
     
     protected void readWriteCompareSweCommonXml(String path, boolean isDataStream) throws Exception
     {
-        SWEUtils utils = new SWEUtils("2.0");
+        SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
         
         InputStream is = getClass().getResourceAsStream(path);
         DOMHelper dom1 = new DOMHelper(is, false);
