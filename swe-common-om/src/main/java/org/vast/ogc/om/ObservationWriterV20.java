@@ -76,7 +76,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
                 
         // gml:id
         String id = obs.getId();
-        if (id == null)
+        if (id == null || id.length() == 0)
             id = "OBS_" + idFormatter.format(currentId++);
         dom.setAttributeValue(obsElt, "gml:id", id);
         
