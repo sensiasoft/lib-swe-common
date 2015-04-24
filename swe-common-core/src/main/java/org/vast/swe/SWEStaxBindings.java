@@ -24,13 +24,16 @@ import org.vast.data.SWEFactory;
  */
 public class SWEStaxBindings extends XMLStreamBindings
 {
-
+    public final static String NS_PREFIX_SWE = "swe";
+    public final static String NS_PREFIX_XLINK = "xlink";
+    
+    
     public SWEStaxBindings()
     {
         super(new SWEFactory());
         
-        nsContext.registerNamespace("swe", net.opengis.swe.v20.bind.XMLStreamBindings.NS_URI);
-        nsContext.registerNamespace("xlink", net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
+        nsContext.registerNamespace(NS_PREFIX_SWE, net.opengis.swe.v20.bind.XMLStreamBindings.NS_URI);
+        nsContext.registerNamespace(NS_PREFIX_XLINK, net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
     }
     
 }

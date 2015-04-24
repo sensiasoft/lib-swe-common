@@ -24,7 +24,7 @@ import net.opengis.swe.v20.Vector;
 import org.junit.Test;
 import org.vast.data.BinaryEncodingImpl;
 import org.vast.data.TextEncodingImpl;
-import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
 
@@ -32,7 +32,7 @@ import org.vast.swe.SWEHelper;
 public class TestSweHelper
 {
     SWEHelper fac = new SWEHelper();
-    SWECommonUtils utils = new SWECommonUtils();
+    SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
     
     
     @Test

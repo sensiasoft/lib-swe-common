@@ -46,10 +46,10 @@ public class DOMHelper
     protected final static String PATH_SEPARATOR = "/";
     
     /** User prefix to domain map **/
-    protected Hashtable<String, String> userPrefixTable = new Hashtable<String, String>();
+    protected Map<String, String> userPrefixTable = new HashMap<String, String>();
 
     /** Linked documents (URI object -> XMLDocument Object) */
-    protected Hashtable<String, XMLDocument> loadedDocuments = new Hashtable<String, XMLDocument>();
+    protected Map<String, XMLDocument> loadedDocuments = new HashMap<String, XMLDocument>();
 
     /** Main Document object */
     protected XMLFragment mainFragment;
@@ -251,6 +251,14 @@ public class DOMHelper
     public void addUserPrefix(String prefix, String nsDomain)
     {
         userPrefixTable.put(prefix, nsDomain);
+    }
+    
+    
+    public void addNSDeclaration(String prefix, String nsUri)
+    {
+        XMLDocument parentDoc = getXmlDocument();
+        if (parentDoc.getNSPrefix(nsUri) == null)
+            parentDoc.addNS(prefix, nsUri);
     }
     
     
@@ -1189,20 +1197,16 @@ public class DOMHelper
      */
     public XMLDocument getParentDocument(Node node)
     {
-        XMLDocument nextDoc = null;
-        Enumeration<XMLDocument> docs = loadedDocuments.elements();
-
         // find corresponding document
-        while (docs.hasMoreElements())
+        for (XMLDocument nextDoc: loadedDocuments.values())
         {
-            nextDoc = (XMLDocument) docs.nextElement();
             if (nextDoc.getDocument() == node.getOwnerDocument())
-                break;
+                return nextDoc;
             if (nextDoc.getDocument() == node)
-                break;
+                return nextDoc;
         }
 
-        return nextDoc;
+        return null;
     }
     
         

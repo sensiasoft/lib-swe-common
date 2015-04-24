@@ -41,7 +41,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
         
     boolean needNamespaceDecl = false;
     boolean resolveAllXlinks = false;
-    protected NamespaceRegister nsContext = new NamespaceRegister();    
+    protected NamespaceRegister nsContext = new NamespaceRegister();
     protected Map<String, Object> idrefMap = new HashMap<String, Object>();
     
     

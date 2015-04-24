@@ -29,10 +29,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataStream;
 import org.custommonkey.xmlunit.Validator;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
-import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEUtils;
 import org.vast.xml.DOMHelper;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -60,20 +61,27 @@ public class TestSweDomBindingsV20 extends XMLTestCase
     }
     
     
-    protected void readWriteCompareSweCommonXml(String path) throws Exception
+    protected void readWriteCompareSweCommonXml(String path, boolean isDataStream) throws Exception
     {
-        SWECommonUtils utils = new SWECommonUtils();
-        utils.setOutputVersion("2.0");
+        SWEUtils utils = new SWEUtils("2.0");
         
         InputStream is = getClass().getResourceAsStream(path);
         DOMHelper dom1 = new DOMHelper(is, false);
-        DataComponent data = utils.readComponent(dom1, dom1.getBaseElement());
+        DataComponent data;
+        if (isDataStream)
+            data = utils.readDataStream(dom1, dom1.getBaseElement());
+        else
+            data = utils.readComponent(dom1, dom1.getBaseElement());
         is.close();
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         System.out.println();
         DOMHelper dom = new DOMHelper();
-        Element domElt = utils.writeComponent(dom, data, true);
+        Element domElt;
+        if (isDataStream)
+            domElt = utils.writeDataStream(dom, (DataStream)data);
+        else
+            domElt = utils.writeComponent(dom, data, true);
         dom.serialize(domElt, System.out, true);
         dom.serialize(domElt, os, true);
         os.close();
@@ -85,71 +93,71 @@ public class TestSweDomBindingsV20 extends XMLTestCase
     
     public void testReadWriteScalars() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/spec/simple_components.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/simple_components.xml", false);
     }
     
     
     public void testReadWriteRecord() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/spec/record_weather.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/record_coefs.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/range_components.xml");
-        readWriteCompareSweCommonXml("examples_v20/sps/TaskingParameter_DataRecord.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/record_weather.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/spec/record_coefs.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/spec/range_components.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/sps/TaskingParameter_DataRecord.xml", false);
     }
     
     
     public void testReadWriteRecordWithConstraints() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/sps/TaskingParameter_DataRecord_constraints.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/constraints.xml");
+        readWriteCompareSweCommonXml("examples_v20/sps/TaskingParameter_DataRecord_constraints.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/spec/constraints.xml", false);
     }
     
     
     public void testReadWriteRecordWithOptionals() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/sps/TaskingParameter_DataRecord_optional.xml");
+        readWriteCompareSweCommonXml("examples_v20/sps/TaskingParameter_DataRecord_optional.xml", false);
     }
     
     
     public void testReadWriteRecordWithNilValues() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/spec/nilValues.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/nilValues.xml", false);
     }
     
     
     public void testReadWriteRecordWithQuality() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/spec/quality.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/quality.xml", false);
     }
     
     
     public void testReadWriteRecordWithXlinks() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/spec/record_weather_xlinks.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/record_weather_xlinks.xml", false);
     }
     
     
     public void testReadWriteArrayNoData() throws Exception
     {        
-        readWriteCompareSweCommonXml("examples_v20/spec/array_trajectory.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/array_image_band_interleaved.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/array_image_pixel_interleaved.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/array_trajectory.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/spec/array_image_band_interleaved.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/spec/array_image_pixel_interleaved.xml", false);
     }
     
     
     public void testReadWriteArrayWithTextData() throws Exception
     {        
-        readWriteCompareSweCommonXml("examples_v20/spec/array_weather.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/enc_text_curve.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/enc_text_profile_series.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/enc_text_stress_matrix.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/matrix_rotation.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/array_weather.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/spec/enc_text_curve.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/spec/enc_text_profile_series.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/spec/enc_text_stress_matrix.xml", false);
+        readWriteCompareSweCommonXml("examples_v20/spec/matrix_rotation.xml", false);
     }
     
     
     public void testReadWriteArrayWithRangeData() throws Exception
     {        
-        readWriteCompareSweCommonXml("examples_v20/spec/array_with_ranges.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/array_with_ranges.xml", false);
     }
     
     
@@ -168,22 +176,22 @@ public class TestSweDomBindingsV20 extends XMLTestCase
     
     public void testReadWriteDataChoice() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/spec/choice_stream.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/choice_stream.xml", false);
     }
     
     
     public void testReadWriteDataStream() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/weather_data.xml");
-        readWriteCompareSweCommonXml("examples_v20/nav_data.xml");
-        readWriteCompareSweCommonXml("examples_v20/image_data.xml");
-        readWriteCompareSweCommonXml("examples_v20/spec/datastream_with_quality.xml");
+        readWriteCompareSweCommonXml("examples_v20/weather_data.xml", true);
+        readWriteCompareSweCommonXml("examples_v20/nav_data.xml", true);
+        readWriteCompareSweCommonXml("examples_v20/image_data.xml", true);
+        readWriteCompareSweCommonXml("examples_v20/spec/datastream_with_quality.xml", true);
     }
     
     
     public void testReadWriteDataStreamWithChoice() throws Exception
     {
-        readWriteCompareSweCommonXml("examples_v20/spec/enc_text_choice_stream.xml");
+        readWriteCompareSweCommonXml("examples_v20/spec/enc_text_choice_stream.xml", true);
     }
     
 }

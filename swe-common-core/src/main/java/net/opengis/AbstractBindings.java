@@ -114,11 +114,32 @@ public abstract class AbstractBindings
             }
             catch (ParseException e1)
             {
-                throw new RuntimeException("Invalid date/time", e1);
+                throw new RuntimeException("Invalid ISO or decimal date/time", e1);
             }
         }
         
         return new DateTimeDouble(time);      
+    }
+    
+    
+    protected double getDurationFromString(String val)
+    {
+        double duration;
+        
+        try { duration = getDoubleFromString(val); }
+        catch (NumberFormatException e)
+        {
+            try
+            {
+                duration = isoFormat.parseIsoPeriod(val.trim());
+            }
+            catch (ParseException e1)
+            {
+                throw new RuntimeException("Invalid ISO or decimal duration", e1);
+            }
+        }
+        
+        return duration;      
     }
     
     
@@ -186,6 +207,12 @@ public abstract class AbstractBindings
             return TIME_NOW;
                     
         return isoFormat.formatIso(dateTime.getAsDouble(), dateTime.getTimeZoneOffset());
+    }
+    
+    
+    protected String getIsoDurationString(double val)
+    {
+        return isoFormat.formatIsoPeriod(val);
     }
 
 

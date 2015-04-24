@@ -26,7 +26,7 @@ import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.Vector;
 import org.junit.Test;
-import org.vast.swe.SWECommonUtils;
+import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEHelper;
 import org.vast.swe.ScalarIndexer;
 
@@ -79,7 +79,7 @@ public class TestScalarIndexer
         Boolean b = fac.newBoolean();
         rec.addComponent("b", b);
         
-        new SWECommonUtils().writeComponent(System.out, rec, true, true);
+        new SWEUtils(SWEUtils.V2_0).writeComponent(System.out, rec, true, true);
         
         
         ScalarIndexer indexer;
@@ -152,7 +152,7 @@ public class TestScalarIndexer
         Vector vec = fac.newLocationVectorECEF(null);
         choice.addItem("vec", vec);
         
-        new SWECommonUtils().writeComponent(System.out, choice, true, true);
+        new SWEUtils(SWEUtils.V2_0).writeComponent(System.out, choice, true, true);
         
         
         ScalarIndexer indexer;

@@ -62,14 +62,14 @@ public class XMLDocument
 	/** w3c.Document object */
 	protected Document domDocument;
 
-	/** Hashtable linking each (local) ID (String) to an Element (w3c.Element) */
-	protected Hashtable<String, Element> identifiers = new Hashtable<String, Element>();
+	/** map linking each (local) ID (String) to an Element (w3c.Element) */
+	protected Map<String, Element> identifiers = new LinkedHashMap<String, Element>();
 
-	/** Hashtable linking NS URI (String) to a NS prefix (String) */
-	protected Hashtable<String, String> nsUriToPrefix = new Hashtable<String, String>();
+	/** map linking NS URI (String) to a NS prefix (String) */
+	protected Map<String, String> nsUriToPrefix = new LinkedHashMap<String, String>();
     
-    /** Hashtable linking NS Prefix (String) to a NS URI (String) */
-    protected Hashtable<String, String> nsPrefixToUri = new Hashtable<String, String>();
+    /** map linking NS Prefix (String) to a NS URI (String) */
+    protected Map<String, String> nsPrefixToUri = new LinkedHashMap<String, String>();
     
     
 	public XMLDocument()
@@ -175,7 +175,7 @@ public class XMLDocument
      * Retrieves the namespace table
      * @return map of namespace prefix to URI
      */
-    public Hashtable<String, String> getNSTable()
+    public Map<String, String> getNSTable()
     {
     	return nsPrefixToUri;
     }
@@ -381,11 +381,10 @@ public class XMLDocument
                 return;
             
             // add namespaces xmlns attributes
-            Enumeration<String> nsEnum = nsUriToPrefix.keys();
-            while (nsEnum.hasMoreElements())
+            for (Entry<String, String> nsEntry: nsUriToPrefix.entrySet())
             {
-                String uri = (String)nsEnum.nextElement();
-                String prefix = getNSPrefix(uri);
+                String uri = nsEntry.getKey();
+                String prefix = nsEntry.getValue();
                 
                 // add namespace attributes to root element
                 String attName = "xmlns";
