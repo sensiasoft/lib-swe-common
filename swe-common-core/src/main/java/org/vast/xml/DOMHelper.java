@@ -102,6 +102,7 @@ public class DOMHelper
      * Loads an existing XML document from the given InputStream
      * @param inputStream
      * @param validation
+     * @param schemaLocations 
      * @throws DOMHelperException
      */
     public DOMHelper(InputStream inputStream, boolean validation, Map<String, String> schemaLocations) throws DOMHelperException
@@ -140,7 +141,6 @@ public class DOMHelper
      * Creates a new Document with the given qname
      * The new document will replace the document loaded in this DOMHelper
      * @param qname
-     * @return
      */
     public void createDocument(String qname)
     {
@@ -200,7 +200,7 @@ public class DOMHelper
     
     /**
      * Gets the DOM Document attached to this DOMHelper
-     * @return
+     * @return DOM Document owning the main fragment
      */
     public Document getDocument()
     {
@@ -407,7 +407,7 @@ public class DOMHelper
      * The nodePath is here set to null and thus this method simply retrieves
      * the text content of the given Element.
      * @param element
-     * @return
+     * @return Element text value
      */
     public String getElementValue(Element element)
     {
@@ -501,7 +501,7 @@ public class DOMHelper
      * This does the comparison using user prefixes
      * @param node
      * @param qname
-     * @return
+     * @return true if QName matches
      */
     public boolean hasQName(Node node, String qname)
     {
@@ -532,7 +532,7 @@ public class DOMHelper
      * qualified element name (prefix + local name), and the prefix needs
      * to be defined by calling addUserPrefix(prefix, ns-uri)
      * @param startElement Node where to start the search
-     * @param name Name of the nodes to look for
+     * @param tagName Name of the nodes to look for
      * @return a NodeList containing all the matching elements or an Empty NodeList if no matching elements are found
      */
     public NodeList getAllElements(Element startElement, String tagName)
@@ -659,9 +659,9 @@ public class DOMHelper
      * Adds an element to the document at the given location relative
      * to the parent element. This will also add all the elements given
      * in the path if they are not yet present or if marked with a '+' prefix.
-     * @param parentElement
+     * @param parentNode
      * @param nodePath
-     * @return
+     * @return DOM Element after it has been created and appended to the DOM
      */
     public Element addElement(Node parentNode, String nodePath)
     {
@@ -677,7 +677,7 @@ public class DOMHelper
      * Default version of the previous method using the base element
      * as the parent element.
      * @param nodePath
-     * @return
+     * @return DOM Element after it has been created and appended to the DOM
      */
     public Element addElement(String nodePath)
     {
@@ -765,7 +765,7 @@ public class DOMHelper
     /**
      * Adds all necessary elements and the final attribute in the path and
      * sets the text value of the attribute to the given String.
-     * @param parentElement
+     * @param startElement 
      * @param nodePath
      * @param val
      */
@@ -834,8 +834,9 @@ public class DOMHelper
     
     /**
      * Creates a new element using the underlying DOM Document.
+     * @param parentDoc 
      * @param qname qname of the new element
-     * @return
+     * @return Newly created DOM element (owned by the main document)
      */
     public Element createElement(XMLDocument parentDoc, String qname)
     {
@@ -854,7 +855,7 @@ public class DOMHelper
     /**
      * Creates a new element using the main document
      * @param qname
-     * @return
+     * @return Newly created DOM element (owned by the main document)
      */
     public Element createElement(String qname)
     {
@@ -1214,6 +1215,7 @@ public class DOMHelper
      * Adds a node to the end of the children list<br>
      * @param parent Node Parent node receiving the new child
      * @param child String Child node to be added
+     * @return Newly created DOM Node after it has bee appended to the DOM tree
      */
     public Node appendChild(Node parent, String child)
     {

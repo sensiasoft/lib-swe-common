@@ -32,6 +32,7 @@ import javax.xml.stream.XMLStreamWriter;
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @param <ObjectType> Type of object handled by this writer
  * @since Sep 30, 2012
  * */
 public interface IXMLWriterStAX<ObjectType>

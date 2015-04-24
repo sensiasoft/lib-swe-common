@@ -32,6 +32,7 @@ import javax.xml.stream.XMLStreamReader;
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @param <ObjectType> Type of object handled by this reader
  * @since Sep 30, 2012
  * */
 public interface IXMLReaderStAX<ObjectType>
