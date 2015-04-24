@@ -29,11 +29,10 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import javax.xml.namespace.QName;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.IDefinition;
 import org.vast.ogc.gml.FeatureRef;
-import org.vast.ogc.gml.IFeature;
+import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
 import org.vast.util.URIResolver;
@@ -60,59 +59,27 @@ public class ObservationRef extends FeatureRef implements IObservation
     {
         setHref(href);
     }
-        
     
-    public String getType()
+    
+    @Override
+    protected IObservation fetchTarget(String href)
     {
-        return getTarget().getType();
-    }
-
-
-    public Object getProperty(String name)
-    {
-        return getTarget().getProperty(name);
-    }
-
-
-    public void setType(String type)
-    {
-        getTarget().setType(type);
-    }
-
-
-    public void setProperty(String name, Object val)
-    {
-        getTarget().setProperty(name, val);
-    }
-
-
-    public Object getMetadata()
-    {
-        return getTarget().getMetadata();
-    }
-
-
-    public void setMetadata(Object metadata)
-    {
-        getTarget().setMetadata(metadata);
-    }
-
-
-    public Object getProperty(QName qname)
-    {
-        return getTarget().getProperty(qname);
+        try
+        {
+            URIResolver resolver = new URIResolver(new URI(href));
+            InputStream is = resolver.openStream();            
+            return new OMUtils(OMUtils.V2_0).readObservation(is);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
 
     public List<IXlinkReference<IObservation>> getRelatedObservations()
     {
         return getTarget().getRelatedObservations();
-    }
-
-
-    public void setProperty(QName qname, Object val)
-    {
-        getTarget().setProperty(qname, val);
     }
 
 
@@ -170,13 +137,13 @@ public class ObservationRef extends FeatureRef implements IObservation
     }
 
 
-    public IFeature getFeatureOfInterest()
+    public GenericFeature getFeatureOfInterest()
     {
         return getTarget().getFeatureOfInterest();
     }
 
 
-    public void setFeatureOfInterest(IFeature foi)
+    public void setFeatureOfInterest(GenericFeature foi)
     {
         getTarget().setFeatureOfInterest(foi);
     }
@@ -234,21 +201,5 @@ public class ObservationRef extends FeatureRef implements IObservation
     public IObservation getTarget()
     {
         return (IObservation)super.getTarget();
-    }
-    
-    
-    @Override
-    protected IObservation fetchTarget(String href)
-    {
-        try
-        {
-            URIResolver resolver = new URIResolver(new URI(href));
-            InputStream is = resolver.openStream();            
-            return OMUtils.readObservation(is);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 }

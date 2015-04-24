@@ -23,18 +23,18 @@
 
 package org.vast.ogc.om;
 
-import javax.xml.namespace.QName;
+import net.opengis.gml.v32.impl.CodeImpl;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.FeatureRef;
-import org.vast.ogc.gml.GMLFeatureReader;
-import org.vast.ogc.gml.GMLTimeReader;
-import org.vast.ogc.gml.IFeature;
+import org.vast.ogc.gml.GMLUtils;
+import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.xlink.CachedReference;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
+import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEFilter;
-import org.vast.swe.SweComponentReaderV20;
+import org.vast.swe.SWEStaxBindings;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLReaderDOM;
@@ -53,16 +53,12 @@ import org.w3c.dom.*;
 public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
 {
 	protected SWEFilter streamFilter;
-    protected GMLTimeReader timeReader;
-    protected GMLFeatureReader featureReader;
-    protected SweComponentReaderV20 sweReader;
+    protected GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
+    protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
     
     
     public ObservationReaderV20()
     {
-        timeReader = new GMLTimeReader();
-        featureReader = new GMLFeatureReader();
-        sweReader = new SweComponentReaderV20();
     }
     
     
@@ -72,13 +68,15 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         
         // local ID
         String id = dom.getAttributeValue(obsElt, "id");
-        obs.setLocalId(id);
+        obs.setId(id);
             
         // description
         obs.setDescription(dom.getElementValue(obsElt, "description"));
         
         // identifier
-        obs.setIdentifier(dom.getElementValue(obsElt, "identifier"));
+        String uid = dom.getElementValue(obsElt, "identifier");
+        if (uid != null)
+            obs.setUniqueIdentifier(uid);
         
         // observation names
         NodeList nameElts = dom.getElements("name");
@@ -87,7 +85,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
             Element nameElt = (Element)nameElts.item(i);
             String name = dom.getElementValue(nameElt);
             String codeSpace = dom.getAttributeValue(nameElt, "@codeSpace");
-            obs.addName(new QName(codeSpace, name));
+            obs.getNameList().add(new CodeImpl(codeSpace, name));
         }
         
         // type
@@ -96,7 +94,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         // metadata as raw XML
         Element metadata = dom.getElement(obsElt, "metadata/*");
         if (metadata != null)
-            obs.setMetadata(metadata.cloneNode(true));
+            obs.getMetaDataPropertyList().add(metadata.cloneNode(true));
         
         // related observations
         NodeList relObsElts = dom.getElements(obsElt, "relatedObservation/ObservationContext");
@@ -114,20 +112,20 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         
         // phenomenon time
         timeElt = dom.getElement(obsElt, "phenomenonTime/*");
-        time = timeReader.readTimePrimitive(dom, timeElt);
+        time = gmlUtils.readTimePrimitiveAsTimeExtent(dom, timeElt);
         obs.setPhenomenonTime(time);
         
         // result time
         timeElt = dom.getElement(obsElt, "resultTime/*");
-        time = timeReader.readTimePrimitive(dom, timeElt);
+        time = gmlUtils.readTimePrimitiveAsTimeExtent(dom, timeElt);
         obs.setResultTime(time);
         
         // optional valid time
         timeElt = dom.getElement(obsElt, "validTime/*");
         if (timeElt != null)
         {
-            time = timeReader.readTimePrimitive(dom, timeElt);
-            obs.setPhenomenonTime(time);
+            time = gmlUtils.readTimePrimitiveAsTimeExtent(dom, timeElt);
+            obs.setValidTime(time);
         }
         
         // procedure
@@ -160,8 +158,8 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
             
             try
             {
-                if (valueElt.getNamespaceURI().equals(SweComponentReaderV20.SWE_NS))
-                    paramValue = sweReader.read(dom, valueElt);
+                if (valueElt.getNamespaceURI().equals(SWEStaxBindings.NS_URI))
+                    paramValue = sweUtils.readComponent(dom, valueElt);
                 else
                     paramValue = valueElt.cloneNode(true);
             }
@@ -197,7 +195,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
                 Element foiElt = dom.getFirstChildElement(foiPropElt);
                 if (foiElt != null)
                 {
-                    IFeature foi = readFOI(dom, foiElt);
+                    GenericFeature foi = readFOI(dom, foiElt);
                     obs.setFeatureOfInterest(foi);
                 }
             }
@@ -214,7 +212,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         {
             try
             {
-                DataComponent result = sweReader.read(dom, resultElt);
+                DataComponent result = sweUtils.readComponent(dom, resultElt);
                 obs.setResult(result);
             }
             catch (XMLReaderException e)
@@ -227,7 +225,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
     }
     
     
-    protected IFeature readFOI(DOMHelper dom, Element foiElt) throws XMLReaderException
+    protected GenericFeature readFOI(DOMHelper dom, Element foiElt) throws XMLReaderException
     {
         Element featureElt = dom.getFirstChildElement(foiElt);
         
@@ -239,7 +237,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         }
         else
         {
-            return featureReader.read(dom, featureElt);
+            return gmlUtils.readFeature(dom, featureElt);
         }
     }    
 }

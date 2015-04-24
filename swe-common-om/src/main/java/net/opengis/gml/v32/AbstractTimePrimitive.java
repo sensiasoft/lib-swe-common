@@ -22,9 +22,9 @@ import net.opengis.OgcPropertyList;
  *
  * This is a complex type.
  */
+@SuppressWarnings("javadoc")
 public interface AbstractTimePrimitive extends AbstractGML
-{
-    
+{ 
     
     /**
      * Gets the list of relatedTime properties

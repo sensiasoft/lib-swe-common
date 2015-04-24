@@ -17,16 +17,13 @@ package net.opengis.gml.v32.impl;
 import java.util.ArrayList;
 import java.util.List;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGeometry;
-import net.opengis.gml.v32.AbstractMetaData;
 import net.opengis.gml.v32.AbstractRing;
 import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Polygon;
 import net.opengis.gml.v32.Reference;
-import net.opengis.gml.v32.StringOrRef;
 
 
 /**
@@ -107,7 +104,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
 
 
     @Override
-    public final OgcPropertyList<AbstractMetaData> getMetaDataPropertyList()
+    public final OgcPropertyList<Object> getMetaDataPropertyList()
     {
         return geom.getMetaDataPropertyList();
     }
@@ -137,23 +134,9 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
 
 
     @Override
-    public final int getNumMetaDataPropertys()
-    {
-        return geom.getNumMetaDataPropertys();
-    }
-
-
-    @Override
     public final int getSrsDimension()
     {
         return geom.getSrsDimension();
-    }
-
-
-    @Override
-    public final void addMetaDataProperty(AbstractMetaData metaDataProperty)
-    {
-        geom.addMetaDataProperty(metaDataProperty);
     }
 
 
@@ -165,7 +148,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
 
 
     @Override
-    public final StringOrRef getDescription()
+    public final String getDescription()
     {
         return geom.getDescription();
     }
@@ -175,13 +158,6 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
     public final void setSrsDimension(int srsDimension)
     {
         geom.setSrsDimension(srsDimension);
-    }
-
-
-    @Override
-    public final OgcProperty<StringOrRef> getDescriptionProperty()
-    {
-        return geom.getDescriptionProperty();
     }
 
 
@@ -210,13 +186,6 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
     public final boolean isSetAxisLabels()
     {
         return geom.isSetAxisLabels();
-    }
-
-
-    @Override
-    public final void setDescription(StringOrRef description)
-    {
-        geom.setDescription(description);
     }
 
 

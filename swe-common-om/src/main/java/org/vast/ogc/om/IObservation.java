@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.IDefinition;
-import org.vast.ogc.gml.IFeature;
+import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
 
@@ -40,7 +40,7 @@ import org.vast.util.TimeExtent;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 28, 2012
  * */
-public interface IObservation extends IFeature
+public interface IObservation extends GenericFeature
 {
     public String OBS_TYPE_GENERIC = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Observation";
     public String OBS_TYPE_MEAS = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement";
@@ -49,11 +49,7 @@ public interface IObservation extends IFeature
     public String OBS_TYPE_SCALAR = "http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEScalarObservation";
     public String OBS_TYPE_RECORD = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation";
     public String OBS_TYPE_ARRAY = "http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEArrayObservation";
-       
-    
-    public Object getMetadata();
-    
-    public void setMetadata(Object metadata);
+
     
     public List<IXlinkReference<IObservation>> getRelatedObservations();
     
@@ -75,9 +71,9 @@ public interface IObservation extends IFeature
     
     public void setObservedProperty(IXlinkReference<IDefinition> propRef);
     
-    public IFeature getFeatureOfInterest();
+    public GenericFeature getFeatureOfInterest();
     
-    public void setFeatureOfInterest(IFeature foi);
+    public void setFeatureOfInterest(GenericFeature foi);
     
     public IProcedure getProcedure();
     

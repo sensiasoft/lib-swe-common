@@ -18,9 +18,7 @@ import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGeometry;
-import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.Envelope;
-import net.opengis.gml.v32.StringOrRef;
 
 
 /**
@@ -32,7 +30,7 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
 {
     static final long serialVersionUID = 1L;
     protected Envelope boundedBy;
-    protected OgcProperty<Object> location;
+    protected OgcProperty<AbstractGeometry> location;
     
     
     public AbstractFeatureImpl()
@@ -74,7 +72,7 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
      * Gets the location property
      */
     @Override
-    public Object getLocation()
+    public AbstractGeometry getLocation()
     {
         return location.getValue();
     }
@@ -84,10 +82,10 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
      * Gets extra info (name, xlink, etc.) carried by the location property
      */
     @Override
-    public OgcProperty<Object> getLocationProperty()
+    public OgcProperty<AbstractGeometry> getLocationProperty()
     {
         if (location == null)
-            location = new OgcPropertyImpl<Object>();
+            location = new OgcPropertyImpl<AbstractGeometry>();
         return location;
     }
     
@@ -106,34 +104,10 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
      * Sets the locationAsAbstractGeometry property
      */
     @Override
-    public void setLocationAsAbstractGeometry(AbstractGeometry location)
+    public void setLocation(AbstractGeometry location)
     {
         if (this.location == null)
-            this.location = new OgcPropertyImpl<Object>();
-        this.location.setValue(location);
-    }
-    
-    
-    /**
-     * Sets the locationAsLocationKeyWord property
-     */
-    @Override
-    public void setLocationAsLocationKeyWord(Code location)
-    {
-        if (this.location == null)
-            this.location = new OgcPropertyImpl<Object>();
-        this.location.setValue(location);
-    }
-    
-    
-    /**
-     * Sets the locationAsLocationString property
-     */
-    @Override
-    public void setLocationAsLocationString(StringOrRef location)
-    {
-        if (this.location == null)
-            this.location = new OgcPropertyImpl<Object>();
+            this.location = new OgcPropertyImpl<AbstractGeometry>();
         this.location.setValue(location);
     }
 }

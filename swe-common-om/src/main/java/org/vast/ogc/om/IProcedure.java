@@ -23,7 +23,7 @@
 
 package org.vast.ogc.om;
 
-import org.vast.ogc.gml.IFeature;
+import org.vast.ogc.gml.GenericFeature;
 
 
 /**
@@ -34,7 +34,7 @@ import org.vast.ogc.gml.IFeature;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 28, 2012
  * */
-public interface IProcedure extends IFeature
+public interface IProcedure extends GenericFeature
 {
 
 }

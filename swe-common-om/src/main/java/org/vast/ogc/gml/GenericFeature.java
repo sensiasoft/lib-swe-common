@@ -23,9 +23,9 @@
 
 package org.vast.ogc.gml;
 
-import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import net.opengis.gml.v32.AbstractFeature;
 
 
 /**
@@ -36,7 +36,7 @@ import javax.xml.namespace.QName;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 28, 2012
  * */
-public interface IFeature
+public interface GenericFeature extends AbstractFeature
 {
     public QName getQName();
     
@@ -44,26 +44,6 @@ public interface IFeature
     
     public void setType(String type);
 
-    public String getLocalId();
-    
-    public void setLocalId(String id);
-    
-    public String getIdentifier();
-    
-    public void setIdentifier(String uid);
-    
-    public String getDescription();
-    
-    public void setDescription(String desc);
-    
-    public String getName();
-    
-    public void setName(String name);
-    
-    public List<QName> getNames();
-    
-    public void addName(QName name);
-    
     public Map<QName, Object> getProperties();
     
     public Object getProperty(String name);

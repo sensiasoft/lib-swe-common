@@ -27,7 +27,6 @@ import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
 import net.opengis.gml.v32.Reference;
-import net.opengis.gml.v32.StringOrRef;
 import net.opengis.gml.v32.TimeInstant;
 import net.opengis.gml.v32.TimeIntervalLength;
 import net.opengis.gml.v32.TimePeriod;
@@ -55,12 +54,6 @@ public class GMLFactory implements Factory
         this.useJTS = useJTS;
         if (useJTS)
             jtsFactory = new GeometryFactory();
-    }
-       
-    
-    public final StringOrRef newStringOrRef()
-    {
-        return new StringOrRefImpl();
     }
     
     
@@ -215,6 +208,16 @@ public class GMLFactory implements Factory
         env.setSrsName(crs);
         env.setLowerCorner(new double[] {minX, minY});
         env.setUpperCorner(new double[] {maxX, maxY});
+        return env;
+    }
+    
+    
+    public Envelope newEnvelope(String crs, double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+    {
+        Envelope env = newEnvelope();
+        env.setSrsName(crs);
+        env.setLowerCorner(new double[] {minX, minY, minZ});
+        env.setUpperCorner(new double[] {maxX, maxY, maxZ});
         return env;
     }
 

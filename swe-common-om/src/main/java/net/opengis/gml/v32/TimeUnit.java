@@ -17,16 +17,18 @@ package net.opengis.gml.v32;
 
 
 /**
- * POJO class for XML type TimeIndeterminateValueType(@http://www.opengis.net/gml/3.2).
+ * POJO class for XML type TimeUnitType(@http://www.opengis.net/gml/3.2).
  *
  */
 @SuppressWarnings("javadoc")
-public enum TimeIndeterminateValue
+public enum TimeUnit
 {
-    AFTER("after"),
-    BEFORE("before"),
-    NOW("now"),
-    UNKNOWN("unknown");
+    YEAR("year"),
+    MONTH("month"),
+    DAY("day"),
+    HOUR("hour"),
+    MINUTE("minute"),
+    SECOND("second");
     
     private final String text;
     
@@ -35,7 +37,7 @@ public enum TimeIndeterminateValue
     /**
      * Private constructor for storing string representation
      */
-    private TimeIndeterminateValue(String s)
+    private TimeUnit(String s)
     {
         this.text = s;
     }
@@ -55,17 +57,21 @@ public enum TimeIndeterminateValue
     /**
      * To get the enum constant corresponding to the given String representation
      */
-    public static TimeIndeterminateValue fromString(String s)
+    public static TimeUnit fromString(String s)
     {
-        if (s.equals("after"))
-            return AFTER;
-        else if (s.equals("before"))
-            return BEFORE;
-        else if (s.equals("now"))
-            return NOW;
-        else if (s.equals("unknown"))
-            return UNKNOWN;
+        if (s.equals("year"))
+            return YEAR;
+        else if (s.equals("month"))
+            return MONTH;
+        else if (s.equals("day"))
+            return DAY;
+        else if (s.equals("hour"))
+            return HOUR;
+        else if (s.equals("minute"))
+            return MINUTE;
+        else if (s.equals("second"))
+            return SECOND;
         
-        throw new IllegalArgumentException("Invalid token " + s + " for enum TimeIndeterminateValue");
+        throw new IllegalArgumentException("Invalid token " + s + " for enum TimeUnit");
     }
 }

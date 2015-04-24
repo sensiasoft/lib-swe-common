@@ -28,6 +28,13 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyList;
+import net.opengis.gml.v32.AbstractGeometry;
+import net.opengis.gml.v32.Code;
+import net.opengis.gml.v32.CodeWithAuthority;
+import net.opengis.gml.v32.Envelope;
+import net.opengis.gml.v32.Reference;
 import org.vast.ogc.xlink.CachedReference;
 import org.vast.util.URIResolver;
 
@@ -41,9 +48,9 @@ import org.vast.util.URIResolver;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 28, 2012
  * */
-public class FeatureRef extends CachedReference<IFeature> implements IFeature
+public class FeatureRef extends CachedReference<GenericFeature> implements GenericFeature
 {
-    
+        
     
     public FeatureRef()
     { 
@@ -51,148 +58,262 @@ public class FeatureRef extends CachedReference<IFeature> implements IFeature
     
     
     public FeatureRef(String href)
-    {
-        setHref(href);
-    }
-    
-    
-    @Override
-    public QName getQName()
-    {
-        return getTarget().getQName();
-    }
-    
-    
-    @Override
-    public String getType()
-    {
-        return getTarget().getType();
+    { 
+        this.href = href;
     }
 
 
+
     @Override
-    public void setType(String type)
+    protected GenericFeature fetchTarget(String href)
     {
-        getTarget().setType(type);        
+        try
+        {
+            URIResolver resolver = new URIResolver(new URI(href));
+            InputStream is = resolver.openStream();            
+            return new GMLUtils(GMLUtils.V3_2).readFeature(is);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
 
-    @Override
-    public String getLocalId()
+
+    public OgcPropertyList<Object> getMetaDataPropertyList()
     {
-        return getTarget().getLocalId();
+        return getTarget().getMetaDataPropertyList();
     }
 
 
-    @Override
-    public void setLocalId(String id)
+
+    public Envelope getBoundedBy()
     {
-        getTarget().setLocalId(id);        
+        return getTarget().getBoundedBy();
     }
 
 
-    @Override
-    public String getIdentifier()
+
+    public boolean isSetBoundedBy()
     {
-        return getTarget().getIdentifier();
+        return getTarget().isSetBoundedBy();
     }
 
 
-    @Override
-    public void setIdentifier(String uid)
-    {
-        getTarget().setIdentifier(uid);        
-    }
-    
-    
-    @Override
+
     public String getDescription()
     {
         return getTarget().getDescription();
     }
 
 
-    @Override
-    public void setDescription(String desc)
+
+    public void setBoundedByAsEnvelope(Envelope boundedBy)
     {
-        getTarget().setDescription(desc);
+        getTarget().setBoundedByAsEnvelope(boundedBy);
     }
 
 
-    @Override
-    public String getName()
+
+    public boolean isSetDescription()
     {
-        return getTarget().getName();
+        return getTarget().isSetDescription();
     }
 
 
-    @Override
-    public void setName(String name)
+
+    public AbstractGeometry getLocation()
     {
-        getTarget().setName(name);
+        return getTarget().getLocation();
     }
 
 
-    @Override
-    public List<QName> getNames()
+
+    public void setDescription(String description)
     {
-        return getTarget().getNames();
+        getTarget().setDescription(description);
     }
 
 
-    @Override
-    public void addName(QName name)
+
+    public QName getQName()
     {
-        getTarget().addName(name);
+        return getTarget().getQName();
     }
-    
-    
+
+
+
+    public OgcProperty<AbstractGeometry> getLocationProperty()
+    {
+        return getTarget().getLocationProperty();
+    }
+
+
+
+    public Reference getDescriptionReference()
+    {
+        return getTarget().getDescriptionReference();
+    }
+
+
+
+    public String getType()
+    {
+        return getTarget().getType();
+    }
+
+
+
+    public void setType(String type)
+    {
+        getTarget().setType(type);
+    }
+
+
+
     public Map<QName, Object> getProperties()
     {
         return getTarget().getProperties();
     }
 
 
-    @Override
+
+    public boolean isSetDescriptionReference()
+    {
+        return getTarget().isSetDescriptionReference();
+    }
+
+
+
     public Object getProperty(String name)
     {
         return getTarget().getProperty(name);
     }
 
 
-    @Override
+
+    public boolean isSetLocation()
+    {
+        return getTarget().isSetLocation();
+    }
+
+
+
     public void setProperty(String name, Object value)
     {
         getTarget().setProperty(name, value);
     }
 
 
-    @Override
+
     public Object getProperty(QName qname)
     {
         return getTarget().getProperty(qname);
     }
-    
 
-    @Override
+
+
+    public void setLocation(AbstractGeometry location)
+    {
+        getTarget().setLocation(location);
+    }
+
+
+
+    public void setDescriptionReference(Reference descriptionReference)
+    {
+        getTarget().setDescriptionReference(descriptionReference);
+    }
+
+
+
     public void setProperty(QName qname, Object value)
     {
         getTarget().setProperty(qname, value);
     }
 
 
-    @Override
-    protected IFeature fetchTarget(String href)
+
+    public CodeWithAuthority getIdentifier()
     {
-        try
-        {
-            URIResolver resolver = new URIResolver(new URI(href));
-            InputStream is = resolver.openStream();            
-            return GMLUtils.readFeature(is);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+        return getTarget().getIdentifier();
+    }
+
+
+
+    public String getUniqueIdentifier()
+    {
+        return getTarget().getUniqueIdentifier();
+    }
+
+
+
+    public boolean isSetIdentifier()
+    {
+        return getTarget().isSetIdentifier();
+    }
+
+
+
+    public void setIdentifier(CodeWithAuthority identifier)
+    {
+        getTarget().setIdentifier(identifier);
+    }
+
+
+
+    public void setUniqueIdentifier(String identifier)
+    {
+        getTarget().setUniqueIdentifier(identifier);
+    }
+
+
+
+    public List<Code> getNameList()
+    {
+        return getTarget().getNameList();
+    }
+
+
+
+    public int getNumNames()
+    {
+        return getTarget().getNumNames();
+    }
+
+
+
+    public void addName(Code name)
+    {
+        getTarget().addName(name);
+    }
+
+
+
+    public void setName(String name)
+    {
+        getTarget().setName(name);
+    }
+
+
+
+    public String getName()
+    {
+        return getTarget().getName();
+    }
+
+
+
+    public String getId()
+    {
+        return getTarget().getId();
+    }
+
+
+
+    public void setId(String id)
+    {
+        getTarget().setId(id);
     }
 }

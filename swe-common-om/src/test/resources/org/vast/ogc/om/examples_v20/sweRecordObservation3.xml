@@ -4,12 +4,12 @@
    <gml:name>Complex Observation test 3</gml:name>
    <om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation" />
    <om:phenomenonTime>
-      <gml:TimeInstant gml:id="T001">
+      <gml:TimeInstant gml:id="T1">
          <gml:timePosition>2005-01-11T17:22:25Z</gml:timePosition>
       </gml:TimeInstant>
    </om:phenomenonTime>
    <om:resultTime>
-    <gml:TimeInstant gml:id="T002">
+    <gml:TimeInstant gml:id="T2">
          <gml:timePosition>2005-01-11T17:22:25.010Z</gml:timePosition>
       </gml:TimeInstant>
    </om:resultTime>

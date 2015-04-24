@@ -39,6 +39,13 @@ public class CodeImpl implements Code
     }
     
     
+    public CodeImpl(String codeSpace, String value)
+    {
+        this.codeSpace = codeSpace;
+        this.value = value;
+    }
+    
+    
     /**
      * Gets the codeSpace property
      */

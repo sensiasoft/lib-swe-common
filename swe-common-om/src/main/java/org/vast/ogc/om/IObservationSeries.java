@@ -24,7 +24,7 @@
 package org.vast.ogc.om;
 
 import java.util.Map;
-import org.vast.ogc.gml.IFeature;
+import org.vast.ogc.gml.GenericFeature;
 import org.vast.swe.ISweInputDataStream;
 import org.vast.swe.ISweOutputDataStream;
 import org.vast.util.TimeExtent;
@@ -41,7 +41,7 @@ import org.vast.util.TimeExtent;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Sep 28, 2012
  * */
-public interface IObservationSeries extends IFeature, ISweInputDataStream, ISweOutputDataStream
+public interface IObservationSeries extends GenericFeature, ISweInputDataStream, ISweOutputDataStream
 {
     /**
      * Get the phenomenon time extent of the series
@@ -80,7 +80,7 @@ public interface IObservationSeries extends IFeature, ISweInputDataStream, ISweO
      *         mapping feature IDs as they appear in the stream to 
      *         the actual feature instances.
      */
-    public Map<String, IFeature> getFeaturesOfInterest();
+    public Map<String, GenericFeature> getFeaturesOfInterest();
     
     
     /**

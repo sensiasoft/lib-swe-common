@@ -14,7 +14,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
-import net.opengis.IDateTime;
 import net.opengis.OgcProperty;
 
 
@@ -23,9 +22,9 @@ import net.opengis.OgcProperty;
  *
  * This is a complex type.
  */
+@SuppressWarnings("javadoc")
 public interface TimePeriod extends AbstractTimeGeometricPrimitive
 {
-    
     
     /**
      * Gets the beginPosition property
@@ -114,7 +113,7 @@ public interface TimePeriod extends AbstractTimeGeometricPrimitive
     /**
      * Gets the duration property
      */
-    public IDateTime getDuration();
+    public double getDuration();
     
     
     /**
@@ -126,7 +125,7 @@ public interface TimePeriod extends AbstractTimeGeometricPrimitive
     /**
      * Sets the duration property
      */
-    public void setDuration(IDateTime duration);
+    public void setDuration(double duration);
     
     
     /**
@@ -145,4 +144,18 @@ public interface TimePeriod extends AbstractTimeGeometricPrimitive
      * Sets the timeInterval property
      */
     public void setTimeInterval(TimeIntervalLength timeInterval);
+    
+    
+    /**
+     * Sets the time interval in seconds
+     */
+    public void setTimeInterval(double seconds);
+    
+    
+    /**
+     * Sets the time interval in the specified unit
+     * @param value
+     * @param unit
+     */
+    public void setTimeInterval(double value, TimeUnit unit);
 }

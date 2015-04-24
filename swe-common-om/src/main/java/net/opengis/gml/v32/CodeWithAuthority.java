@@ -22,8 +22,7 @@ package net.opengis.gml.v32;
  */
 public interface CodeWithAuthority extends Code
 {
-    
-    
+        
     /**
      * Gets the codeSpace property
      */

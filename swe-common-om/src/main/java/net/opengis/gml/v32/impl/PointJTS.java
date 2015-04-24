@@ -16,15 +16,12 @@ package net.opengis.gml.v32.impl;
 
 import java.util.List;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGeometry;
-import net.opengis.gml.v32.AbstractMetaData;
 import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Reference;
-import net.opengis.gml.v32.StringOrRef;
 
 
 /**
@@ -79,7 +76,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 
 
     @Override
-    public OgcPropertyList<AbstractMetaData> getMetaDataPropertyList()
+    public OgcPropertyList<Object> getMetaDataPropertyList()
     {
         return geom.getMetaDataPropertyList();
     }
@@ -109,23 +106,9 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 
 
     @Override
-    public int getNumMetaDataPropertys()
-    {
-        return geom.getNumMetaDataPropertys();
-    }
-
-
-    @Override
     public int getSrsDimension()
     {
         return geom.getSrsDimension();
-    }
-
-
-    @Override
-    public void addMetaDataProperty(AbstractMetaData metaDataProperty)
-    {
-        geom.addMetaDataProperty(metaDataProperty);
     }
 
 
@@ -137,7 +120,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 
 
     @Override
-    public StringOrRef getDescription()
+    public String getDescription()
     {
         return geom.getDescription();
     }
@@ -147,13 +130,6 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
     public void setSrsDimension(int srsDimension)
     {
         geom.setSrsDimension(srsDimension);
-    }
-
-
-    @Override
-    public OgcProperty<StringOrRef> getDescriptionProperty()
-    {
-        return geom.getDescriptionProperty();
     }
 
 
@@ -182,13 +158,6 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
     public boolean isSetAxisLabels()
     {
         return geom.isSetAxisLabels();
-    }
-
-
-    @Override
-    public void setDescription(StringOrRef description)
-    {
-        geom.setDescription(description);
     }
 
 

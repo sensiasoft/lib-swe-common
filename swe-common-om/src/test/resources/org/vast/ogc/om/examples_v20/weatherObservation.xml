@@ -3,13 +3,13 @@
    <gml:name>Weather Data</gml:name>
    <om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_SWEObservation" />
    <om:phenomenonTime>
-      <gml:TimePeriod gml:id="T001">
+      <gml:TimePeriod gml:id="T1">
          <gml:beginPosition>2007-04-01T00:00:00Z</gml:beginPosition>
          <gml:endPosition>2007-04-01T03:40:00Z</gml:endPosition>
       </gml:TimePeriod>
    </om:phenomenonTime>
    <om:resultTime>
-      <gml:TimeInstant gml:id="T002">
+      <gml:TimeInstant gml:id="T2">
          <gml:timePosition>2007-04-01T03:40:00.230Z</gml:timePosition>
       </gml:TimeInstant>
    </om:resultTime>

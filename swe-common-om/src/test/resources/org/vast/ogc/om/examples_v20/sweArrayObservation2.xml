@@ -12,13 +12,13 @@
 	<om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation"/>
 	<!-- -->
 	<om:phenomenonTime>
-		<gml:TimePeriod gml:id="T001">
+		<gml:TimePeriod gml:id="T1">
 			<gml:beginPosition>2005-01-11T17:22:25Z</gml:beginPosition>
 			<gml:endPosition>2005-01-11T18:22:25Z</gml:endPosition>
 		</gml:TimePeriod>
 	</om:phenomenonTime>
 	<om:resultTime>
-        <gml:TimePeriod gml:id="T002">
+        <gml:TimePeriod gml:id="T2">
             <gml:beginPosition>2005-01-11T17:22:25Z</gml:beginPosition>
             <gml:endPosition>2005-01-11T18:22:25Z</gml:endPosition>
         </gml:TimePeriod>

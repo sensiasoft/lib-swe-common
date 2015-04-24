@@ -20,9 +20,6 @@ public interface Factory
 {
     
     
-    public StringOrRef newStringOrRef();
-    
-    
     public TimeInstant newTimeInstant();
     
     

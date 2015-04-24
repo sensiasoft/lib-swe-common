@@ -20,12 +20,10 @@
 
 package org.vast.ogc.gml;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
-import org.vast.math.Vector3d;
+import net.opengis.gml.v32.impl.AbstractFeatureImpl;
 
 
 /**
@@ -36,24 +34,17 @@ import org.vast.math.Vector3d;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 20, 2007
  * */
-public class FeatureImpl implements IGeoFeature
+public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFeature
 {
-    public final static QName LOCATION = new QName("location");
     protected QName qname;
-    protected String id;
-    protected String identifier;
-    protected Object metadata;
     protected String type;
-    protected String description;
-    protected List<QName> names;
     protected Map<QName, Object> properties;
 
 
-    public FeatureImpl(QName qname)
+    public GenericFeatureImpl(QName qname)
     {
-        this.qname = qname;
-        names = new ArrayList<QName>();
         properties = new LinkedHashMap<QName, Object>();
+        this.qname = qname;
     }
     
     
@@ -61,90 +52,8 @@ public class FeatureImpl implements IGeoFeature
     {
         return qname;
     }
-    
-    
-    public String getLocalId()
-    {
-        return this.id;
-    }
-    
-    
-    public void setLocalId(String id)
-    {
-        this.id = id;
-    }
-    
-    
-    public String getIdentifier()
-    {
-        return this.identifier;
-    }
-    
-    
-    public void setIdentifier(String uid)
-    {
-        this.identifier = uid;
-    }
-    
-    
-    public String getDescription()
-    {
-        return description;
-    }
 
-
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
     
-    
-    public String getName()
-    {
-        QName name = names.get(0);
-        if (name != null)
-            return name.getLocalPart();
-        return null;
-    }
-    
-    
-    public void setName(String name)
-    {
-        QName qname = new QName(name);
-        names.add(qname);
-    }
-    
-    
-    public void addName(QName qname)
-    {
-        names.add(qname);
-    }
-
-
-    public List<QName> getNames()
-    {
-        return names;
-    }
-
-
-    public void setNames(List<QName> names)
-    {
-        this.names = names;
-    }
-    
-    
-    public Vector3d getLocation()
-    {
-        return (Vector3d)properties.get(LOCATION);
-    }
-    
-    
-    public void setLocation(Vector3d point)
-    {
-        properties.put(LOCATION, point);
-    }
-
-
     public Map<QName, Object> getProperties()
     {
         return properties;
@@ -186,17 +95,5 @@ public class FeatureImpl implements IGeoFeature
     public void setType(String type)
     {
         this.type = type;
-    }
-
-
-    public Object getMetadata()
-    {
-        return metadata;
-    }
-
-
-    public void setMetadata(Object metadata)
-    {
-        this.metadata = metadata;
     }
 }

@@ -1,0 +1,5 @@
+<gml:TimePeriod gml:id="T1" xmlns:gml="http://www.opengis.net/gml/3.2">
+   <gml:beginPosition>2008-01-11T00:00:00Z</gml:beginPosition>
+   <gml:endPosition>2011-08-21T00:00:00Z</gml:endPosition>
+   <gml:timeInterval unit="second">10.0</gml:timeInterval>
+</gml:TimePeriod>

@@ -26,7 +26,6 @@ import net.opengis.gml.v32.AbstractCurve;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGML;
 import net.opengis.gml.v32.AbstractGeometry;
-import net.opengis.gml.v32.AbstractMetaData;
 import net.opengis.gml.v32.AbstractRing;
 import net.opengis.gml.v32.AbstractSurface;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
@@ -42,21 +41,20 @@ import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Polygon;
 import net.opengis.gml.v32.Reference;
-import net.opengis.gml.v32.StringOrRef;
 import net.opengis.gml.v32.TimeIndeterminateValue;
 import net.opengis.gml.v32.TimeInstant;
 import net.opengis.gml.v32.TimeIntervalLength;
 import net.opengis.gml.v32.TimePeriod;
 import net.opengis.gml.v32.TimePosition;
 import net.opengis.gml.v32.Factory;
+import net.opengis.gml.v32.TimeUnit;
 
 
 @SuppressWarnings("javadoc")
 public class XMLStreamBindings extends AbstractXMLStreamBindings
 {
     public final static String NS_URI = "http://www.opengis.net/gml/3.2";
-    
-    Factory factory;
+    protected Factory factory;
     
     
     public XMLStreamBindings(Factory factory)
@@ -66,86 +64,14 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     
     
     /**
-     * Read method for StringOrRefType complex type
+     * Reads AbstractFeatureType content to a concrete feature instance
      */
-    public StringOrRef readStringOrRefType(XMLStreamReader reader) throws XMLStreamException
+    public AbstractFeature readAbstractFeatureType(XMLStreamReader reader, AbstractFeature bean) throws XMLStreamException
     {
-        StringOrRef bean = factory.newStringOrRef();
-        
         Map<String, String> attrMap = collectAttributes(reader);
-        this.readStringOrRefTypeAttributes(attrMap, bean);
-        
-        String val = reader.getElementText();
-        if (val != null)
-            bean.setValue(val);
-        
+        this.readAbstractFeatureTypeAttributes(attrMap, bean);
+        this.readAbstractFeatureTypeElements(reader, bean);
         return bean;
-    }
-    
-    
-    /**
-     * Reads attributes of StringOrRefType complex type
-     */
-    public void readStringOrRefTypeAttributes(Map<String, String> attrMap, StringOrRef bean) throws XMLStreamException
-    {
-        readPropertyAttributes(attrMap, bean);
-        
-        String val;
-        
-        // remoteschema
-        val = attrMap.get("remoteSchema");
-        if (val != null)
-            bean.setRemoteSchema(val);
-    }
-    
-    
-    /**
-     * Write method for StringOrRefType complex type
-     */
-    public void writeStringOrRefType(XMLStreamWriter writer, StringOrRef bean) throws XMLStreamException
-    {
-        this.writeStringOrRefTypeAttributes(writer, bean);
-        
-        writer.writeCharacters(getStringValue(bean.getValue()));
-    }
-    
-    
-    /**
-     * Writes attributes of StringOrRefType complex type
-     */
-    public void writeStringOrRefTypeAttributes(XMLStreamWriter writer, StringOrRef bean) throws XMLStreamException
-    {
-        writePropertyAttributes(writer, bean);
-        
-        // remoteSchema
-        if (bean.isSetRemoteSchema())
-            writer.writeAttribute("remoteSchema", getStringValue(bean.getRemoteSchema()));
-    }
-    
-    
-    /**
-     * Reads attributes of AbstractMetaDataType complex type
-     */
-    public void readAbstractMetaDataTypeAttributes(Map<String, String> attrMap, AbstractMetaData bean) throws XMLStreamException
-    {
-        String val;
-        
-        // id
-        val = attrMap.get("id");
-        if (val != null)
-            bean.setId(val);
-    }
-    
-    
-    /**
-     * Writes attributes of AbstractMetaDataType complex type
-     */
-    public void writeAbstractMetaDataTypeAttributes(XMLStreamWriter writer, AbstractMetaData bean) throws XMLStreamException
-    {
-        
-        // id
-        if (bean.isSetId())
-            writer.writeAttribute("id", getStringValue(bean.getId()));
     }
     
     
@@ -154,8 +80,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
      */
     public void readAbstractFeatureTypeAttributes(Map<String, String> attrMap, AbstractFeature bean) throws XMLStreamException
     {
-        this.readAbstractGMLTypeAttributes(attrMap, bean);
-        
+        this.readAbstractGMLTypeAttributes(attrMap, bean);        
     }
     
     
@@ -197,30 +122,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (found)
         {
             reader.nextTag();
-            String localName = reader.getName().getLocalPart();
             
-            if (localName.equals("AbstractGeometry"))
-            {
-                AbstractGeometry location = this.readPoint(reader);
-                bean.setLocationAsAbstractGeometry(location);
-            }
-            else if (localName.equals("Code"))
-            {
-                Code location = this.readLocationKeyWord(reader);
-                bean.setLocationAsLocationKeyWord(location);
-            }
-            else if (localName.equals("StringOrRef"))
-            {
-                StringOrRef location = this.readLocationString(reader);
-                bean.setLocationAsLocationString(location);
-            }
-            /*else if (localName.equals("Object"))
-            {
-                Object location = this.readNull(reader);
-                bean.setLocationAsNull(location);
-            }*/
-            else
-                throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
+            AbstractGeometry location = this.readAbstractGeometry(reader);
+            bean.setLocation(location);
             
             reader.nextTag();
             reader.nextTag();
@@ -256,15 +160,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetLocation())
         {
             writer.writeStartElement(NS_URI, "location");
-            writePropertyAttributes(writer, bean.getLocationProperty());
-            
-            if (bean.getLocation() instanceof Point)
-                this.writePoint(writer, (Point)bean.getLocation());
-            else if (bean.getLocation() instanceof Code)
-                this.writeLocationKeyWord(writer, (Code)bean.getLocation());
-            else if (bean.getLocation() instanceof StringOrRef)
-                this.writeLocationString(writer, (StringOrRef)bean.getLocation());
-            
+            writePropertyAttributes(writer, bean.getLocationProperty());            
+            if (bean.getLocationProperty().hasValue())
+                this.writeAbstractGeometry(writer, bean.getLocation());            
             writer.writeEndElement();
         }
     }
@@ -693,7 +591,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             val = reader.getElementText();
             if (val != null)
-                bean.setDuration(getDateTimeFromString(val));
+                bean.setDuration(getDurationFromString(val));
             reader.nextTag();
         }
         
@@ -774,7 +672,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetDuration())
         {
             writer.writeStartElement(NS_URI, "duration");
-            writer.writeCharacters(getStringValue(bean.getDuration()));
+            writer.writeCharacters(getIsoDurationString(bean.getDuration()));
             writer.writeEndElement();
         }
         
@@ -889,7 +787,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         // unit
         val = attrMap.get("unit");
         if (val != null)
-            bean.setUnit(val);
+            bean.setUnit(TimeUnit.fromString(val));
         
         // radix
         val = attrMap.get("radix");
@@ -1592,39 +1490,36 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         boolean found;
         
         // metaDataProperty
-        /*do
+        do
         {
             found = checkElementName(reader, "metaDataProperty");
             if (found)
             {
-                OgcProperty<AbstractMetaData> metaDataPropertyProp = new OgcPropertyImpl<AbstractMetaData>();
+                OgcProperty<Object> metaDataPropertyProp = new OgcPropertyImpl<Object>();
                 readPropertyAttributes(reader, metaDataPropertyProp);
                 
                 if (metaDataPropertyProp.getHref() == null)
                 {
                     reader.nextTag();
-                    metaDataPropertyProp.setValue(this.readAbstractMetaData(reader));
+                    metaDataPropertyProp.setValue(this.readExtension(reader));
                 }
-                bean.getMetaDataPropertyList().add(metaDataPropertyProp);
+                
+                if (metaDataPropertyProp.hasValue() || metaDataPropertyProp.hasHref())
+                    bean.getMetaDataPropertyList().add(metaDataPropertyProp);
                 
                 reader.nextTag(); // end property tag
                 reader.nextTag();
             }
         }
-        while (found);*/
+        while (found);
         
         // description
         found = checkElementName(reader, "description");
         if (found)
         {
-            OgcProperty<StringOrRef> descriptionProp = bean.getDescriptionProperty();
-            readPropertyAttributes(reader, descriptionProp);
-            
-            if (descriptionProp.getHref() == null)
-            {
-                descriptionProp.setValue(this.readStringOrRefType(reader));
-            }
-            
+            String val = reader.getElementText();
+            if (val != null)
+                bean.setDescription(val.trim());            
             reader.nextTag();
         }
         
@@ -1687,22 +1582,25 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         int numItems;
         
         // metaDataProperty
-        /*numItems = bean.getMetaDataPropertyList().size();
+        numItems = bean.getMetaDataPropertyList().size();
         for (int i = 0; i < numItems; i++)
         {
-            OgcProperty<AbstractMetaData> item = bean.getMetaDataPropertyList().getProperty(i);
-            writer.writeStartElement(NS_URI, "metaDataProperty");
-            writePropertyAttributes(writer, item);
-            this.writeAbstractMetaData(writer, item.getValue());
-            writer.writeEndElement();
-        }*/
+            OgcProperty<Object> item = bean.getMetaDataPropertyList().getProperty(i);
+            if (!item.hasValue() || canWriteExtension(item.getValue()))
+            {
+                writer.writeStartElement(NS_URI, "metaDataProperty");
+                writePropertyAttributes(writer, item);
+                if (item.hasValue())
+                    this.writeExtension(writer, item.getValue());
+                writer.writeEndElement();
+            }
+        }
         
         // description
         if (bean.isSetDescription())
         {
             writer.writeStartElement(NS_URI, "description");
-            writePropertyAttributes(writer, bean.getDescriptionProperty());
-            this.writeStringOrRefType(writer, bean.getDescription());
+            writer.writeCharacters(bean.getDescription());
             writer.writeEndElement();
         }
         
@@ -2567,24 +2465,24 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Read method for LocationString elements
      */
-    public StringOrRef readLocationString(XMLStreamReader reader) throws XMLStreamException
+    public String readLocationString(XMLStreamReader reader) throws XMLStreamException
     {
         boolean found = checkElementName(reader, "LocationString");
         if (!found)
             throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
         
-        return this.readStringOrRefType(reader);
+        return reader.getElementText();
     }
     
     
     /**
      * Write method for LocationString element
      */
-    public void writeLocationString(XMLStreamWriter writer, StringOrRef bean) throws XMLStreamException
+    public void writeLocationString(XMLStreamWriter writer, String bean) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "LocationString");
         this.writeNamespaces(writer);
-        this.writeStringOrRefType(writer, bean);
+        writer.writeCharacters(bean);
         writer.writeEndElement();
     }
     

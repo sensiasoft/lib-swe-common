@@ -16,15 +16,11 @@ package net.opengis.gml.v32.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.opengis.OgcProperty;
-import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGML;
-import net.opengis.gml.v32.AbstractMetaData;
 import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Reference;
-import net.opengis.gml.v32.StringOrRef;
 
 
 
@@ -37,8 +33,8 @@ public abstract class AbstractGMLImpl implements AbstractGML
 {
     static final long serialVersionUID = 1L;
     public final static String UUID_CODE = "uid";
-    protected OgcPropertyList<AbstractMetaData> metaDataPropertyList = new OgcPropertyList<AbstractMetaData>();
-    protected OgcProperty<StringOrRef> description;
+    protected OgcPropertyList<Object> metaDataPropertyList = new OgcPropertyList<Object>();
+    protected String description;
     protected Reference descriptionReference;
     protected CodeWithAuthority identifier;
     protected List<Code> nameList = new ArrayList<Code>();
@@ -54,31 +50,9 @@ public abstract class AbstractGMLImpl implements AbstractGML
      * Gets the list of metaDataProperty properties
      */
     @Override
-    public OgcPropertyList<AbstractMetaData> getMetaDataPropertyList()
+    public OgcPropertyList<Object> getMetaDataPropertyList()
     {
         return metaDataPropertyList;
-    }
-    
-    
-    /**
-     * Returns number of metaDataProperty properties
-     */
-    @Override
-    public int getNumMetaDataPropertys()
-    {
-        if (metaDataPropertyList == null)
-            return 0;
-        return metaDataPropertyList.size();
-    }
-    
-    
-    /**
-     * Adds a new metaDataProperty property
-     */
-    @Override
-    public void addMetaDataProperty(AbstractMetaData metaDataProperty)
-    {
-        this.metaDataPropertyList.add(metaDataProperty);
     }
     
     
@@ -86,20 +60,8 @@ public abstract class AbstractGMLImpl implements AbstractGML
      * Gets the description property
      */
     @Override
-    public StringOrRef getDescription()
+    public String getDescription()
     {
-        return description.getValue();
-    }
-    
-    
-    /**
-     * Gets extra info (name, xlink, etc.) carried by the description property
-     */
-    @Override
-    public OgcProperty<StringOrRef> getDescriptionProperty()
-    {
-        if (description == null)
-            description = new OgcPropertyImpl<StringOrRef>();
         return description;
     }
     
@@ -110,26 +72,14 @@ public abstract class AbstractGMLImpl implements AbstractGML
     @Override
     public boolean isSetDescription()
     {
-        return (description != null && description.getValue() != null);
-    }
-    
-    
-    /**
-     * Sets the description property
-     */
-    @Override
-    public void setDescription(StringOrRef description)
-    {
-        if (this.description == null)
-            this.description = new OgcPropertyImpl<StringOrRef>();
-        this.description.setValue(description);
+        return (description != null);
     }
     
     
     @Override
     public void setDescription(String description)
     {
-        setDescription(new StringOrRefImpl(description));        
+        this.description = description;
     }
     
     

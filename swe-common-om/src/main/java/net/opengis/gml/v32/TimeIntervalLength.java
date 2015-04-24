@@ -20,20 +20,20 @@ package net.opengis.gml.v32;
  * POJO class for XML type TimeIntervalLengthType(@http://www.opengis.net/gml/3.2).
  *
  */
+@SuppressWarnings("javadoc")
 public interface TimeIntervalLength
 {
-    
     
     /**
      * Gets the unit property
      */
-    public Object getUnit();
+    public TimeUnit getUnit();
     
     
     /**
      * Sets the unit property
      */
-    public void setUnit(Object unit);
+    public void setUnit(TimeUnit unit);
     
     
     /**

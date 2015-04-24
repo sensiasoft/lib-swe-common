@@ -31,8 +31,8 @@ import javax.xml.namespace.QName;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.def.IDefinition;
-import org.vast.ogc.gml.FeatureImpl;
-import org.vast.ogc.gml.IFeature;
+import org.vast.ogc.gml.GenericFeatureImpl;
+import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
 
@@ -45,7 +45,7 @@ import org.vast.util.TimeExtent;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 20, 2007
  * */
-public class ObservationImpl extends FeatureImpl implements IObservation
+public class ObservationImpl extends GenericFeatureImpl implements IObservation
 {
     protected List<IXlinkReference<IObservation>> relatedObservations;
     protected TimeExtent phenomenonTime;
@@ -54,7 +54,7 @@ public class ObservationImpl extends FeatureImpl implements IObservation
     protected IProcedure procedure;
     protected Map<String, Object> parameters;
     protected IXlinkReference<IDefinition> observedProperty;
-    protected IFeature featureOfInterest;
+    protected GenericFeature featureOfInterest;
     protected List<Object> resultQuality;
     protected DataComponent result;
 
@@ -159,13 +159,13 @@ public class ObservationImpl extends FeatureImpl implements IObservation
     }
 
 
-    public IFeature getFeatureOfInterest()
+    public GenericFeature getFeatureOfInterest()
     {
         return featureOfInterest;
     }
 
 
-    public void setFeatureOfInterest(IFeature featureOfInterest)
+    public void setFeatureOfInterest(GenericFeature featureOfInterest)
     {
         this.featureOfInterest = featureOfInterest;
     }

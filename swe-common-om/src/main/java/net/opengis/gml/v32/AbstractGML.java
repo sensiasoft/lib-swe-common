@@ -15,7 +15,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis.gml.v32;
 
 import java.util.List;
-import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyList;
 
 
@@ -24,49 +23,26 @@ import net.opengis.OgcPropertyList;
  *
  * This is a complex type.
  */
+@SuppressWarnings("javadoc")
 public interface AbstractGML
 {
         
     /**
      * Gets the list of metaDataProperty properties
      */
-    public OgcPropertyList<AbstractMetaData> getMetaDataPropertyList();
-    
-    
-    /**
-     * Returns number of metaDataProperty properties
-     */
-    public int getNumMetaDataPropertys();
-    
-    
-    /**
-     * Adds a new metaDataProperty property
-     */
-    public void addMetaDataProperty(AbstractMetaData metaDataProperty);
+    public OgcPropertyList<Object> getMetaDataPropertyList();
     
     
     /**
      * Gets the description property
      */
-    public StringOrRef getDescription();
-    
-    
-    /**
-     * Gets extra info (name, xlink, etc.) carried by the description property
-     */
-    public OgcProperty<StringOrRef> getDescriptionProperty();
+    public String getDescription();
     
     
     /**
      * Checks if description is set
      */
     public boolean isSetDescription();
-    
-    
-    /**
-     * Sets the description property
-     */
-    public void setDescription(StringOrRef description);
     
     
     /**

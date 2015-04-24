@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis.gml.v32.impl;
 
 import net.opengis.gml.v32.TimeIntervalLength;
+import net.opengis.gml.v32.TimeUnit;
 
 
 /**
@@ -24,7 +25,7 @@ import net.opengis.gml.v32.TimeIntervalLength;
 public class TimeIntervalLengthImpl implements TimeIntervalLength
 {
     static final long serialVersionUID = 1L;
-    protected Object unit;
+    protected TimeUnit unit = TimeUnit.SECOND;
     protected Integer radix;
     protected Integer factor;
     protected double value;
@@ -39,7 +40,7 @@ public class TimeIntervalLengthImpl implements TimeIntervalLength
      * Gets the unit property
      */
     @Override
-    public Object getUnit()
+    public TimeUnit getUnit()
     {
         return unit;
     }
@@ -49,7 +50,7 @@ public class TimeIntervalLengthImpl implements TimeIntervalLength
      * Sets the unit property
      */
     @Override
-    public void setUnit(Object unit)
+    public void setUnit(TimeUnit unit)
     {
         this.unit = unit;
     }

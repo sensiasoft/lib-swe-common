@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.util.Arrays;
 import net.opengis.gml.v32.Envelope;
 
 
@@ -225,5 +226,29 @@ public class EnvelopeImpl implements Envelope
     public void setUomLabels(String[] uomLabels)
     {
         this.uomLabels = uomLabels;
+    }
+
+
+    @Override
+    public boolean equals(Object other)
+    {
+        if (!(other instanceof Envelope))
+            return false;
+        
+        Envelope env = (Envelope)other;
+        
+        if (!Arrays.equals(env.getLowerCorner(), this.getLowerCorner()))
+            return false;
+        
+        if (!Arrays.equals(env.getUpperCorner(), this.getUpperCorner()))
+            return false;
+        
+        if (env.getSrsName() != null && !env.getSrsName().equals(this.getSrsName()))
+            return false;
+        
+        if (this.getSrsName() != null && !this.getSrsName().equals(env.getSrsName()))
+            return false;
+        
+        return true;
     }
 }

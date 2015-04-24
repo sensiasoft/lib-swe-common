@@ -14,13 +14,13 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
-import net.opengis.IDateTime;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.gml.v32.TimeInstant;
 import net.opengis.gml.v32.TimeIntervalLength;
 import net.opengis.gml.v32.TimePeriod;
 import net.opengis.gml.v32.TimePosition;
+import net.opengis.gml.v32.TimeUnit;
 
 
 /**
@@ -35,7 +35,7 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
     protected OgcProperty<TimeInstant> begin;
     protected TimePosition endPosition;
     protected OgcProperty<TimeInstant> end;
-    protected IDateTime duration;
+    protected Double duration;
     protected TimeIntervalLength timeInterval;
     
     
@@ -196,7 +196,7 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
      * Gets the duration property
      */
     @Override
-    public IDateTime getDuration()
+    public double getDuration()
     {
         return duration;
     }
@@ -216,7 +216,7 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
      * Sets the duration property
      */
     @Override
-    public void setDuration(IDateTime duration)
+    public void setDuration(double duration)
     {
         this.duration = duration;
     }
@@ -249,6 +249,23 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
     public void setTimeInterval(TimeIntervalLength timeInterval)
     {
         this.timeInterval = timeInterval;
+    }
+    
+    
+    @Override
+    public void setTimeInterval(double seconds)
+    {
+        setTimeInterval(seconds, TimeUnit.SECOND);
+    }
+
+
+    @Override
+    public void setTimeInterval(double value, TimeUnit unit)
+    {
+        TimeIntervalLength timeInterval = new TimeIntervalLengthImpl();
+        timeInterval.setUnit(unit);
+        timeInterval.setValue(value);
+        setTimeInterval(timeInterval);        
     }
     
     

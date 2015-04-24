@@ -22,6 +22,7 @@ import net.opengis.OgcProperty;
  *
  * This is a complex type.
  */
+@SuppressWarnings("javadoc")
 public interface AbstractFeature extends AbstractGML
 {
         
@@ -46,13 +47,13 @@ public interface AbstractFeature extends AbstractGML
     /**
      * Gets the location property
      */
-    public Object getLocation();
+    public AbstractGeometry getLocation();
     
     
     /**
      * Gets extra info (name, xlink, etc.) carried by the location property
      */
-    public OgcProperty<Object> getLocationProperty();
+    public OgcProperty<AbstractGeometry> getLocationProperty();
     
     
     /**
@@ -64,17 +65,6 @@ public interface AbstractFeature extends AbstractGML
     /**
      * Sets the locationAsAbstractGeometry property
      */
-    public void setLocationAsAbstractGeometry(AbstractGeometry location);
-    
-    
-    /**
-     * Sets the locationAsLocationKeyWord property
-     */
-    public void setLocationAsLocationKeyWord(Code location);
-    
-    
-    /**
-     * Sets the locationAsLocationString property
-     */
-    public void setLocationAsLocationString(StringOrRef location);
+    public void setLocation(AbstractGeometry location);
+
 }

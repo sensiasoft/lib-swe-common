@@ -21,9 +21,9 @@ package net.opengis.gml.v32;
  *
  * This is a list type whose items are java.lang.String.
  */
+@SuppressWarnings("javadoc")
 public interface CodeList
 {
-    
     
     /**
      * Gets the codeSpace property

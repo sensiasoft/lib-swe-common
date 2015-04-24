@@ -18,7 +18,6 @@
         <groupId>org.codehaus.woodstox</groupId>
         <artifactId>woodstox-core-asl</artifactId>
         <version>4.2.0</version>
-        <scope>test</scope>
      </dependency>
   </dependencies>
 </project>

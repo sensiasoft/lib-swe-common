@@ -26,6 +26,13 @@ package org.vast.ogc.om;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyList;
+import net.opengis.gml.v32.AbstractGeometry;
+import net.opengis.gml.v32.Code;
+import net.opengis.gml.v32.CodeWithAuthority;
+import net.opengis.gml.v32.Envelope;
+import net.opengis.gml.v32.Reference;
 import org.w3c.dom.Element;
 
 
@@ -86,7 +93,7 @@ public class ProcedureXML implements IProcedure
         if (procedure == null)
             throw getException();
         else
-            return procedure.getLocalId();
+            return procedure.getId();
     }
 
 
@@ -95,16 +102,16 @@ public class ProcedureXML implements IProcedure
         if (procedure == null)
             throw getException();
         else
-            procedure.setLocalId(id);
+            procedure.setId(id);
     }
 
 
-    public String getIdentifier()
+    public String getUniqueIdentifier()
     {
         if (procedure == null)
             throw getException();
         else
-            return procedure.getIdentifier();
+            return procedure.getUniqueIdentifier();
     }
 
 
@@ -113,7 +120,7 @@ public class ProcedureXML implements IProcedure
         if (procedure == null)
             throw getException();
         else
-            procedure.setIdentifier(uid);
+            procedure.setUniqueIdentifier(uid);
     }
 
 
@@ -152,23 +159,6 @@ public class ProcedureXML implements IProcedure
             procedure.setName(name);
     }
 
-
-    public List<QName> getNames()
-    {
-        if (procedure == null)
-            throw getException();
-        else
-            return procedure.getNames();
-    }
-
-
-    public void addName(QName name)
-    {
-        if (procedure == null)
-            throw getException();
-        else
-            procedure.addName(name);
-    }
 
 
     public Map<QName, Object> getProperties()
@@ -219,5 +209,173 @@ public class ProcedureXML implements IProcedure
     protected RuntimeException getException() 
     {
         return new UnsupportedOperationException("Method not supported because XML content hasn't been parsed yet.");
+    }
+
+
+    @Override
+    public Envelope getBoundedBy()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public boolean isSetBoundedBy()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+    @Override
+    public void setBoundedByAsEnvelope(Envelope boundedBy)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public AbstractGeometry getLocation()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public OgcProperty<AbstractGeometry> getLocationProperty()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public boolean isSetLocation()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+    @Override
+    public void setLocation(AbstractGeometry location)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public OgcPropertyList<Object> getMetaDataPropertyList()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public boolean isSetDescription()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+    @Override
+    public Reference getDescriptionReference()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public boolean isSetDescriptionReference()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+    @Override
+    public void setDescriptionReference(Reference descriptionReference)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public CodeWithAuthority getIdentifier()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public boolean isSetIdentifier()
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+
+    @Override
+    public void setIdentifier(CodeWithAuthority identifier)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public void setUniqueIdentifier(String identifier)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public List<Code> getNameList()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public int getNumNames()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+
+    @Override
+    public void addName(Code name)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    @Override
+    public String getId()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    @Override
+    public void setId(String id)
+    {
+        // TODO Auto-generated method stub
+        
     }
 }

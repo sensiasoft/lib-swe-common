@@ -22,9 +22,9 @@ import net.opengis.OgcPropertyList;
  *
  * This is a complex type.
  */
+@SuppressWarnings("javadoc")
 public interface FeatureCollection extends AbstractFeature
 {
-    
     
     /**
      * Gets the list of featureMember properties

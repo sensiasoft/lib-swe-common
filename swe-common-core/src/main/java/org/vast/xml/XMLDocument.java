@@ -369,10 +369,11 @@ public class XMLDocument
      */
     public void serialize(Node node, OutputStream out, boolean pretty) throws IOException
     {
+        Element elt = null;
+        
         try
         {
             // select root element to serialize
-            Element elt = null;
             if (node.getNodeType() == Node.ELEMENT_NODE)
                 elt = (Element)node;
             else if (node.getNodeType() == Node.DOCUMENT_NODE)
@@ -392,7 +393,14 @@ public class XMLDocument
                     attName += ":" + prefix;
                 elt.setAttributeNS("http://www.w3.org/2000/xmlns/", attName, uri);
             }
+        }
+        catch (Exception e)
+        {
+            throw new IllegalStateException("Impossible to initialize DOM implementation for serialization", e);
+        }  
             
+        try
+        {    
             // use LS implementation when available
             DOMImplementation impl = XMLImplFinder.getDOMImplementation();            
             if (impl instanceof DOMImplementationLS)

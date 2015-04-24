@@ -24,7 +24,9 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import net.opengis.AbstractXMLStreamBindings;
+import net.opengis.NamespaceRegister;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -80,6 +82,7 @@ public abstract class XMLBindingsUtils
             XMLStreamWriter writer = factory.createXMLStreamWriter(result);
             staxBindings.setNamespacePrefixes(writer);
             writeToXmlStream(writer, sweObj, eltType);
+            addOnlyUsedNamespaceMappingsToDOM(dom, dom.getXmlDocument(), staxBindings.getNamespaceContext(), result.getNode());
             writer.close();
             return (Element)result.getNode().getFirstChild();
         }
@@ -110,7 +113,13 @@ public abstract class XMLBindingsUtils
     }
     
     
-    protected void addNamespaceMappings(DOMHelper dom, XMLDocument xmlDoc, Node elt)
+    /**
+     * This recursively scans the created DOM tree to get all used namespaces
+     * @param dom
+     * @param xmlDoc
+     * @param elt
+     */
+    protected void addOnlyUsedNamespaceMappingsToDOM(DOMHelper dom, XMLDocument xmlDoc, NamespaceRegister staxNsMap, Node elt)
     {
         NodeList children = elt.getChildNodes();
         for (int i = 0; i < children.getLength(); i++)
@@ -120,11 +129,21 @@ public abstract class XMLBindingsUtils
                 continue;
             
             String nsUri = child.getNamespaceURI();
-            if (xmlDoc.getNSPrefix(nsUri) == null)
+            if (nsUri != null && xmlDoc.getNSPrefix(nsUri) == null)
                 xmlDoc.addNS(child.getPrefix(), nsUri);
             
+            // scan attributes
+            NamedNodeMap attribs = child.getAttributes();
+            for (int a = 0; a < attribs.getLength(); a++)
+            {
+                Node att = attribs.item(a);
+                nsUri = att.getNamespaceURI();
+                if (nsUri != null && xmlDoc.getNSPrefix(nsUri) == null)
+                    xmlDoc.addNS(staxNsMap.getPrefix(nsUri), nsUri);
+            }
+            
             // call recursively
-            addNamespaceMappings(dom, xmlDoc, child);
+            addOnlyUsedNamespaceMappingsToDOM(dom, xmlDoc, staxNsMap, child);
         }
     }
     

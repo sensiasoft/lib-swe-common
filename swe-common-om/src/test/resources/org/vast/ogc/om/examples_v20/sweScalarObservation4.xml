@@ -11,13 +11,13 @@
 	<gml:name>Observation test 4</gml:name>
 	<om:phenomenonTime>
 		<gml:TimeInstant
-			gml:id="T001">
+			gml:id="T1">
 			<gml:timePosition>2005-01-11T17:22:25Z</gml:timePosition>
 		</gml:TimeInstant>
 	</om:phenomenonTime>
 	<om:resultTime>
         <gml:TimeInstant
-            gml:id="T002">
+            gml:id="T2">
             <gml:timePosition>2005-01-11T17:22:25.020Z</gml:timePosition>
         </gml:TimeInstant>
     </om:resultTime>

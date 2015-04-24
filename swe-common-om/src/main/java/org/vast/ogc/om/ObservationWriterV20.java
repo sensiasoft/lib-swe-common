@@ -25,18 +25,15 @@ package org.vast.ogc.om;
 
 import java.text.NumberFormat;
 import java.util.Map.Entry;
-import javax.xml.namespace.QName;
+import net.opengis.gml.v32.Code;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
-import org.vast.ogc.gml.GMLFeatureWriter;
-import org.vast.ogc.gml.GMLTimeWriter;
 import org.vast.ogc.gml.GMLUtils;
-import org.vast.ogc.gml.IFeature;
+import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
-import org.vast.swe.SWECommonUtils;
-import org.vast.swe.SweComponentWriterV20;
+import org.vast.swe.SWEUtils;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IXMLWriterDOM;
 import org.vast.xml.XMLWriterException;
@@ -53,21 +50,14 @@ import org.w3c.dom.Element;
  * */
 public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
 {
-    private static String GML_VERSION = "3.2";
-    protected GMLTimeWriter timeWriter;
-    protected GMLFeatureWriter featureWriter;
-    protected SweComponentWriterV20 sweWriter;
+    protected GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
+    protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
     protected int currentId;
     protected NumberFormat idFormatter;
     
     
     public ObservationWriterV20()
     {
-        timeWriter = new GMLTimeWriter(GML_VERSION);
-        featureWriter = new GMLFeatureWriter();
-        featureWriter.setGmlVersion(GML_VERSION);
-        sweWriter = new SweComponentWriterV20();
-        
         currentId = 1;
         idFormatter = NumberFormat.getNumberInstance();
         idFormatter.setMinimumIntegerDigits(3);
@@ -77,15 +67,15 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     
     public Element write(DOMHelper dom, IObservation obs) throws XMLWriterException
     {
-        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWECommonUtils.SWE, "2.0"));
-        dom.addUserPrefix("om", OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"));
-        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML, GML_VERSION));
+        dom.addUserPrefix("swe", OGCRegistry.getNamespaceURI(SWEUtils.SWE, SWEUtils.V2_0));
+        dom.addUserPrefix("om", OGCRegistry.getNamespaceURI(OMUtils.OM, OMUtils.V2_0));
+        dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML, GMLUtils.V3_2));
         dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
         
         Element obsElt = dom.createElement("om:" + obs.getQName().getLocalPart());
                 
         // gml:id
-        String id = obs.getLocalId();
+        String id = obs.getId();
         if (id == null)
             id = "OBS_" + idFormatter.format(currentId++);
         dom.setAttributeValue(obsElt, "gml:id", id);
@@ -96,21 +86,19 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
             dom.setElementValue(obsElt, "gml:description", desc);
         
         // identifier
-        String identifier = obs.getIdentifier();
-        if (identifier != null)
+        if (obs.isSetIdentifier())
         {
-            Element elt = dom.setElementValue(obsElt, "gml:identifier", identifier);
+            Element elt = dom.setElementValue(obsElt, "gml:identifier", obs.getUniqueIdentifier());
             dom.setAttributeValue(elt, "@codeSpace", "uid");
         }
         
         // names
-        for (int i=0; i<obs.getNames().size(); i++)
+        for (Code name: obs.getNameList())
         {
-            QName name = obs.getNames().get(i);
             Element nameElt = dom.addElement(obsElt, "+gml:name");
-            dom.setElementValue(nameElt, name.getLocalPart());
-            if (name.getNamespaceURI() != null && name.getNamespaceURI().length() > 0)
-                dom.setAttributeValue(nameElt, "@codeSpace", name.getNamespaceURI());
+            dom.setElementValue(nameElt, name.getValue());
+            if (name.getCodeSpace() != null && name.getCodeSpace().length() > 0)
+                dom.setAttributeValue(nameElt, "@codeSpace", name.getCodeSpace());
         }
         
         // type
@@ -137,19 +125,19 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         
         // phenomenon time (mandatory)
         timePropElt = dom.addElement(obsElt, "om:phenomenonTime");
-        timeElt = timeWriter.writeTime(dom, obs.getPhenomenonTime());
+        timeElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, obs.getPhenomenonTime());
         timePropElt.appendChild(timeElt);
         
         // result time (mandatory)
         timePropElt = dom.addElement(obsElt, "om:resultTime");
-        timeElt = timeWriter.writeTime(dom, obs.getResultTime());
+        timeElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, obs.getResultTime());
         timePropElt.appendChild(timeElt);
         
         // valid time
         if (obs.getValidTime() != null)
         {
             timePropElt = dom.addElement(obsElt, "om:validTime");
-            timeElt = timeWriter.writeTime(dom, obs.getValidTime());
+            timeElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom, obs.getValidTime());
             timePropElt.appendChild(timeElt);
         }
         
@@ -181,7 +169,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
                 {
                     try
                     {
-                        Element componentElt = sweWriter.writeComponent(dom, (DataComponent)value, true);
+                        Element componentElt = sweUtils.writeComponent(dom, (DataComponent)value, true);
                         valueElt.appendChild(componentElt);
                     }
                     catch (XMLWriterException e)
@@ -211,7 +199,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         
         // foi
         Element foiPropElt = dom.addElement(obsElt, "om:featureOfInterest");
-        IFeature foi = obs.getFeatureOfInterest();
+        GenericFeature foi = obs.getFeatureOfInterest();
         if (foi != null)
         {
             if (foi instanceof FeatureRef) {
@@ -231,7 +219,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         {            
             try
             {
-                Element componentElt = sweWriter.writeComponent(dom, obs.getResult(), true);
+                Element componentElt = sweUtils.writeComponent(dom, obs.getResult(), true);
                 resultElt.appendChild(componentElt);
                 
                 String sweQName = componentElt.getLocalName();
@@ -248,7 +236,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     }
     
     
-    protected void writeFOI(DOMHelper dom, Element foiPropElt, IFeature foi) throws XMLWriterException
+    protected void writeFOI(DOMHelper dom, Element foiPropElt, GenericFeature foi) throws XMLWriterException
     {
         if (foi instanceof FeatureRef)
         {
@@ -256,7 +244,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         }
         else
         {
-            Element foiElt = featureWriter.write(dom, foi);
+            Element foiElt = gmlUtils.writeFeature(dom, foi);
             foiPropElt.appendChild(foiElt);
         }
     }

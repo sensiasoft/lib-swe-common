@@ -1207,7 +1207,10 @@ public class DOMHelper
                 return nextDoc;
         }
 
-        return null;
+        if (!loadedDocuments.isEmpty())
+            return loadedDocuments.values().iterator().next();
+        else
+            return null;
     }
     
         

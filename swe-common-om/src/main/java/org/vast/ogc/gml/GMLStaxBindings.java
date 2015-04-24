@@ -10,8 +10,12 @@
 
 package org.vast.ogc.gml;
 
-import net.opengis.gml.v32.impl.GMLFactory;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import net.opengis.gml.v32.bind.XMLStreamBindings;
+import net.opengis.gml.v32.impl.GMLFactory;
 
 
 /**
@@ -24,7 +28,10 @@ import net.opengis.gml.v32.bind.XMLStreamBindings;
  */
 public class GMLStaxBindings extends XMLStreamBindings
 {
-
+    public final static String NS_PREFIX_GML = "gml";
+    public final static String NS_PREFIX_XLINK = "xlink";
+    
+    
     public GMLStaxBindings()
     {
         this(false);
@@ -35,8 +42,72 @@ public class GMLStaxBindings extends XMLStreamBindings
     {
         super(new GMLFactory(useJTS));
         
-        nsContext.registerNamespace("gml", net.opengis.gml.v32.bind.XMLStreamBindings.NS_URI);
-        nsContext.registerNamespace("xlink", net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
+        nsContext.registerNamespace(NS_PREFIX_GML, net.opengis.gml.v32.bind.XMLStreamBindings.NS_URI);
+        nsContext.registerNamespace(NS_PREFIX_XLINK, net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
+    }
+    
+    
+    public GMLFactory getFactory()
+    {
+        return (GMLFactory)factory;
+    }
+    
+    
+    public GenericFeature readGenericFeature(XMLStreamReader reader) throws XMLStreamException
+    {
+        QName featureType = reader.getName();
+        GenericFeature newFeature = new GenericFeatureImpl(featureType);
+        this.readAbstractFeatureType(reader, newFeature);
+                
+        // also read all other properties in a generic manner
+        while (reader.getEventType() != XMLStreamConstants.END_ELEMENT)
+        {
+            reader.nextTag();
+            QName propName = reader.getName();
+            
+            if (reader.hasText())
+            {
+                String text = reader.getElementText();
+                Object value = null;
+                
+                if (text != null)
+                {
+                    try
+                    {
+                        value = Integer.parseInt(text);
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        try
+                        {
+                            value = Double.parseDouble(text);
+                        }
+                        catch (NumberFormatException e1)
+                        {
+                            try
+                            {
+                                if (text.equalsIgnoreCase("true") || text.equalsIgnoreCase("false"))
+                                    value = Boolean.parseBoolean(text);
+                                else
+                                    this.getDateTimeFromString(text);
+                            }
+                            catch (Exception e2)
+                            {
+                                value = text;
+                            }
+                        }
+                    }
+                    
+                    newFeature.setProperty(propName, value);
+                }
+            }
+            else
+                this.skipElementAndAllChildren(reader);
+            
+            reader.nextTag();
+        }
+        
+        return newFeature;
     }
     
 }

@@ -21,9 +21,9 @@ package net.opengis.gml.v32;
  *
  * This is a list type whose items are net.opengis.gml.v32.NameOrNilReason.
  */
+@SuppressWarnings("javadoc")
 public interface CodeOrNilReasonList
 {
-    
     
     /**
      * Gets the codeSpace property

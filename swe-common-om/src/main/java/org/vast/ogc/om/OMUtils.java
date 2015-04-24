@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 import org.vast.ogc.OGCException;
 import org.vast.ogc.OGCExceptionReader;
 import org.vast.ogc.OGCRegistry;
-import org.vast.ogc.gml.GMLUtils;
 import org.vast.swe.SWEFilter;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
@@ -47,9 +46,10 @@ import org.w3c.dom.Element;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Feb 22, 2007
  * */
-public class OMUtils extends GMLUtils
+public class OMUtils
 {
     public final static String OM;
+    public final static String V2_0 = "2.0";
     public final static String OBSERVATION = "Observation";
     protected final static Pattern versionRegex = Pattern.compile("^\\d+(\\.\\d+)?(\\.\\d+)?$");
     protected final static String defaultVersion = "1.0";
@@ -62,6 +62,18 @@ public class OMUtils extends GMLUtils
     }
     
     
+    public static void loadRegistry()
+    {
+        String mapFileUrl = OMUtils.class.getResource("OMRegistry.xml").toString();
+        OGCRegistry.loadMaps(mapFileUrl, false);
+    }
+    
+    
+    public OMUtils(String version)
+    {
+    }
+    
+    
     /**
      * Read an O&M observation object from a DOM element 
      * @param dom DOMHelper to use to read the element content
@@ -69,7 +81,7 @@ public class OMUtils extends GMLUtils
      * @return Concrete instance of IObservation containing information parsed from the DOM tree
      * @throws XMLReaderException
      */
-    public static IObservation readObservation(DOMHelper dom, Element obsElt) throws XMLReaderException
+    public IObservation readObservation(DOMHelper dom, Element obsElt) throws XMLReaderException
     {
         String version = getVersion(dom, obsElt);
         IXMLReaderDOM<IObservation> reader = (IXMLReaderDOM<IObservation>)OGCRegistry.createReader(OM, OBSERVATION, version);
@@ -79,10 +91,11 @@ public class OMUtils extends GMLUtils
     
     /**
      * Reads an O&M observation object from an InputStream
-     * @param Concrete instance of IObservation containing information parsed from XML
+     * @param inputStream input stream to read from
+     * @return Concrete instance of IObservation containing information parsed from XML
      * @throws XMLReaderException
      */
-    public static IObservation readObservation(InputStream inputStream) throws XMLReaderException
+    public IObservation readObservation(InputStream inputStream) throws XMLReaderException
     {
         try
         {
@@ -100,7 +113,7 @@ public class OMUtils extends GMLUtils
     }
     
     
-    public static IObservation readObservationSeries(InputStream inputStream) throws XMLReaderException
+    public IObservation readObservationSeries(InputStream inputStream) throws XMLReaderException
     {
         try
         {
@@ -131,10 +144,10 @@ public class OMUtils extends GMLUtils
      * @param dom DOMHelper used to generate the element
      * @param obs Observation instance whose content will be serialized
      * @param version Version of O&M schema to use
-     * @return
+     * @return New DOM Element
      * @throws XMLWriterException
      */
-    public static Element writeObservation(DOMHelper dom, IObservation obs, String version) throws XMLWriterException
+    public Element writeObservation(DOMHelper dom, IObservation obs, String version) throws XMLWriterException
     {
         IXMLWriterDOM<IObservation> writer = (IXMLWriterDOM<IObservation>)OGCRegistry.createWriter(OM, OBSERVATION, version);
         return writer.write(dom, obs);
@@ -147,8 +160,9 @@ public class OMUtils extends GMLUtils
      * @param obs Observation instance whose content will be serialized
      * @param version Version of O&M schema to use
      * @throws XMLWriterException
+     * @throws IOException 
      */
-    public static void writeObservation(OutputStream outputStream, IObservation obs, String version) throws XMLWriterException, IOException
+    public void writeObservation(OutputStream outputStream, IObservation obs, String version) throws XMLWriterException, IOException
     {
         DOMHelper dom = new DOMHelper("obs");
         Element obsElt = writeObservation(dom, obs, version);
@@ -159,9 +173,10 @@ public class OMUtils extends GMLUtils
     /**
      * Logic to guess O&M version from namespace
      * @param dom
-     * @return
+     * @param omElt 
+     * @return Version string
      */
-    public static String getVersion(DOMHelper dom, Element omElt)
+    public String getVersion(DOMHelper dom, Element omElt)
     {
         // get version from the last part of namespace URI
         String omUri = omElt.getNamespaceURI();

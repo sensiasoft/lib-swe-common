@@ -21,6 +21,7 @@ package net.opengis.gml.v32;
  *
  * This is a complex type.
  */
+@SuppressWarnings("javadoc")
 public interface Envelope
 {
         

@@ -23,13 +23,10 @@ import net.opengis.IDateTime;
  *
  * This is a union type. Instances are of one of the following types:
  *     net.opengis.DateTime
- *     short
- *     short
- *     net.opengis.DateTime
- *     net.opengis.DateTime
  *     java.lang.String
  *     double
  */
+@SuppressWarnings("javadoc")
 public interface TimePosition
 {
     

@@ -29,8 +29,8 @@ import javax.xml.namespace.QName;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataBlock;
-import org.vast.ogc.gml.FeatureImpl;
-import org.vast.ogc.gml.IFeature;
+import org.vast.ogc.gml.GenericFeatureImpl;
+import org.vast.ogc.gml.GenericFeature;
 import org.vast.swe.SWEData;
 import org.vast.util.TimeExtent;
 
@@ -44,20 +44,20 @@ import org.vast.util.TimeExtent;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 20, 2012
  * */
-public class BufferedObservationSeries extends FeatureImpl implements IObservationSeries
+public class BufferedObservationSeries extends GenericFeatureImpl implements IObservationSeries
 {
     protected TimeExtent phenomenonTimeExtent;
     protected TimeExtent resultTimeExtent;
     protected TimeExtent validTimeExtent;
     protected IProcedure procedure;
-    protected Map<String, IFeature> featuresOfInterest;
+    protected Map<String, GenericFeature> featuresOfInterest;
     protected SWEData resultData;
     
     
     public BufferedObservationSeries()
     {
         super(new QName("ObservationSeries"));
-        featuresOfInterest = new LinkedHashMap<String, IFeature>();
+        featuresOfInterest = new LinkedHashMap<String, GenericFeature>();
     }
     
     
@@ -90,7 +90,7 @@ public class BufferedObservationSeries extends FeatureImpl implements IObservati
     
 
     @Override
-    public Map<String, IFeature> getFeaturesOfInterest()
+    public Map<String, GenericFeature> getFeaturesOfInterest()
     {
         return featuresOfInterest;
     }

@@ -22,9 +22,9 @@ import java.util.List;
  *
  * This is a complex type.
  */
+@SuppressWarnings("javadoc")
 public interface Polygon extends AbstractSurface
 {
-    
     
     /**
      * Gets the exterior property

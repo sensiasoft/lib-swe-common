@@ -58,15 +58,17 @@ public class TestOMBindingsV20 extends XMLTestCase
     
     protected void readWriteCompareOmXml(String path) throws Exception
     {
+        OMUtils omUtils = new OMUtils(OMUtils.V2_0);
+        
         InputStream is = getClass().getResourceAsStream(path);
         DOMHelper dom1 = new DOMHelper(is, false);
-        IObservation obs1 = OMUtils.readObservation(dom1, dom1.getBaseElement());
+        IObservation obs1 = omUtils.readObservation(dom1, dom1.getBaseElement());
         is.close();
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         System.out.println();
-        OMUtils.writeObservation(System.out, obs1, "2.0");
-        OMUtils.writeObservation(os, obs1, "2.0");
+        omUtils.writeObservation(System.out, obs1, "2.0");
+        omUtils.writeObservation(os, obs1, "2.0");
         os.close();
         
         DOMHelper dom2 = new DOMHelper(new ByteArrayInputStream(os.toByteArray()), false);
