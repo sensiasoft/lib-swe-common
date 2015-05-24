@@ -19,9 +19,9 @@ import java.util.List;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGeometry;
-import net.opengis.gml.v32.AbstractRing;
 import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
+import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Polygon;
 import net.opengis.gml.v32.Reference;
 
@@ -38,8 +38,8 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
 {
     static final long serialVersionUID = 1L;
     AbstractGeometry geom = new AbstractGeometryImpl() { };
-    protected AbstractRing exterior;
-    protected List<AbstractRing> interiorList = new ArrayList<AbstractRing>();
+    protected LinearRing exterior;
+    protected List<LinearRing> interiorList = new ArrayList<LinearRing>();
     
     
     public PolygonJTS(GeometryFactory jtsFactory)
@@ -49,7 +49,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
     
     
     @Override
-    public final AbstractRing getExterior()
+    public final LinearRing getExterior()
     {
         return exterior;
     }
@@ -63,7 +63,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
     
     
     @Override
-    public final void setExterior(AbstractRing exterior)
+    public final void setExterior(LinearRing exterior)
     {
         this.exterior = exterior;
         this.shell = (LinearRingJTS)exterior;
@@ -72,7 +72,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
     
     
     @Override
-    public final List<AbstractRing> getInteriorList()
+    public final List<LinearRing> getInteriorList()
     {
         return interiorList;
     }
@@ -88,7 +88,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
     
     
     @Override
-    public final void addInterior(AbstractRing interior)
+    public final void addInterior(LinearRing interior)
     {
         this.interiorList.add(interior);
         this.holes = this.interiorList.toArray(this.holes);

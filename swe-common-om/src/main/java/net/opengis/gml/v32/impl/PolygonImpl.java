@@ -16,7 +16,7 @@ package net.opengis.gml.v32.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.opengis.gml.v32.AbstractRing;
+import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Polygon;
 
 
@@ -28,8 +28,8 @@ import net.opengis.gml.v32.Polygon;
 public class PolygonImpl extends AbstractGeometryImpl implements Polygon
 {
     static final long serialVersionUID = 1L;
-    protected AbstractRing exterior;
-    protected List<AbstractRing> interiorList = new ArrayList<AbstractRing>();
+    protected LinearRing exterior;
+    protected List<LinearRing> interiorList = new ArrayList<LinearRing>();
     
     
     public PolygonImpl()
@@ -41,7 +41,7 @@ public class PolygonImpl extends AbstractGeometryImpl implements Polygon
      * Gets the exterior property
      */
     @Override
-    public AbstractRing getExterior()
+    public LinearRing getExterior()
     {
         return exterior;
     }
@@ -61,7 +61,7 @@ public class PolygonImpl extends AbstractGeometryImpl implements Polygon
      * Sets the exterior property
      */
     @Override
-    public void setExterior(AbstractRing exterior)
+    public void setExterior(LinearRing exterior)
     {
         this.exterior = exterior;
     }
@@ -71,7 +71,7 @@ public class PolygonImpl extends AbstractGeometryImpl implements Polygon
      * Gets the list of interior properties
      */
     @Override
-    public List<AbstractRing> getInteriorList()
+    public List<LinearRing> getInteriorList()
     {
         return interiorList;
     }
@@ -93,7 +93,7 @@ public class PolygonImpl extends AbstractGeometryImpl implements Polygon
      * Adds a new interior property
      */
     @Override
-    public void addInterior(AbstractRing interior)
+    public void addInterior(LinearRing interior)
     {
         this.interiorList.add(interior);
     }

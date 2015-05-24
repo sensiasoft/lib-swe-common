@@ -22,7 +22,7 @@ import net.opengis.gml.v32.LinearRing;
  *
  * This is a complex type.
  */
-public class LinearRingImpl extends AbstractRingImpl implements LinearRing
+public class LinearRingImpl implements LinearRing
 {
     static final long serialVersionUID = 1L;
     protected double[] posList;

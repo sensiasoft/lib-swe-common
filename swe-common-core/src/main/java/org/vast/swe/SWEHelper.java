@@ -21,6 +21,8 @@
 package org.vast.swe;
 
 import java.nio.ByteOrder;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.BinaryComponent;
 import net.opengis.swe.v20.BinaryMember;
@@ -106,6 +108,28 @@ public class SWEHelper extends SWEFactory
     public static String getPropertyUri(String propName)
     {
         return SWE_PROP_URI_PREFIX + propName;
+    }
+    
+    
+    public static OgcProperty<?> newLinkProperty(String href)
+    {
+        return newLinkProperty(null, href, null);
+    }
+    
+    
+    public static OgcProperty<?> newLinkProperty(String name, String href)
+    {
+        return newLinkProperty(name, href, null);
+    }
+    
+    
+    public static OgcProperty<?> newLinkProperty(String name, String href, String role)
+    {
+        OgcProperty<?> prop = new OgcPropertyImpl<Object>();
+        prop.setName(name);
+        prop.setHref(href);
+        prop.setRole(role);
+        return prop;
     }
     
     

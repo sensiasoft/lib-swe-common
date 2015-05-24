@@ -149,6 +149,7 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
         prop.href = href;
         prop.role = role;
         items.add(prop);
+        nameMap.put(name, prop);
         return prop;
     }
 
@@ -382,7 +383,7 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
     
     protected void checkName(String name)
     {
-        if(name == null)
+        if (name == null)
             return;
         
         if (nameMap.containsKey(name))

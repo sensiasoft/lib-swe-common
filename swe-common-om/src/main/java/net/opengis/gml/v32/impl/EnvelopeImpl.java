@@ -39,6 +39,24 @@ public class EnvelopeImpl implements Envelope
     }
     
     
+    public EnvelopeImpl(String crs, double minX, double maxX, double minY, double maxY)
+    {
+        lowerCorner = new double[] {minX, minY};
+        upperCorner = new double[] {maxX, maxY};
+        srsDimension = 2;
+        srsName = crs;
+    }
+    
+    
+    public EnvelopeImpl(String crs, double minX, double maxX, double minY, double maxY, double minZ, double maxZ)
+    {
+        lowerCorner = new double[] {minX, minY, minZ};
+        upperCorner = new double[] {maxX, maxY, maxZ};
+        srsDimension = 3;
+        srsName = crs;
+    }
+    
+    
     /**
      * Gets the lowerCorner property
      */

@@ -133,15 +133,6 @@ public class GMLFactory implements Factory
     }
     
     
-    public final Point newPoint()
-    {
-        if (useJTS)
-            return new PointJTS(jtsFactory);
-        else
-            return new PointImpl();
-    }
-    
-    
     public final Reference newReference()
     {
         return new ReferenceImpl();
@@ -172,7 +163,20 @@ public class GMLFactory implements Factory
     }
 
 
-    @Override
+    public final Point newPoint()
+    {
+        Point point;
+        
+        if (useJTS)
+            point = new PointJTS(jtsFactory);
+        else
+            point = new PointImpl();
+        
+        point.setId(newGeomId());
+        return point;
+    }
+    
+    
     public final LinearRing newLinearRing()
     {
         if (useJTS)
@@ -182,23 +186,31 @@ public class GMLFactory implements Factory
     }
 
 
-    @Override
     public final Polygon newPolygon()
     {
+        Polygon poly;
+        
         if (useJTS)
-            return new PolygonJTS(jtsFactory);
+            poly = new PolygonJTS(jtsFactory);
         else
-            return new PolygonImpl();
+            poly = new PolygonImpl();
+        
+        poly.setId(newGeomId());
+        return poly;
     }
 
 
-    @Override
     public final LineString newLineString()
     {
+        LineString line;
+        
         if (useJTS)
-            return new LineStringJTS(jtsFactory);
+            line = new LineStringJTS(jtsFactory);
         else
-            return new LineStringImpl();
+            line = new LineStringImpl();
+        
+        line.setId(newGeomId());
+        return line;
     }
     
     
@@ -239,6 +251,15 @@ public class GMLFactory implements Factory
         sb.setLength(0);
         sb.append('T');
         sb.append(timeIdCounter++);
+        return sb.toString();
+    }
+    
+    
+    private final String newGeomId()
+    {
+        sb.setLength(0);
+        sb.append('G');
+        sb.append(geomIdCounter++);
         return sb.toString();
     }
 }

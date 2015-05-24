@@ -29,7 +29,7 @@ public interface Polygon extends AbstractSurface
     /**
      * Gets the exterior property
      */
-    public AbstractRing getExterior();
+    public LinearRing getExterior();
     
     
     /**
@@ -41,13 +41,13 @@ public interface Polygon extends AbstractSurface
     /**
      * Sets the exterior property
      */
-    public void setExterior(AbstractRing exterior);
+    public void setExterior(LinearRing exterior);
     
     
     /**
      * Gets the list of interior properties
      */
-    public List<AbstractRing> getInteriorList();
+    public List<LinearRing> getInteriorList();
     
     
     /**
@@ -59,5 +59,5 @@ public interface Polygon extends AbstractSurface
     /**
      * Adds a new interior property
      */
-    public void addInterior(AbstractRing interior);
+    public void addInterior(LinearRing interior);
 }

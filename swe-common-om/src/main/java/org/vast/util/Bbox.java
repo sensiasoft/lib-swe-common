@@ -95,4 +95,19 @@ public class Bbox extends SpatialExtent
     {
 	    return super.equals(obj);
     }
+	
+	
+	public com.vividsolutions.jts.geom.Envelope toJtsEnvelope()
+	{
+	    return new com.vividsolutions.jts.geom.Envelope(minX, maxX, minY, maxY);
+	}
+	
+	
+	public net.opengis.gml.v32.Envelope toGmlEnvelope()
+	{
+	    if (Double.isNaN(minZ))
+	        return new net.opengis.gml.v32.impl.EnvelopeImpl(crs, minX, maxX, minY, maxY);
+	    else
+	        return new net.opengis.gml.v32.impl.EnvelopeImpl(crs, minX, maxX, minY, maxY, minZ, maxZ);
+	}
 }

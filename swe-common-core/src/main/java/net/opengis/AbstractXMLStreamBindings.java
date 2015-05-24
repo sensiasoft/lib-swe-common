@@ -79,7 +79,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
-    protected void writeNamespaces(XMLStreamWriter writer) throws XMLStreamException
+    public void writeNamespaces(XMLStreamWriter writer) throws XMLStreamException
     {
         if (needNamespaceDecl)
         {

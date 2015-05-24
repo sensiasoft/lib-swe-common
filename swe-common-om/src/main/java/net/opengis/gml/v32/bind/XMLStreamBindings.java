@@ -26,7 +26,6 @@ import net.opengis.gml.v32.AbstractCurve;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGML;
 import net.opengis.gml.v32.AbstractGeometry;
-import net.opengis.gml.v32.AbstractRing;
 import net.opengis.gml.v32.AbstractSurface;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.AbstractTimePrimitive;
@@ -1347,7 +1346,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (found)
         {
             reader.nextTag();
-            AbstractRing exterior = this.readAbstractRing(reader);
+            LinearRing exterior = this.readLinearRing(reader);
             if (exterior != null)
                 bean.setExterior(exterior);
             
@@ -1362,7 +1361,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             if (found)
             {
                 reader.nextTag();
-                AbstractRing interior = this.readAbstractRing(reader);
+                LinearRing interior = this.readLinearRing(reader);
                 if (interior != null)
                     bean.addInterior(interior);
                 
@@ -1405,7 +1404,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetExterior())
         {
             writer.writeStartElement(NS_URI, "exterior");
-            this.writeAbstractRing(writer, bean.getExterior());
+            this.writeLinearRing(writer, bean.getExterior());
             writer.writeEndElement();
         }
         
@@ -1413,9 +1412,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         numItems = bean.getInteriorList().size();
         for (int i = 0; i < numItems; i++)
         {
-            AbstractRing item = bean.getInteriorList().get(i);
+            LinearRing item = bean.getInteriorList().get(i);
             writer.writeStartElement(NS_URI, "interior");
-            this.writeAbstractRing(writer, item);
+            this.writeLinearRing(writer, item);
             writer.writeEndElement();
         }
     }
@@ -2404,36 +2403,6 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         this.writeNamespaces(writer);
         this.writePolygonType(writer, bean);
         writer.writeEndElement();
-    }
-    
-    
-    /**
-     * Dispatcher method for reading elements derived from AbstractRing
-     */
-    public AbstractRing readAbstractRing(XMLStreamReader reader) throws XMLStreamException
-    {
-        String localName = reader.getName().getLocalPart();
-        
-        /*if (localName.equals("Ring"))
-            return readRing(reader);*/
-        if (localName.equals("LinearRing"))
-            return readLinearRing(reader);
-        
-        throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
-    }
-    
-    
-    /**
-     * Dispatcher method for writing classes derived from AbstractRing
-     */
-    public void writeAbstractRing(XMLStreamWriter writer, AbstractRing bean) throws XMLStreamException
-    {
-        /*if (bean instanceof Ring)
-            writeRing(writer, (Ring)bean);*/
-        if (bean instanceof LinearRing)
-            writeLinearRing(writer, (LinearRing)bean);
-        else
-            throw new XMLStreamException(ERROR_UNSUPPORTED_TYPE + bean.getClass().getCanonicalName());
     }
     
     

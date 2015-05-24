@@ -10,10 +10,13 @@
 
 package org.vast.ogc.gml;
 
+import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamWriter;
+import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.bind.XMLStreamBindings;
 import net.opengis.gml.v32.impl.GMLFactory;
 
@@ -108,6 +111,49 @@ public class GMLStaxBindings extends XMLStreamBindings
         }
         
         return newFeature;
+    }
+    
+    
+    public void writeGenericFeature(XMLStreamWriter writer, GenericFeature bean) throws XMLStreamException
+    {
+        QName featureType = bean.getQName();
+        String nsUri = featureType.getNamespaceURI();
+        
+        // namespace        
+        if (writer.getPrefix(nsUri) == null)
+            writer.writeNamespace("ns1", nsUri);
+        
+        // element name
+        writer.writeStartElement(nsUri, featureType.getLocalPart());
+        
+        // common attributes and elements from AbstractFeature
+        this.writeAbstractFeatureTypeAttributes(writer, bean);
+        this.writeAbstractFeatureTypeElements(writer, bean);
+        
+        // write all other properties
+        for (Entry<QName, Object> prop: bean.getProperties().entrySet())
+        {
+            // prop name
+            QName propName = prop.getKey();
+            writer.writeStartElement(propName.getNamespaceURI(), propName.getLocalPart());
+            
+            // prop value
+            Object val = prop.getValue();            
+            writer.writeCharacters(val.toString());                
+                
+            writer.writeEndElement();
+        }
+        
+        writer.writeEndElement();
+    }
+    
+    
+    public void writeAbstractFeature(XMLStreamWriter writer, AbstractFeature bean) throws XMLStreamException
+    {
+        if (bean instanceof GenericFeature)
+            this.writeGenericFeature(writer, (GenericFeature)bean);        
+        else
+            super.writeAbstractFeature(writer, bean);
     }
     
 }
