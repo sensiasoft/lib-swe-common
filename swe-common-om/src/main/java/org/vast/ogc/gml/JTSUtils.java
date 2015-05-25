@@ -12,7 +12,10 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package net.opengis.gml.v32.impl;
+package org.vast.ogc.gml;
+
+import net.opengis.gml.v32.AbstractGeometry;
+import com.vividsolutions.jts.geom.Geometry;
 
 
 /**
@@ -52,5 +55,14 @@ public class JTSUtils
             return Integer.parseInt(srsName.substring(codeIndex));
         else
             return 0;
+    }
+    
+    
+    public static Geometry getAsJTSGeometry(AbstractGeometry geom)
+    {
+        if (geom instanceof Geometry)
+            return (Geometry)geom;
+        
+        throw new IllegalStateException("Conversion from pure GML implementation to JTS not implemented yet");
     }
 }

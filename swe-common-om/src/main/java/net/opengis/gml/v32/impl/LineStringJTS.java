@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis.gml.v32.impl;
 
 import java.util.List;
+import org.vast.ogc.gml.JTSUtils;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGeometry;

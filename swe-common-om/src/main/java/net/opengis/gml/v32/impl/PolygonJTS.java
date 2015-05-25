@@ -16,6 +16,7 @@ package net.opengis.gml.v32.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.vast.ogc.gml.JTSUtils;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGeometry;
