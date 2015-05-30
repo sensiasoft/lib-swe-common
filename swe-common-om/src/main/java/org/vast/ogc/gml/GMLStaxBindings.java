@@ -10,6 +10,8 @@
 
 package org.vast.ogc.gml;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
@@ -34,6 +36,8 @@ public class GMLStaxBindings extends XMLStreamBindings
     public final static String NS_PREFIX_GML = "gml";
     public final static String NS_PREFIX_XLINK = "xlink";
     
+    protected Map<QName, IFeatureStaxBindings> featureTypesBindings;
+    
     
     public GMLStaxBindings()
     {
@@ -45,6 +49,8 @@ public class GMLStaxBindings extends XMLStreamBindings
     {
         super(new GMLFactory(useJTS));
         
+        featureTypesBindings = new HashMap<QName, IFeatureStaxBindings>();
+        
         nsContext.registerNamespace(NS_PREFIX_GML, net.opengis.gml.v32.bind.XMLStreamBindings.NS_URI);
         nsContext.registerNamespace(NS_PREFIX_XLINK, net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
     }
@@ -53,6 +59,13 @@ public class GMLStaxBindings extends XMLStreamBindings
     public GMLFactory getFactory()
     {
         return (GMLFactory)factory;
+    }
+    
+    
+    public void registerFeatureBindings(IFeatureStaxBindings featureBindings)
+    {
+        for (QName fType: featureBindings.getSupportedFeatureTypes())
+            featureTypesBindings.put(fType, featureBindings);
     }
     
     
@@ -148,10 +161,31 @@ public class GMLStaxBindings extends XMLStreamBindings
     }
     
     
+    @Override
+    public AbstractFeature readAbstractFeature(XMLStreamReader reader) throws XMLStreamException
+    {
+        QName featureType = reader.getName();
+        IFeatureStaxBindings customBindings = featureTypesBindings.get(featureType);
+        
+        if (customBindings != null)
+            return customBindings.readFeature(reader, featureType);
+        else if (featureType.getNamespaceURI().equals(NS_URI))
+            return super.readAbstractFeature(reader);
+        else
+            return readGenericFeature(reader);
+    }
+
+
+    @Override
     public void writeAbstractFeature(XMLStreamWriter writer, AbstractFeature bean) throws XMLStreamException
     {
-        if (bean instanceof GenericFeature)
-            this.writeGenericFeature(writer, (GenericFeature)bean);        
+        QName featureType = bean.getQName();
+        IFeatureStaxBindings customBindings = featureTypesBindings.get(featureType);
+        
+        if (customBindings != null)
+            customBindings.writeFeature(writer, bean);
+        else if (bean instanceof GenericFeature)
+            this.writeGenericFeature(writer, (GenericFeature)bean);
         else
             super.writeAbstractFeature(writer, bean);
     }

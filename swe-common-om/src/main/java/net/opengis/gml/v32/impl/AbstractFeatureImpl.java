@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import javax.xml.namespace.QName;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.gml.v32.AbstractFeature;
@@ -29,6 +30,7 @@ import net.opengis.gml.v32.Envelope;
 public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements AbstractFeature
 {
     static final long serialVersionUID = 1L;
+    protected QName qName;
     protected Envelope boundedBy;
     protected OgcProperty<AbstractGeometry> location;
     
@@ -38,6 +40,13 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
     }
     
     
+    @Override
+    public QName getQName()
+    {
+        return qName;
+    }
+    
+
     /**
      * Gets the boundedBy property
      */

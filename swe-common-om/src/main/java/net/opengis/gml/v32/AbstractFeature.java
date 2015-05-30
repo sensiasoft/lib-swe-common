@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
+import javax.xml.namespace.QName;
 import net.opengis.OgcProperty;
 
 
@@ -25,7 +26,13 @@ import net.opengis.OgcProperty;
 @SuppressWarnings("javadoc")
 public interface AbstractFeature extends AbstractGML
 {
-        
+    
+    /**
+     * @return Qualified name of feature type
+     */
+    public QName getQName();
+    
+    
     /**
      * Gets the boundedBy property
      */

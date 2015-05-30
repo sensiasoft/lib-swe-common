@@ -16,6 +16,7 @@ package net.opengis.gml.v32.bind;
 
 import java.util.ArrayList;
 import java.util.Map;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
@@ -2080,6 +2081,15 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     {
         if (bean instanceof FeatureCollection)
             writeFeatureCollection(writer, (FeatureCollection)bean);
+        else
+        {
+            QName qName = bean.getQName();
+            writer.writeStartElement(qName.getNamespaceURI(), qName.getLocalPart());
+            this.writeNamespaces(writer);
+            this.writeAbstractFeatureTypeAttributes(writer, bean);
+            this.writeAbstractFeatureTypeElements(writer, bean);
+            writer.writeEndElement();
+        }
     }
     
     
