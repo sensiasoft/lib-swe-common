@@ -21,6 +21,12 @@
 
 package org.vast.util;
 
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.operation.buffer.BufferParameters;
+
 
 /**
  * <p>Title:
@@ -103,6 +109,19 @@ public class Bbox extends SpatialExtent
 	}
 	
 	
+	public com.vividsolutions.jts.geom.Polygon toJtsPolygon()
+    {
+	    Geometry geom = new GeometryFactory().toGeometry(toJtsEnvelope());
+	    
+        if (geom instanceof Point)
+            geom = geom.buffer(1e-6, 1, BufferParameters.CAP_SQUARE);
+        else if (geom instanceof LineString)
+            geom = geom.buffer(1e-6, 1, BufferParameters.CAP_FLAT);
+        
+	    return (com.vividsolutions.jts.geom.Polygon)geom;
+    }
+	
+	
 	public net.opengis.gml.v32.Envelope toGmlEnvelope()
 	{
 	    if (Double.isNaN(minZ))
@@ -110,4 +129,17 @@ public class Bbox extends SpatialExtent
 	    else
 	        return new net.opengis.gml.v32.impl.EnvelopeImpl(crs, minX, maxX, minY, maxY, minZ, maxZ);
 	}
+
+
+    public void checkValid()
+    {
+        if (minX > maxX)
+            throw new IllegalArgumentException("MinX > MaxX");
+        
+        if (minY > maxY)
+            throw new IllegalArgumentException("MinY > MaxY");
+        
+        if (minZ > maxZ)
+            throw new IllegalArgumentException("MinZ > MaxZ");
+    }
 }
