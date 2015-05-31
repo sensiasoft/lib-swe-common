@@ -42,14 +42,13 @@ import org.vast.util.TimeExtent;
  * */
 public interface IObservation extends GenericFeature
 {
-    public String OBS_TYPE_GENERIC = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Observation";
-    public String OBS_TYPE_MEAS = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement";
-    public String OBS_TYPE_COUNT = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CountObservation"; 
-    public String OBS_TYPE_CATEGORY = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CategoryObservation"; 
-    public String OBS_TYPE_SCALAR = "http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEScalarObservation";
-    public String OBS_TYPE_RECORD = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation";
-    public String OBS_TYPE_ARRAY = "http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEArrayObservation";
-
+    public final static String OBS_TYPE_GENERIC = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Observation";
+    public final static String OBS_TYPE_MEAS = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement";
+    public final static String OBS_TYPE_COUNT = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CountObservation"; 
+    public final static String OBS_TYPE_CATEGORY = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CategoryObservation"; 
+    public final static String OBS_TYPE_SCALAR = "http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEScalarObservation";
+    public final static String OBS_TYPE_RECORD = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation";
+    public final static String OBS_TYPE_ARRAY = "http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEArrayObservation";
     
     public List<IXlinkReference<IObservation>> getRelatedObservations();
     

@@ -46,10 +46,20 @@ public class SWEConstants
     public final static String DATACHOICE_COMPONENT_TAG = "DataChoice"; 	
 	
 	/* definition URIs */
-	public static final String DEF_SAMPLING_TIME = "http://www.opengis.net/def/property/OGC/0/SamplingTime";
-	public static final String DEF_SAMPLING_LOC = "http://www.opengis.net/def/property/OGC/0/SamplingLocation";
-	public static final String DEF_SENSOR_LOC = "http://www.opengis.net/def/property/OGC/0/SensorLocation";
-	public static final String DEF_SENSOR_ORIENT = "http://www.opengis.net/def/property/OGC/0/SensorOrientation";
-	public static final String DEF_PLATFORM_LOC = "http://www.opengis.net/def/property/OGC/0/PlatformLocation";
-    public static final String DEF_PLATFORM_ORIENT = "http://www.opengis.net/def/property/OGC/0/PlatformOrientation";
+	public final static String DEF_SAMPLING_TIME = "http://www.opengis.net/def/property/OGC/0/SamplingTime";
+	public final static String DEF_SAMPLING_LOC = "http://www.opengis.net/def/property/OGC/0/SamplingLocation";
+	public final static String DEF_SENSOR_LOC = "http://www.opengis.net/def/property/OGC/0/SensorLocation";
+	public final static String DEF_SENSOR_ORIENT = "http://www.opengis.net/def/property/OGC/0/SensorOrientation";
+	public final static String DEF_PLATFORM_LOC = "http://www.opengis.net/def/property/OGC/0/PlatformLocation";
+    public final static String DEF_PLATFORM_ORIENT = "http://www.opengis.net/def/property/OGC/0/PlatformOrientation";
+    
+    /* nil values */
+    public final static String NIL_ABOVE_MAX = "http://www.opengis.net/def/nil/OGC/0/AboveDetectionRange";
+    public final static String NIL_BELOW_MIN = "http://www.opengis.net/def/nil/OGC/0/BelowDetectionRange";
+    public final static String NIL_INAPPLICABLE = "http://www.opengis.net/def/nil/OGC/0/inapplicable";
+    public final static String NIL_MISSING = "http://www.opengis.net/def/nil/OGC/0/missing";
+    public final static String NIL_TEMPLATE = "http://www.opengis.net/def/nil/OGC/0/template";
+    public final static String NIL_UNKNOWN = "http://www.opengis.net/def/nil/OGC/0/unknown";
+    public final static String NIL_WITHHELD = "http://www.opengis.net/def/nil/OGC/0/withheld";
+    
 }
