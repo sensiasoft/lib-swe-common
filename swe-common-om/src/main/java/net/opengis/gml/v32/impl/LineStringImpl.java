@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.LineString;
 
 
@@ -28,8 +29,15 @@ public class LineStringImpl extends AbstractCurveImpl implements LineString
     protected double[] posList;
     
     
-    public LineStringImpl()
+    @SuppressWarnings("unused")
+    private LineStringImpl()
     {
+    }
+    
+    
+    public LineStringImpl(int numDims)
+    {
+        this.srsDimension = numDims;
     }
 
 
@@ -43,7 +51,8 @@ public class LineStringImpl extends AbstractCurveImpl implements LineString
     @Override
     public void setPosList(double[] posList)
     {
-        this.posList = posList;        
+        this.posList = posList;
+        this.envelope = null;     
     }    
     
     
@@ -51,5 +60,15 @@ public class LineStringImpl extends AbstractCurveImpl implements LineString
     public boolean isSetPosList()
     {
         return (posList != null);
+    }
+
+
+    @Override
+    public Envelope getGeomEnvelope()
+    {
+        if (envelope == null)
+            envelope = addCoordinatesToEnvelope(envelope, posList, srsDimension);
+            
+        return envelope;
     }
 }

@@ -33,6 +33,17 @@ public class JTSCoordinatesDoubleArray implements CoordinateSequence
     int numDims = 2;
     
     
+    private JTSCoordinatesDoubleArray()
+    {        
+    }
+    
+    
+    public JTSCoordinatesDoubleArray(int numDims)
+    {
+        this.numDims = numDims;
+    }
+    
+    
     public void setNumDimensions(int numDims)
     {
         this.numDims = numDims;

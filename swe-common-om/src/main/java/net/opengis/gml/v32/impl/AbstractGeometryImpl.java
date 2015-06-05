@@ -14,7 +14,9 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.util.Arrays;
 import net.opengis.gml.v32.AbstractGeometry;
+import net.opengis.gml.v32.Envelope;
 
 
 /**
@@ -29,6 +31,7 @@ public class AbstractGeometryImpl extends AbstractGMLImpl implements AbstractGeo
     protected Integer srsDimension;
     protected String[] axisLabels;
     protected String[] uomLabels;
+    transient Envelope envelope;
     
     
     public AbstractGeometryImpl()
@@ -163,5 +166,41 @@ public class AbstractGeometryImpl extends AbstractGMLImpl implements AbstractGeo
     public void setUomLabels(String[] uomLabels)
     {
         this.uomLabels = uomLabels;
+    }
+    
+    
+    @Override
+    public Envelope getGeomEnvelope()
+    {
+        return envelope;
+    }
+    
+    
+    protected static Envelope addCoordinatesToEnvelope(Envelope env, double[] coords, int nDims)
+    {
+        if (env == null)
+        {
+            env = new EnvelopeImpl(nDims);
+            Arrays.fill(env.getLowerCorner(), Double.POSITIVE_INFINITY);
+            Arrays.fill(env.getUpperCorner(), Double.NEGATIVE_INFINITY);
+        }
+        
+        double[] lc = env.getLowerCorner();
+        double[] uc = env.getUpperCorner();
+        int dim = 0;
+        for (double val: coords)
+        {
+            if (val < lc[dim])
+                lc[dim] = val;
+            
+            if (val > uc[dim])
+                uc[dim] = val;
+            
+            dim++;
+            if (dim == nDims)
+                dim = 0;
+        }
+        
+        return env;
     }
 }

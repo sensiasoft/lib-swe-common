@@ -18,9 +18,9 @@ import java.util.List;
 import org.vast.ogc.gml.JTSUtils;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
-import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
+import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.Point;
 import net.opengis.gml.v32.Reference;
 
@@ -36,13 +36,14 @@ import net.opengis.gml.v32.Reference;
 public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 {
     static final long serialVersionUID = 1L;
-    AbstractGeometry geom = new AbstractGeometryImpl() { };
+    AbstractGeometryImpl geom = new AbstractGeometryImpl() { };
     protected double[] pos;
     
     
-    public PointJTS(GeometryFactory jtsFactory)
+    public PointJTS(GeometryFactory jtsFactory, int numDims)
     {
-        super(new JTSCoordinatesDoubleArray(), jtsFactory);
+        super(new JTSCoordinatesDoubleArray(numDims), jtsFactory);
+        geom.srsDimension = numDims;
     }
     
     
@@ -66,6 +67,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
         this.pos = pos;
         ((JTSCoordinatesDoubleArray)getCoordinateSequence()).setPosList(pos);
         this.geometryChanged();
+        geom.envelope = null;
     }
     
     
@@ -94,7 +96,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
     public final void setSrsName(String srsName)
     {
         geom.setSrsName(srsName);
-        this.setSRID(JTSUtils.getSRIDFromSrsName(srsName));
+        super.setSRID(JTSUtils.getSRIDFromSrsName(srsName));
     }
     
     
@@ -131,6 +133,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
     public void setSrsDimension(int srsDimension)
     {
         geom.setSrsDimension(srsDimension);
+        ((JTSCoordinatesDoubleArray)getCoordinateSequence()).setNumDimensions(srsDimension);
     }
 
 
@@ -299,5 +302,15 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
     public void setId(String id)
     {
         geom.setId(id);
+    }
+    
+    
+    @Override
+    public Envelope getGeomEnvelope()
+    {
+        if (geom.envelope == null)
+            geom.envelope = AbstractGeometryImpl.addCoordinatesToEnvelope(geom.envelope, pos, geom.srsDimension);
+            
+        return geom.envelope;
     }
 }

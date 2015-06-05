@@ -32,9 +32,9 @@ public class LinearRingJTS extends com.vividsolutions.jts.geom.LinearRing implem
     protected double[] posList;
     
     
-    public LinearRingJTS(GeometryFactory jtsFactory)
+    public LinearRingJTS(GeometryFactory jtsFactory, int numDims)
     {
-        super(new JTSCoordinatesDoubleArray(), jtsFactory);
+        super(new JTSCoordinatesDoubleArray(numDims), jtsFactory);
     }
 
 

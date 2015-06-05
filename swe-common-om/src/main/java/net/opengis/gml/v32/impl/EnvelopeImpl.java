@@ -39,6 +39,14 @@ public class EnvelopeImpl implements Envelope
     }
     
     
+    public EnvelopeImpl(int numDims)
+    {
+        lowerCorner = new double[numDims];
+        upperCorner = new double[numDims];
+        srsDimension = numDims;        
+    }
+    
+    
     public EnvelopeImpl(String crs, double minX, double maxX, double minY, double maxY)
     {
         lowerCorner = new double[] {minX, minY};
@@ -54,6 +62,15 @@ public class EnvelopeImpl implements Envelope
         upperCorner = new double[] {maxX, maxY, maxZ};
         srsDimension = 3;
         srsName = crs;
+    }
+    
+    
+    public EnvelopeImpl(String crs, double[] lowerCorner, double[] upperCorner)
+    {
+        this.lowerCorner = lowerCorner;
+        this.upperCorner = upperCorner;
+        this.srsDimension = lowerCorner.length;
+        this.srsName = crs;
     }
     
     

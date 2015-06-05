@@ -19,6 +19,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import net.opengis.gml.v32.AbstractFeature;
+import net.opengis.gml.v32.AbstractGML;
+import net.opengis.gml.v32.AbstractGeometry;
+import net.opengis.gml.v32.AbstractTimePrimitive;
 import net.opengis.gml.v32.bind.XMLStreamBindings;
 import net.opengis.gml.v32.impl.GMLFactory;
 
@@ -35,7 +38,11 @@ public class GMLStaxBindings extends XMLStreamBindings
 {
     public final static String NS_PREFIX_GML = "gml";
     public final static String NS_PREFIX_XLINK = "xlink";
-    
+
+    protected int geomIdCounter = 1;
+    protected int timeIdCounter = 1;
+    protected int featureIdCounter = 1;
+    protected StringBuilder sb = new StringBuilder();
     protected Map<QName, IFeatureStaxBindings> featureTypesBindings;
     
     
@@ -189,5 +196,48 @@ public class GMLStaxBindings extends XMLStreamBindings
         else
             super.writeAbstractFeature(writer, bean);
     }
+
+
+    @Override
+    public void writeAbstractGMLTypeAttributes(XMLStreamWriter writer, AbstractGML bean) throws XMLStreamException
+    {        
+        // automatically generate gml:id if not set
+        String gmlID = bean.getId();        
+        if (gmlID == null || gmlID.length() == 0)
+        {
+            sb.setLength(0);
+            
+            if (bean instanceof AbstractGeometry)
+            {
+                sb.append('G');
+                sb.append(geomIdCounter++);
+            }
+            else if (bean instanceof AbstractTimePrimitive)
+            {
+                sb.append('T');
+                sb.append(timeIdCounter++);
+            }
+            else if (bean instanceof AbstractFeature)
+            {
+                sb.append('F');
+                sb.append(featureIdCounter++);
+            }
+            
+            gmlID = sb.toString();
+        }
+        
+        writer.writeAttribute(NS_URI, "id", gmlID);
+    }
     
+    
+    public final void resetGeomIdCounter(int geomIdCounter)
+    {
+        this.geomIdCounter = geomIdCounter;
+    }
+
+
+    public final void resetTimeIdCounter(int timeIdCounter)
+    {
+        this.timeIdCounter = timeIdCounter;
+    }
 }

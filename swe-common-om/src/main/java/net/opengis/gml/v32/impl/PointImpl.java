@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.Point;
 
 
@@ -28,8 +29,15 @@ public class PointImpl extends AbstractGeometryImpl implements Point
     protected double[] pos;
     
     
-    public PointImpl()
+    @SuppressWarnings("unused")
+    private PointImpl()
     {
+    }
+    
+    
+    public PointImpl(int numDims)
+    {
+        this.srsDimension = numDims;
     }
     
     
@@ -60,5 +68,16 @@ public class PointImpl extends AbstractGeometryImpl implements Point
     public void setPos(double[] pos)
     {
         this.pos = pos;
+        this.envelope = null;
+    }
+    
+    
+    @Override
+    public Envelope getGeomEnvelope()
+    {
+        if (envelope == null)
+            envelope = addCoordinatesToEnvelope(envelope, pos, srsDimension);
+            
+        return envelope;
     }
 }

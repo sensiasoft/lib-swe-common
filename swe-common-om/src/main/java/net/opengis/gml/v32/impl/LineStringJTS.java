@@ -18,9 +18,9 @@ import java.util.List;
 import org.vast.ogc.gml.JTSUtils;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
-import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
+import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.LineString;
 import net.opengis.gml.v32.Reference;
 
@@ -36,13 +36,14 @@ import net.opengis.gml.v32.Reference;
 public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implements LineString
 {
     static final long serialVersionUID = 1L;
-    AbstractGeometry geom = new AbstractGeometryImpl() { };
+    AbstractGeometryImpl geom = new AbstractGeometryImpl() { };
     protected double[] posList;
     
     
-    public LineStringJTS(GeometryFactory jtsFactory)
+    public LineStringJTS(GeometryFactory jtsFactory, int numDims)
     {
-        super(new JTSCoordinatesDoubleArray(), jtsFactory);
+        super(new JTSCoordinatesDoubleArray(numDims), jtsFactory);
+        geom.srsDimension = numDims;
     }
 
 
@@ -59,6 +60,7 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
         this.posList = posList;
         ((JTSCoordinatesDoubleArray)getCoordinateSequence()).setPosList(posList);
         this.geometryChanged();
+        geom.envelope = null;
     }    
     
     
@@ -94,7 +96,7 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
     public final void setSrsName(String srsName)
     {
         geom.setSrsName(srsName);
-        this.setSRID(JTSUtils.getSRIDFromSrsName(srsName));
+        super.setSRID(JTSUtils.getSRIDFromSrsName(srsName));
     }
     
     
@@ -131,6 +133,7 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
     public final void setSrsDimension(int srsDimension)
     {
         geom.setSrsDimension(srsDimension);
+        ((JTSCoordinatesDoubleArray)getCoordinateSequence()).setNumDimensions(srsDimension);
     }
 
 
@@ -299,5 +302,15 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
     public final void setId(String id)
     {
         geom.setId(id);
+    }
+    
+    
+    @Override
+    public Envelope getGeomEnvelope()
+    {
+        if (geom.envelope == null)
+            geom.envelope = AbstractGeometryImpl.addCoordinatesToEnvelope(geom.envelope, posList, geom.srsDimension);
+            
+        return geom.envelope;
     }
 }

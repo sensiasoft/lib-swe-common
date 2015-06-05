@@ -37,9 +37,6 @@ import net.opengis.gml.v32.Factory;
 public class GMLFactory implements Factory
 {
     boolean useJTS;
-    int geomIdCounter = 1;
-    int timeIdCounter = 1;
-    StringBuilder sb = new StringBuilder();
     GeometryFactory jtsFactory;
     
     
@@ -65,9 +62,7 @@ public class GMLFactory implements Factory
     
     public final TimeInstant newTimeInstant()
     {
-        TimeInstant instant = new TimeInstantImpl();
-        instant.setId(newTimeId());
-        return instant;
+        return new TimeInstantImpl();
     }
     
     
@@ -81,9 +76,7 @@ public class GMLFactory implements Factory
     
     public final TimePeriod newTimePeriod()
     {
-        TimePeriod period = new TimePeriodImpl();
-        period.setId(newTimeId());
-        return period;
+        return new TimePeriodImpl();
     }
     
     
@@ -126,10 +119,7 @@ public class GMLFactory implements Factory
     
     public final Envelope newEnvelope()
     {
-        if (useJTS)
-            return new EnvelopeJTS();
-        else
-            return new EnvelopeImpl();
+        return new EnvelopeImpl(2);
     }
     
     
@@ -168,11 +158,10 @@ public class GMLFactory implements Factory
         Point point;
         
         if (useJTS)
-            point = new PointJTS(jtsFactory);
+            point = new PointJTS(jtsFactory, 3);
         else
-            point = new PointImpl();
+            point = new PointImpl(3);
         
-        point.setId(newGeomId());
         return point;
     }
     
@@ -180,7 +169,7 @@ public class GMLFactory implements Factory
     public final LinearRing newLinearRing()
     {
         if (useJTS)
-            return new LinearRingJTS(jtsFactory);
+            return new LinearRingJTS(jtsFactory, 2);
         else
             return new LinearRingImpl();
     }
@@ -191,11 +180,10 @@ public class GMLFactory implements Factory
         Polygon poly;
         
         if (useJTS)
-            poly = new PolygonJTS(jtsFactory);
+            poly = new PolygonJTS(jtsFactory, 2);
         else
-            poly = new PolygonImpl();
+            poly = new PolygonImpl(2);
         
-        poly.setId(newGeomId());
         return poly;
     }
 
@@ -205,11 +193,10 @@ public class GMLFactory implements Factory
         LineString line;
         
         if (useJTS)
-            line = new LineStringJTS(jtsFactory);
+            line = new LineStringJTS(jtsFactory, 3);
         else
-            line = new LineStringImpl();
+            line = new LineStringImpl(3);
         
-        line.setId(newGeomId());
         return line;
     }
     
@@ -231,35 +218,5 @@ public class GMLFactory implements Factory
         env.setLowerCorner(new double[] {minX, minY, minZ});
         env.setUpperCorner(new double[] {maxX, maxY, maxZ});
         return env;
-    }
-
-    
-    public final void resetGeomIdCounter(int geomIdCounter)
-    {
-        this.geomIdCounter = geomIdCounter;
-    }
-
-
-    public final void resetTimeIdCounter(int timeIdCounter)
-    {
-        this.timeIdCounter = timeIdCounter;
-    }
-
-
-    private final String newTimeId()
-    {
-        sb.setLength(0);
-        sb.append('T');
-        sb.append(timeIdCounter++);
-        return sb.toString();
-    }
-    
-    
-    private final String newGeomId()
-    {
-        sb.setLength(0);
-        sb.append('G');
-        sb.append(geomIdCounter++);
-        return sb.toString();
     }
 }

@@ -1568,7 +1568,6 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
      */
     public void writeAbstractGMLTypeAttributes(XMLStreamWriter writer, AbstractGML bean) throws XMLStreamException
     {
-        
         // id
         writer.writeAttribute(NS_URI, "id", getStringValue(bean.getId()));
     }

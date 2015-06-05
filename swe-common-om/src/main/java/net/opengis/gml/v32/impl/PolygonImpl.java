@@ -16,6 +16,7 @@ package net.opengis.gml.v32.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.LinearRing;
 import net.opengis.gml.v32.Polygon;
 
@@ -32,8 +33,15 @@ public class PolygonImpl extends AbstractGeometryImpl implements Polygon
     protected List<LinearRing> interiorList = new ArrayList<LinearRing>();
     
     
-    public PolygonImpl()
+    @SuppressWarnings("unused")
+    private PolygonImpl()
     {
+    }
+    
+    
+    public PolygonImpl(int numDims)
+    {
+        this.srsDimension = numDims;
     }
     
     
@@ -64,6 +72,7 @@ public class PolygonImpl extends AbstractGeometryImpl implements Polygon
     public void setExterior(LinearRing exterior)
     {
         this.exterior = exterior;
+        this.envelope = null;
     }
     
     
@@ -96,5 +105,20 @@ public class PolygonImpl extends AbstractGeometryImpl implements Polygon
     public void addInterior(LinearRing interior)
     {
         this.interiorList.add(interior);
+        this.envelope = null;
+    }
+    
+    
+    @Override
+    public Envelope getGeomEnvelope()
+    {
+        if (envelope == null)
+        {
+            envelope = addCoordinatesToEnvelope(envelope, exterior.getPosList(), srsDimension);
+            for (LinearRing interior: interiorList)
+                addCoordinatesToEnvelope(envelope, interior.getPosList(), srsDimension);
+        }
+        
+        return envelope;
     }
 }

@@ -1,0 +1,17 @@
+<gml:Polygon xmlns:gml="http://www.opengis.net/gml/3.2" gml:id="G1" srsDimension="2" srsName="4326">
+    <gml:exterior>
+        <gml:LinearRing>
+            <gml:posList>0.0 0.0 0.0 1.0 1.0 1.0 1.0 0.0 0.0 0.0</gml:posList>
+        </gml:LinearRing>
+    </gml:exterior>
+    <gml:interior>
+        <gml:LinearRing>
+            <gml:posList>0.0 0.0 0.0 1.0 1.0 1.0 1.0 0.0 0.0 0.0</gml:posList>
+        </gml:LinearRing>
+    </gml:interior>
+    <gml:interior>
+        <gml:LinearRing>
+            <gml:posList>0.0 0.0 0.0 1.0 1.0 1.0 1.0 0.0 0.0 0.0</gml:posList>
+        </gml:LinearRing>
+    </gml:interior>
+</gml:Polygon>

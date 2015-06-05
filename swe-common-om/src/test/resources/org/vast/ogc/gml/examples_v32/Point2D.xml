@@ -1,0 +1,3 @@
+<gml:Point xmlns:gml="http://www.opengis.net/gml/3.2" gml:id="G1" srsDimension="2" srsName="4326">
+    <gml:pos>1.0 2.0</gml:pos>
+</gml:Point>

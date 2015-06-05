@@ -451,11 +451,22 @@ public class GMLUtils extends XMLBindingsUtils
     
     
     /**
+     * Utility method to convert a {@link Bbox} object to a GML {@link Envelope}
+     * @param bbox Bbox object
+     * @return GML envelope
+     */
+    public Envelope bboxToEnvelope(Bbox bbox)
+    {
+        return gmlFactory.newEnvelope(bbox.getCrs(), bbox.getMinX(), bbox.getMinY(), bbox.getMaxX(), bbox.getMaxY());
+    }
+    
+    
+    /**
      * Utility method to convert from a GML {@link Envelope} to a {@link Bbox} object
      * @param env GML envelope
      * @return Bbox instance
      */
-    public Bbox envelopeToBbox(Envelope env)
+    public static Bbox envelopeToBbox(Envelope env)
     {
         Bbox bbox = new Bbox();
         bbox.setCrs(env.getSrsName());
@@ -473,17 +484,6 @@ public class GMLUtils extends XMLBindingsUtils
             bbox.setMaxZ(upperCorner[2]);
         
         return bbox;
-    }
-    
-    
-    /**
-     * Utility method to convert a {@link Bbox} object to a GML {@link Envelope}
-     * @param bbox Bbox object
-     * @return GML envelope
-     */
-    public Envelope bboxToEnvelope(Bbox bbox)
-    {
-        return gmlFactory.newEnvelope(bbox.getCrs(), bbox.getMinX(), bbox.getMinY(), bbox.getMaxX(), bbox.getMaxY());
     }
 
 

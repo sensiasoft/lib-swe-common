@@ -26,6 +26,12 @@ public interface AbstractGeometry extends AbstractGML
 {
     
     /**
+     * @return the geometry bounding (hyper)rectangle
+     */
+    public Envelope getGeomEnvelope();
+    
+    
+    /**
      * Gets the srsName property
      */
     public String getSrsName();

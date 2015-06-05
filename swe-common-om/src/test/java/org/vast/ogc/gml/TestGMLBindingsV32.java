@@ -26,7 +26,9 @@
 package org.vast.ogc.gml;
 
 import java.io.InputStream;
+import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
+import net.opengis.gml.v32.Envelope;
 import org.custommonkey.xmlunit.Validator;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -91,7 +93,6 @@ public class TestGMLBindingsV32 extends XMLTestCase
         is.close();
         
         // write after conversion to TimeExtent
-        gmlUtils.getGmlFactory().resetTimeIdCounter(1);
         TimeExtent timeExtent = gmlUtils.timePrimitiveToTimeExtent(gmlTime);
         DOMHelper dom2 = new DOMHelper();
         Element gmlElt = gmlUtils.writeTimeExtentAsTimePrimitive(dom2, timeExtent);
@@ -100,6 +101,41 @@ public class TestGMLBindingsV32 extends XMLTestCase
         dom2.serialize(gmlElt, System.out, true);
                 
         assertXMLEqual(dom1.getDocument(), dom2.getDocument());
+    }
+    
+    
+    protected void readWriteCompareGeometryXml(String path) throws Exception
+    {
+        GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
+                
+        // read XML example
+        InputStream is = getClass().getResourceAsStream(path);
+        DOMHelper dom1 = new DOMHelper(is, false);
+        AbstractGeometry geom = gmlUtils.readGeometry(dom1, dom1.getBaseElement());
+        is.close();
+        
+        // write GML object
+        DOMHelper dom2 = new DOMHelper();
+        Element gmlElt = gmlUtils.writeGeometry(dom2, geom);
+        dom2.getDocument().appendChild(gmlElt);
+        System.out.println();
+        dom2.serialize(gmlElt, System.out, true);
+                
+        assertXMLEqual(dom1.getDocument(), dom2.getDocument());
+    }
+    
+    
+    protected Envelope readGeometryAndGetEnvelope(String path) throws Exception
+    {
+        GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
+                
+        // read XML example
+        InputStream is = getClass().getResourceAsStream(path);
+        DOMHelper dom1 = new DOMHelper(is, false);
+        AbstractGeometry geom = gmlUtils.readGeometry(dom1, dom1.getBaseElement());
+        is.close();
+        
+        return geom.getGeomEnvelope();
     }
     
     
@@ -138,5 +174,60 @@ public class TestGMLBindingsV32 extends XMLTestCase
         readWriteCompareTimePrimitiveXml("examples_v32/TimePeriod_withTimeStep.xml");
         readWriteCompareTimePrimitiveXml("examples_v32/TimePeriod_beginUnknown.xml");
         readWriteCompareTimePrimitiveXml("examples_v32/TimePeriod_endUnknown.xml");
+    }
+    
+    
+    public void testReadWritePoint() throws Exception
+    {
+        readWriteCompareGeometryXml("examples_v32/Point2D.xml");
+        readWriteCompareGeometryXml("examples_v32/Point3D.xml");
+    }
+    
+    
+    public void testReadWriteLineString() throws Exception
+    {
+        readWriteCompareGeometryXml("examples_v32/Line2D.xml");
+        readWriteCompareGeometryXml("examples_v32/Line3D.xml");
+    }
+    
+    
+    public void testReadWritePolygon() throws Exception
+    {
+        readWriteCompareGeometryXml("examples_v32/Polygon_noInterior.xml");
+        readWriteCompareGeometryXml("examples_v32/Polygon_withInteriors.xml");
+    }
+    
+    
+    public void testComputeGeomEnvelopes() throws Exception
+    {
+        Envelope env;
+        
+        env = readGeometryAndGetEnvelope("examples_v32/Point2D.xml");        
+        testEnvelope(env, 2, new double[] {1,2}, new double[] {1,2});
+        
+        env = readGeometryAndGetEnvelope("examples_v32/Point3D.xml");        
+        testEnvelope(env, 3, new double[] {1,2,3}, new double[] {1,2,3});
+        
+        env = readGeometryAndGetEnvelope("examples_v32/Line2D.xml");        
+        testEnvelope(env, 2, new double[] {1,2}, new double[] {5,6});
+        
+        env = readGeometryAndGetEnvelope("examples_v32/Line3D.xml");        
+        testEnvelope(env, 3, new double[] {1,2,3}, new double[] {7,8,9});
+        
+        env = readGeometryAndGetEnvelope("examples_v32/Polygon_noInterior.xml");        
+        testEnvelope(env, 2, new double[] {0,0}, new double[] {1,1});
+        
+        env = readGeometryAndGetEnvelope("examples_v32/Polygon_withInteriors.xml");        
+        testEnvelope(env, 2, new double[] {0,0}, new double[] {1,1});
+    }
+    
+    
+    protected void testEnvelope(Envelope env, int numDims, double[] lower, double[] upper)
+    {
+        assertEquals(numDims, env.getSrsDimension());
+        for (int i=0; i<numDims; i++)
+            assertEquals(lower[i], env.getLowerCorner()[i]);
+        for (int i=0; i<numDims; i++)
+            assertEquals(upper[i], env.getUpperCorner()[i]);
     }
 }
