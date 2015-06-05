@@ -249,7 +249,7 @@ public class GMLUtils extends XMLBindingsUtils
      */
     public Element writeBboxAsEnvelope(DOMHelper dom, Bbox bbox) throws XMLWriterException
     {
-        Envelope env = bboxToEnvelope(bbox);
+        Envelope env = bboxToEnvelope(bbox, gmlFactory);
         return writeEnvelope(dom, env);
     }
     
@@ -458,6 +458,18 @@ public class GMLUtils extends XMLBindingsUtils
     public Envelope bboxToEnvelope(Bbox bbox)
     {
         return gmlFactory.newEnvelope(bbox.getCrs(), bbox.getMinX(), bbox.getMinY(), bbox.getMaxX(), bbox.getMaxY());
+    }
+    
+    
+    /**
+     * Utility method to convert a {@link Bbox} object to a GML {@link Envelope}
+     * @param bbox Bbox object
+     * @param gmlFac FActory used to create GML objects
+     * @return GML envelope
+     */
+    public static Envelope bboxToEnvelope(Bbox bbox, GMLFactory gmlFac)
+    {
+        return gmlFac.newEnvelope(bbox.getCrs(), bbox.getMinX(), bbox.getMinY(), bbox.getMaxX(), bbox.getMaxY());
     }
     
     
