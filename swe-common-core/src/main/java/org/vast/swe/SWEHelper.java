@@ -349,11 +349,12 @@ public class SWEHelper extends SWEFactory
      * @param def definition of the whole vector
      * @param crs reference frame of the vector
      * @param names array containing name of each individual vector element
+     * @param labels array containing label of each individual vector element
      * @param uoms array containing unit of measure of each individual vector element
      * @param axes array containing axis name of each individual vector element
      * @return the new Vector component object
      */
-    public Vector newVector(String def, String crs, String[] names, String[] uoms, String[] axes)
+    public Vector newVector(String def, String crs, String[] names, String[] labels, String[] uoms, String[] axes)
     {
         Vector loc = newVector();
         loc.setDefinition(def);
@@ -364,6 +365,8 @@ public class SWEHelper extends SWEFactory
         {
             c = newQuantity(DataType.DOUBLE);
             //c.setDefinition(DEF_COORD);
+            if (labels != null)
+                c.setLabel(labels[i]);
             c.getUom().setCode(uoms[i]);
             c.setAxisID(axes[i]);
             loc.addComponent(names[i], c);
@@ -387,6 +390,7 @@ public class SWEHelper extends SWEFactory
                 def,
                 REF_FRAME_LLA,
                 new String[] {"lat", "lon", "alt"},
+                new String[] {"Geodetic Latitude", "Longitude", "Altitude above MSL"},
                 new String[] {"deg", "deg", "m"},
                 new String[] {"Lat", "Long", "h"});
     }
@@ -406,6 +410,7 @@ public class SWEHelper extends SWEFactory
                 def,
                 REF_FRAME_ECEF,
                 new String[] {"x", "y", "z"},
+                new String[] {"X Pos", "Y Pos", "Z Pos"},
                 new String[] {"m", "m", "m"},
                 new String[] {"X", "Y", "Z"});
     }
@@ -427,6 +432,7 @@ public class SWEHelper extends SWEFactory
                 def,
                 refFrame,
                 new String[] {"vx", "vy", "vz"},
+                new String[] {"X Vel", "Y Vel", "Z Vel"},
                 new String[] {uomCode, uomCode, uomCode},
                 new String[] {"X", "Y", "Z"});
     }
@@ -483,6 +489,7 @@ public class SWEHelper extends SWEFactory
                 def,
                 REF_FRAME_ENU,
                 new String[] {"yaw", "pitch", "roll"},
+                new String[] {"Yaw Angle", "Pitch Angle", "Roll Angle"},
                 new String[] {"deg", "deg", "deg"},
                 new String[] {"Z", "X", "Y"});
     }
@@ -503,6 +510,7 @@ public class SWEHelper extends SWEFactory
                 def,
                 REF_FRAME_ENU,
                 new String[] {"yaw", "pitch", "roll"},
+                new String[] {"Yaw Angle", "Pitch Angle", "Roll Angle"},
                 new String[] {"deg", "deg", "deg"},
                 new String[] {"Z", "Y", "X"});
     }
@@ -523,6 +531,7 @@ public class SWEHelper extends SWEFactory
                 def,
                 REF_FRAME_ECEF,
                 new String[] {"x", "y", "z"},
+                new String[] {"X Angle", "Y Angle", "Z Angle"},
                 new String[] {"deg", "deg", "deg"},
                 new String[] {"X", "Y", "Z"});
     }
@@ -537,6 +546,7 @@ public class SWEHelper extends SWEFactory
                 def,
                 crs,
                 new String[] {"q0", "qx", "qy", "qz"},
+                new String[] {"Scalar", "X Component", "Y Component", "Z Component"},
                 new String[] {"1", "1", "1", "1"},
                 new String[] {null, "X", "Y", "Z"});
     }
