@@ -25,12 +25,12 @@ package org.vast.ogc.om;
 
 import java.text.NumberFormat;
 import java.util.Map.Entry;
+import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.Code;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLUtils;
-import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.swe.SWEUtils;
@@ -199,15 +199,9 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         
         // foi
         Element foiPropElt = dom.addElement(obsElt, "om:featureOfInterest");
-        GenericFeature foi = obs.getFeatureOfInterest();
+        AbstractFeature foi = obs.getFeatureOfInterest();
         if (foi != null)
-        {
-            if (foi instanceof FeatureRef) {
-                XlinkUtils.writeXlinkAttributes(dom, foiPropElt, (FeatureRef)foi);
-            }
-            else
-                writeFOI(dom, obsElt, foi);
-        }
+            writeFOI(dom, foiPropElt, foi);
         else
             dom.setXsiNil(obsElt, "om:featureOfInterest");
         
@@ -236,7 +230,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     }
     
     
-    protected void writeFOI(DOMHelper dom, Element foiPropElt, GenericFeature foi) throws XMLWriterException
+    protected void writeFOI(DOMHelper dom, Element foiPropElt, AbstractFeature foi) throws XMLWriterException
     {
         if (foi instanceof FeatureRef)
         {

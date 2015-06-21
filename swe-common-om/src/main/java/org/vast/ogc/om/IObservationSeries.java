@@ -44,9 +44,8 @@ import org.vast.util.TimeExtent;
 public interface IObservationSeries extends GenericFeature, ISweInputDataStream, ISweOutputDataStream
 {
     /**
-     * Get the phenomenon time extent of the series
-     * (i.e. including phenomenon times of all observation in the series)
-     * @return
+     * Get time extent including phenomenon times of all observation in the series
+     * @return the phenomenon time extent of the series
      */
     public TimeExtent getPhenomenonTimeExtent();
     
@@ -59,9 +58,8 @@ public interface IObservationSeries extends GenericFeature, ISweInputDataStream,
     
     
     /**
-     * Get the result time extent of the series
-     * (i.e. including result times of all observation in the series)
-     * @return
+     * Get time extent including result times of all observation in the series
+     * @return the result time extent of the series
      */
     public TimeExtent getResultTimeExtent();
     

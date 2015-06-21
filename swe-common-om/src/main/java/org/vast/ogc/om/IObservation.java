@@ -25,6 +25,7 @@ package org.vast.ogc.om;
 
 import java.util.List;
 import java.util.Map;
+import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.IDefinition;
 import org.vast.ogc.gml.GenericFeature;
@@ -70,9 +71,9 @@ public interface IObservation extends GenericFeature
     
     public void setObservedProperty(IXlinkReference<IDefinition> propRef);
     
-    public GenericFeature getFeatureOfInterest();
+    public AbstractFeature getFeatureOfInterest();
     
-    public void setFeatureOfInterest(GenericFeature foi);
+    public void setFeatureOfInterest(AbstractFeature foi);
     
     public IProcedure getProcedure();
     

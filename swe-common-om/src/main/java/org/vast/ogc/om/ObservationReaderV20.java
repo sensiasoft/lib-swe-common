@@ -183,23 +183,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         // read foi
         Element foiPropElt = dom.getElement(obsElt, "featureOfInterest");
         if (foiPropElt != null && !dom.existAttribute(foiPropElt, "nil"))
-        {
-            if (dom.existAttribute(foiPropElt, "href"))
-            {
-                FeatureRef ref = new FeatureRef();
-                XlinkUtils.readXlinkAttributes(dom, foiPropElt, ref);
-                obs.setFeatureOfInterest(ref);
-            }
-            else
-            {
-                Element foiElt = dom.getFirstChildElement(foiPropElt);
-                if (foiElt != null)
-                {
-                    GenericFeature foi = readFOI(dom, foiElt);
-                    obs.setFeatureOfInterest(foi);
-                }
-            }
-        }
+            obs.setFeatureOfInterest(readFOI(dom, foiPropElt));
         
         // result quality as raw XML
         NodeList qualityElts = dom.getElements(obsElt, "resultQuality/*");
@@ -225,19 +209,22 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
     }
     
     
-    protected GenericFeature readFOI(DOMHelper dom, Element foiElt) throws XMLReaderException
+    protected GenericFeature readFOI(DOMHelper dom, Element foiPropElt) throws XMLReaderException
     {
-        Element featureElt = dom.getFirstChildElement(foiElt);
+        Element featureElt = dom.getFirstChildElement(foiPropElt);
         
         if (featureElt != null)
         {
-            FeatureRef ref = new FeatureRef();
-            XlinkUtils.readXlinkAttributes(dom, foiElt, ref);
-            return ref;
-        }
-        else
-        {
             return gmlUtils.readFeature(dom, featureElt);
         }
+        
+        else if (dom.existAttribute(foiPropElt, "href"))
+        {
+            FeatureRef ref = new FeatureRef();
+            XlinkUtils.readXlinkAttributes(dom, foiPropElt, ref);
+            return ref;
+        }
+                
+        return null;
     }    
 }

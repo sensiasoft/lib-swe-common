@@ -54,10 +54,14 @@ public class GMLStaxBindings extends XMLStreamBindings
     
     public GMLStaxBindings(boolean useJTS)
     {
-        super(new GMLFactory(useJTS));
-        
-        featureTypesBindings = new HashMap<QName, IFeatureStaxBindings>();
-        
+        this(new GMLFactory(useJTS));
+    }
+    
+    
+    public GMLStaxBindings(net.opengis.gml.v32.Factory fac)
+    {
+        super(fac);
+        featureTypesBindings = new HashMap<QName, IFeatureStaxBindings>();        
         nsContext.registerNamespace(NS_PREFIX_GML, net.opengis.gml.v32.bind.XMLStreamBindings.NS_URI);
         nsContext.registerNamespace(NS_PREFIX_XLINK, net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
     }
@@ -80,7 +84,12 @@ public class GMLStaxBindings extends XMLStreamBindings
     {
         QName featureType = reader.getName();
         GenericFeature newFeature = new GenericFeatureImpl(featureType);
-        this.readAbstractFeatureType(reader, newFeature);
+                
+        Map<String, String> attrMap = collectAttributes(reader);
+        this.readAbstractFeatureTypeAttributes(attrMap, newFeature);
+        
+        reader.nextTag();
+        this.readAbstractFeatureTypeElements(reader, newFeature);
                 
         // also read all other properties in a generic manner
         while (reader.getEventType() != XMLStreamConstants.END_ELEMENT)
@@ -137,11 +146,17 @@ public class GMLStaxBindings extends XMLStreamBindings
     public void writeGenericFeature(XMLStreamWriter writer, GenericFeature bean) throws XMLStreamException
     {
         QName featureType = bean.getQName();
-        String nsUri = featureType.getNamespaceURI();
         
-        // namespace        
+        // namespace stuff
+        String nsUri = featureType.getNamespaceURI();
         if (writer.getPrefix(nsUri) == null)
-            writer.writeNamespace("ns1", nsUri);
+        {
+            String prefix = featureType.getPrefix();
+            if (prefix == null)
+                prefix = "ns1";            
+            //writer.writeNamespace(prefix, featureType.getNamespaceURI());
+            writer.setPrefix(prefix, featureType.getNamespaceURI());
+        }
         
         // element name
         writer.writeStartElement(nsUri, featureType.getLocalPart());

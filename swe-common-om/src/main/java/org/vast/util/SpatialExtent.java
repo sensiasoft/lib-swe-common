@@ -40,8 +40,7 @@ public class SpatialExtent
     
     
     /**
-     * Returns an exact copy of this SpatialExtent
-     * @return
+     * @return an exact copy of this SpatialExtent
      */
     public SpatialExtent copy()
     {
@@ -212,7 +211,7 @@ public class SpatialExtent
     /**
      * Finds out if this bbox intersects the given bbox.
      * @param bbox
-     * @return
+     * @return true if both bbox intersect
      */
     public boolean intersects(SpatialExtent bbox)
     {
@@ -244,7 +243,7 @@ public class SpatialExtent
      * Returns true if extent is completely contained
      * within this extent
      * @param bbox
-     * @return
+     * @return true if given bbox is contained in this bbox
      */
     public boolean contains(SpatialExtent bbox)
     {
@@ -272,24 +271,8 @@ public class SpatialExtent
     
     
     /**
-     * Finds out if given extent crosses this one
-     * Returns true if so.
-     * @param bbox
-     * @return
-     */
-    public boolean cross(SpatialExtent bbox)
-    {
-        checkCrs(bbox);
-        // TODO cross method
-        return true;
-    }
-    
-    
-    /**
      * Checks if extents crs are compatible
-     * @throws exception if not
      * @param bbox
-     * @return
      */
     protected void checkCrs(SpatialExtent bbox)
     {

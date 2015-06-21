@@ -86,7 +86,7 @@ public class Quat4d extends javax.vecmath.Quat4d
      * Gets Euler Angles producing a rotation equivalent to this quaternion.
      * Order of rotation for the produced Euler Angles is z, y, x (NASA convention for heading,pitch,roll)
      * Quaternion must be normalized
-     * @return
+     * @return 3D vector containing euler angles values
      */
     public Vector3d getEulerAngles()
     {

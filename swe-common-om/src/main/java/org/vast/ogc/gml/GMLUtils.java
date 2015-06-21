@@ -27,6 +27,7 @@ import java.io.InputStream;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.Envelope;
@@ -177,7 +178,7 @@ public class GMLUtils extends XMLBindingsUtils
      * @return the newly created DOM element
      * @throws XMLWriterException
      */
-    public Element writeFeature(DOMHelper dom, GenericFeature feature) throws XMLWriterException
+    public Element writeFeature(DOMHelper dom, AbstractFeature feature) throws XMLWriterException
     {
         dom.addNSDeclaration(GMLStaxBindings.NS_PREFIX_GML, GMLStaxBindings.NS_URI);
         return writeToDom(dom, feature, ObjectType.Feature);
@@ -298,7 +299,7 @@ public class GMLUtils extends XMLBindingsUtils
                 return;
                 
             case Feature:
-                //gmlBindings.writeGenericFeature(writer, (GenericFeature)gmlObj);
+                gmlBindings.writeAbstractFeature(writer, (AbstractFeature)gmlObj);
                 return;
         }
     }

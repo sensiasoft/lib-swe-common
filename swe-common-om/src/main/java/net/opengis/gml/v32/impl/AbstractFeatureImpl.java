@@ -83,6 +83,9 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
     @Override
     public AbstractGeometry getLocation()
     {
+        if (location == null)
+            return null;
+        
         return location.getValue();
     }
     

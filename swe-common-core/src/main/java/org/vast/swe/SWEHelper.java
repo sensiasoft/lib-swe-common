@@ -508,7 +508,7 @@ public class SWEHelper extends SWEFactory
         
         return newVector(
                 def,
-                REF_FRAME_ENU,
+                REF_FRAME_NED,
                 new String[] {"yaw", "pitch", "roll"},
                 new String[] {"Yaw Angle", "Pitch Angle", "Roll Angle"},
                 new String[] {"deg", "deg", "deg"},

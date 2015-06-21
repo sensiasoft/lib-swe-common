@@ -28,11 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.def.IDefinition;
 import org.vast.ogc.gml.GenericFeatureImpl;
-import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
 
@@ -54,7 +54,7 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     protected IProcedure procedure;
     protected Map<String, Object> parameters;
     protected IXlinkReference<IDefinition> observedProperty;
-    protected GenericFeature featureOfInterest;
+    protected AbstractFeature featureOfInterest;
     protected List<Object> resultQuality;
     protected DataComponent result;
 
@@ -159,13 +159,13 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
-    public GenericFeature getFeatureOfInterest()
+    public AbstractFeature getFeatureOfInterest()
     {
         return featureOfInterest;
     }
 
 
-    public void setFeatureOfInterest(GenericFeature featureOfInterest)
+    public void setFeatureOfInterest(AbstractFeature featureOfInterest)
     {
         this.featureOfInterest = featureOfInterest;
     }
