@@ -91,7 +91,9 @@ public class SWEHelper extends SWEFactory
     public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";
     public static final String DEF_LOCATION = SWE_PROP_URI_PREFIX + "Location";
     public static final String DEF_VELOCITY = SWE_PROP_URI_PREFIX + "Velocity";
+    public static final String DEF_ACCELERATION = SWE_PROP_URI_PREFIX + "Acceleration";
     public static final String DEF_ORIENTATION = SWE_PROP_URI_PREFIX + "Orientation";
+    public static final String DEF_ANGULAR_RATE = SWE_PROP_URI_PREFIX + "AngularRate";
     public static final String DEF_IMAGE = SWE_PROP_URI_PREFIX + "Image";
     
     
@@ -475,6 +477,28 @@ public class SWEHelper extends SWEFactory
     
     
     /**
+     * Creates a 3D acceleration vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of acceleration vector (if null, {@value #DEF_ACCELERATION} is used)
+     * @param refFrame reference frame within which the vector is expressed
+     * @param uomCode unit of acceleration to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newAccelerationVector(String def, String refFrame, String uomCode)
+    {
+        if (def == null)
+            def = DEF_ACCELERATION;
+        
+        return newVector(
+                def,
+                refFrame,
+                new String[] {"ax", "ay", "az"},
+                new String[] {"X Accel", "Y Accel", "Z Accel"},
+                new String[] {uomCode, uomCode, uomCode},
+                new String[] {"X", "Y", "Z"});
+    }
+    
+    
+    /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
      * East-North-Up (ENU) frame (order of rotations is Z, X, Y)
      * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
@@ -582,6 +606,28 @@ public class SWEHelper extends SWEFactory
     public Vector newQuatOrientationECEF(String def)
     {
         return newQuatOrientation(def, REF_FRAME_ECEF);
+    }
+    
+    
+    /**
+     * Creates a 3D angular velocity vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of angular velocity vector (if null, {@value #DEF_ANGULAR_RATE} is used)
+     * @param refFrame reference frame within which the vector is expressed
+     * @param uomCode unit of acceleration to use on all 3 axes
+     * @return the new Vector component object
+     */
+    public Vector newAngularVelocityVector(String def, String refFrame, String uomCode)
+    {
+        if (def == null)
+            def = DEF_ANGULAR_RATE;
+        
+        return newVector(
+                def,
+                refFrame,
+                new String[] {"rx", "ry", "rz"},
+                new String[] {"X Angular Rate", "Y Angular Rate", "Z Angular Rate"},
+                new String[] {uomCode, uomCode, uomCode},
+                new String[] {"X", "Y", "Z"});
     }
     
     

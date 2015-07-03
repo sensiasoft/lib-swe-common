@@ -122,4 +122,16 @@ public interface SimpleComponent extends DataComponent
      * Sets the axisID property
      */
     public void setAxisID(String axisID);
+    
+    
+    /**
+     * Gets the component data type
+     */
+    public DataType getDataType();
+
+
+    /**
+     * Sets the component data type
+     */
+    public void setDataType(DataType type);
 }

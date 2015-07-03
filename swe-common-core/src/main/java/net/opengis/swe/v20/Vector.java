@@ -64,5 +64,17 @@ public interface Vector extends DataComponent, HasRefFrames
      * Adds a new coordinateAsTime property
      */
     public void addCoordinateAsTime(String name, Time coordinate);
+    
+    
+    /**
+     * Gets the component data type
+     */
+    public DataType getDataType();
+
+
+    /**
+     * Sets the component data type
+     */
+    public void setDataType(DataType type);
 
 }
