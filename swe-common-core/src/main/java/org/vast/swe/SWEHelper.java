@@ -392,7 +392,7 @@ public class SWEHelper extends SWEFactory
                 def,
                 REF_FRAME_LLA,
                 new String[] {"lat", "lon", "alt"},
-                new String[] {"Geodetic Latitude", "Longitude", "Altitude above MSL"},
+                new String[] {"Geodetic Latitude", "Longitude", "Altitude"},
                 new String[] {"deg", "deg", "m"},
                 new String[] {"Lat", "Long", "h"});
     }
