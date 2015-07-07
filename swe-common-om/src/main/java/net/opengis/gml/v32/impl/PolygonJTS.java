@@ -56,6 +56,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
     public PolygonJTS(GeometryFactory jtsFactory, int numDims)
     {
         super(null, null, jtsFactory);
+        geom.srsDimension = numDims;
     }
     
     
