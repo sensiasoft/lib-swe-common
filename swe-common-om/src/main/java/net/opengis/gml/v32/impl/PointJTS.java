@@ -65,6 +65,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
     public void setPos(double[] pos)
     {
         this.pos = pos;
+        ((JTSCoordinatesDoubleArray)getCoordinateSequence()).numDims = pos.length;
         ((JTSCoordinatesDoubleArray)getCoordinateSequence()).setPosList(pos);
         this.geometryChanged();
         geom.envelope = null;
