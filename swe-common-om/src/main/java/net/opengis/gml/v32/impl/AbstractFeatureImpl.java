@@ -122,4 +122,31 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
             this.location = new OgcPropertyImpl<AbstractGeometry>();
         this.location.setValue(location);
     }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof AbstractFeature))
+           return false;
+        
+        // features are equal if their UIDs are equal
+        String thisUid = getUniqueIdentifier();
+        String otherUid = ((AbstractFeature)obj).getUniqueIdentifier();
+        if (thisUid == null || otherUid == null)
+            return false;
+        
+        return thisUid.equals(otherUid);
+    }
+
+
+    @Override
+    public int hashCode()
+    {
+        String uid = getUniqueIdentifier();
+        if (uid == null)
+            return 0;
+        
+        return uid.hashCode();
+    }
 }

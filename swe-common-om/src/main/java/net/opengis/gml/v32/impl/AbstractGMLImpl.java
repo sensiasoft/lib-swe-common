@@ -129,6 +129,9 @@ public abstract class AbstractGMLImpl implements AbstractGML
     @Override
     public String getUniqueIdentifier()
     {
+        if (identifier == null)
+            return null;
+        
         return identifier.getValue();
     }
     
