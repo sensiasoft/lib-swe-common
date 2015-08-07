@@ -67,7 +67,7 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
     public void write(OutputStream outputStream) throws IOException
     {
         // error if no dataHandler is registered
-        if (dataHandler == null)
+        if (dataHandler == null && parentArray == null)
             throw new IllegalStateException(NO_HANDLER_ERROR);
         
         stopWriting = false;
@@ -78,7 +78,7 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
             
             // keep writing until told to stop
             do processNextElement();
-            while(!stopWriting);
+            while(!stopWriting && !endOfArray);
         }
         catch (Exception e)
         {
@@ -86,7 +86,8 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
         }
         finally
         {
-            dataComponents.clearData();
+            if (parentArray == null)
+                dataComponents.clearData(); // don't clear if we're writing the content of an array
         }
     }
     

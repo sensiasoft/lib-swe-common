@@ -26,7 +26,6 @@ import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.ByteEncoding;
 import net.opengis.swe.v20.DataArray;
-import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.EncodedValues;
 
@@ -80,15 +79,8 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
         try
         {
             DataStreamWriter writer = SWEHelper.createDataWriter(encoding);
-            writer.setDataComponents(array.getElementType().copy());
-            writer.setOutput(os);
-            
-            for (int i = 0; i < array.getElementCount().getValue(); i++)
-            {
-                DataBlock nextBlock = array.getComponent(i).getData();
-                writer.write(nextBlock);
-            }
-            
+            writer.setParentArray(array);
+            writer.write(os);            
             writer.flush();
         }
         catch (IOException e)

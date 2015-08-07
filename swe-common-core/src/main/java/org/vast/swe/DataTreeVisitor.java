@@ -191,6 +191,11 @@ public abstract class DataTreeVisitor
             // catch end of data
             if (componentStack.isEmpty())
             {
+                if (parentArray != null && parentArrayIndex == ((DataComponent)parentArray).getComponentCount())
+                    endOfArray = true;
+                
+                endDataBlock();
+                
                 // send end of data event
                 if (dataHandler != null)
                     dataHandler.endData(dataComponents, dataComponents.getData());
@@ -198,9 +203,6 @@ public abstract class DataTreeVisitor
                 // signal that a new block is starting
                 newBlock = true;
                 currentRecord = null;
-                
-                if (parentArray != null && parentArrayIndex == ((DataComponent)parentArray).getComponentCount())
-                    endOfArray = true;
                 
                 return;
             }
@@ -230,6 +232,11 @@ public abstract class DataTreeVisitor
         next = parentRecord.component.getComponent(parentRecord.index);
         currentRecord = new Record(next);
 	}
+	
+	
+	protected void endDataBlock() throws Exception
+    {        
+    }
 	
 	
 	public boolean isEndOfDataBlock()
@@ -322,7 +329,8 @@ public abstract class DataTreeVisitor
     public void setParentArray(BlockComponent parentArray)
     {
         this.parentArray = parentArray;
-        ((DataComponent)parentArray).renewDataBlock();
+        if (parsing)
+            ((DataComponent)parentArray).renewDataBlock();
         parentArrayIndex = 0;
     }
 }

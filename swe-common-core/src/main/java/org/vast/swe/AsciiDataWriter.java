@@ -45,12 +45,13 @@ public class AsciiDataWriter extends AbstractDataWriter
     protected String nextToken;
     protected int tupleSize;
     protected char[] tokenSep, blockSep;
-    protected boolean firstToken, appendBlockSeparator;
+    protected boolean firstToken;
     protected Writer outputWriter;
     
 	
 	public AsciiDataWriter()
 	{
+        firstToken = true;
 	}
 	
 	
@@ -60,16 +61,14 @@ public class AsciiDataWriter extends AbstractDataWriter
 	    outputWriter = new OutputStreamWriter(outputStream);
         tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator().toCharArray();
         blockSep = ((TextEncoding)dataEncoding).getBlockSeparator().toCharArray();
-        firstToken = true;
-        appendBlockSeparator = false;
     }
-    
-    
+	
+	
 	@Override
     public void reset()
     {
         super.reset();
-        appendBlockSeparator = true;
+        firstToken = true;
     }
 	
 	
@@ -105,19 +104,10 @@ public class AsciiDataWriter extends AbstractDataWriter
     
     protected void writeToken(String token) throws IOException
     {
-        if (!firstToken)
-        {
-            // write a block separator if this is a new block
-            if (appendBlockSeparator)
-            {
-                outputWriter.write(blockSep);
-                appendBlockSeparator = false;
-            }
-            else
-                outputWriter.write(tokenSep);
-        }
+        if (firstToken)
+            firstToken = false;
         else
-            firstToken = appendBlockSeparator = false;
+            outputWriter.write(tokenSep);
         
         if (token != null)
             outputWriter.write(token);
@@ -145,4 +135,12 @@ public class AsciiDataWriter extends AbstractDataWriter
 		
 		return true;
 	}
+    
+    
+    @Override
+    protected void endDataBlock() throws IOException
+    {
+        if (!endOfArray)
+            outputWriter.write(blockSep);
+    }
 }

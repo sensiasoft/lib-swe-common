@@ -22,6 +22,7 @@ package org.vast.cdm.common;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
@@ -67,6 +68,9 @@ public interface DataStreamWriter
 
 
     public void setDataEncoding(DataEncoding encoding);
+    
+    
+    public void setParentArray(BlockComponent parentArray);
     
     
     public void setOutput(OutputStream outputStream) throws IOException;
