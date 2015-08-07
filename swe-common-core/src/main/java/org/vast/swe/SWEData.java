@@ -21,8 +21,6 @@
 package org.vast.swe;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataBlock;
@@ -162,10 +160,8 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
        
             DataStreamParser parser = SWEHelper.createDataParser(encoding);
             parser.setDataComponents((DataComponent)getElementType());
-        	parser.setDataHandler(new DefaultParserHandler(this));
-        	
-        	InputStream dataStream = dataSource.getDataStream();
-        	parser.parse(dataStream);
+        	parser.setDataHandler(new DefaultParserHandler(this));        	
+        	parser.parse(dataSource.getDataStream());
         }
     }
     
@@ -195,11 +191,8 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
                 encoding = SWEHelper.ensureXmlCompatible(encoding);
             
             DataStreamWriter writer = SWEHelper.createDataWriter(encoding);
-            writer.setDataComponents((DataComponent)getElementType());
-            writer.setDataHandler(new DefaultWriterHandler(this, writer));
-            
-        	OutputStream dataStream = dataSink.getDataStream();
-            writer.write(dataStream);
+            writer.setParentArray(this);
+        	writer.write(dataSink.getDataStream());
             writer.flush();
             dataSink.flush();
         }
