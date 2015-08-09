@@ -23,7 +23,6 @@ package org.vast.ogc.om;
 import java.io.IOException;
 import java.io.InputStream;
 import org.vast.cdm.common.DataHandler;
-import org.vast.math.Vector3d;
 import org.vast.swe.SWEReader;
 
 
@@ -50,7 +49,7 @@ public abstract class ObservationStreamReader extends SWEReader
     }
 
     
-    public abstract Vector3d getFoiLocation();
+    public abstract double[] getFoiLocation();
 
 
     public abstract String getObservationName();
