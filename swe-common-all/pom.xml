@@ -4,7 +4,7 @@
   <artifactId>swe-common-all</artifactId>
   <version>1.0</version>
   <packaging>pom</packaging>
-  <name>SWE Common Data Framework</name>
+  <name>SWE Common Library</name>
   <url>https://github.com/sensiasoft/lib-swe-common/tree/master/swe-common-all</url>
   <description>Java bindings and associated data components for the SWE Common Data Model language</description>
   <properties>
