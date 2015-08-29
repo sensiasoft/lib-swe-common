@@ -203,7 +203,7 @@ public class DataBlockFloat extends AbstractDataBlock
 
 	public String getStringValue()
 	{
-		return Double.toString(primitiveArray[startIndex]);
+		return Float.toString(primitiveArray[startIndex]);
 	}
 
 
