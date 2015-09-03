@@ -20,7 +20,8 @@
 
 package org.vast.ogc;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
@@ -41,18 +42,18 @@ public class OGCRegistry
 {
     public final static String XLINK = "XLINK";
     protected final static String DEFAULT_OWS_VERSION = "1.0";
-    protected static Hashtable<String, Class<?>> readerClasses;
-    protected static Hashtable<String, Class<?>> writerClasses;
-    protected static Hashtable<String, String> namespaces;
-    protected static Hashtable<String, String> owsVersions;
+    protected static Map<String, String> readerClasses;
+    protected static Map<String, String> writerClasses;
+    protected static Map<String, String> namespaces;
+    protected static Map<String, String> owsVersions;
     
 
     static
     {
-        readerClasses = new Hashtable<String, Class<?>>();
-        writerClasses = new Hashtable<String, Class<?>>();
-        namespaces = new Hashtable<String, String>();
-        owsVersions = new Hashtable<String, String>();
+        readerClasses = new HashMap<String, String>();
+        writerClasses = new HashMap<String, String>();
+        namespaces = new HashMap<String, String>();
+        owsVersions = new HashMap<String, String>();
         String mapFileUrl = OGCRegistry.class.getResource("OGCRegistry.xml").toString();
         loadMaps(mapFileUrl, false);
     }
@@ -191,32 +192,6 @@ public class OGCRegistry
 
 
     /**
-     * Retrieves a registered reader class
-     * @param type
-     * @param subType
-     * @param version
-     * @return null if none found
-     */
-    public static Class<?> getReaderClass(String type, String subType, String version)
-    {
-        return getClass(readerClasses, type, subType, version);
-    }
-
-
-    /**
-     * Retrieves a registered writer class
-     * @param type
-     * @param subType
-     * @param version
-     * @return null if none found
-     */
-    public static Class<?> getWriterClass(String type, String subType, String version)
-    {
-        return getClass(writerClasses, type, subType, version);
-    }
-
-
-    /**
      * Handles registration of reader/writer classes into the tables
      * @param table
      * @param type
@@ -225,7 +200,7 @@ public class OGCRegistry
      * @param className
      * @throws IllegalStateException
      */
-    private static void addClass(Hashtable<String, Class<?>> table, String type, String subType, String version, String className) throws IllegalStateException
+    private static void addClass(Map<String, String> table, String type, String subType, String version, String className) throws IllegalStateException
     {
         type = normalizeTypeString(type);
         subType = normalizeSubtypeString(subType);
@@ -247,17 +222,8 @@ public class OGCRegistry
             key.append(version);
         }
 
-        // try to instantiate corresponding class
-        try
-        {
-            Class<?> ioClass = Class.forName(className);
-            table.put(key.toString(), ioClass);
-        }
-        catch (ClassNotFoundException e)
-        {
-            // problem if class is not found in class path
-            throw new IllegalStateException("Error while registering reader/writer Class " + className, e);
-        }
+        // store class name in table
+        table.put(key.toString(), className);
     }
 
 
@@ -270,9 +236,9 @@ public class OGCRegistry
      * @return
      * @throws IllegalStateException
      */
-    private static Class<?> getClass(Hashtable<String, Class<?>> table, String type, String subType, String version) throws IllegalStateException
+    private static String getClassName(Map<String, String> table, String type, String subType, String version) throws IllegalStateException
     {
-        Class<?> ioClass;
+        String ioClass;
         StringBuffer key;
         type = normalizeTypeString(type);
         subType = normalizeSubtypeString(subType);
@@ -354,11 +320,22 @@ public class OGCRegistry
      * @param version
      * @return
      */
-    private static Object createObject(Hashtable<String, Class<?>> table, String type, String subType, String version) throws IllegalStateException
+    private static Object createObject(Map<String, String> table, String type, String subType, String version) throws IllegalStateException
     {
-        Class<?> objClass = getClass(table, type, subType, version);
-
-        // instantiate the reader class using reflection
+        String className = getClassName(table, type, subType, version);
+        Class<?> objClass;
+        
+        // load class
+        try
+        {
+            objClass = Class.forName(className);
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new IllegalStateException("Error while registering reader/writer Class " + className, e);
+        }
+        
+        // instantiate using reflection
         try
         {
             Object obj = objClass.newInstance();
@@ -497,30 +474,10 @@ public class OGCRegistry
 
 
     /**
-     * Provides direct access to the readerClasses hashtable
-     * @return map of spec to reader classes
-     */
-    public static Hashtable<String, Class<?>> getReaderClasses()
-    {
-        return readerClasses;
-    }
-
-
-    /**
-     * Provides direct access to the writerClasses hashtable
-     * @return map of spec to writer classes
-     */
-    public static Hashtable<String, Class<?>> getWriterClasses()
-    {
-        return writerClasses;
-    }
-
-
-    /**
      * Provides direct access to the namespaceBuilders hashtable
      * @return map of spec to namespace URIs
      */
-    public static Hashtable<String, String> getNamespaces()
+    public static Map<String, String> getNamespaces()
     {
         return namespaces;
     }
