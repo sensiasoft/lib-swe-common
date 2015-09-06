@@ -169,7 +169,7 @@ public class BinaryDataWriter extends AbstractDataWriter
                     
                 case SHORT:
                     short shortValue = data.getShortValue();
-                    dataOutput.writeByte(shortValue);
+                    dataOutput.writeShort(shortValue);
                     break;
                     
                 case USHORT:
