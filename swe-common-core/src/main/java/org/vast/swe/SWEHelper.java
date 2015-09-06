@@ -34,6 +34,7 @@ import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.JSONEncoding;
 import net.opengis.swe.v20.Quantity;
@@ -677,6 +678,21 @@ public class SWEHelper extends SWEFactory
         imgRow.addComponent("pixel", imgPixel);
         imgArray.setElementType("row", imgRow);
         return imgArray;
+    }
+    
+    
+    /**
+     * Creates a data stream description with given description and encoding
+     * @param dataDescription description of each stream element
+     * @param dataEncoding data encoding spec
+     * @return the new DataStream object
+     */
+    public DataStream newDataStream(DataComponent dataDescription, DataEncoding dataEncoding)
+    {
+        DataStream ds = newDataStream();
+        ds.setElementType(dataDescription.getName(), dataDescription);
+        ds.setEncoding(dataEncoding);
+        return ds;
     }
     
     
