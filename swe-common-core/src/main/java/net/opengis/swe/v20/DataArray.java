@@ -27,9 +27,32 @@ public interface DataArray extends BlockComponent
     public DataArray copy();
     
     
+    /**
+     * @return true if array has variable size
+     */
     public boolean isVariableSize();
     
     
+    /**
+     * @return true if array has implicit variable size (i.e. the size is not
+     * specified by any component but will be included implicitely in a stream
+     * right before the array data).
+     */
     public boolean isImplicitSize();
+    
+    
+    /**
+     * Updates the size of the array (and corresponding data block if set)
+     * using the size value set in the size component
+     */
+    public void updateSize();
+    
+    
+    /**
+     * Updates the size of the array (and corresponding data block if set) to
+     * the given size. If a size component is set, its value is also updated.
+     * @param arraySize new array size
+     */
+    public void updateSize(int arraySize);
     
 }

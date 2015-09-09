@@ -475,12 +475,14 @@ public class DataArrayImpl extends AbstractArrayImpl
      */
     protected void updateSizeComponent(int newSize)
     {
-    	// update value of size data
-    	DataBlock data = getArraySizeComponent().getData();
+    	Count arraySizeComp = getArraySizeComponent();
+        
+        // update value of size data
+    	DataBlock data = arraySizeComp.getData();
         if (data == null)
         {
-            getArraySizeComponent().renewDataBlock();
-        	data = getArraySizeComponent().getData();
+            arraySizeComp.renewDataBlock();
+        	data = arraySizeComp.getData();
         }        
         data.setIntValue(newSize);
         
@@ -551,7 +553,7 @@ public class DataArrayImpl extends AbstractArrayImpl
                 for (int i=0; i<parentComponent.getComponentCount(); i++)
                 {
                     sizeComponent = parentComponent.getComponent(i);
-                    if (sizeComponent.getId().equals(sizeIdRef))
+                    if (sizeComponent.isSetId() && sizeComponent.getId().equals(sizeIdRef))
                     {
                         found = true;
                         break;

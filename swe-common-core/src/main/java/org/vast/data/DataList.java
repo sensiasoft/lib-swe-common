@@ -259,5 +259,17 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     {
         return (elementCount != null && (elementCount.hasValue() || elementCount.hasHref()));
     }
+
+
+    @Override
+    public void updateSize()
+    {        
+    }
+
+
+    @Override
+    public void updateSize(int arraySize)
+    {        
+    }
     
 }
