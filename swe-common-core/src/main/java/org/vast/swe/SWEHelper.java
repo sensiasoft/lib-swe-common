@@ -82,7 +82,8 @@ public class SWEHelper extends SWEFactory
     public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
     
     // other spatial reference frames
-    public static final String REF_FRAME_LLA = getEpsgUri(4979);
+    public static final String REF_FRAME_4979 = getEpsgUri(4979);
+    public static final String REF_FRAME_4326 = getEpsgUri(4326);
     public static final String REF_FRAME_ECEF = getEpsgUri(4978);
     public static final String REF_FRAME_ENU = "http://www.opengis.net/def/crs/OGC/0/ENU";
     public static final String REF_FRAME_NED = "http://www.opengis.net/def/crs/OGC/0/NED";
@@ -391,11 +392,31 @@ public class SWEHelper extends SWEFactory
         
         return newVector(
                 def,
-                REF_FRAME_LLA,
+                REF_FRAME_4979,
                 new String[] {"lat", "lon", "alt"},
                 new String[] {"Geodetic Latitude", "Longitude", "Altitude"},
                 new String[] {"deg", "deg", "m"},
                 new String[] {"Lat", "Long", "h"});
+    }
+    
+    
+    /**
+     * Creates a 2D location vector with latitude/longitude axes (EPSG 4326) 
+     * @param def semantic definition of location vector (if null, {@value #DEF_LOCATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newLocationVectorLatLon(String def)
+    {
+        if (def == null)
+            def = DEF_LOCATION;
+        
+        return newVector(
+                def,
+                REF_FRAME_4326,
+                new String[] {"lat", "lon"},
+                new String[] {"Geodetic Latitude", "Longitude"},
+                new String[] {"deg", "deg"},
+                new String[] {"Lat", "Long"});
     }
     
     
@@ -642,7 +663,7 @@ public class SWEHelper extends SWEFactory
     public DataArray newArray(Count sizeComponent, String eltName, DataComponent elementType)
     {
         DataArray array = newDataArray();
-        ((DataArrayImpl)array).setVariableSizeComponent(sizeComponent);
+        ((DataArrayImpl)array).setElementCount(sizeComponent);
         array.setElementType(eltName, elementType);
         return array;
     }
