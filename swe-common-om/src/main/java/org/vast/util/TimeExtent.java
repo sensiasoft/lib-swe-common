@@ -445,7 +445,7 @@ public class TimeExtent
      */
     public boolean isNull()
     {
-        return (Double.isNaN(baseTime) && !baseAtNow);
+        return (Double.isNaN(baseTime) && !baseAtNow && !beginNow && !endNow);
     }
     
     
@@ -461,7 +461,7 @@ public class TimeExtent
         if (lagTimeDelta != 0)
             return false;
         
-        if (beginNow != endNow)
+        if (!baseAtNow && (beginNow || endNow))
             return false;
         
         return true;
