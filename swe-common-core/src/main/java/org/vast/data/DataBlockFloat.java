@@ -83,6 +83,7 @@ public class DataBlockFloat extends AbstractDataBlock
     public void setUnderlyingObject(float[] primitiveArray)
     {
         this.primitiveArray = primitiveArray;
+        this.atomCount = primitiveArray.length;
     }
     
     

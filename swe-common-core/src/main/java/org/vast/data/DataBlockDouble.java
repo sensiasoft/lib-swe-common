@@ -83,6 +83,7 @@ public class DataBlockDouble extends AbstractDataBlock
     public void setUnderlyingObject(double[] primitiveArray)
     {
         this.primitiveArray = primitiveArray;
+        this.atomCount = primitiveArray.length;
     }
     
     

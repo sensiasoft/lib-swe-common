@@ -20,12 +20,19 @@ import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataRecord;
 import org.junit.Test;
+import org.vast.data.DataBlockDouble;
+import org.vast.data.DataBlockFactory;
+import org.vast.data.DataBlockInt;
+import org.vast.data.DataBlockMixed;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEHelper;
 
 
 public class TestVarSizeArrays
 {
+    static final String TEST1_FAIL_MSG = "Wrong data block size before resizing";
+    static final String TEST2_FAIL_MSG = "Wrong data block size after resizing";
+    
     SWEHelper fac = new SWEHelper();
     SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
 
@@ -45,14 +52,25 @@ public class TestVarSizeArrays
         rec.addField("pos_array", array);
         
         utils.writeComponent(System.out, rec, false, true);
-                
+             
+        // test initial size
         DataBlock data = rec.createDataBlock();
-        assertEquals("Wrong data block size", 4, data.getAtomCount());
+        assertEquals(TEST1_FAIL_MSG, 4, data.getAtomCount());
         
+        // test resizing
         int arraySize = 100;
         array.updateSize(arraySize);
         data = rec.createDataBlock();
-        assertEquals("Wrong data block size", arraySize*3+1, data.getAtomCount());        
+        assertEquals(TEST2_FAIL_MSG, arraySize*3+1, data.getAtomCount());
+        
+        // test set new datablock
+        arraySize = 50;
+        DataBlockMixed newData = new DataBlockMixed(
+                DataBlockFactory.createBlock(new int[] {arraySize}),
+                new DataBlockDouble(arraySize*3)
+        );
+        rec.setData(newData);
+        assertEquals(arraySize, array.getComponentCount());
     }
     
     
@@ -66,37 +84,35 @@ public class TestVarSizeArrays
         Count numBins = fac.newCount();
         numBins.setId("NUM_BINS");
         rec.addField("num_bins", numBins);
-        
-        DataRecord arrayGroup = fac.newDataRecord(3);
 
         DataArray array1 = fac.newDataArray();
         array1.setElementType("elt", fac.newQuantity());
         array1.setElementCount(numBins);
-        arrayGroup.addComponent("array1", array1);
+        rec.addComponent("array1", array1);
 
         DataArray array2 = fac.newDataArray();
         array2.setElementType("elt", fac.newQuantity());
         array2.setElementCount(numBins);
-        arrayGroup.addComponent("array2", array2);
+        rec.addComponent("array2", array2);
 
         DataArray array3 = fac.newDataArray();
         array3.setElementType("elt", fac.newQuantity());
         array3.setElementCount(numBins);
-        arrayGroup.addComponent("array3", array3);
-
-        rec.addComponent("data", arrayGroup);
+        rec.addComponent("array3", array3);
         
         utils.writeComponent(System.out, rec, false, true);
         
+        // test initial size
         DataBlock data = rec.createDataBlock();
-        assertEquals("Wrong data block size", 6, data.getAtomCount());
+        assertEquals(TEST1_FAIL_MSG, 6, data.getAtomCount());
         
+        // test resizing
         int arraySize = 100;
         array1.updateSize(arraySize);
         array2.updateSize();
         array3.updateSize();
         data = rec.createDataBlock();
-        assertEquals("Wrong data block size", arraySize*3+3, data.getAtomCount()); 
+        assertEquals(TEST2_FAIL_MSG, arraySize*3+3, data.getAtomCount()); 
     }
     
     
@@ -127,13 +143,13 @@ public class TestVarSizeArrays
         utils.writeEncoding(System.out, SWEHelper.getDefaultBinaryEncoding(rec), true);
         
         DataBlock data = rec.createDataBlock();
-        assertEquals("Wrong data block size", 3, data.getAtomCount());
+        assertEquals(TEST1_FAIL_MSG, 3, data.getAtomCount());
         
         int innerSize = 100;
         innerArray.updateSize(innerSize);
         int outerSize = 200;
         outerArray.updateSize(outerSize);
         data = rec.createDataBlock();
-        assertEquals("Wrong data block size", innerSize*outerSize*1+2, data.getAtomCount());        
+        assertEquals(TEST2_FAIL_MSG, innerSize*outerSize*1+2, data.getAtomCount());        
     }
 }

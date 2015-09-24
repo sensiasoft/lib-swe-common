@@ -57,19 +57,12 @@ public class SWEDataTypeUtils
     {
         double val;
         
-        try
-        {
+        if (text.equals("INF") || text.equals("+INF"))
+            val = Double.POSITIVE_INFINITY;
+        else if (text.equals("-INF"))
+            val = Double.NEGATIVE_INFINITY;
+        else
             val = Double.parseDouble(text);
-        }
-        catch (NumberFormatException e)
-        {
-            if (text.equalsIgnoreCase("-INF"))
-                val = Double.NEGATIVE_INFINITY;
-            else if (text.equalsIgnoreCase("INF") || text.equalsIgnoreCase("+INF"))
-                val = Double.POSITIVE_INFINITY;
-            else
-                throw e; 
-        }
         
         return val;
     }

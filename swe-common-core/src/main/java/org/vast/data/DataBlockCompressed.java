@@ -42,9 +42,10 @@ public class DataBlockCompressed extends AbstractDataBlock
 	}
 	
 	
-	public DataBlockCompressed(byte[] compressedData)
+	public DataBlockCompressed(byte[] compressedData, int atomCount)
 	{
 		this.compressedData = compressedData;
+		this.atomCount = atomCount;
 	}
 	
 	

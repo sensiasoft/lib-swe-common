@@ -84,6 +84,7 @@ public class DataBlockUByte extends AbstractDataBlock
     public void setUnderlyingObject(byte[] primitiveArray)
     {
         this.primitiveArray = primitiveArray;
+        this.atomCount = primitiveArray.length;
     }
     
     

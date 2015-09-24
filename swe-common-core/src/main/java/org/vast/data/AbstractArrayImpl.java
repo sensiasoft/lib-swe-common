@@ -173,7 +173,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
      * The component must have an id and exist up the data component tree
      * @param sizeComponent Count component to obtain array size from
      */
-    public void setVariableSizeComponent(Count sizeComponent)
+    protected void setVariableSizeComponent(Count sizeComponent)
     {
         assert(sizeComponent.isSetId());
         this.elementCount.setHref("#" + sizeComponent.getId());

@@ -84,6 +84,7 @@ public class DataBlockString extends AbstractDataBlock
     public void setUnderlyingObject(String[] primitiveArray)
     {
         this.primitiveArray = primitiveArray;
+        this.atomCount = primitiveArray.length;
     }
     
     

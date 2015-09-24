@@ -117,6 +117,11 @@ public class DataBlockMixed extends AbstractDataBlock
     public void setUnderlyingObject(AbstractDataBlock[] blockArray)
     {
         this.blockArray = blockArray;
+        
+        // init atom count to the whole size
+        this.atomCount = 0;
+        for (AbstractDataBlock block: blockArray)
+            this.atomCount += block.atomCount;
     }
     
     
@@ -333,10 +338,18 @@ public class DataBlockMixed extends AbstractDataBlock
 		selectBlock(0);
 		return blockArray[blockIndex].getStringValue(localIndex);
 	}
+	
 
-	public void setBlock(int blockIndex, AbstractDataBlock Block)
+	public void setBlock(int blockIndex, AbstractDataBlock dataBlock)
 	{
-		blockArray[blockIndex] = Block;
+	    // update atom count
+        AbstractDataBlock oldBlock = blockArray[blockIndex];
+        if (oldBlock != null)
+            this.atomCount -= oldBlock.atomCount;
+        this.atomCount += dataBlock.atomCount;
+        
+        // set actual child block
+        blockArray[blockIndex] = dataBlock;
 	}
 	
 	

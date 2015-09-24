@@ -17,6 +17,7 @@ package org.vast.data;
 import java.util.List;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.Count;
+import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.ValidationException;
@@ -25,8 +26,7 @@ import net.opengis.swe.v20.ValidationException;
  * <p>
  * Array of identical components. Can be of variable size.
  * In the case of a variable size array, size is actually given
- * by another component: sizeComponent which should be a DataValue
- * carrying an Integer value.
+ * by another component: sizeComponent which should be a Count.
  * There are two cases of variable size component:
  *  - The component is explicitely listed in the component tree
  *    (in this case, the count component has a parent) 
@@ -197,8 +197,8 @@ public class DataArrayImpl extends AbstractArrayImpl
         
         this.dataBlock = (AbstractDataBlock)dataBlock;
     	
-    	// update size component if variable size
-        if (isVariableSize())// && implicitSize)
+    	// always update size component if implicit variable size
+        if (isImplicitSize())
         {
         	int newSize = 0;
         	
@@ -209,11 +209,19 @@ public class DataArrayImpl extends AbstractArrayImpl
         	else
         	{
 	        	// TODO should infer array size differently (keep size int in data block??)
-	        	// TODO potential bug here with nested variable size arrays
+	        	// TODO potential bug here with nested implicit variable size arrays
 	        	newSize = dataBlock.getAtomCount() / getArrayComponent().scalarCount;
         	}
         	
         	updateSizeComponent(newSize);
+        }
+        
+        // if variable size, error if size component value is not compatible with datablock size!
+        else if (isVariableSize())
+        {
+            int arraySize = getArraySizeComponent().getData().getIntValue();
+            if (dataBlock.getAtomCount() % arraySize != 0)
+                throw new IllegalStateException("Datablock is incompatible with specified array size: " + arraySize);
         }
         
 		// also assign dataBlock to child
@@ -388,17 +396,18 @@ public class DataArrayImpl extends AbstractArrayImpl
     		int oldSize = this.currentSize;
     		
     		// stop here if parent also has variable size
-            // in this case updateSize() will be called from parent anyway!!
-            if (parent instanceof DataArrayImpl)
+            // in this case updateSize() will be called from parent anyway (see below)!!
+            if (parent instanceof DataArray)
             {
-                if (((DataArrayImpl)parent).isVariableSize())
+                if (((DataArray)parent).isVariableSize())
                     return;
             }
             
-            //  
-	    	if (getArraySizeComponent() != null)
+            // get new size from array size component
+            Count sizeComponent = getArraySizeComponent();
+	    	if (sizeComponent != null)
 	    	{
-	    		DataBlock data = getArraySizeComponent().getData();
+	    		DataBlock data = sizeComponent.getData();
 	    		if (data != null)
                 {
 	    			// continue only if sized has changed
@@ -410,10 +419,10 @@ public class DataArrayImpl extends AbstractArrayImpl
             
             // take care of variable size child array
 	    	// before we resize everything
-	    	if (getArrayComponent() instanceof DataArrayImpl)
+	    	if (sizeComponent instanceof DataArray)
             {
-                if (((DataArrayImpl)getArrayComponent()).isVariableSize())
-                    ((DataArrayImpl)getArrayComponent()).updateSize();
+                if (((DataArray)sizeComponent).isVariableSize())
+                    ((DataArray)sizeComponent).updateSize();
             }
             
             // resize datablock
@@ -541,12 +550,13 @@ public class DataArrayImpl extends AbstractArrayImpl
             return implicitElementCount;
         }
         
-	    // if elementCount value is null, try to find it in the tree
-	    if (!elementCount.hasValue())
+	    // if variable size, try to find the size component up the component tree
+        else if (isVariableSize())
 	    {
 	        String sizeIdRef = elementCount.getHref().substring(1);
 	        DataComponent parentComponent = this.parent;
 	        DataComponent sizeComponent = this;
+	        
             while (parentComponent != null)
             {
                 boolean found = false;
@@ -566,10 +576,16 @@ public class DataArrayImpl extends AbstractArrayImpl
                 parentComponent = parentComponent.getParent();
             }
             
+            if (parentComponent == null)
+                throw new IllegalStateException("Could not found array size component with ID " + sizeIdRef);
+            
             elementCount.setValue((Count)sizeComponent);
 	    }
 	    
-	    return (CountImpl)elementCount.getValue();
+        if (elementCount.hasValue())
+            return (CountImpl)elementCount.getValue();
+        else
+            throw new IllegalStateException("The array element count hasn't been set. Please use one of setElementCount() or setFixedSize() methods");
     }
 	
 	

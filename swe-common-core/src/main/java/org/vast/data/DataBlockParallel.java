@@ -47,13 +47,20 @@ public class DataBlockParallel extends AbstractDataBlock
 	
 	public void setChildBlock(int blockIndex, AbstractDataBlock dataBlock)
 	{
-	    if (blockArray[0] != null)
-	        if (blockArray[0].atomCount != dataBlock.atomCount)
+	    // check size is coherent with other child blocks
+	    for (AbstractDataBlock block: blockArray)
+	    {
+	        if (block != null && block.atomCount != dataBlock.atomCount)
 	            throw new IllegalArgumentException("All child data blocks of a parallel data block must have the same size");
+	    }
 	    
-	    if (blockArray[blockIndex] == null)
-	        this.atomCount += dataBlock.atomCount;
+	    // update atom count
+	    AbstractDataBlock oldBlock = blockArray[blockIndex];
+	    if (oldBlock != null)
+	        this.atomCount -= oldBlock.atomCount;
+	    this.atomCount += dataBlock.atomCount;
 	    
+	    // set actual child block
 	    blockArray[blockIndex] = dataBlock;
 	}
 	
@@ -112,6 +119,11 @@ public class DataBlockParallel extends AbstractDataBlock
     public void setUnderlyingObject(AbstractDataBlock[] blockArray)
     {
         this.blockArray = blockArray;
+        
+        // init atom count to the whole size
+        this.atomCount = 0;
+        for (AbstractDataBlock block: blockArray)
+            this.atomCount += block.atomCount;
     }
     
     
