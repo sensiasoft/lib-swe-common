@@ -74,10 +74,28 @@
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9.1</version>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>3.4</version>
+            <dependencies>
+               <dependency>
+                  <groupId>org.apache.maven.doxia</groupId>
+                  <artifactId>doxia-module-markdown</artifactId>
+                  <version>1.6</version>
+               </dependency>
+               <!-- Needed by Reflow Skin -->
+               <dependency>
+                  <groupId>lt.velykis.maven.skins</groupId>
+                  <artifactId>reflow-velocity-tools</artifactId>
+                  <version>1.1.1</version>
+               </dependency>
+               <dependency>
+                  <groupId>org.apache.velocity</groupId>
+                  <artifactId>velocity</artifactId>
+                  <version>1.7</version>
+               </dependency>
+            </dependencies>
             <configuration>
-               <show>public</show>
+               <skipDeploy>true</skipDeploy>
             </configuration>
          </plugin>
       </plugins>
@@ -91,5 +109,41 @@
          <id>sensiasoft</id>
          <url>scpexe://sensiasoft.net/home/ubuntu/maven-repo</url>
       </snapshotRepository>
+      <site>
+         <id>sensiasoft</id>
+         <url>scpexe://sensiasoft.net/home/ubuntu/sensorhub-site</url>
+      </site>
    </distributionManagement>
+   <reporting>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>2.6</version>
+            <reportSets>
+               <reportSet>
+                  <reports />
+               </reportSet>
+            </reportSets>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.3</version>
+            <configuration>
+               <show>public</show>
+               <links>
+                  <link>http://docs.oracle.com/javase/7/docs/api/</link>
+               </links>
+            </configuration>
+            <reportSets>
+               <reportSet>
+                  <reports>
+                     <report>javadoc</report>
+                  </reports>
+               </reportSet>
+            </reportSets>
+         </plugin>
+      </plugins>
+   </reporting>
 </project>
