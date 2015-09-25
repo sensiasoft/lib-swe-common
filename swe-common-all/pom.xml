@@ -5,7 +5,7 @@
    <version>1.0</version>
    <packaging>pom</packaging>
    <name>SWE Common Library</name>
-   <url>https://github.com/sensiasoft/lib-swe-common/tree/master/swe-common-all</url>
+   <url>http://docs.opensensorhub.org/${project.artifactId}</url>
    <description>Java bindings and associated data components for the SWE Common Data Model language</description>
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -95,7 +95,7 @@
                </dependency>
             </dependencies>
             <configuration>
-               <skipDeploy>true</skipDeploy>
+               <stagingDirectory>${session.executionRootDirectory}/../sensorhub-site/${project.artifactId}</stagingDirectory>
             </configuration>
          </plugin>
       </plugins>
@@ -110,8 +110,8 @@
          <url>scpexe://sensiasoft.net/home/ubuntu/maven-repo</url>
       </snapshotRepository>
       <site>
-         <id>sensiasoft</id>
-         <url>scpexe://sensiasoft.net/home/ubuntu/sensorhub-site</url>
+         <id>osh</id>
+         <url>http://docs.opensensorhub.org</url>
       </site>
    </distributionManagement>
    <reporting>
