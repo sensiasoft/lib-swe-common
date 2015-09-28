@@ -18,6 +18,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import org.vast.ogc.xlink.IXlinkReference;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGML;
 import net.opengis.gml.v32.AbstractGeometry;
@@ -146,20 +147,17 @@ public class GMLStaxBindings extends XMLStreamBindings
     public void writeGenericFeature(XMLStreamWriter writer, GenericFeature bean) throws XMLStreamException
     {
         QName featureType = bean.getQName();
-        
-        // namespace stuff
-        String nsUri = featureType.getNamespaceURI();
-        if (writer.getPrefix(nsUri) == null)
-        {
-            String prefix = featureType.getPrefix();
-            if (prefix == null)
-                prefix = "ns1";            
-            //writer.writeNamespace(prefix, featureType.getNamespaceURI());
-            writer.setPrefix(prefix, featureType.getNamespaceURI());
-        }
+        ensureNamespaceDecl(writer, featureType);
         
         // element name
-        writer.writeStartElement(nsUri, featureType.getLocalPart());
+        writer.writeStartElement(featureType.getNamespaceURI(), featureType.getLocalPart());
+        
+        // write property namespaces if needed
+        for (Entry<QName, Object> prop: bean.getProperties().entrySet())
+        {
+            QName propName = prop.getKey();
+            ensureNamespaceDecl(writer, propName);
+        }        
         
         // common attributes and elements from AbstractFeature
         this.writeAbstractFeatureTypeAttributes(writer, bean);
@@ -173,13 +171,44 @@ public class GMLStaxBindings extends XMLStreamBindings
             writer.writeStartElement(propName.getNamespaceURI(), propName.getLocalPart());
             
             // prop value
-            Object val = prop.getValue();            
-            writer.writeCharacters(val.toString());                
+            Object val = prop.getValue();
+            
+            if (val instanceof IXlinkReference<?>)
+            {
+                String href = ((IXlinkReference<?>) val).getHref();
+                writer.writeAttribute(XLINK_NS_URI, "href", href);
+            }
+            else if (val instanceof AbstractGeometry)
+            {
+                writeAbstractGeometry(writer, (AbstractGeometry)val);
+            }
+            else
+                writer.writeCharacters(val.toString());                
                 
             writer.writeEndElement();
         }
         
         writer.writeEndElement();
+    }
+    
+    
+    public void ensureNamespaceDecl(XMLStreamWriter writer, QName qname) throws XMLStreamException
+    {
+        String nsUri = qname.getNamespaceURI();
+        String prefix = qname.getPrefix();
+        
+        if (writer.getPrefix(nsUri) == null)
+        {
+            int i = 1;
+            while (writer.getNamespaceContext().getNamespaceURI(prefix) != null)
+            {
+                prefix = "ns" + i;
+                i++;
+            }
+            
+            writer.writeNamespace(prefix, nsUri);
+            writer.setPrefix(prefix, nsUri);
+        }
     }
     
     
