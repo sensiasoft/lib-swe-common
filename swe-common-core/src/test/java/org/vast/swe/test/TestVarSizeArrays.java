@@ -22,7 +22,6 @@ import net.opengis.swe.v20.DataRecord;
 import org.junit.Test;
 import org.vast.data.DataBlockDouble;
 import org.vast.data.DataBlockFactory;
-import org.vast.data.DataBlockInt;
 import org.vast.data.DataBlockMixed;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEHelper;

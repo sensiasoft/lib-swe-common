@@ -21,6 +21,7 @@ import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.DataChoice;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.ValidationException;
 
 
@@ -396,5 +397,12 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     public void addItem(String name, DataComponent item)
     {
         itemList.add(new OgcPropertyImpl<DataComponent>(name, (AbstractDataComponentImpl)item));
+    }
+
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
     }
 }

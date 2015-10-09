@@ -17,6 +17,7 @@ package org.vast.data;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataRecord;
 
 
@@ -123,4 +124,10 @@ public class DataRecordImpl extends AbstractRecordImpl<DataComponent> implements
         fieldList.add(new OgcPropertyImpl<DataComponent>(name, (AbstractDataComponentImpl)field));
     }
 
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
+    }
 }

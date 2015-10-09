@@ -20,6 +20,7 @@ import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.ValidationException;
 
 /**
@@ -593,4 +594,11 @@ public class DataArrayImpl extends AbstractArrayImpl
 	{
 	    return (AbstractDataComponentImpl)elementType.getValue();
 	}
+
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
+    }
 }

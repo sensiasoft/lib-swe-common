@@ -256,4 +256,8 @@ public interface DataComponent extends AbstractSWEIdentifiable, HasCopy
      * This method is faster than recreating a datablock from scratch with createDataBlock().
      */
     public void renewDataBlock();
+    
+    
+    
+    public void accept(DataComponentVisitor visitor);
 }

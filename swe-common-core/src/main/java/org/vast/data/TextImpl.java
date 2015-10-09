@@ -18,6 +18,7 @@ import java.util.List;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedTokens;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.ValidationException;
@@ -165,5 +166,12 @@ public class TextImpl extends DataValue implements Text
         if (dataBlock != null)
             text.append(" = " + dataBlock.getStringValue());
         return text.toString();
+    }
+
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
     }
 }

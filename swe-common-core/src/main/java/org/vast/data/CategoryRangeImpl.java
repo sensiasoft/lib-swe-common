@@ -19,6 +19,7 @@ import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedTokens;
 import net.opengis.swe.v20.CategoryRange;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.ValidationException;
 
@@ -200,5 +201,12 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
         }
         text.append("\n");
         return text.toString();
+    }
+
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
     }
 }

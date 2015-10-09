@@ -16,6 +16,7 @@ package org.vast.data;
 
 import java.util.List;
 import net.opengis.swe.v20.Boolean;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.ValidationException;
 
@@ -113,5 +114,12 @@ public class BooleanImpl extends DataValue implements Boolean
         if (dataBlock != null)
             text.append(" = " + dataBlock.getStringValue());
         return text.toString();
+    }
+
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
     }
 }

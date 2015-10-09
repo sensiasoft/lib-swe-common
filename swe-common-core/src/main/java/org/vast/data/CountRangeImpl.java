@@ -19,6 +19,7 @@ import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedValues;
 import net.opengis.swe.v20.CountRange;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.ValidationException;
 
@@ -193,5 +194,12 @@ import net.opengis.swe.v20.ValidationException;
             text.append(']');
         }
         return text.toString();
+    }
+
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
     }
 }

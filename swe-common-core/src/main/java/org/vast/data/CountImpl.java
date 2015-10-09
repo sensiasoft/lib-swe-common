@@ -19,6 +19,7 @@ import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedValues;
 import net.opengis.swe.v20.Count;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.ValidationException;
 
@@ -183,5 +184,12 @@ public class CountImpl extends DataValue implements Count
         if (dataBlock != null)
             text.append(" = ").append(dataBlock.getIntValue());
         return text.toString();
+    }
+
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
     }
 }

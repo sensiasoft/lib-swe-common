@@ -21,6 +21,7 @@ import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.DataArray;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.ValidationException;
 
@@ -271,5 +272,11 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     public void updateSize(int arraySize)
     {        
     }
-    
+
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
+    }
 }

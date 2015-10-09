@@ -18,6 +18,7 @@ import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataComponentVisitor;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.ScalarComponent;
@@ -228,5 +229,12 @@ public class VectorImpl extends AbstractRecordImpl<ScalarComponent> implements V
     {
         for (ScalarComponent coord: fieldList)
             coord.setDataType(type);
+    }
+
+
+    @Override
+    public void accept(DataComponentVisitor visitor)
+    {
+        visitor.visit(this);
     }
 }
