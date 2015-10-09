@@ -254,24 +254,21 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
     @Override
     public Iterator<ValueType> iterator()
     {
+        final Iterator<OgcProperty<ValueType>> it = items.iterator();
+        
+        // wrap iterator to change type
         return new Iterator<ValueType>() {
-
-            int index = 0;
             
             @Override
             public boolean hasNext()
             {
-                if (index == items.size())
-                    return false;
-                else
-                    return true;
+                return it.hasNext();
             }
 
             @Override
             public ValueType next()
             {
-                OgcProperty<ValueType> prop = items.get(index);
-                index++;
+                OgcProperty<ValueType> prop = it.next();
                 if (prop == null)
                     return null;
                 else
@@ -281,8 +278,7 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
             @Override
             public void remove()
             {
-                index--;
-                items.remove(index);
+                it.remove();
             }            
         };
     }
