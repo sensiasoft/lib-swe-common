@@ -43,7 +43,6 @@ public class FilteredWriter extends AbstractDataWriter
     {
         this.writer = writer;
         this.enabledDefUris = new HashSet<String>();
-        this.enabledDefUris.add(SWEConstants.DEF_SAMPLING_TIME);
         this.enabledDefUris.addAll(enabledDefUris);
     }
 
