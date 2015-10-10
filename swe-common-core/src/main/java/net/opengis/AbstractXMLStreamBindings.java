@@ -67,6 +67,41 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
+    public void ensureNamespaceDecl(XMLStreamWriter writer, QName qname) throws XMLStreamException
+    {
+        String newPrefix = ensurePrefix(writer, qname);
+        if (newPrefix != null)
+            writer.writeNamespace(newPrefix, qname.getNamespaceURI());
+    }
+    
+    
+    public String ensurePrefix(XMLStreamWriter writer, QName qname) throws XMLStreamException
+    {
+        String nsUri = qname.getNamespaceURI();
+        String prefix = qname.getPrefix();
+                
+        if (writer.getPrefix(nsUri) == null)
+        {
+            // try to get a prefix from this binding context
+            String contextPrefix = nsContext.getPrefix(nsUri);
+            if (contextPrefix != null)
+                prefix = contextPrefix;
+            
+            int i = 1;
+            while (writer.getNamespaceContext().getNamespaceURI(prefix) != null)
+            {
+                prefix = "ns" + i;
+                i++;
+            }
+            
+            writer.setPrefix(prefix, nsUri);
+            return prefix;
+        }
+        
+        return null;
+    }
+    
+    
     public void setNamespacePrefixes(XMLStreamWriter writer) throws XMLStreamException
     {
         writer.setNamespaceContext(nsContext);

@@ -147,17 +147,16 @@ public class GMLStaxBindings extends XMLStreamBindings
     public void writeGenericFeature(XMLStreamWriter writer, GenericFeature bean) throws XMLStreamException
     {
         QName featureType = bean.getQName();
-        ensureNamespaceDecl(writer, featureType);
+        String newPrefix = ensurePrefix(writer, featureType);
         
         // element name
         writer.writeStartElement(featureType.getNamespaceURI(), featureType.getLocalPart());
+        if (newPrefix != null)
+            writer.writeNamespace(newPrefix, featureType.getNamespaceURI());
         
         // write property namespaces if needed
         for (Entry<QName, Object> prop: bean.getProperties().entrySet())
-        {
-            QName propName = prop.getKey();
-            ensureNamespaceDecl(writer, propName);
-        }        
+            ensureNamespaceDecl(writer, prop.getKey());
         
         // common attributes and elements from AbstractFeature
         this.writeAbstractFeatureTypeAttributes(writer, bean);
@@ -189,26 +188,6 @@ public class GMLStaxBindings extends XMLStreamBindings
         }
         
         writer.writeEndElement();
-    }
-    
-    
-    public void ensureNamespaceDecl(XMLStreamWriter writer, QName qname) throws XMLStreamException
-    {
-        String nsUri = qname.getNamespaceURI();
-        String prefix = qname.getPrefix();
-        
-        if (writer.getPrefix(nsUri) == null)
-        {
-            int i = 1;
-            while (writer.getNamespaceContext().getNamespaceURI(prefix) != null)
-            {
-                prefix = "ns" + i;
-                i++;
-            }
-            
-            writer.writeNamespace(prefix, nsUri);
-            writer.setPrefix(prefix, nsUri);
-        }
     }
     
     
