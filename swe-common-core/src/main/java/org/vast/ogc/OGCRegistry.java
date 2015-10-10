@@ -22,6 +22,7 @@ package org.vast.ogc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
@@ -42,6 +43,7 @@ public class OGCRegistry
 {
     public final static String XLINK = "XLINK";
     protected final static String DEFAULT_OWS_VERSION = "1.0";
+    protected final static Pattern versionNormalizePattern = Pattern.compile("(\\.0)+$");
     protected static Map<String, String> readerClasses;
     protected static Map<String, String> writerClasses;
     protected static Map<String, String> namespaces;
@@ -459,14 +461,8 @@ public class OGCRegistry
     {
         if (version != null && version.length() > 0 && !version.equalsIgnoreCase("*"))
         {
-            int lastPeriod = version.length();
-
-            // remove trailing zeros
-            // ex: 1.0.0 => 1 and 1.0 => 1 so that they map to the same version
-            while (lastPeriod > 1 && version.charAt(lastPeriod - 1) == '0')
-                lastPeriod = version.lastIndexOf('.', lastPeriod - 1);
-
-            return version.substring(0, lastPeriod);
+            version = versionNormalizePattern.matcher(version).replaceAll("");
+            return version;
         }
         else
             return null;
