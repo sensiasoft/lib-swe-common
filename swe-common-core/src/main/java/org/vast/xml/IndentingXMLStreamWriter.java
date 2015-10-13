@@ -189,6 +189,14 @@ public class IndentingXMLStreamWriter extends DelegatingXMLStreamWriter
         onEndElement();
         writer.writeEndElement();
     }
+    
+    
+    @Override
+    public void writeEndDocument() throws XMLStreamException
+    {
+        writer.writeCharacters(NEW_LINE);
+        writer.writeEndDocument();
+    }
 
 
     @Override
@@ -212,13 +220,5 @@ public class IndentingXMLStreamWriter extends DelegatingXMLStreamWriter
     {
         state = SEEN_DATA;
         writer.writeCData(data);
-    }
-
-
-    @Override
-    public void close() throws XMLStreamException
-    {
-        writer.writeCharacters(NEW_LINE);
-        writer.close();
-    }
+    }    
 }
