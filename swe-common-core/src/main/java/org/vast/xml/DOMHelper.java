@@ -65,6 +65,7 @@ public class DOMHelper
     protected String[] wantedPath;
     protected QName eltQName = new QName();
     protected boolean validation = false;
+    public final static String DEFAULT_PREFIX = "_NIL_";
     
 
     public DOMHelper()
@@ -787,7 +788,7 @@ public class DOMHelper
             elt = addElement(startElement, attPath);
         
         QName qnameObj = getQName(getParentDocument(elt), attName);
-        if (qnameObj.getNsUri() == null || qnameObj.getPrefix().equals(QName.DEFAULT_PREFIX))
+        if (qnameObj.getNsUri() == null || qnameObj.getPrefix().equals(DOMHelper.DEFAULT_PREFIX))
             elt.setAttribute(attName, val);
         else
             elt.setAttributeNS(qnameObj.getNsUri(), qnameObj.getFullName(), val);
@@ -1286,7 +1287,7 @@ public class DOMHelper
         
         if (nsUri == null)
         {
-            if (eltQName.prefix != QName.DEFAULT_PREFIX)
+            if (eltQName.prefix != DOMHelper.DEFAULT_PREFIX)
                 throw new IllegalStateException("No namespace URI defined for user prefix " + eltQName.prefix);
             eltQName.nsUri = null;
             return eltQName;

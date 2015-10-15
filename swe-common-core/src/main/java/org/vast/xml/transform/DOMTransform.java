@@ -22,13 +22,12 @@ package org.vast.xml.transform;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.vast.xml.DOMHelper;
-import org.vast.xml.QName;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 
 public class DOMTransform
 {
@@ -129,16 +128,6 @@ public class DOMTransform
         if (elts != null)
             for (int i=0; i<elts.getLength(); i++)
                 applyTemplates(elts.item(i), resultNode);
-    }
-    
-    
-    protected QName getResultQName(String name)
-    {
-        QName qname = new QName(name);
-        String nsUri = srcDom.getXmlDocument().getNSUri(qname.getPrefix());
-        String resPrefix = resDom.getXmlDocument().getNSPrefix(nsUri);
-        qname.setPrefix(resPrefix);
-        return qname;
     }
     
     

@@ -302,7 +302,7 @@ public class XMLDocument
                 StringBuilder schemaLocText = new StringBuilder();
                 for (Entry<String,String> schemaLoc: schemaLocations.entrySet())
                 {
-                    if (!schemaLoc.getKey().equals(QName.DEFAULT_PREFIX))
+                    if (!schemaLoc.getKey().equals(DOMHelper.DEFAULT_PREFIX))
                     {
                         schemaLocText.append(schemaLoc.getKey());
                         schemaLocText.append(' ');
@@ -389,7 +389,7 @@ public class XMLDocument
                 
                 // add namespace attributes to root element
                 String attName = "xmlns";
-                if (!prefix.equals(QName.DEFAULT_PREFIX))
+                if (!prefix.equals(DOMHelper.DEFAULT_PREFIX))
                     attName += ":" + prefix;
                 elt.setAttributeNS("http://www.w3.org/2000/xmlns/", attName, uri);
             }
@@ -511,7 +511,7 @@ public class XMLDocument
             if (prefix != null && prefix.equals("xmlns"))
                 addNS(localName, val);
             else if(localName.equals("xmlns"))
-                addNS(QName.DEFAULT_PREFIX, val);
+                addNS(DOMHelper.DEFAULT_PREFIX, val);
         }
         
         // call the function for all the child nodes

@@ -29,9 +29,8 @@ package org.vast.xml;
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Dec 15, 2006
  * */
-public class QName
+class QName
 {
-    public final static String DEFAULT_PREFIX = "_NIL_";
     protected String nsUri;
     protected String prefix;
     protected String localName;
@@ -65,7 +64,7 @@ public class QName
         }
         else
         {
-            prefix = DEFAULT_PREFIX;
+            prefix = DOMHelper.DEFAULT_PREFIX;
             localName = qname;
         }
     }
@@ -73,7 +72,7 @@ public class QName
     
     public String getFullName()
     {
-        if (prefix.equals(DEFAULT_PREFIX))
+        if (prefix.equals(DOMHelper.DEFAULT_PREFIX))
             return localName;
         else
             return prefix + ":" + localName;
@@ -113,7 +112,7 @@ public class QName
     public void setPrefix(String prefix)
     {
         if (prefix == null)
-            this.prefix = DEFAULT_PREFIX;
+            this.prefix = DOMHelper.DEFAULT_PREFIX;
         else
             this.prefix = prefix;
     }
