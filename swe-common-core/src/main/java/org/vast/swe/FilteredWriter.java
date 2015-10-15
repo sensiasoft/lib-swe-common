@@ -92,16 +92,16 @@ public class FilteredWriter extends AbstractDataWriter
     @Override
     public void setDataComponents(DataComponent dataInfo)
     {
-        super.setDataComponents(dataInfo);
         writer.setDataComponents(dataInfo);
+        super.dataComponents = writer.getDataComponents();
     }
 
 
     @Override
     public void setDataEncoding(DataEncoding dataEncoding)
     {
-        super.setDataEncoding(dataEncoding);
         writer.setDataEncoding(dataEncoding);
+        super.dataEncoding = writer.getDataEncoding();
     }
 
 
