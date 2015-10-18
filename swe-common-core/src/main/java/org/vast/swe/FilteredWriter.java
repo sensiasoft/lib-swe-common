@@ -50,7 +50,7 @@ public class FilteredWriter extends AbstractDataWriter
     @Override
     protected void processAtom(ScalarComponent component) throws IOException
     {
-        if (isComponentEnabled(component))
+        if (isComponentEnabled(component) || isParentEnabled(component))
             writer.processAtom(component);
     }
 
@@ -58,18 +58,24 @@ public class FilteredWriter extends AbstractDataWriter
     @Override
     protected boolean processBlock(DataComponent component) throws IOException
     {
-        if (isComponentEnabled(component))
+        if (!isParentEnabled(component) && isComponentEnabled(component))
             enabledRecord = currentRecord;
         
         return writer.processBlock(component);
     }
     
     
-    private boolean isComponentEnabled(DataComponent component)
+    private boolean isParentEnabled(DataComponent component)
     {
         if (enabledRecord != null && componentStack.contains(enabledRecord))
             return true;
         
+        return false;
+    }
+    
+    
+    private boolean isComponentEnabled(DataComponent component)
+    {
         String defUri = component.getDefinition();
         
         if (enabledDefUris != null && defUri != null)
