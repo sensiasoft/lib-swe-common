@@ -78,7 +78,10 @@ public class FilteredWriter extends AbstractDataWriter
     {
         String defUri = component.getDefinition();
         
-        if (enabledDefUris != null && defUri != null)
+        if (defUri == null)
+            return false;
+        
+        if (enabledDefUris != null)
         {
             if (!enabledDefUris.contains(defUri))
                 return false;
