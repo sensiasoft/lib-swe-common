@@ -29,6 +29,15 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.Attribute;
+import javax.xml.stream.events.Namespace;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
+import javax.xml.transform.dom.DOMSource;
 
 
 /**
@@ -1315,5 +1324,55 @@ public class DOMHelper
             return matchingNodes.item(0);
         else
             return null;
+    }
+    
+    
+    /**
+     * Writes a DOM element using the given XMLStreamWriter
+     * @param elt DOM element to write
+     * @param writer writer object to use for serialization
+     * @throws XMLStreamException
+     */
+    public void writeToStreamWriter(Element elt, XMLStreamWriter writer) throws XMLStreamException
+    {
+        DOMSource src = new DOMSource(elt);
+        XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(src);
+        while (reader.hasNext())
+        {
+            XMLEvent e = (XMLEvent)reader.next();
+            switch(e.getEventType())
+            {
+                case XMLEvent.START_ELEMENT:
+                    StartElement startElt = e.asStartElement();
+                    javax.xml.namespace.QName qName = startElt.getName();
+                    writer.writeStartElement(qName.getPrefix(), qName.getLocalPart(), qName.getNamespaceURI());
+                    
+                    // namespace declarations
+                    Iterator<?> it = startElt.getNamespaces();
+                    while (it.hasNext())
+                    {
+                        Namespace nsDef = (Namespace)it.next();
+                        writer.writeNamespace(nsDef.getPrefix(), nsDef.getNamespaceURI());
+                    }
+                    
+                    // other attributes
+                    it = startElt.getAttributes();
+                    while (it.hasNext())
+                    {
+                        Attribute att = (Attribute)it.next();
+                        qName = att.getName();
+                        writer.writeAttribute(qName.getPrefix(), qName.getNamespaceURI(), qName.getLocalPart(), att.getValue());
+                    }
+                    break;
+                    
+                case XMLEvent.END_ELEMENT:
+                    writer.writeEndElement();
+                    break;
+                    
+                case XMLEvent.CHARACTERS:
+                    writer.writeCharacters(e.asCharacters().getData());
+                    break;
+            }
+        }
     }
 }
