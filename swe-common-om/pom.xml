@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.vast.opengis</groupId>
     <artifactId>swe-common-all</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <relativePath>../swe-common-all/pom.xml</relativePath>
   </parent>
   <dependencies>
