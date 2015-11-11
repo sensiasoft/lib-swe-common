@@ -13,7 +13,7 @@
      <dependency>
         <groupId>org.vast.opengis</groupId>
         <artifactId>swe-common-core</artifactId>
-        <version>1.0</version>
+        <version>${project.version}</version>
      </dependency>
      <dependency>
         <groupId>com.vividsolutions</groupId>
