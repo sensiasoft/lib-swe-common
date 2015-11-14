@@ -169,10 +169,20 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
     
     
     @Override
+    @SuppressWarnings("rawtypes")
     public boolean addAll(Collection<? extends ValueType> c)
     {
-        for (ValueType e: c)
-            add(e);
+        if (c instanceof OgcPropertyList)
+        {
+            items.addAll(((OgcPropertyList) c).items);
+            nameMap.putAll(((OgcPropertyList) c).nameMap);
+        }
+        else
+        {
+            for (ValueType e: c)
+                add(e);
+        }
+        
         return true;
     }
 
@@ -180,8 +190,7 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
     @Override
     public boolean addAll(int index, Collection<? extends ValueType> c)
     {
-        // TODO Auto-generated method stub
-        return false;
+        throw new UnsupportedOperationException();
     }
 
 
@@ -189,6 +198,7 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
     public void clear()
     {
         items.clear();
+        nameMap.clear();
     }
 
 
@@ -211,8 +221,7 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
     @Override
     public boolean containsAll(Collection<?> c)
     {
-        // TODO Auto-generated method stub
-        return false;
+        throw new UnsupportedOperationException();
     }
 
 
@@ -287,55 +296,58 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
     @Override
     public int lastIndexOf(Object o)
     {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public ListIterator<ValueType> listIterator()
     {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public ListIterator<ValueType> listIterator(int index)
     {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public boolean remove(Object o)
     {
-        // TODO Auto-generated method stub
-        return false;
+        boolean removed = items.remove(o);
+        if (removed)
+        {
+            OgcProperty<ValueType> prop = (OgcProperty<ValueType>)o;
+            nameMap.remove(prop.getName());
+        }
+        
+        return removed;
     }
 
 
     @Override
     public ValueType remove(int index)
     {
-        return items.remove(index).getValue();
+        OgcProperty<ValueType> prop = items.remove(index);
+        nameMap.remove(prop.getName());
+        return prop.getValue();
     }
 
 
     @Override
     public boolean removeAll(Collection<?> c)
     {
-        // TODO Auto-generated method stub
-        return false;
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public boolean retainAll(Collection<?> c)
     {
-        // TODO Auto-generated method stub
-        return false;
+        throw new UnsupportedOperationException();
     }
 
 
@@ -356,24 +368,21 @@ public class OgcPropertyList<ValueType> implements List<ValueType>
     @Override
     public List<ValueType> subList(int fromIndex, int toIndex)
     {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public Object[] toArray()
     {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public <T> T[] toArray(T[] a)
     {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException();
     }
     
     
