@@ -23,37 +23,15 @@ package org.vast.swe;
 
 /**
  * <p>
- * Constants defined by SWE Common standard
+ * Constants defined by SWE Common standard and other commonly used URIs
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
- * @since 5 mars 08
+ * @since Mar 5, 2008
  * */
 public class SWEConstants
 {
-	/* component tag names */
-    public final static String BOOL_COMPONENT_TAG = "Boolean";
-    public final static String COUNT_COMPONENT_TAG = "Count";
-    public final static String QUANTITY_COMPONENT_TAG = "Quantity";
-    public final static String TIME_COMPONENT_TAG = "Time";
-    public final static String TEXT_COMPONENT_TAG = "Text";
-    public final static String CATEGORY_COMPONENT_TAG = "Category";
-    public final static String DATARECORD_COMPONENT_TAG = "DataRecord";
-    public final static String VECTOR_COMPONENT_TAG = "Vector";
-    public final static String DATAARRAY_COMPONENT_TAG = "DataArray";
-    public final static String MATRIX_COMPONENT_TAG = "Matrix";
-    public final static String DATASTREAM_COMPONENT_TAG = "DataStream";
-    public final static String DATACHOICE_COMPONENT_TAG = "DataChoice"; 	
-	
-	/* definition URIs */
-	public final static String DEF_SAMPLING_TIME = "http://www.opengis.net/def/property/OGC/0/SamplingTime";
-	public final static String DEF_SAMPLING_LOC = "http://www.opengis.net/def/property/OGC/0/SamplingLocation";
-	public final static String DEF_SENSOR_LOC = "http://www.opengis.net/def/property/OGC/0/SensorLocation";
-	public final static String DEF_SENSOR_ORIENT = "http://www.opengis.net/def/property/OGC/0/SensorOrientation";
-	public final static String DEF_PLATFORM_LOC = "http://www.opengis.net/def/property/OGC/0/PlatformLocation";
-    public final static String DEF_PLATFORM_ORIENT = "http://www.opengis.net/def/property/OGC/0/PlatformOrientation";
-    
-    /* nil values */
+	// nil values
     public final static String NIL_ABOVE_MAX = "http://www.opengis.net/def/nil/OGC/0/AboveDetectionRange";
     public final static String NIL_BELOW_MIN = "http://www.opengis.net/def/nil/OGC/0/BelowDetectionRange";
     public final static String NIL_INAPPLICABLE = "http://www.opengis.net/def/nil/OGC/0/inapplicable";
@@ -61,5 +39,45 @@ public class SWEConstants
     public final static String NIL_TEMPLATE = "http://www.opengis.net/def/nil/OGC/0/template";
     public final static String NIL_UNKNOWN = "http://www.opengis.net/def/nil/OGC/0/unknown";
     public final static String NIL_WITHHELD = "http://www.opengis.net/def/nil/OGC/0/withheld";
+    
+    // temporal reference systems
+    public static final String TIME_REF_UTC = "http://www.opengis.net/def/trs/BIPM/0/UTC";
+    public static final String TIME_REF_GPS = "http://www.opengis.net/def/trs/USNO/0/GPS";
+    
+    // EPSG crs URI prefix
+    public static final String EPSG_URI_PREFIX = "http://www.opengis.net/def/crs/EPSG/0/";
+        
+    // other spatial reference frames
+    public static final String REF_FRAME_4979 = EPSG_URI_PREFIX + 4979;
+    public static final String REF_FRAME_4326 = EPSG_URI_PREFIX + 4326;
+    public static final String REF_FRAME_ECEF = EPSG_URI_PREFIX + 4978;
+    public static final String REF_FRAME_ECI_GCRF = "http://www.opengis.net/def/crs/IERS/0/ECI_GCRF";
+    public static final String REF_FRAME_ECI_J2000 = "http://www.opengis.net/def/crs/IERS/0/ECI_J2000";
+    public static final String REF_FRAME_ECI_M50 = "http://www.opengis.net/def/crs/IERS/0/ECI_M50";
+    public static final String REF_FRAME_ENU = "http://www.opengis.net/def/crs/OGC/0/ENU";
+    public static final String REF_FRAME_NED = "http://www.opengis.net/def/crs/OGC/0/NED";
+    
+    // vertical datums
+    public static final String VERT_DATUM_EGM96_MSL = EPSG_URI_PREFIX + 5773;
+    
+    // OGC definition URIs
+    public final static String DEF_SAMPLING_TIME = "http://www.opengis.net/def/property/OGC/0/SamplingTime";
+    public final static String DEF_SAMPLING_LOC = "http://www.opengis.net/def/property/OGC/0/SamplingLocation";
+    public final static String DEF_SENSOR_LOC = "http://www.opengis.net/def/property/OGC/0/SensorLocation";
+    public final static String DEF_SENSOR_ORIENT = "http://www.opengis.net/def/property/OGC/0/SensorOrientation";
+    public final static String DEF_PLATFORM_LOC = "http://www.opengis.net/def/property/OGC/0/PlatformLocation";
+    public final static String DEF_PLATFORM_ORIENT = "http://www.opengis.net/def/property/OGC/0/PlatformOrientation";
+    
+    // SWE definition URIs
+    public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
+    public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
+    public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";
+    public static final String DEF_LOCATION = SWE_PROP_URI_PREFIX + "Location";
+    public static final String DEF_VELOCITY = SWE_PROP_URI_PREFIX + "Velocity";
+    public static final String DEF_ACCELERATION = SWE_PROP_URI_PREFIX + "Acceleration";
+    public static final String DEF_ORIENTATION = SWE_PROP_URI_PREFIX + "Orientation";
+    public static final String DEF_ANGULAR_RATE = SWE_PROP_URI_PREFIX + "AngularRate";
+    public static final String DEF_IMAGE = SWE_PROP_URI_PREFIX + "Image";
+    public static final String DEF_MATRIX = SWE_PROP_URI_PREFIX + "Matrix";
     
 }

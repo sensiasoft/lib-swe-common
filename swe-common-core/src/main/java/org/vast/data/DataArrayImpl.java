@@ -179,7 +179,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     @Override
     public AbstractDataComponentImpl getComponent(String name)
 	{
-		if (name.equals(ARRAY_SIZE_FIELD) && isImplicitSize())
+		if (name.equals(ARRAY_SIZE_FIELD))
 		    return getArraySizeComponent();
         
 		if (!name.equals(elementType.getName()))

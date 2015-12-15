@@ -73,31 +73,6 @@ public class SWEHelper extends SWEFactory
 {  
     public final static String PATH_SEPARATOR = "/";
     
-    // temporal reference systems
-    public static final String TIME_REF_UTC = "http://www.opengis.net/def/trs/BIPM/0/UTC";
-    public static final String TIME_REF_GPS = "http://www.opengis.net/def/trs/USNO/0/GPS";
-    
-    // EPSG crs URI prefix
-    public static final String EPSG_URI_PREFIX = "http://www.opengis.net/def/crs/EPSG/0/";
-    public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
-    
-    // other spatial reference frames
-    public static final String REF_FRAME_4979 = getEpsgUri(4979);
-    public static final String REF_FRAME_4326 = getEpsgUri(4326);
-    public static final String REF_FRAME_ECEF = getEpsgUri(4978);
-    public static final String REF_FRAME_ENU = "http://www.opengis.net/def/crs/OGC/0/ENU";
-    public static final String REF_FRAME_NED = "http://www.opengis.net/def/crs/OGC/0/NED";
-    
-    // component definitions
-    public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
-    public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";
-    public static final String DEF_LOCATION = SWE_PROP_URI_PREFIX + "Location";
-    public static final String DEF_VELOCITY = SWE_PROP_URI_PREFIX + "Velocity";
-    public static final String DEF_ACCELERATION = SWE_PROP_URI_PREFIX + "Acceleration";
-    public static final String DEF_ORIENTATION = SWE_PROP_URI_PREFIX + "Orientation";
-    public static final String DEF_ANGULAR_RATE = SWE_PROP_URI_PREFIX + "AngularRate";
-    public static final String DEF_IMAGE = SWE_PROP_URI_PREFIX + "Image";
-    
     
     /**
      * @param epsgCode
@@ -105,13 +80,13 @@ public class SWEHelper extends SWEFactory
      */
     public static String getEpsgUri(int epsgCode)
     {
-        return EPSG_URI_PREFIX + epsgCode;
+        return SWEConstants.EPSG_URI_PREFIX + epsgCode;
     }
     
     
     public static String getPropertyUri(String propName)
     {
-        return SWE_PROP_URI_PREFIX + propName;
+        return SWEConstants.SWE_PROP_URI_PREFIX + propName;
     }
     
     
@@ -292,7 +267,7 @@ public class SWEHelper extends SWEFactory
      */
     public Time newTimeStampIsoUTC()
     {
-        return newTimeStamp(Time.ISO_TIME_UNIT, false, TIME_REF_UTC);
+        return newTimeStamp(Time.ISO_TIME_UNIT, false, SWEConstants.TIME_REF_UTC);
     }
     
     
@@ -302,7 +277,7 @@ public class SWEHelper extends SWEFactory
      */
     public Time newTimeStampIsoGPS()
     {
-        return newTimeStamp(Time.ISO_TIME_UNIT, false, TIME_REF_GPS);
+        return newTimeStamp(Time.ISO_TIME_UNIT, false, SWEConstants.TIME_REF_GPS);
     }
     
     
@@ -343,7 +318,7 @@ public class SWEHelper extends SWEFactory
     public Text newSystemIdComponent()
     {
         Text t = newText();
-        t.setDefinition(DEF_SYSTEM_ID);
+        t.setDefinition(SWEConstants.DEF_SYSTEM_ID);
         return t;
     }
   
@@ -362,17 +337,21 @@ public class SWEHelper extends SWEFactory
     {
         Vector loc = newVector();
         loc.setDefinition(def);
+        
+        if(crs == null)
+            crs = SWEConstants.NIL_UNKNOWN;
         loc.setReferenceFrame(crs);
 
         Quantity c;        
         for (int i = 0; i < names.length; i++)
         {
             c = newQuantity(DataType.DOUBLE);
-            //c.setDefinition(DEF_COORD);
             if (labels != null)
                 c.setLabel(labels[i]);
-            c.getUom().setCode(uoms[i]);
-            c.setAxisID(axes[i]);
+            if (uoms != null)
+                c.getUom().setCode(uoms[i]);
+            if (axes != null)
+                c.setAxisID(axes[i]);
             loc.addComponent(names[i], c);
         }
         
@@ -382,17 +361,17 @@ public class SWEHelper extends SWEFactory
     
     /**
      * Creates a 3D location vector with latitude/longitude/altitude axes (EPSG 4979) 
-     * @param def semantic definition of location vector (if null, {@value #DEF_LOCATION} is used)
+     * @param def semantic definition of location vector (if null, {@link SWEConstants#DEF_LOCATION} is used)
      * @return the new Vector component object
      */
     public Vector newLocationVectorLLA(String def)
     {
         if (def == null)
-            def = DEF_LOCATION;
+            def = SWEConstants.DEF_LOCATION;
         
         return newVector(
                 def,
-                REF_FRAME_4979,
+                SWEConstants.REF_FRAME_4979,
                 new String[] {"lat", "lon", "alt"},
                 new String[] {"Geodetic Latitude", "Longitude", "Altitude"},
                 new String[] {"deg", "deg", "m"},
@@ -402,17 +381,17 @@ public class SWEHelper extends SWEFactory
     
     /**
      * Creates a 2D location vector with latitude/longitude axes (EPSG 4326) 
-     * @param def semantic definition of location vector (if null, {@value #DEF_LOCATION} is used)
+     * @param def semantic definition of location vector (if null, {@link SWEConstants#DEF_LOCATION} is used)
      * @return the new Vector component object
      */
     public Vector newLocationVectorLatLon(String def)
     {
         if (def == null)
-            def = DEF_LOCATION;
+            def = SWEConstants.DEF_LOCATION;
         
         return newVector(
                 def,
-                REF_FRAME_4326,
+                SWEConstants.REF_FRAME_4326,
                 new String[] {"lat", "lon"},
                 new String[] {"Geodetic Latitude", "Longitude"},
                 new String[] {"deg", "deg"},
@@ -421,28 +400,44 @@ public class SWEHelper extends SWEFactory
     
     
     /**
-     * Creates a 3D location vector with ECEF X/Y/Z axes (EPSG 4978) 
-     * @param def semantic definition of location vector (if null, {@value #DEF_LOCATION} is used)
+     * Creates a 3D location vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_LOCATION} is used)
+     * @param refFrame reference frame within which the vector is expressed
+     * @param uomCode unit of distance to use on all 3 axes
      * @return the new Vector component object
      */
-    public Vector newLocationVectorECEF(String def)
+    public Vector newLocationVectorXYZ(String def, String refFrame, String uomCode)
     {
         if (def == null)
-            def = DEF_LOCATION;
+            def = SWEConstants.DEF_LOCATION;
         
         return newVector(
                 def,
-                REF_FRAME_ECEF,
+                refFrame,
                 new String[] {"x", "y", "z"},
                 new String[] {"X Pos", "Y Pos", "Z Pos"},
-                new String[] {"m", "m", "m"},
+                new String[] {uomCode, uomCode, uomCode},
                 new String[] {"X", "Y", "Z"});
     }
     
     
     /**
+     * Creates a 3D location vector with ECEF X/Y/Z axes (EPSG 4978) 
+     * @param def semantic definition of location vector (if null, {@link SWEConstants#DEF_LOCATION} is used)
+     * @return the new Vector component object
+     */
+    public Vector newLocationVectorECEF(String def)
+    {
+        if (def == null)
+            def = SWEConstants.DEF_LOCATION;
+        
+        return newLocationVectorXYZ(def, SWEConstants.REF_FRAME_ECEF, "m");
+    }
+    
+    
+    /**
      * Creates a 3D velocity vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@value #DEF_VELOCITY} is used)
+     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_VELOCITY} is used)
      * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of velocity to use on all 3 axes
      * @return the new Vector component object
@@ -450,7 +445,7 @@ public class SWEHelper extends SWEFactory
     public Vector newVelocityVector(String def, String refFrame, String uomCode)
     {
         if (def == null)
-            def = DEF_VELOCITY;
+            def = SWEConstants.DEF_VELOCITY;
         
         return newVector(
                 def,
@@ -464,43 +459,43 @@ public class SWEHelper extends SWEFactory
     
     /**
      * Creates a 3D velocity with ECEF X/Y/Z axes (EPSG 4978) 
-     * @param def semantic definition of velocity vector (if null, {@value #DEF_VELOCITY} is used)
+     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_VELOCITY} is used)
      * @param uomCode unit of velocity to use on all 3 axes
      * @return the new Vector component object
      */
     public Vector newVelocityVectorECEF(String def, String uomCode)
     {
-        return newVelocityVector(def, REF_FRAME_ECEF, uomCode);
+        return newVelocityVector(def, SWEConstants.REF_FRAME_ECEF, uomCode);
     }
     
     
     /**
      * Creates a 3D velocity with ENU X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@value #DEF_VELOCITY} is used)
+     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_VELOCITY} is used)
      * @param uomCode unit of velocity to use on all 3 axes
      * @return the new Vector component object
      */
     public Vector newVelocityVectorENU(String def, String uomCode)
     {
-        return newVelocityVector(def, REF_FRAME_ENU, uomCode);
+        return newVelocityVector(def, SWEConstants.REF_FRAME_ENU, uomCode);
     }
     
     
     /**
      * Creates a 3D velocity with NED X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@value #DEF_VELOCITY} is used)
+     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_VELOCITY} is used)
      * @param uomCode unit of velocity to use on all 3 axes
      * @return the new Vector component object
      */
     public Vector newVelocityVectorNED(String def, String uomCode)
     {
-        return newVelocityVector(def, REF_FRAME_NED, uomCode);
+        return newVelocityVector(def, SWEConstants.REF_FRAME_NED, uomCode);
     }
     
     
     /**
      * Creates a 3D acceleration vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of acceleration vector (if null, {@value #DEF_ACCELERATION} is used)
+     * @param def semantic definition of acceleration vector (if null, {@link SWEConstants#DEF_ACCELERATION} is used)
      * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of acceleration to use on all 3 axes
      * @return the new Vector component object
@@ -508,7 +503,7 @@ public class SWEHelper extends SWEFactory
     public Vector newAccelerationVector(String def, String refFrame, String uomCode)
     {
         if (def == null)
-            def = DEF_ACCELERATION;
+            def = SWEConstants.DEF_ACCELERATION;
         
         return newVector(
                 def,
@@ -523,17 +518,17 @@ public class SWEHelper extends SWEFactory
     /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
      * East-North-Up (ENU) frame (order of rotations is Z, X, Y)
-     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
      * @return the new Vector component object
      */
     public Vector newEulerOrientationENU(String def)
     {
         if (def == null)
-            def = DEF_ORIENTATION;
+            def = SWEConstants.DEF_ORIENTATION;
         
         return newVector(
                 def,
-                REF_FRAME_ENU,
+                SWEConstants.REF_FRAME_ENU,
                 new String[] {"yaw", "pitch", "roll"},
                 new String[] {"Yaw Angle", "Pitch Angle", "Roll Angle"},
                 new String[] {"deg", "deg", "deg"},
@@ -544,17 +539,17 @@ public class SWEHelper extends SWEFactory
     /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
      * North-East-Down (NED) frame (order of rotations is Z, Y, X)
-     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
      * @return the new Vector component object
      */
     public Vector newEulerOrientationNED(String def)
     {
         if (def == null)
-            def = DEF_ORIENTATION;
+            def = SWEConstants.DEF_ORIENTATION;
         
         return newVector(
                 def,
-                REF_FRAME_NED,
+                SWEConstants.REF_FRAME_NED,
                 new String[] {"yaw", "pitch", "roll"},
                 new String[] {"Yaw Angle", "Pitch Angle", "Roll Angle"},
                 new String[] {"deg", "deg", "deg"},
@@ -565,17 +560,17 @@ public class SWEHelper extends SWEFactory
     /**
      * Creates an orientation vector component composed of 3 Euler angles expressed in
      * Earth-Centered-Earth-Fixed (ECEF) frame (order of rotations is X, Y, Z)
-     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
      * @return the new Vector component object
      */
     public Vector newEulerOrientationECEF(String def)
     {
         if (def == null)
-            def = DEF_ORIENTATION;
+            def = SWEConstants.DEF_ORIENTATION;
         
         return newVector(
                 def,
-                REF_FRAME_ECEF,
+                SWEConstants.REF_FRAME_ECEF,
                 new String[] {"x", "y", "z"},
                 new String[] {"X Angle", "Y Angle", "Z Angle"},
                 new String[] {"deg", "deg", "deg"},
@@ -583,10 +578,16 @@ public class SWEHelper extends SWEFactory
     }
     
     
-    protected Vector newQuatOrientation(String def, String crs)
+    /**
+     * Creates a 4d vector representing an orientation quaternion expressed in the given frame (scalar comes first).
+     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
+     * @param crs reference frame with respect to which the coordinates of this quaternion are expressed
+     * @return the new Vector component object
+     */
+    public Vector newQuatOrientation(String def, String crs)
     {
         if (def == null)
-            def = DEF_ORIENTATION;
+            def = SWEConstants.DEF_ORIENTATION;
         
         return newVector(
                 def,
@@ -599,41 +600,41 @@ public class SWEHelper extends SWEFactory
     
     
     /**
-     * Creates a  vector representing an orientation quaternion expressed in ENU frame.
-     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * Creates a 4d vector representing an orientation quaternion expressed in ENU frame.
+     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
      * @return the new Vector component object
      */
     public Vector newQuatOrientationENU(String def)
     {
-        return newQuatOrientation(def, REF_FRAME_ENU);
+        return newQuatOrientation(def, SWEConstants.REF_FRAME_ENU);
     }
     
     
     /**
-     * Creates a  vector representing an orientation quaternion expressed in NED frame.
-     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * Creates a 4d vector representing an orientation quaternion expressed in NED frame.
+     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
      * @return the new Vector component object
      */
     public Vector newQuatOrientationNED(String def)
     {
-        return newQuatOrientation(def, REF_FRAME_NED);
+        return newQuatOrientation(def, SWEConstants.REF_FRAME_NED);
     }
     
     
     /**
-     * Creates a  vector representing an orientation quaternion expressed in ECEF frame.
-     * @param def semantic definition of orientation vector (if null, {@value #DEF_ORIENTATION} is used)
+     * Creates a 4d vector representing an orientation quaternion expressed in ECEF frame.
+     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
      * @return the new Vector component object
      */
     public Vector newQuatOrientationECEF(String def)
     {
-        return newQuatOrientation(def, REF_FRAME_ECEF);
+        return newQuatOrientation(def, SWEConstants.REF_FRAME_ECEF);
     }
     
     
     /**
      * Creates a 3D angular velocity vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of angular velocity vector (if null, {@value #DEF_ANGULAR_RATE} is used)
+     * @param def semantic definition of angular velocity vector (if null, {@link SWEConstants#DEF_ANGULAR_RATE} is used)
      * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of acceleration to use on all 3 axes
      * @return the new Vector component object
@@ -641,7 +642,7 @@ public class SWEHelper extends SWEFactory
     public Vector newAngularVelocityVector(String def, String refFrame, String uomCode)
     {
         if (def == null)
-            def = DEF_ANGULAR_RATE;
+            def = SWEConstants.DEF_ANGULAR_RATE;
         
         return newVector(
                 def,
@@ -679,7 +680,7 @@ public class SWEHelper extends SWEFactory
     public DataArray newRgbImage(int width, int height, DataType dataType)
     {
         DataArray imgArray = newDataArray(height);
-        imgArray.setDefinition(DEF_IMAGE);
+        imgArray.setDefinition(SWEConstants.DEF_IMAGE);
         DataArray imgRow = newDataArray(width);
                 
         DataRecord imgPixel = newDataRecord(3);

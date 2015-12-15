@@ -59,8 +59,8 @@ public class MatrixImpl extends DataArrayImpl implements Matrix
     @Override
     public void setElementType(String name, DataComponent component)
     {
-        if (!(component instanceof ScalarComponent))
-            throw new IllegalArgumentException("A matrix can only have scalar elements");
+        if (!(component instanceof ScalarComponent) && !(component instanceof Matrix))
+            throw new IllegalArgumentException("A matrix can only have scalar elements or a nested matrix");
         
         super.setElementType(name, component);
     }

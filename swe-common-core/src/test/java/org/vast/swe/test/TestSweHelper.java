@@ -38,8 +38,8 @@ public class TestSweHelper
     @Test
     public void testCreateQuantities() throws Exception
     {
-        utils.writeComponent(System.out, fac.newQuantity(SWEHelper.SWE_PROP_URI_PREFIX + "AirTemperature", "Air Temperature", "Temperature of air in the garden", "Cel"), false, true);
-        utils.writeComponent(System.out, fac.newQuantity(SWEHelper.SWE_PROP_URI_PREFIX + "Acceleration", "Acceleration", null, "m/s2"), false, true);
+        utils.writeComponent(System.out, fac.newQuantity(SWEHelper.getPropertyUri("AirTemperature"), "Air Temperature", "Temperature of air in the garden", "Cel"), false, true);
+        utils.writeComponent(System.out, fac.newQuantity(SWEHelper.getPropertyUri("Acceleration"), "Acceleration", null, "m/s2"), false, true);
     }
     
     
