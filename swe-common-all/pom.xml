@@ -5,7 +5,7 @@
    <version>1.1-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>SWE Common Library</name>
-   <url>http://docs.opensensorhub.org/${project.artifactId}</url>
+   <url>http://docs.opensensorhub.org</url>
    <description>Java bindings and associated data components for the SWE Common Data Model language</description>
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,11 +37,6 @@
       <system>GitHub</system>
       <url>https://github.com/sensiasoft/lib-swe-common/issues</url>
    </issueManagement>
-   <modules>
-      <module>../swe-common-core</module>
-      <module>../swe-common-om</module>
-      <module>../swe-common-video</module>
-   </modules>
    <dependencies>
       <dependency>
          <groupId>junit</groupId>
@@ -72,6 +67,26 @@
                <target>1.7</target>
             </configuration>
          </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>attach-javadoc</id>
+                  <goals>
+                     <goal>jar</goal>
+                  </goals>
+                  <configuration>
+                     <show>public</show>
+                     <notimestamp>true</notimestamp>
+                     <links>
+                        <link>http://docs.oracle.com/javase/7/docs/api/</link>
+                     </links>
+                     <detectOfflineLinks />
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
       <extensions>
          <extension>
@@ -91,37 +106,4 @@
          <url>scpexe://sensiasoft.net/home/ubuntu/maven-repo</url>
       </snapshotRepository>
    </distributionManagement>
-   <reporting>
-      <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-project-info-reports-plugin</artifactId>
-            <version>2.6</version>
-            <reportSets>
-               <reportSet>
-                  <reports />
-               </reportSet>
-            </reportSets>
-         </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10.3</version>
-            <configuration>
-               <show>public</show>
-               <notimestamp>true</notimestamp>
-               <links>
-                  <link>http://docs.oracle.com/javase/7/docs/api/</link>
-               </links>
-            </configuration>
-            <reportSets>
-               <reportSet>
-                  <reports>
-                     <report>javadoc</report>
-                  </reports>
-               </reportSet>
-            </reportSets>
-         </plugin>
-      </plugins>
-   </reporting>
 </project>
