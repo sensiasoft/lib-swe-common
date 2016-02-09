@@ -51,6 +51,7 @@ import javax.xml.transform.dom.DOMSource;
  * */
 public class DOMHelper
 {
+    public final static String XML_NS_URI = "http://www.w3.org/2000/xmlns/";
     public final static String XSI_NS_URI = "http://www.w3.org/2001/XMLSchema-instance";
     protected final static String PATH_SEPARATOR = "/";
     

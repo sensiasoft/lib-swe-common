@@ -138,6 +138,8 @@ public abstract class XMLBindingsUtils
             {
                 Node att = attribs.item(a);
                 nsUri = att.getNamespaceURI();
+                if (DOMHelper.XML_NS_URI.equals(nsUri))
+                    continue;
                 if (nsUri != null && xmlDoc.getNSPrefix(nsUri) == null)
                     xmlDoc.addNS(staxNsMap.getPrefix(nsUri), nsUri);
             }

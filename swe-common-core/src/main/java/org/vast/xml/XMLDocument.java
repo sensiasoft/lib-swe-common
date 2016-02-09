@@ -396,7 +396,7 @@ public class XMLDocument
         }
         catch (Exception e)
         {
-            throw new IllegalStateException("Impossible to initialize DOM implementation for serialization", e);
+            throw new IllegalStateException("Error while writing namespaces", e);
         }  
             
         try
