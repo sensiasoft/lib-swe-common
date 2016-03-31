@@ -22,10 +22,10 @@ import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Vector;
 import org.junit.Test;
 import org.vast.data.TextEncodingImpl;
-import org.vast.swe.GeoPosHelper;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
+import org.vast.swe.helper.GeoPosHelper;
 
 
 public class TestGeoPosHelper

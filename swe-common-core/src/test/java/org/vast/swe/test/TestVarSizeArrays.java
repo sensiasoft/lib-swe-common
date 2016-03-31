@@ -23,9 +23,9 @@ import org.junit.Test;
 import org.vast.data.DataBlockDouble;
 import org.vast.data.DataBlockFactory;
 import org.vast.data.DataBlockMixed;
-import org.vast.swe.GeoPosHelper;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEHelper;
+import org.vast.swe.helper.GeoPosHelper;
 
 
 public class TestVarSizeArrays

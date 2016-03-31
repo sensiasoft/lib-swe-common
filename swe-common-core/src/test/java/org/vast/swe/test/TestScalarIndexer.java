@@ -26,9 +26,9 @@ import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.Vector;
 import org.junit.Test;
-import org.vast.swe.GeoPosHelper;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.ScalarIndexer;
+import org.vast.swe.helper.GeoPosHelper;
 
 
 public class TestScalarIndexer

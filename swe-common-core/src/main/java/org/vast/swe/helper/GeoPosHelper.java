@@ -13,10 +13,11 @@ Developer are Copyright (C) 2016 the Initial Developer. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.swe;
+package org.vast.swe.helper;
 
 import java.util.Arrays;
 import java.util.List;
+import org.vast.swe.SWEConstants;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Vector;
@@ -32,7 +33,7 @@ import net.opengis.swe.v20.Vector;
  * @author Alex Robin
  * @since March 2016
  */
-public class GeoPosHelper extends SWEHelper
+public class GeoPosHelper extends VectorHelper
 {
 
     /**
@@ -72,28 +73,6 @@ public class GeoPosHelper extends SWEHelper
                 new String[] {"Geodetic Latitude", "Longitude"},
                 new String[] {"deg", "deg"},
                 new String[] {"Lat", "Long"});
-    }
-    
-    
-    /**
-     * Creates a 3D location vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_LOCATION} is used)
-     * @param refFrame reference frame within which the vector is expressed
-     * @param uomCode unit of distance to use on all 3 axes
-     * @return the new Vector component object
-     */
-    public Vector newLocationVectorXYZ(String def, String refFrame, String uomCode)
-    {
-        if (def == null)
-            def = SWEConstants.DEF_LOCATION;
-        
-        return newVector(
-                def,
-                refFrame,
-                new String[] {"x", "y", "z"},
-                new String[] {"X Pos", "Y Pos", "Z Pos"},
-                new String[] {uomCode, uomCode, uomCode},
-                new String[] {"X", "Y", "Z"});
     }
     
     
