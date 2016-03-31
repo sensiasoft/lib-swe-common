@@ -26,14 +26,14 @@ import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.Vector;
 import org.junit.Test;
+import org.vast.swe.GeoPosHelper;
 import org.vast.swe.SWEUtils;
-import org.vast.swe.SWEHelper;
 import org.vast.swe.ScalarIndexer;
 
 
 public class TestScalarIndexer
 {
-    SWEHelper fac = new SWEHelper();
+    GeoPosHelper fac = new GeoPosHelper();
     
     
     @Test

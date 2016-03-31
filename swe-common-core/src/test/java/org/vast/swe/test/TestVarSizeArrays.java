@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.vast.data.DataBlockDouble;
 import org.vast.data.DataBlockFactory;
 import org.vast.data.DataBlockMixed;
+import org.vast.swe.GeoPosHelper;
 import org.vast.swe.SWEUtils;
 import org.vast.swe.SWEHelper;
 
@@ -32,7 +33,7 @@ public class TestVarSizeArrays
     static final String TEST1_FAIL_MSG = "Wrong data block size before resizing";
     static final String TEST2_FAIL_MSG = "Wrong data block size after resizing";
     
-    SWEHelper fac = new SWEHelper();
+    GeoPosHelper fac = new GeoPosHelper();
     SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
 
     

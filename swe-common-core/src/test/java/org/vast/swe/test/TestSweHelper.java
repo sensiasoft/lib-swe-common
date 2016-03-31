@@ -20,12 +20,9 @@ import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataType;
-import net.opengis.swe.v20.Vector;
 import org.junit.Test;
 import org.vast.data.BinaryEncodingImpl;
-import org.vast.data.TextEncodingImpl;
 import org.vast.swe.SWEUtils;
-import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
 
 
@@ -40,29 +37,6 @@ public class TestSweHelper
     {
         utils.writeComponent(System.out, fac.newQuantity(SWEHelper.getPropertyUri("AirTemperature"), "Air Temperature", "Temperature of air in the garden", "Cel"), false, true);
         utils.writeComponent(System.out, fac.newQuantity(SWEHelper.getPropertyUri("Acceleration"), "Acceleration", null, "m/s2"), false, true);
-    }
-    
-    
-    @Test
-    public void testCreateLocationVectors() throws Exception
-    {
-        utils.writeComponent(System.out, fac.newLocationVectorLLA(SWEConstants.DEF_SENSOR_LOC), false, true);
-        utils.writeComponent(System.out, fac.newLocationVectorECEF(SWEConstants.DEF_SENSOR_LOC), false, true);
-    }
-
-    
-    @Test
-    public void testCreateOrientationVectors() throws Exception
-    {
-        // orientation vectors
-        utils.writeComponent(System.out, fac.newEulerOrientationENU(SWEConstants.DEF_SENSOR_ORIENT), false, true);
-        utils.writeComponent(System.out, fac.newEulerOrientationNED(SWEConstants.DEF_SENSOR_ORIENT), false, true);
-        utils.writeComponent(System.out, fac.newEulerOrientationECEF(SWEConstants.DEF_PLATFORM_ORIENT), false, true);
-        
-        // quaternions
-        utils.writeComponent(System.out, fac.newQuatOrientationENU(SWEConstants.DEF_SENSOR_ORIENT), false, true);
-        utils.writeComponent(System.out, fac.newQuatOrientationNED(SWEConstants.DEF_SENSOR_ORIENT), false, true);
-        utils.writeComponent(System.out, fac.newQuatOrientationECEF(SWEConstants.DEF_PLATFORM_ORIENT), false, true);
     }
     
     
@@ -85,41 +59,22 @@ public class TestSweHelper
     }
     
     
-    protected DataRecord createWeatherRecordWithLocation() throws Exception
-    {
-        DataRecord rec = createWeatherRecord();
-        rec.addField("location", fac.newLocationVectorLLA(null));
-        return rec;
-    }
-    
-    
     @Test
     public void testCreateWeatherRecord() throws Exception
     {
         utils.writeComponent(System.out, createWeatherRecord(), false, true);
-        utils.writeComponent(System.out, createWeatherRecordWithLocation(), false, true);
     }
     
     
     @Test
     public void testWrapWithTimeStamp() throws Exception
     {
-        Vector vec = fac.newLocationVectorLLA(null);
-        vec.setName("location");
+        DataRecord rec = createWeatherRecord();
+        rec.setName("weather");
         DataArray img = fac.newRgbImage(800, 600, DataType.FLOAT);
         img.setName("img");
-        DataRecord rec = fac.wrapWithTimeStamp(fac.newTimeStampIsoUTC(), vec, img);
-        utils.writeComponent(System.out, rec, false, true);
-    }
-    
-    
-    @Test
-    public void testCreateDefaultEncodingForVector() throws Exception
-    {
-        Vector vec = fac.newLocationVectorLLA(null);
-        DataEncoding encoding = SWEHelper.getDefaultEncoding(vec);
-        assertEquals(TextEncodingImpl.class, encoding.getClass());
-        utils.writeEncoding(System.out, encoding, true);
+        DataRecord all = fac.wrapWithTimeStamp(fac.newTimeStampIsoUTC(), rec, img);
+        utils.writeComponent(System.out, all, false, true);
     }
     
     
@@ -136,13 +91,13 @@ public class TestSweHelper
     @Test
     public void testGetComponentByPath() throws Exception
     {
-        DataRecord rec = createWeatherRecordWithLocation();
+        DataRecord rec = createWeatherRecord();
         DataComponent c;
         
         c = SWEHelper.findComponentByPath(rec, "temp");
         assertEquals(c.getName(), "temp");
         
-        c = SWEHelper.findComponentByPath(rec, "location/lat");
-        assertEquals(c.getName(), "lat");
+        c = SWEHelper.findComponentByPath(rec, "press");
+        assertEquals(c.getName(), "press");
     }
 }
