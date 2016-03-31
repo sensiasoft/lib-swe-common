@@ -71,6 +71,8 @@ public class CountImpl extends DataValue implements Count
     @Override
     public AllowedValues getConstraint()
     {
+        if (constraint == null)
+            return null;
         return constraint.getValue();
     }
     

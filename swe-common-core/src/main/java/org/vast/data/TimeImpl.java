@@ -106,6 +106,8 @@ public class TimeImpl extends DataValue implements Time
     @Override
     public AllowedTimes getConstraint()
     {
+        if (constraint == null)
+            return null;
         return constraint.getValue();
     }
     

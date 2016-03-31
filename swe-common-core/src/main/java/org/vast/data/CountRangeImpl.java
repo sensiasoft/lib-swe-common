@@ -73,6 +73,8 @@ import net.opengis.swe.v20.ValidationException;
     @Override
     public AllowedValues getConstraint()
     {
+        if (constraint == null)
+            return null;
         return constraint.getValue();
     }
     

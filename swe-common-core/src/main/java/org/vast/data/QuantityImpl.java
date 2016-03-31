@@ -98,6 +98,8 @@ public class QuantityImpl extends DataValue implements Quantity
     @Override
     public AllowedValues getConstraint()
     {
+        if (constraint == null)
+            return null;
         return constraint.getValue();
     }
     

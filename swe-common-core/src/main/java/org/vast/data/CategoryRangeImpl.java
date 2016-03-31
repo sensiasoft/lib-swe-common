@@ -92,6 +92,8 @@ public class CategoryRangeImpl extends AbstractRangeComponentImpl implements Cat
     @Override
     public AllowedTokens getConstraint()
     {
+        if (constraint == null)
+            return null;
         return constraint.getValue();
     }
     

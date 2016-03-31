@@ -101,6 +101,8 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
     @Override
     public AllowedValues getConstraint()
     {
+        if (constraint == null)
+            return null;
         return constraint.getValue();
     }
     

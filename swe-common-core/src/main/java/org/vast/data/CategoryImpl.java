@@ -101,6 +101,8 @@ public class CategoryImpl extends DataValue implements Category
     @Override
     public AllowedTokens getConstraint()
     {
+        if (constraint == null)
+            return null;
         return constraint.getValue();
     }
     

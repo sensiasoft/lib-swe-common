@@ -62,6 +62,8 @@ public class TextImpl extends DataValue implements Text
     @Override
     public AllowedTokens getConstraint()
     {
+        if (constraint == null)
+            return null;
         return constraint.getValue();
     }
     
