@@ -25,7 +25,7 @@ import net.opengis.swe.v20.Vector;
 
 /**
  * <p>
- * Implementation of a helper class to support geo-positioning<br/>
+ * Helper class to create SWE structures used for geo-positioning<br/>
  * This includes location and attitude but also linear velocity, angular rate,
  * and linear acceleration
  * </p>
@@ -35,16 +35,21 @@ import net.opengis.swe.v20.Vector;
  */
 public class GeoPosHelper extends VectorHelper
 {
-
+    public static final String DEF_VELOCITY = getPropertyUri("Velocity");
+    public static final String DEF_ACCELERATION = getPropertyUri("Acceleration");
+    public static final String DEF_ACCELERATION_MAG = getPropertyUri("AccelerationMagnitude");
+    public static final String DEF_ANGULAR_RATE = getPropertyUri("AngularRate");
+    
+    
     /**
      * Creates a 3D location vector with latitude/longitude/altitude axes (EPSG 4979) 
-     * @param def semantic definition of location vector (if null, {@link SWEConstants#DEF_LOCATION} is used)
+     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
      * @return the new Vector component object
      */
     public Vector newLocationVectorLLA(String def)
     {
         if (def == null)
-            def = SWEConstants.DEF_LOCATION;
+            def = DEF_LOCATION;
         
         return newVector(
                 def,
@@ -58,13 +63,13 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 2D location vector with latitude/longitude axes (EPSG 4326) 
-     * @param def semantic definition of location vector (if null, {@link SWEConstants#DEF_LOCATION} is used)
+     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
      * @return the new Vector component object
      */
     public Vector newLocationVectorLatLon(String def)
     {
         if (def == null)
-            def = SWEConstants.DEF_LOCATION;
+            def = DEF_LOCATION;
         
         return newVector(
                 def,
@@ -78,13 +83,13 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 3D location vector with ECEF X/Y/Z axes (EPSG 4978) 
-     * @param def semantic definition of location vector (if null, {@link SWEConstants#DEF_LOCATION} is used)
+     * @param def semantic definition of location vector (if null, {@link #DEF_LOCATION} is used)
      * @return the new Vector component object
      */
     public Vector newLocationVectorECEF(String def)
     {
         if (def == null)
-            def = SWEConstants.DEF_LOCATION;
+            def = DEF_LOCATION;
         
         return newLocationVectorXYZ(def, SWEConstants.REF_FRAME_ECEF, "m");
     }
@@ -92,7 +97,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 3D velocity vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_VELOCITY} is used)
+     * @param def semantic definition of velocity vector (if null, {@link #DEF_VELOCITY} is used)
      * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of velocity to use on all 3 axes
      * @return the new Vector component object
@@ -100,7 +105,7 @@ public class GeoPosHelper extends VectorHelper
     public Vector newVelocityVector(String def, String refFrame, String uomCode)
     {
         if (def == null)
-            def = SWEConstants.DEF_VELOCITY;
+            def = DEF_VELOCITY;
         
         return newVector(
                 def,
@@ -114,7 +119,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 3D velocity with ECEF X/Y/Z axes (EPSG 4978) 
-     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_VELOCITY} is used)
+     * @param def semantic definition of velocity vector (if null, {@link #DEF_VELOCITY} is used)
      * @param uomCode unit of velocity to use on all 3 axes
      * @return the new Vector component object
      */
@@ -126,7 +131,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 3D velocity with ENU X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_VELOCITY} is used)
+     * @param def semantic definition of velocity vector (if null, {@link #DEF_VELOCITY} is used)
      * @param uomCode unit of velocity to use on all 3 axes
      * @return the new Vector component object
      */
@@ -138,7 +143,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 3D velocity with NED X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_VELOCITY} is used)
+     * @param def semantic definition of velocity vector (if null, {@link #DEF_VELOCITY} is used)
      * @param uomCode unit of velocity to use on all 3 axes
      * @return the new Vector component object
      */
@@ -150,7 +155,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 3D acceleration vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of acceleration vector (if null, {@link SWEConstants#DEF_ACCELERATION} is used)
+     * @param def semantic definition of acceleration vector (if null, {@link #DEF_ACCELERATION} is used)
      * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of acceleration to use on all 3 axes
      * @return the new Vector component object
@@ -158,7 +163,7 @@ public class GeoPosHelper extends VectorHelper
     public Vector newAccelerationVector(String def, String refFrame, String uomCode)
     {
         if (def == null)
-            def = SWEConstants.DEF_ACCELERATION;
+            def = DEF_ACCELERATION;
         
         return newVector(
                 def,
@@ -173,13 +178,13 @@ public class GeoPosHelper extends VectorHelper
     /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
      * East-North-Up (ENU) frame (order of rotations is Z, X, Y)
-     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
      * @return the new Vector component object
      */
     public Vector newEulerOrientationENU(String def)
     {
         if (def == null)
-            def = SWEConstants.DEF_ORIENTATION;
+            def = DEF_ORIENTATION_EULER;
         
         return newVector(
                 def,
@@ -194,13 +199,13 @@ public class GeoPosHelper extends VectorHelper
     /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
      * North-East-Down (NED) frame (order of rotations is Z, Y, X)
-     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
      * @return the new Vector component object
      */
     public Vector newEulerOrientationNED(String def)
     {
         if (def == null)
-            def = SWEConstants.DEF_ORIENTATION;
+            def = DEF_ORIENTATION_EULER;
         
         return newVector(
                 def,
@@ -215,13 +220,13 @@ public class GeoPosHelper extends VectorHelper
     /**
      * Creates an orientation vector component composed of 3 Euler angles expressed in
      * Earth-Centered-Earth-Fixed (ECEF) frame (order of rotations is X, Y, Z)
-     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
      * @return the new Vector component object
      */
     public Vector newEulerOrientationECEF(String def)
     {
         if (def == null)
-            def = SWEConstants.DEF_ORIENTATION;
+            def = DEF_ORIENTATION_EULER;
         
         return newVector(
                 def,
@@ -235,14 +240,14 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 4d vector representing an orientation quaternion expressed in the given frame (scalar comes first).
-     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_QUAT} is used)
      * @param crs reference frame with respect to which the coordinates of this quaternion are expressed
      * @return the new Vector component object
      */
     public Vector newQuatOrientation(String def, String crs)
     {
         if (def == null)
-            def = SWEConstants.DEF_ORIENTATION;
+            def = DEF_ORIENTATION_QUAT;
         
         return newVector(
                 def,
@@ -256,7 +261,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 4d vector representing an orientation quaternion expressed in ENU frame.
-     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_QUAT} is used)
      * @return the new Vector component object
      */
     public Vector newQuatOrientationENU(String def)
@@ -267,7 +272,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 4d vector representing an orientation quaternion expressed in NED frame.
-     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_QUAT} is used)
      * @return the new Vector component object
      */
     public Vector newQuatOrientationNED(String def)
@@ -278,7 +283,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 4d vector representing an orientation quaternion expressed in ECEF frame.
-     * @param def semantic definition of orientation vector (if null, {@link SWEConstants#DEF_ORIENTATION} is used)
+     * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_QUAT} is used)
      * @return the new Vector component object
      */
     public Vector newQuatOrientationECEF(String def)
@@ -289,7 +294,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 3D angular velocity vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of angular velocity vector (if null, {@link SWEConstants#DEF_ANGULAR_RATE} is used)
+     * @param def semantic definition of angular velocity vector (if null, {@link #DEF_ANGULAR_RATE} is used)
      * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of acceleration to use on all 3 axes
      * @return the new Vector component object
@@ -297,7 +302,7 @@ public class GeoPosHelper extends VectorHelper
     public Vector newAngularVelocityVector(String def, String refFrame, String uomCode)
     {
         if (def == null)
-            def = SWEConstants.DEF_ANGULAR_RATE;
+            def = DEF_ANGULAR_RATE;
         
         return newVector(
                 def,

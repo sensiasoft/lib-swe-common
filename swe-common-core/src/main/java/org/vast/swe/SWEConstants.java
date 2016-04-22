@@ -71,12 +71,7 @@ public class SWEConstants
     // SWE definition URIs
     public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
     public static final String DEF_SYSTEM_ID = SWE_PROP_URI_PREFIX + "SystemID";
-    public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";
-    public static final String DEF_LOCATION = SWE_PROP_URI_PREFIX + "Location";
-    public static final String DEF_VELOCITY = SWE_PROP_URI_PREFIX + "Velocity";
-    public static final String DEF_ACCELERATION = SWE_PROP_URI_PREFIX + "Acceleration";
-    public static final String DEF_ORIENTATION = SWE_PROP_URI_PREFIX + "Orientation";
-    public static final String DEF_ANGULAR_RATE = SWE_PROP_URI_PREFIX + "AngularRate";
+    public static final String DEF_COORD = SWE_PROP_URI_PREFIX + "Coordinate";    
     public static final String DEF_IMAGE = SWE_PROP_URI_PREFIX + "Image";
     public static final String DEF_MATRIX = SWE_PROP_URI_PREFIX + "Matrix";
     

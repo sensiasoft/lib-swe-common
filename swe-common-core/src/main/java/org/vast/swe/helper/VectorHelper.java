@@ -14,31 +14,47 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.helper;
 
-import org.vast.swe.SWEConstants;
 import org.vast.swe.SWEHelper;
 import net.opengis.swe.v20.Matrix;
 import net.opengis.swe.v20.Vector;
 
 
+/**
+ * <p>
+ * Helper class to create SWE structures used in vector math
+ * </p>
+ *
+ * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @since March 2016
+ */
 public class VectorHelper extends SWEHelper
 {
-    public static String DEF_UNIT_VECTOR = SWEHelper.getPropertyUri("UnitVector");
-    public static String DEF_ROW = SWEHelper.getPropertyUri("Row");
-    public static String DEF_COEF = SWEHelper.getPropertyUri("Coordinate");
-    public static String DEF_ROT_MATRIX = SWEHelper.getPropertyUri("RotationMatrix");
+    public static final String DEF_UNIT_VECTOR = SWEHelper.getPropertyUri("UnitVector");
+    public static final String DEF_ROW = SWEHelper.getPropertyUri("Row");
+    public static final String DEF_COEF = SWEHelper.getPropertyUri("Coordinate");
+    public static final String DEF_ROT_MATRIX = SWEHelper.getPropertyUri("RotationMatrix");
+    public static final String DEF_LOCATION = getPropertyUri("Location");
+    public static final String DEF_ORIENTATION_EULER = getPropertyUri("OrientationEuler");
+    public static final String DEF_ORIENTATION_QUAT = getPropertyUri("OrientationQuaternion");
     
     
-    public Vector newVector3()
+    protected Vector newVector3()
     {
         return newVector3(null, null);
     }
     
     
-    public Vector newVector3(String def, String crs)
+    /**
+     * Creates a 3D vector with atrbitrary axes called u1, u2, u3
+     * @param def semantic definition of velocity vector (must be set)
+     * @param refFrame reference frame within which the vector is expressed
+     * @return the new Vector component object
+     */
+    public Vector newVector3(String def, String refFrame)
     {
         return newVector(
                 def,
-                crs,
+                refFrame,
                 new String[] {"u1", "u2", "u3"},
                 null,
                 new String[] {"1", "1", "1"},
@@ -46,14 +62,20 @@ public class VectorHelper extends SWEHelper
     }
     
     
-    public Vector newUnitVectorXYZ(String def, String crs)
+    /**
+     * Creates a 3D unit vector in an ortho-normal frame with X/Y/Z axes
+     * @param def semantic definition of velocity vector (if null, {@link #DEF_UNIT_VECTOR} is used)
+     * @param refFrame reference frame within which the vector is expressed
+     * @return the new Vector component object
+     */
+    public Vector newUnitVectorXYZ(String def, String refFrame)
     {
         if (def == null)
             def = DEF_UNIT_VECTOR;
         
         return newVector(
                 def,
-                crs,
+                refFrame,
                 new String[] {"ux", "uy", "uz"},
                 null,
                 new String[] {"1", "1", "1"},
@@ -63,7 +85,7 @@ public class VectorHelper extends SWEHelper
     
     /**
      * Creates a 3D location vector in an ortho-normal frame with X/Y/Z axes
-     * @param def semantic definition of velocity vector (if null, {@link SWEConstants#DEF_LOCATION} is used)
+     * @param def semantic definition of velocity vector (if null, {@link #DEF_LOCATION} is used)
      * @param refFrame reference frame within which the vector is expressed
      * @param uomCode unit of distance to use on all 3 axes
      * @return the new Vector component object
@@ -71,7 +93,7 @@ public class VectorHelper extends SWEHelper
     public Vector newLocationVectorXYZ(String def, String refFrame, String uomCode)
     {
         if (def == null)
-            def = SWEConstants.DEF_LOCATION;
+            def = DEF_LOCATION;
         
         return newVector(
                 def,
@@ -83,10 +105,15 @@ public class VectorHelper extends SWEHelper
     }
     
     
+    /**
+     * Creates a 3D euler angles vector with unspecified order of rotations about X/Y/Z axes.<br/>
+     * This is only used when order and axes of rotations are specified separately.
+     * @return the new Vector component object
+     */
     public Vector newEulerAngles()
     {
         return newVector(
-                SWEConstants.DEF_ORIENTATION,
+                DEF_ORIENTATION_EULER,
                 null,
                 new String[] {"r1", "r2", "r3"},
                 null,
@@ -95,13 +122,27 @@ public class VectorHelper extends SWEHelper
     }
     
     
+    /**
+     * Creates a matrix (i.e. 2D tensor) with no definition nor reference frame
+     * @param nRows number of rows
+     * @param nCols number of columns
+     * @return the new Matrix component object
+     */
     public Matrix newMatrix(int nRows, int nCols)
     {
         return newMatrix(null, null, nRows, nCols);
     }
     
     
-    public Matrix newMatrix(String def, String crs, int nRows, int nCols)
+    /**
+     * Creates a matrix (i.e. 2D tensor)
+     * @param def semantic definition of matrix (e.g. rotation matrix, stress matrix, etc.) 
+     * @param refFrame reference frame within which the matrix is expressed, if applicable, null otherwise
+     * @param nRows number of rows
+     * @param nCols number of columns
+     * @return the new Matrix component object
+     */
+    public Matrix newMatrix(String def, String refFrame, int nRows, int nCols)
     {
         Matrix row = newMatrix(nCols);
         row.setDefinition(DEF_ROW);
