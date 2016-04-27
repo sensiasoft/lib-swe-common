@@ -252,10 +252,10 @@ public class GeoPosHelper extends VectorHelper
         return newVector(
                 def,
                 crs,
-                new String[] {"q0", "qx", "qy", "qz"},
-                new String[] {"Scalar", "X Component", "Y Component", "Z Component"},
+                new String[] {"qx", "qy", "qz", "q0"},
+                new String[] {"X Component", "Y Component", "Z Component", "Scalar"},
                 new String[] {"1", "1", "1", "1"},
-                new String[] {null, "X", "Y", "Z"});
+                new String[] {"X", "Y", "Z", null});
     }
     
     
