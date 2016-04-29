@@ -214,6 +214,20 @@ public class GMLUtils extends XMLBindingsUtils
     
     
     /**
+     * Writes a {@link TimeExtent} object as a GML time period DOM element
+     * @param dom parent DOM helper instance
+     * @param timeExtent TimeExtent instance to serialize
+     * @return the newly created DOM element
+     * @throws XMLWriterException
+     */
+    public Element writeTimeExtentAsTimePeriod(DOMHelper dom, TimeExtent timeExtent) throws XMLWriterException
+    {
+        AbstractTimeGeometricPrimitive timePrimitive = timeExtentToTimePrimitive(timeExtent, true);
+        return writeTimePrimitive(dom, timePrimitive);
+    }
+    
+    
+    /**
      * Writes a {@link TimeExtent} object as a GML time primitive DOM element
      * @param dom parent DOM helper instance
      * @param timeExtent TimeExtent instance to serialize
@@ -222,7 +236,7 @@ public class GMLUtils extends XMLBindingsUtils
      */
     public Element writeTimeExtentAsTimePrimitive(DOMHelper dom, TimeExtent timeExtent) throws XMLWriterException
     {
-        AbstractTimeGeometricPrimitive timePrimitive = timeExtentToTimePrimitive(timeExtent);
+        AbstractTimeGeometricPrimitive timePrimitive = timeExtentToTimePrimitive(timeExtent, false);
         return writeTimePrimitive(dom, timePrimitive);
     }
     
@@ -358,6 +372,8 @@ public class GMLUtils extends XMLBindingsUtils
                 if (endUnknown)
                     timeExtent.setLeadTimeDelta(duration);
             }
+            else if (beginUnknown && endUnknown)
+                timeExtent.nullify();
             
             // get time step from timeInterval
             if (timePeriod.isSetTimeInterval())
@@ -374,15 +390,16 @@ public class GMLUtils extends XMLBindingsUtils
     /**
      * Utility method to convert a {@link TimeExtent} to a {@link AbstractTimeGeometricPrimitive} object
      * @param timeExtent TimeExtent object
+     * @param forcePeriod Set to true to force output to be a GML time period
      * @return new GML time primitive instance
      */
-    public AbstractTimeGeometricPrimitive timeExtentToTimePrimitive(TimeExtent timeExtent)
+    public AbstractTimeGeometricPrimitive timeExtentToTimePrimitive(TimeExtent timeExtent, boolean forcePeriod)
     {
         double begin = timeExtent.getStartTime();
         double end = timeExtent.getStopTime();
         
         // time instant
-        if (timeExtent.isTimeInstant())
+        if (timeExtent.isTimeInstant() && !forcePeriod)
         {
             TimePosition timePosition = gmlFactory.newTimePosition();
             
@@ -403,8 +420,15 @@ public class GMLUtils extends XMLBindingsUtils
             TimePosition endPosition = gmlFactory.newTimePosition();
             TimePeriod timePeriod = gmlFactory.newTimePeriod(beginPosition, endPosition);
             
+            // case of null period
+            if (timeExtent.isNull())
+            {
+                beginPosition.setIndeterminatePosition(TimeIndeterminateValue.UNKNOWN);
+                endPosition.setIndeterminatePosition(TimeIndeterminateValue.UNKNOWN);
+            }
+            
             // case of relative begin or end (now +/- period)
-            if (timeExtent.isBaseAtNow())
+            else if (timeExtent.isBaseAtNow())
             {
                 if (timeExtent.getLeadTimeDelta() > 0.0 && timeExtent.getLagTimeDelta() > 0.0)
                 {
@@ -415,12 +439,12 @@ public class GMLUtils extends XMLBindingsUtils
                 else if (timeExtent.getLagTimeDelta() == 0.0)
                 {
                     beginPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
-                    endPosition.setIndeterminatePosition(TimeIndeterminateValue.UNKNOWN);
+                    endPosition.setIndeterminatePosition(TimeIndeterminateValue.AFTER);
                     timePeriod.setDuration(timeExtent.getLeadTimeDelta());
                 }
                 else if (timeExtent.getLeadTimeDelta() == 0.0)
                 {
-                    beginPosition.setIndeterminatePosition(TimeIndeterminateValue.UNKNOWN);
+                    beginPosition.setIndeterminatePosition(TimeIndeterminateValue.BEFORE);
                     endPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
                     timePeriod.setDuration(timeExtent.getLagTimeDelta());
                 }             
