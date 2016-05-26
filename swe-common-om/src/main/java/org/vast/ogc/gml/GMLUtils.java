@@ -23,7 +23,10 @@
 
 package org.vast.ogc.gml;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
@@ -40,7 +43,9 @@ import net.opengis.gml.v32.impl.GMLFactory;
 import org.vast.util.Bbox;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
+import org.vast.xml.IndentingXMLStreamWriter;
 import org.vast.xml.XMLBindingsUtils;
+import org.vast.xml.XMLImplFinder;
 import org.vast.xml.XMLReaderException;
 import org.vast.xml.XMLWriterException;
 import org.w3c.dom.Element;
@@ -182,6 +187,26 @@ public class GMLUtils extends XMLBindingsUtils
     {
         dom.addNSDeclaration(GMLStaxBindings.NS_PREFIX_GML, GMLStaxBindings.NS_URI);
         return writeToDom(dom, feature, ObjectType.Feature);
+    }
+    
+    
+    public void writeFeature(OutputStream os, AbstractFeature feature, boolean indent) throws XMLWriterException, IOException
+    {
+        try
+        {
+            XMLOutputFactory factory = XMLImplFinder.getStaxOutputFactory();
+            XMLStreamWriter writer = factory.createXMLStreamWriter(os, encoding);
+            if (indent)
+                writer = new IndentingXMLStreamWriter(writer);
+            staxBindings.setNamespacePrefixes(writer);
+            staxBindings.declareNamespacesOnRootElement();
+            writeToXmlStream(writer, feature, ObjectType.Feature);
+            writer.close();
+        }
+        catch (XMLStreamException e)
+        {
+            throw new XMLWriterException("Error while writing " + ObjectType.Feature + " to output stream", e);
+        }
     }
     
     

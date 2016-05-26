@@ -29,6 +29,7 @@ public abstract class SamplingFeature<GeomType extends AbstractGeometry> extends
     public static final String SF_NS_URI = "http://www.opengis.net/sampling/2.0";
     
     public static final QName PROP_SAMPLED_FEATURE = new QName(SF_NS_URI, "sampledFeature", SF_NS_PREFIX);
+    public static final QName PROP_HOSTED_PROCEDURE = new QName(SAMS_NS_URI, "hostedProcedure", SAMS_NS_PREFIX);
     public static final QName PROP_SHAPE = new QName(SAMS_NS_URI, "shape", SAMS_NS_PREFIX);
     
     
@@ -57,6 +58,21 @@ public abstract class SamplingFeature<GeomType extends AbstractGeometry> extends
     }
     
     
+    public void setHostedProcedureUID(String processUID)
+    {
+        setProperty(PROP_HOSTED_PROCEDURE, new FeatureRef(processUID));
+    }
+    
+    
+    public String getHostedProcedureUID()
+    {
+        FeatureRef ref = (FeatureRef)getProperty(PROP_HOSTED_PROCEDURE);
+        if (ref == null)
+            return null;
+        return ref.getHref();
+    }
+    
+    
     public void setShape(GeomType geom)
     {
         setProperty(PROP_SHAPE, geom);
@@ -66,6 +82,17 @@ public abstract class SamplingFeature<GeomType extends AbstractGeometry> extends
     public GeomType getShape()
     {
         return (GeomType)getProperty(PROP_SHAPE);
+    }
+    
+
+    @Override
+    public AbstractGeometry getLocation()
+    {
+        AbstractGeometry location = super.getLocation();
+        if (location != null)
+            return location;
+        else
+            return getShape();
     }
 
 }

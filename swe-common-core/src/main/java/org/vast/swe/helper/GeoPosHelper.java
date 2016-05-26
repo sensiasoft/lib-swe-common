@@ -177,7 +177,7 @@ public class GeoPosHelper extends VectorHelper
     
     /**
      * Creates a 3D orientation vector composed of 3 Euler angles expressed in local
-     * East-North-Up (ENU) frame (order of rotations is Z, X, Y)
+     * East-North-Up (ENU) frame (order of rotations is Z, X, Y in rotating frame)
      * @param def semantic definition of orientation vector (if null, {@link #DEF_ORIENTATION_EULER} is used)
      * @return the new Vector component object
      */
