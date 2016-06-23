@@ -19,13 +19,11 @@ import net.opengis.gml.v32.LineString;
 
 public class SamplingCurve extends SamplingFeature<LineString>
 {
-    
+    public final static String TYPE = "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingCurve";
+            
+            
     public SamplingCurve()
     {
-        super("http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingCurve");
+        super(TYPE);
     }
-    
-    
-    
-
 }

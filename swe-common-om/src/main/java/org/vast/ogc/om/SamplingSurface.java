@@ -19,13 +19,11 @@ import net.opengis.gml.v32.Polygon;
 
 public class SamplingSurface extends SamplingFeature<Polygon>
 {
+    public final static String TYPE = "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface";
+    
     
     public SamplingSurface()
     {
-        super("http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface");
+        super(TYPE);
     }
-    
-    
-    
-
 }
