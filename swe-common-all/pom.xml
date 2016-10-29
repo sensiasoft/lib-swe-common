@@ -2,7 +2,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.vast.opengis</groupId>
    <artifactId>swe-common-all</artifactId>
-   <version>1.1-beta1</version>
+   <version>1.1.0</version>
    <packaging>pom</packaging>
    <name>SWE Common Library</name>
    <url>http://docs.opensensorhub.org</url>
