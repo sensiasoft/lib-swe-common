@@ -35,6 +35,13 @@ public class DataComponentPropertyList<ComponentType extends DataComponent> exte
     AbstractDataComponentImpl parent;
     
     
+    @SuppressWarnings("unused")
+    private DataComponentPropertyList()
+    {
+        super();
+    }
+    
+    
     public DataComponentPropertyList(AbstractDataComponentImpl parent)
     {
         this.parent = parent;
@@ -74,7 +81,8 @@ public class DataComponentPropertyList<ComponentType extends DataComponent> exte
     public boolean add(ComponentType component)
     {
         ((AbstractDataComponentImpl)component).setParent(parent);
-        return super.add(component);
+        super.add(component.getName(), component);
+        return true;
     }
     
 
