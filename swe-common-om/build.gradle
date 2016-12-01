@@ -1,7 +1,26 @@
 group = 'org.vast.opengis'
-description = 'SWE Common OM and GML Models'
+description = 'SWE O&M and GML Models'
 
 dependencies {
-    compile project(':swe-common-core')
-    compile 'com.vividsolutions:jts:1.13'
+  compile project(':swe-common-core')
+  compile 'com.vividsolutions:jts:1.13'
+}
+
+// add info to OSGI manifest
+jar {
+  manifest {
+    instruction 'Bundle-Vendor', 'Sensia Software LLC'
+  }
+}
+
+// add info to maven pom
+ext.pom >>= {
+  developers {
+    developer {
+      id 'alexrobin'
+      name 'Alex Robin'
+      organization 'Sensia Software LLC'
+      organizationUrl 'http://www.sensiasoftware.com' 
+    }
+  } 
 }
