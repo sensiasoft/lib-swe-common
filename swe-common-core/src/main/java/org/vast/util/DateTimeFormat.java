@@ -44,6 +44,8 @@ public class DateTimeFormat extends SimpleDateFormat
 	public static int SECONDS_IN_MONTH = 30 * SECONDS_IN_DAY;
 	public static int SECONDS_IN_YEAR = 365 * SECONDS_IN_MONTH;
 	
+	Calendar calendar = new GregorianCalendar();
+	
 	
 	public DateTimeFormat()
 	{
@@ -154,8 +156,6 @@ public class DateTimeFormat extends SimpleDateFormat
 	{
 		try
 		{
-			Calendar calendar = new GregorianCalendar();
-			
 			int hour = 0;
 			int minute = 0;
 			int second = 0;
@@ -208,7 +208,7 @@ public class DateTimeFormat extends SimpleDateFormat
 		}
 		catch (Exception e)
 		{
-			throw new ParseException("Invalid ISO 8601 time string", 0);
+			throw new ParseException("Invalid ISO 8601 time string: " + iso8601, 0);
 		}
 	}
 	
