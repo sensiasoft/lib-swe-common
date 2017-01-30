@@ -422,4 +422,13 @@ public abstract class AbstractBindings
         sb.setLength(sb.length()-1);
         return sb.toString();
     }
+    
+    
+    protected String trimStringValue(String text)
+    {
+        if (text == null)
+            return null;
+        
+        return text.trim();
+    }
 }

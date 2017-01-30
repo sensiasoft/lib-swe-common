@@ -2225,7 +2225,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             val = reader.getElementText();
             if (val != null)
-                bean.setValue(val);
+                bean.setValue(trimStringValue(val));
             reader.nextTag();
         }
     }
@@ -2350,7 +2350,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             val = reader.getElementText();
             if (val != null)
-                bean.setValue(val);
+                bean.setValue(trimStringValue(val));
             reader.nextTag();
         }
     }
@@ -2856,7 +2856,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             {
                 val = reader.getElementText();
                 if (val != null)
-                    bean.addValue(val);
+                    bean.addValue(trimStringValue(val));
                 reader.nextTag();
             }
         }
@@ -2868,7 +2868,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             val = reader.getElementText();
             if (val != null)
-                bean.setPattern(val);
+                bean.setPattern(trimStringValue(val));
             reader.nextTag();
         }
     }
@@ -3512,7 +3512,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             val = reader.getElementText();
             if (val != null)
-                bean.setIdentifier(val);
+                bean.setIdentifier(trimStringValue(val));
             reader.nextTag();
         }
         
@@ -3522,7 +3522,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             val = reader.getElementText();
             if (val != null)
-                bean.setLabel(val);
+                bean.setLabel(trimStringValue(val));
             reader.nextTag();
         }
         
@@ -3532,7 +3532,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             val = reader.getElementText();
             if (val != null)
-                bean.setDescription(val);
+                bean.setDescription(trimStringValue(val));
             reader.nextTag();
         }
     }
@@ -3644,7 +3644,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         
         String val = reader.getElementText();
         if (val != null)
-            bean.setValue(val);
+            bean.setValue(trimStringValue(val));
         
         return bean;
     }
