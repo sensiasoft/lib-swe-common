@@ -258,7 +258,7 @@ public class TimeImpl extends DataValue implements Time
             if (!constraint.isValid(getValue()))
             {
                 String valText;                
-                if (Time.ISO_TIME_UNIT.equals(uom.getHref()))
+                if (isIsoTime())
                     valText = new DateTimeFormat().formatIso(dataBlock.getDoubleValue(), 0);
                 else
                     valText = dataBlock.getStringValue();
@@ -274,12 +274,11 @@ public class TimeImpl extends DataValue implements Time
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append(indent);
         text.append("Time");                
         if (dataBlock != null)
         {
             text.append(" = ");
-            if (Time.ISO_TIME_UNIT.equals(uom.getHref()))
+            if (isIsoTime())
                 text.append(new DateTimeFormat().formatIso(dataBlock.getDoubleValue(), 0));
             else
                 text.append(dataBlock.getDoubleValue());
@@ -292,5 +291,12 @@ public class TimeImpl extends DataValue implements Time
     public void accept(DataComponentVisitor visitor)
     {
         visitor.visit(this);
+    }
+    
+    
+    @Override
+    public boolean isIsoTime()
+    {
+        return Time.ISO_TIME_UNIT.equals(uom.getHref());
     }
 }

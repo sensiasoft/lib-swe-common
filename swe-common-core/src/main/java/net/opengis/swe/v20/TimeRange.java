@@ -64,4 +64,10 @@ public interface TimeRange extends RangeComponent, HasRefFrames, HasUom, HasCons
      * Sets the referenceTime property
      */
     public void setReferenceTime(IDateTime referenceTime);
+    
+    
+    /**
+     * @return true if time is encoded as ISO8601 string
+     */
+    public boolean isIsoTime();
 }

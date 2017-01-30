@@ -251,7 +251,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
             if (!constraint.isValid(val[0]) || !constraint.isValid(val[1]))
             {
                 String minText, maxText;                
-                if (Time.ISO_TIME_UNIT.equals(uom.getHref()))
+                if (isIsoTime())
                 {
                     DateTimeFormat isoFormat = new DateTimeFormat();
                     minText = isoFormat.formatIso(dataBlock.getDoubleValue(0), 0);
@@ -274,14 +274,13 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append(indent);
         text.append("TimeRange");                
         if (dataBlock != null)
         {
             text.append(" = [");
             double min = dataBlock.getDoubleValue(0);
             double max = dataBlock.getDoubleValue(1);
-            if (Time.ISO_TIME_UNIT.equals(uom.getHref()))
+            if (isIsoTime())
             {
                 DateTimeFormat isoFormat = new DateTimeFormat();
                 text.append(isoFormat.formatIso(min, 0)).append(' ');
@@ -301,5 +300,12 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     public void accept(DataComponentVisitor visitor)
     {
         visitor.visit(this);
+    }
+    
+    
+    @Override
+    public boolean isIsoTime()
+    {
+        return Time.ISO_TIME_UNIT.equals(uom.getHref());
     }
 }
