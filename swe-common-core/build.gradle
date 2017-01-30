@@ -4,6 +4,7 @@ description = 'SWE Common Core'
 dependencies {
   compile 'ch.qos.logback:logback-classic:1.1.2'
   compile 'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
+  compile 'com.google.code.gson:gson:2.8.0'
 }
 
 // add info to OSGI manifest
