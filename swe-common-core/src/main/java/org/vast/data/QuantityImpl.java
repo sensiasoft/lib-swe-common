@@ -208,7 +208,6 @@ public class QuantityImpl extends DataValue implements Quantity
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append(indent);
         text.append("Quantity");                
         if (dataBlock != null)
             text.append(" = " + dataBlock.getStringValue());

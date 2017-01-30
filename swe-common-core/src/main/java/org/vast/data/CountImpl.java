@@ -181,7 +181,6 @@ public class CountImpl extends DataValue implements Count
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append(indent);
         text.append("Count");
         if (dataBlock != null)
             text.append(" = ").append(dataBlock.getIntValue());

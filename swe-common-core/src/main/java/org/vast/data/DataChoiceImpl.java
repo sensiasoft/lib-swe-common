@@ -302,11 +302,12 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 
         for (int i=0; i<itemList.size(); i++)
         {
-            text.append(indent + INDENT);
+            text.append(indent);
             text.append(itemList.getProperty(i).getName());
-            text.append(":\n");
-            text.append(getComponent(i).toString(indent + INDENT + INDENT));
-            text.append('\n');
+            text.append(": ");
+            text.append(getComponent(i).toString(indent + INDENT));
+            if (i < itemList.size()-1)
+                text.append('\n');
         }
 
         return text.toString();

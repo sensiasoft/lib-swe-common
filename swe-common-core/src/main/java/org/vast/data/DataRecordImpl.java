@@ -65,16 +65,16 @@ public class DataRecordImpl extends AbstractRecordImpl<DataComponent> implements
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append(indent);
         text.append("DataRecord\n");
-
+        
         for (int i=0; i<fieldList.size(); i++)
         {
-            text.append(indent + INDENT);
+            text.append(indent);
             text.append(fieldList.getProperty(i).getName());
-            text.append(":\n");
-            text.append(getComponent(i).toString(indent + INDENT + INDENT));
-            text.append('\n');
+            text.append(": ");
+            text.append(getComponent(i).toString(indent + INDENT));
+            if (i < fieldList.size()-1)
+                text.append('\n');
         }
 
         return text.toString();

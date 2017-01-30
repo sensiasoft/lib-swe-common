@@ -201,13 +201,12 @@ public class CategoryImpl extends DataValue implements Category
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append("Category: ");                
+        text.append("Category");                
         if (dataBlock != null)
         {
             text.append(" = ");
             text.append(dataBlock.getStringValue());
         }
-        text.append("\n");
         return text.toString();
     }
 

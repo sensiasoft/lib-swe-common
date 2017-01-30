@@ -185,7 +185,6 @@ import net.opengis.swe.v20.ValidationException;
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append(indent);
         text.append("CountRange");
         if (dataBlock != null)
         {

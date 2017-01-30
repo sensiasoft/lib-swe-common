@@ -213,7 +213,6 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append(indent);
         text.append("QuantityRange");                
         if (dataBlock != null)
         {

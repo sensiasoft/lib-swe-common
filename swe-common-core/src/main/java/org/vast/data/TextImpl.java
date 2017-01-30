@@ -163,7 +163,6 @@ public class TextImpl extends DataValue implements Text
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
-        text.append(indent);
         text.append("Text");                
         if (dataBlock != null)
             text.append(" = " + dataBlock.getStringValue());
