@@ -58,6 +58,7 @@ import org.vast.data.DataValue;
 import org.vast.data.SWEFactory;
 import org.vast.data.ScalarIterator;
 import org.vast.data.TextEncodingImpl;
+import org.vast.swe.fast.JsonDataWriter;
 
 
 /**
@@ -484,8 +485,6 @@ public class SWEHelper extends SWEFactory
             parser = new BinaryDataParser();
         else if (encoding instanceof XMLEncoding)
             parser = new XmlDataParser();
-        else if (encoding instanceof JSONEncoding)
-            parser = new JSONDataParser();
         
         parser.setDataEncoding(encoding);
         return parser;
@@ -508,7 +507,7 @@ public class SWEHelper extends SWEFactory
         else if (encoding instanceof XMLEncoding)
             writer = new XmlDataWriter();
         else if (encoding instanceof JSONEncoding)
-            writer = new JSONDataWriter();
+            writer = new JsonDataWriter();
         
         writer.setDataEncoding(encoding);
         return writer;
