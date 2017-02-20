@@ -82,6 +82,12 @@ public interface DataStreamWriter
     public void write(DataBlock data) throws IOException;
     
     
+    public void writeBegin() throws IOException;
+    
+    
+    public void writeEnd() throws IOException;
+    
+    
     public void flush() throws IOException;
     
     

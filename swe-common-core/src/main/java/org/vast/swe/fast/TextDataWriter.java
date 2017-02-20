@@ -14,7 +14,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.fast;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -55,7 +54,7 @@ public class TextDataWriter extends AbstractDataWriter
     boolean firstToken;
 
     
-    protected class BooleanWriter implements AtomProcessor
+    protected class BooleanWriter extends BaseProcessor
     {
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -68,7 +67,7 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
-    protected class IntegerWriter implements AtomProcessor
+    protected class IntegerWriter extends BaseProcessor
     {
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -81,7 +80,7 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
-    protected class DecimalWriter implements AtomProcessor
+    protected class DecimalWriter extends BaseProcessor
     {
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -108,7 +107,7 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
-    protected class RoundingDecimalWriter implements AtomProcessor
+    protected class RoundingDecimalWriter extends BaseProcessor
     {
         StringBuilder sb = new StringBuilder();
         long exp = -1;
@@ -162,7 +161,7 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
-    protected class IsoDateTimeWriter implements AtomProcessor
+    protected class IsoDateTimeWriter extends BaseProcessor
     {
         DateTimeFormat timeFormat = new DateTimeFormat();
         
@@ -177,7 +176,7 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
-    protected class StringWriter implements AtomProcessor
+    protected class StringWriter extends BaseProcessor
     {
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -217,7 +216,7 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
-    protected class ArraySizeWriter implements AtomProcessor
+    protected class ArraySizeWriter extends BaseProcessor
     {
         ArrayProcessor arrayProcessor;
         

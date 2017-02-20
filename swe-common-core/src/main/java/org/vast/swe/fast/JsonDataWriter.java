@@ -23,15 +23,19 @@ import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
+import net.opengis.swe.v20.CategoryRange;
 import net.opengis.swe.v20.Count;
+import net.opengis.swe.v20.CountRange;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.Quantity;
+import net.opengis.swe.v20.QuantityRange;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.Time;
+import net.opengis.swe.v20.TimeRange;
 import net.opengis.swe.v20.Vector;
 
 
@@ -51,6 +55,7 @@ public class JsonDataWriter extends AbstractDataWriter
     static final String INDENT = "  ";
     
     protected Writer writer;
+    protected NullWriter nullWriter = new NullWriter();
     protected int depth;
     boolean firstBlock = true;
     
@@ -61,7 +66,7 @@ public class JsonDataWriter extends AbstractDataWriter
     }
     
     
-    protected abstract class ValueWriter implements AtomProcessor, JsonWriter
+    protected abstract class ValueWriter extends BaseProcessor implements JsonWriter
     {
         String eltName;
         
@@ -197,6 +202,41 @@ public class JsonDataWriter extends AbstractDataWriter
     }
     
     
+    protected class RangeWriter extends RecordProcessor implements JsonWriter
+    {
+        String eltName;
+        
+        public RangeWriter(String eltName)
+        {
+            this.eltName = eltName;
+        }
+        
+        @Override
+        public int process(DataBlock data, int index) throws IOException
+        {
+            try
+            {
+                writer.write('[');
+                fieldProcessors.get(0).process(data, index);
+                writer.write(", ");
+                fieldProcessors.get(1).process(data, index);
+                writer.write(']');                
+                return index;
+            }
+            catch (IOException e)
+            {
+                throw new WriterException(JSON_ERROR + eltName + " range", e);
+            }
+        }
+        
+        @Override
+        public String getEltName()
+        {
+            return eltName;
+        }
+    }
+    
+    
     protected class RecordWriter extends RecordProcessor implements JsonWriter
     {
         String eltName;
@@ -218,6 +258,11 @@ public class JsonDataWriter extends AbstractDataWriter
                 int i = 0;                
                 for (AtomProcessor p: fieldProcessors)
                 {
+                    // switch to null writer if this field should be skipped
+                    Writer oldWriter = writer;
+                    if (!p.isEnabled())
+                        writer = nullWriter;
+                    
                     // insert separator
                     if (i > 0)
                         writer.write(',');
@@ -235,6 +280,8 @@ public class JsonDataWriter extends AbstractDataWriter
                     writer.write(": ");
                     index = p.process(data, index);
                     i++;
+                    
+                    writer = oldWriter; // restore old writer
                 }
                 
                 depth--;
@@ -250,7 +297,7 @@ public class JsonDataWriter extends AbstractDataWriter
             catch (IOException e)
             {
                 throw new WriterException(JSON_ERROR + eltName + " record", e);
-            }            
+            }
         }
         
         public void add(AtomProcessor processor)
@@ -370,7 +417,7 @@ public class JsonDataWriter extends AbstractDataWriter
     }
     
     
-    protected class ArraySizeScanner implements AtomProcessor
+    protected class ArraySizeScanner extends BaseProcessor
     {
         ArrayProcessor arrayProcessor;
         
@@ -407,16 +454,24 @@ public class JsonDataWriter extends AbstractDataWriter
     @Override
     public void write(DataBlock data) throws IOException
     {
-        if (firstBlock)
-        {
-            writer.write("[\n");
-            depth++;
-            firstBlock = false;
-        }        
-        
         indent();
         super.write(data);        
         writer.write(",\n");
+    }
+    
+    
+    @Override
+    public void writeBegin() throws IOException
+    {
+        writer.write("[\n");
+        depth++;
+    }
+    
+    
+    @Override
+    public void writeEnd() throws IOException
+    {        
+        writer.write("\n]");
     }
     
 
@@ -432,10 +487,7 @@ public class JsonDataWriter extends AbstractDataWriter
     public void close() throws IOException
     {
         if (writer != null)
-        {
-            writer.write("\n]");
             writer.close();
-        }
     }
     
     
@@ -507,11 +559,56 @@ public class JsonDataWriter extends AbstractDataWriter
     
     
     @Override
+    public void visit(CountRange range)
+    {
+        addToProcessorTree(new RangeWriter(range.getName()));
+        range.getComponent(0).accept(this);
+        range.getComponent(1).accept(this);
+        processorStack.pop();
+    }
+    
+    
+    @Override
+    public void visit(QuantityRange range)
+    {
+        addToProcessorTree(new RangeWriter(range.getName()));
+        range.getComponent(0).accept(this);
+        range.getComponent(1).accept(this);
+        processorStack.pop();
+    }
+    
+    
+    @Override
+    public void visit(TimeRange range)
+    {
+        addToProcessorTree(new RangeWriter(range.getName()));
+        range.getComponent(0).accept(this);
+        range.getComponent(1).accept(this);
+        processorStack.pop();
+    }
+    
+    
+    @Override
+    public void visit(CategoryRange range)
+    {
+        addToProcessorTree(new RangeWriter(range.getName()));
+        range.getComponent(0).accept(this);
+        range.getComponent(1).accept(this);
+        processorStack.pop();
+    }
+    
+    
+    @Override
     public void visit(DataRecord rec)
     {
         addToProcessorTree(new RecordWriter(rec.getName()));
         for (DataComponent field: rec.getFieldList())
-            field.accept(this);        
+        {
+            boolean saveEnabled = enableSubTree;
+            checkEnabled(field);
+            field.accept(this);
+            enableSubTree = saveEnabled; // reset flag
+        }
         processorStack.pop();
     }
     
@@ -521,7 +618,7 @@ public class JsonDataWriter extends AbstractDataWriter
     {
         addToProcessorTree(new RecordWriter(rec.getName()));
         for (DataComponent field: rec.getCoordinateList())
-            field.accept(this);        
+            field.accept(this);
         processorStack.pop();
     }
     
@@ -530,8 +627,8 @@ public class JsonDataWriter extends AbstractDataWriter
     public void visit(DataChoice choice)
     {
         addToProcessorTree(new ChoiceWriter(choice.getName()));
-        for (DataComponent field: choice.getItemList())
-            field.accept(this);        
+        for (DataComponent item: choice.getItemList())
+            item.accept(this);
         processorStack.pop();
     }
     
@@ -550,8 +647,8 @@ public class JsonDataWriter extends AbstractDataWriter
         else
             arrayWriter.setArraySize(array.getComponentCount());
         
-        addToProcessorTree(arrayWriter);        
-        array.getElementType().accept(this);        
+        addToProcessorTree(arrayWriter);
+        array.getElementType().accept(this);
         processorStack.pop();
     }
 }

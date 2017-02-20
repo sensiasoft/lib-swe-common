@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import org.vast.swe.IComponentFilter;
 import net.opengis.swe.v20.CategoryRange;
 import net.opengis.swe.v20.CountRange;
 import net.opengis.swe.v20.DataArray;
@@ -43,13 +44,17 @@ import net.opengis.swe.v20.Vector;
 public abstract class DataBlockProcessor implements DataComponentVisitor
 {
     DataComponent dataComponents;
+    IComponentFilter filter;
     ArrayDeque<AtomProcessor> processorStack = new ArrayDeque<AtomProcessor>();
     AtomProcessor rootProcessor;
+    boolean enableSubTree = true;
     boolean processorTreeReady;
     
     
     public interface AtomProcessor
     {
+        public void setEnabled(boolean enabled);
+        public boolean isEnabled();
         public int process(DataBlock data, int index) throws IOException;
     }
     
@@ -60,7 +65,23 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    public static class RecordProcessor implements CompositeProcessor
+    public static abstract class BaseProcessor implements AtomProcessor
+    {
+        boolean enabled = true;
+        
+        public void setEnabled(boolean enabled)
+        {
+            this.enabled = enabled;
+        }
+        
+        public boolean isEnabled()
+        {
+            return this.enabled;
+        }
+    }
+    
+    
+    public static class RecordProcessor extends BaseProcessor implements CompositeProcessor
     {
         List<AtomProcessor> fieldProcessors = new ArrayList<AtomProcessor>();
         
@@ -78,7 +99,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    public static class ArrayProcessor implements CompositeProcessor
+    public static class ArrayProcessor extends BaseProcessor implements CompositeProcessor
     {
         AtomProcessor eltProcessor;
         int arraySize;
@@ -102,7 +123,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    public static abstract class ChoiceProcessor implements CompositeProcessor
+    public static abstract class ChoiceProcessor extends BaseProcessor implements CompositeProcessor
     {
         List<AtomProcessor> itemProcessors = new ArrayList<AtomProcessor>();
                 
@@ -123,6 +144,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     
     protected void addToProcessorTree(AtomProcessor processor)
     {
+        // add to parent processor or root
         if (!processorStack.isEmpty())
         {
             CompositeProcessor parent = (CompositeProcessor)processorStack.peek();
@@ -131,8 +153,35 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
         else
             rootProcessor = processor;
         
+        // enable/disable processor and parents as needed
+        setEnabled(processor);
+        
         if (processor instanceof CompositeProcessor)
             processorStack.push(processor);
+    }
+    
+    
+    protected void setEnabled(AtomProcessor processor)
+    {
+        processor.setEnabled(enableSubTree);
+        
+        // if enabled, also enable all parents
+        if (enableSubTree)
+        {
+            for (AtomProcessor parent: processorStack)
+                parent.setEnabled(true);                    
+        }
+    }
+    
+    
+    protected void checkEnabled(DataComponent comp)
+    {
+        // do nothing if we're already enabled
+        if (enableSubTree)
+            return;
+        
+        if (filter == null || filter.accept(comp))
+            enableSubTree = true;
     }
     
     
@@ -173,7 +222,12 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     {
         addToProcessorTree(new RecordProcessor());        
         for (DataComponent field: record.getFieldList())
-            field.accept(this);        
+        {
+            boolean saveEnabled = enableSubTree;
+            checkEnabled(field);
+            field.accept(this);
+            enableSubTree = saveEnabled; // reset flag
+        }
         processorStack.pop();
     }
 
@@ -209,5 +263,12 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     public DataComponent getDataComponents()
     {
         return this.dataComponents;
+    }
+    
+    
+    public void setDataComponentFilter(IComponentFilter filter)
+    {
+        this.filter = filter;
+        this.enableSubTree = false;
     }
 }

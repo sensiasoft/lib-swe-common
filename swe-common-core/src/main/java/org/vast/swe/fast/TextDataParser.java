@@ -69,7 +69,7 @@ public class TextDataParser extends AbstractDataParser
     int blockSepIndex = 0;
     
     
-    protected class BooleanParser implements AtomProcessor
+    protected class BooleanParser extends BaseProcessor
     {
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -103,7 +103,7 @@ public class TextDataParser extends AbstractDataParser
     }
     
     
-    private class IntegerParser implements AtomProcessor
+    private class IntegerParser extends BaseProcessor
     {
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -124,7 +124,7 @@ public class TextDataParser extends AbstractDataParser
     }   
     
     
-    protected class DecimalParser implements AtomProcessor
+    protected class DecimalParser extends BaseProcessor
     {
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -153,7 +153,7 @@ public class TextDataParser extends AbstractDataParser
     }    
     
     
-    protected class IsoDateTimeParser implements AtomProcessor
+    protected class IsoDateTimeParser extends BaseProcessor
     {
         DateTimeFormat timeFormat = new DateTimeFormat();
         
@@ -176,7 +176,7 @@ public class TextDataParser extends AbstractDataParser
     }    
     
     
-    protected class StringParser implements AtomProcessor
+    protected class StringParser extends BaseProcessor
     {
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -215,7 +215,7 @@ public class TextDataParser extends AbstractDataParser
     }
     
     
-    protected class ArraySizeParser implements AtomProcessor
+    protected class ArraySizeParser extends BaseProcessor
     {
         ArrayProcessor arrayProcessor;
         
@@ -394,8 +394,8 @@ public class TextDataParser extends AbstractDataParser
     public void visit(DataChoice choice)
     {
         addToProcessorTree(new ChoiceTokenParser(choice));
-        for (DataComponent field: choice.getItemList())
-            field.accept(this);        
+        for (DataComponent item: choice.getItemList())
+            item.accept(this);        
         processorStack.pop();
     }
     

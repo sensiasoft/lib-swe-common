@@ -14,7 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
-import net.opengis.swe.v20.XMLEncoding;
+import net.opengis.swe.v20.JSONEncoding;
 
 
 /**
@@ -22,7 +22,7 @@ import net.opengis.swe.v20.XMLEncoding;
  *
  * This is a complex type.
  */
-public class JSONEncodingImpl extends AbstractEncodingImpl implements XMLEncoding
+public class JSONEncodingImpl extends AbstractEncodingImpl implements JSONEncoding
 {
     static final long serialVersionUID = 1L;
     boolean pretty;

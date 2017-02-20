@@ -56,7 +56,7 @@ public class XmlDataWriter extends AbstractDataWriter
     protected String prefix;
 
     
-    protected abstract class ValueWriter implements AtomProcessor
+    protected abstract class ValueWriter extends BaseProcessor
     {
         String eltName;
         
@@ -268,7 +268,7 @@ public class XmlDataWriter extends AbstractDataWriter
     }
     
     
-    protected class ArraySizeScanner implements AtomProcessor
+    protected class ArraySizeScanner extends BaseProcessor
     {
         ArrayProcessor arrayProcessor;
         
@@ -414,7 +414,10 @@ public class XmlDataWriter extends AbstractDataWriter
     {
         addToProcessorTree(new RecordWriter(rec.getName()));
         for (DataComponent field: rec.getFieldList())
-            field.accept(this);        
+        {
+            field.accept(this);
+            checkEnabled(field);
+        }
         processorStack.pop();
     }
     

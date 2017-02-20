@@ -112,6 +112,16 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
     }
     
     
+    public void writeBegin()
+    {        
+    }
+    
+    
+    public void writeEnd()
+    {        
+    }
+    
+    
 	public synchronized void stop()
 	{
         stopWriting = true;

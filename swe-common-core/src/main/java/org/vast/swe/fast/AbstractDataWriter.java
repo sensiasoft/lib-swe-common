@@ -37,11 +37,11 @@ import net.opengis.swe.v20.DataEncoding;
 public abstract class AbstractDataWriter extends DataBlockProcessor implements DataStreamWriter
 {
     BlockComponent parentArray;
-    int parentArrayIndex;
-    
+    int parentArrayIndex;    
     DataEncoding dataEncoding;
     
         
+    @Override
     public void write(DataBlock data) throws IOException
     {
         Asserts.checkNotNull(data, "Input data block cannot be null");
@@ -50,6 +50,7 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
         {
             if (!processorTreeReady)
             {
+                checkEnabled(dataComponents);
                 dataComponents.accept(this);
                 processorTreeReady = true;
                 init();
@@ -63,6 +64,18 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
         {
             throw new IOException("Error while writing text record", e);
         }
+    }
+    
+    
+    @Override
+    public void writeBegin() throws IOException
+    {        
+    }
+    
+    
+    @Override
+    public void writeEnd() throws IOException
+    {        
     }
 
 
