@@ -454,9 +454,12 @@ public class JsonDataWriter extends AbstractDataWriter
     @Override
     public void write(DataBlock data) throws IOException
     {
+        if (!firstBlock)
+            writer.write(",\n");
+        
         indent();
-        super.write(data);        
-        writer.write(",\n");
+        super.write(data);
+        firstBlock = false;
     }
     
     
@@ -472,6 +475,7 @@ public class JsonDataWriter extends AbstractDataWriter
     public void writeEnd() throws IOException
     {        
         writer.write("\n]");
+        flush();
     }
     
 

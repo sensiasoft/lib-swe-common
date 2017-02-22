@@ -21,7 +21,10 @@
 			<swe:description>Looking direction of camera</swe:description>
 			<swe:constraint>
 				<swe:AllowedTokens>
-					<swe:value>North East South West</swe:value>
+					<swe:value>North</swe:value>
+          <swe:value>East</swe:value>
+          <swe:value>South</swe:value>
+          <swe:value>West</swe:value>
 				</swe:AllowedTokens>
 			</swe:constraint>
 		</swe:Category>

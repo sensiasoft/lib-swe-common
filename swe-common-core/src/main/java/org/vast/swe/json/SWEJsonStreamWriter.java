@@ -16,17 +16,19 @@ package org.vast.swe.json;
 
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import org.vast.json.JsonStreamWriter;
 
 
 public class SWEJsonStreamWriter extends JsonStreamWriter
 {
+    protected final static String NO_PARENT = "";
     protected final static String NO_NS = "";
     
-    // array name mappings (key is localName, value is NS uri)
-    protected HashMap<String, String> arrays = new HashMap<String, String>();
-    protected HashMap<String, String> numerics = new HashMap<String, String>();
+    // array name mappings (key is parentName, subkey is localName, value is NS uri)
+    protected Map<String, Map<String, String>> arrays = new HashMap<String, Map<String, String>>();
+    protected Map<String, Map<String, String>> numerics = new HashMap<String, Map<String, String>>();
     
     public SWEJsonStreamWriter(OutputStream os, String encoding) throws XMLStreamException
     {
@@ -35,23 +37,39 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
         
         // elements to encode as JSON arrays
         addSpecialNames(arrays, NO_NS, "field", "coordinate", "item", "quality", "member");
+        addSpecialNamesWithParent(arrays, NO_NS, "constraint", "value", "interval");
         
         // elements with numerical values
         addSpecialNames(numerics, NO_NS, "value", "nilValue", "paddingBytes-after", "paddingBytes-before", "byteLength", "significantBits", "bitLength");
+        addSpecialNamesWithParent(numerics, NO_NS, "Count", "value");
+        addSpecialNamesWithParent(numerics, NO_NS, "Quantity", "value");
+        addSpecialNamesWithParent(numerics, NO_NS, "Time", "value");
     }
     
     
-    protected void addSpecialNames(HashMap<String, String> nameList, String namespaceURI, String... names)
+    protected void addSpecialNames(Map<String, Map<String, String>> nameMaps, String namespaceURI, String... names)
     {
+        addSpecialNamesWithParent(nameMaps, NO_PARENT, namespaceURI, names);
+    }
+    
+    
+    protected void addSpecialNamesWithParent(Map<String, Map<String, String>> nameMaps, String namespaceURI, String parentName, String... names)
+    {
+        Map<String, String> nameMapForParent = nameMaps.get(parentName);
+        if (nameMapForParent == null)
+        {
+            nameMapForParent = new HashMap<String, String>();
+            nameMaps.put(parentName, nameMapForParent);
+        }
+        
         for (String name: names)
-            nameList.put(name, namespaceURI);
+            nameMapForParent.put(name, namespaceURI);
     }
     
     
-    @Override
-    protected boolean isArray(String namespaceURI, String localName)
+    protected boolean isSpecialName(Map<String, String> nameMap, String namespaceURI, String localName)
     {
-        String assocNsUri = arrays.get(localName);
+        String assocNsUri = nameMap.get(localName);
         
         if (assocNsUri == null)
             return false;
@@ -63,27 +81,34 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     }
     
     
+    protected boolean isSpecialPath(Map<String, Map<String, String>> nameMaps, String namespaceURI, String localName)
+    {
+        if (currentContext.parent != null && currentContext.parent.eltName != null)
+        {
+            String parentName = currentContext.parent.eltName;
+            Map<String, String> nameMap = nameMaps.get(parentName);
+            if (nameMap != null)
+                return isSpecialName(nameMap, namespaceURI, localName);
+        }
+        
+        return isSpecialName(nameMaps.get(NO_PARENT), namespaceURI, localName);
+    }
+    
+    
+    @Override
+    protected boolean isArray(String namespaceURI, String localName)
+    {
+        return isSpecialPath(arrays, namespaceURI, localName);
+    }
+    
+    
     @Override
     protected boolean isNumericValue(String value)
     {
         if (!super.isNumericValue(value))
             return false;
         
-        if (numerics.containsKey(currentContext.eltName))
-        {
-            if (currentContext.eltName.equals("value"))
-            {
-                String parentName = currentContext.parent.eltName;
-                if (parentName.startsWith("Quantity") || parentName.startsWith("Count") || parentName.startsWith("Time"))
-                    return true;
-                else
-                    return false;
-            }
-            
-            return true; 
-        }
-        
-        return false;
+        return isSpecialPath(numerics, null, currentContext.eltName);
     }
 
 
