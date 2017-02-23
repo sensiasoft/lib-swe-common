@@ -244,7 +244,7 @@ public class Unit
 				printSymbol = "GB";
 		
 			else if (code.equals("Cel"))
-				printSymbol = "�C";
+				printSymbol = "°C";
 		}
         
 		// try to use expression
