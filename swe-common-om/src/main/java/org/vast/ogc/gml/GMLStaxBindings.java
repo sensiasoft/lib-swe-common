@@ -126,7 +126,7 @@ public class GMLStaxBindings extends XMLStreamBindings
                             }
                             catch (Exception e2)
                             {
-                                value = text;
+                                value = text.trim();
                             }
                         }
                     }

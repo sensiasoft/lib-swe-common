@@ -30,6 +30,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     protected Map<String, Map<String, String>> arrays = new HashMap<String, Map<String, String>>();
     protected Map<String, Map<String, String>> numerics = new HashMap<String, Map<String, String>>();
     
+    
     public SWEJsonStreamWriter(OutputStream os, String encoding) throws XMLStreamException
     {
         super(os, encoding);
@@ -49,7 +50,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     
     protected void addSpecialNames(Map<String, Map<String, String>> nameMaps, String namespaceURI, String... names)
     {
-        addSpecialNamesWithParent(nameMaps, NO_PARENT, namespaceURI, names);
+        addSpecialNamesWithParent(nameMaps, namespaceURI, NO_PARENT, names);
     }
     
     
