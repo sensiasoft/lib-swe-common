@@ -68,14 +68,14 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
     
     
     @Override
-    public void writeBegin() throws IOException
-    {        
+    public void startStream(boolean multipleRecords) throws IOException
+    {
     }
     
     
     @Override
-    public void writeEnd() throws IOException
-    {        
+    public void endStream() throws IOException
+    {
     }
 
 

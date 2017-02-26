@@ -112,13 +112,15 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
     }
     
     
-    public void writeBegin()
-    {        
+    @Override
+    public void startStream(boolean multipleRecords) throws IOException
+    {
     }
     
     
-    public void writeEnd()
-    {        
+    @Override
+    public void endStream() throws IOException
+    {
     }
     
     

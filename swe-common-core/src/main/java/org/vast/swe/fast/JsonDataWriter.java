@@ -57,6 +57,7 @@ public class JsonDataWriter extends AbstractDataWriter
     protected Writer writer;
     protected NullWriter nullWriter = new NullWriter();
     protected int depth;
+    boolean multipleRecords;
     boolean firstBlock = true;
     
     
@@ -459,23 +460,34 @@ public class JsonDataWriter extends AbstractDataWriter
         
         indent();
         super.write(data);
-        firstBlock = false;
+        
+        if (multipleRecords)
+            firstBlock = false;
     }
     
     
     @Override
-    public void writeBegin() throws IOException
+    public void startStream(boolean multipleRecords) throws IOException
     {
-        writer.write("[\n");
-        depth++;
+        this.multipleRecords = multipleRecords;
+        
+        // wrap records with array if we're writing multiple ones together
+        if (multipleRecords)
+        {
+            writer.write("[\n");
+            depth++;
+        }
     }
     
     
     @Override
-    public void writeEnd() throws IOException
+    public void endStream() throws IOException
     {        
-        writer.write("\n]");
-        flush();
+        if (multipleRecords)
+        {
+            writer.write("\n]");
+            flush();
+        }
     }
     
 
