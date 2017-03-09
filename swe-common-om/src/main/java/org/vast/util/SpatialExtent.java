@@ -396,13 +396,12 @@ public class SpatialExtent
     public String toString()
 	{
 		StringBuilder buf = new StringBuilder();
-		buf.append(minX);
-		buf.append(',');
-		buf.append(minY);
-        buf.append(" - ");
-        buf.append(maxX);
-        buf.append(',');
-        buf.append(maxY);
+		buf.append(minX).append(',');
+		buf.append(minY).append(',');
+        buf.append(minZ).append(" - ");
+        buf.append(maxX).append(',');
+        buf.append(maxY).append(",");
+        buf.append(maxZ);
         
         if (crs != null)
         {
