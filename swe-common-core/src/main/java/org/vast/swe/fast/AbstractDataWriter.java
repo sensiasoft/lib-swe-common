@@ -44,7 +44,7 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
     @Override
     public void write(DataBlock data) throws IOException
     {
-        Asserts.checkNotNull(data, "Input data block cannot be null");
+        Asserts.checkNotNull(data, "DataBlock");
         
         try
         {

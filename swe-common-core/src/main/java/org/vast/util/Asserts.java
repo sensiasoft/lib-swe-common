@@ -737,8 +737,8 @@ public final class Asserts
             throw new NullPointerException();
         return reference;
     }
-
-
+    
+    
     /**
      * Ensures that an object reference passed as a parameter to the calling method is not null.
      *
@@ -751,7 +751,13 @@ public final class Asserts
     public static <T> T checkNotNull(T reference, Object errorMessage)
     {
         if (reference == null)
-            throw new NullPointerException(String.valueOf(errorMessage));
+        {
+            String nameOrMsg = String.valueOf(errorMessage);
+            if (nameOrMsg != null && nameOrMsg.split(" ").length > 1)
+                throw new NullPointerException(nameOrMsg);
+            else
+                throw new NullPointerException(nameOrMsg + " cannot be null");
+        }
         return reference;
     }
 
