@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.OgcPropertyList;
 import net.opengis.swe.v20.DataComponent;
 
@@ -90,7 +91,11 @@ public class DataComponentPropertyList<ComponentType extends DataComponent> exte
     public void add(int index, ComponentType component)
     {
         ((AbstractDataComponentImpl)component).setParent(parent);
-        super.add(index, component);
+        String name = component.getName();
+        checkName(name);
+        OgcPropertyImpl<ComponentType> prop = new OgcPropertyImpl<ComponentType>(name, component);
+        items.add(index, prop);
+        nameMap.put(name, prop);
     }
 
 }

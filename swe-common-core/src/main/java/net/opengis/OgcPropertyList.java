@@ -37,8 +37,8 @@ import java.util.ListIterator;
  */
 public class OgcPropertyList<ValueType> implements List<ValueType>
 {
-    ArrayList<OgcProperty<ValueType>> items;
-    HashMap<String, OgcProperty<ValueType>> nameMap;
+    protected ArrayList<OgcProperty<ValueType>> items;
+    protected HashMap<String, OgcProperty<ValueType>> nameMap;
     
     
     public OgcPropertyList()
