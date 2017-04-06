@@ -16,6 +16,7 @@ package net.opengis;
 
 import java.text.ParseException;
 import org.vast.util.DateTimeFormat;
+import org.vast.util.NumberUtils;
 
 
 /**
@@ -124,22 +125,17 @@ public abstract class AbstractBindings
     
     protected double getDurationFromString(String val)
     {
-        double duration;
+        if (NumberUtils.isNumeric(val))
+            return getDoubleFromString(val);
         
-        try { duration = getDoubleFromString(val); }
-        catch (NumberFormatException e)
+        try
         {
-            try
-            {
-                duration = isoFormat.parseIsoPeriod(val.trim());
-            }
-            catch (ParseException e1)
-            {
-                throw new RuntimeException("Invalid ISO or decimal duration", e1);
-            }
+            return isoFormat.parseIsoPeriod(val.trim());
         }
-        
-        return duration;      
+        catch (ParseException e)
+        {
+            throw new IllegalArgumentException("Invalid ISO or decimal duration", e);
+        }
     }
     
     

@@ -20,6 +20,7 @@
 
 package org.vast.unit;
 
+import org.vast.util.NumberUtils;
 
 /**
  * <p>
@@ -59,12 +60,14 @@ public class UnitFunctionOffset extends UnitFunction
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof UnitFunctionOffset))
-            return false;
-        
-        if (this.offset != ((UnitFunctionOffset)obj).offset)
-            return false;
-        
-        return true;
+        return (obj instanceof UnitFunctionOffset &&
+                NumberUtils.ulpEqual(this.offset, ((UnitFunctionOffset)obj).offset));
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Double.hashCode(offset);
     }
 }

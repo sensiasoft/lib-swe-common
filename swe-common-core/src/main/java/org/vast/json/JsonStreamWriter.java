@@ -18,10 +18,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.regex.Pattern;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import org.vast.util.NumberUtils;
 import com.google.gson.stream.JsonWriter;
 
 
@@ -36,7 +36,6 @@ import com.google.gson.stream.JsonWriter;
 public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 {
     final static String INDENT1 = "  ";
-    final static Pattern regexNumber = Pattern.compile("^[+-]?(\\d+(\\.\\d+)?|\\.\\d+)$");
 
     protected JsonWriter writer;
     //protected Writer writer;
@@ -87,7 +86,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
     protected boolean isNumericValue(String value)
     {
-        return regexNumber.matcher(value).matches();
+        return NumberUtils.isNumericExp(value);
     }
 
 

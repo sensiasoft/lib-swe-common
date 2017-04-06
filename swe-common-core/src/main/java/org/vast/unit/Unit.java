@@ -20,6 +20,7 @@
 
 package org.vast.unit;
 
+import org.vast.util.NumberUtils;
 
 /**
  * <p>
@@ -90,38 +91,21 @@ public class Unit
     /**
      * Checks that this unit is physically compatible with the
      * given unit, which also means that it is possible to
-     * convert from one to the other and vice versa.
+     * convert from one to the other.
      * @param unit
      * @return true if unit is compatible with this unit
      */
     public boolean isCompatible(Unit unit)
     {
         // check that powers are equal for all SI base units
-        if (this.meter != unit.meter)
-            return false;
-        
-        if (this.kilogram != unit.kilogram)
-            return false;
-        
-        if (this.second != unit.second)
-            return false;
-        
-        if (this.radian != unit.radian)
-            return false;
-        
-        if (this.ampere != unit.ampere)
-            return false;
-        
-        if (this.kelvin != unit.kelvin)
-            return false;
-        
-        if (this.mole != unit.mole)
-            return false;
-        
-        if (this.candela != unit.candela)
-            return false;
-        
-        return true;
+        return (NumberUtils.ulpEqual(this.meter, unit.meter) &&
+                NumberUtils.ulpEqual(this.kilogram, unit.kilogram) &&
+                NumberUtils.ulpEqual(this.second, unit.second) &&
+                NumberUtils.ulpEqual(this.radian, unit.radian) &&
+                NumberUtils.ulpEqual(this.ampere, unit.ampere) &&
+                NumberUtils.ulpEqual(this.kelvin, unit.kelvin) &&
+                NumberUtils.ulpEqual(this.mole, unit.mole) &&
+                NumberUtils.ulpEqual(this.candela, unit.candela));
     }
     
     
@@ -131,7 +115,9 @@ public class Unit
      */
     public boolean isEquivalent(Unit unit)
     {
-        return isCompatible(unit) && (this.scaleToSI == unit.scaleToSI) && (this.pi == unit.pi);
+        return (isCompatible(unit) &&
+                NumberUtils.ulpEqual(this.scaleToSI, unit.scaleToSI) &&
+                NumberUtils.ulpEqual(this.pi, unit.pi));
     }
     
     
@@ -457,7 +443,7 @@ public class Unit
         addUnitString(buf, mole, "mol");
         addUnitString(buf, candela, "cd");
         
-        if (scaleToSI != 1.0)
+        if (NumberUtils.ulpEqual(scaleToSI, 1.0))
             buf.insert(0, getScaleToSI() + "*");
         
         return buf.toString();
@@ -497,14 +483,16 @@ public class Unit
     
     private void addUnitString(StringBuffer buf, double val, String sym)
     {
-        if (val != 0)
+        int ival = (int)val;
+        
+        if (ival != 0)
         {
             if (buf.length() > 0)
                 buf.append('.');
             
             buf.append(sym);
-            if (val != 1)
-                buf.append((int)val);                        
+            if (ival != 1)
+                buf.append(ival);                        
         }
     }
 }

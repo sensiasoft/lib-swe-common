@@ -21,6 +21,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import org.vast.util.DateTimeFormat;
+import org.vast.util.NumberUtils;
 import org.vast.util.ReaderException;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
@@ -128,7 +129,7 @@ public class TextDataWriter extends AbstractDataWriter
             
             if (Double.isFinite(val))
             {
-                if (val == 0.0 || val == -0.0)
+                if (NumberUtils.ulpEqual(val, 0.0))
                     writer.write('0');
                 else
                 {

@@ -20,6 +20,7 @@
 
 package org.vast.unit;
 
+import org.vast.util.NumberUtils;
 
 /**
  *  * <p>
@@ -43,7 +44,7 @@ public class GenericUnitConverter extends AbstractUnitConverter
     public GenericUnitConverter(double conversionFactor)
     {
         this.conversionFactor = conversionFactor;
-        if (conversionFactor != 1.0)
+        if (!NumberUtils.ulpEqual(conversionFactor, 1.0))
             conversionNeeded = true;
         conversionPossible = true;
     }
@@ -62,7 +63,7 @@ public class GenericUnitConverter extends AbstractUnitConverter
         {
             computeConversionFactor();
             
-            if (conversionFactor != 1.0)
+            if (!NumberUtils.ulpEqual(conversionFactor, 1.0))
                 conversionNeeded = true;
             
             // if src or dest or both have functions            
