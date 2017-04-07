@@ -23,8 +23,10 @@
 
 package org.vast.ogc.gml;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -36,6 +38,8 @@ import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.Reference;
 import org.vast.ogc.xlink.CachedReference;
+import org.vast.ogc.xlink.IReferenceResolver;
+import org.vast.util.ResolveException;
 import org.vast.util.URIResolver;
 
 
@@ -53,30 +57,30 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
         
     
     public FeatureRef()
-    { 
+    {
+        this.resolver = new IReferenceResolver<GenericFeature>()
+        {            
+            @Override
+            public GenericFeature fetchTarget(String uri) throws IOException
+            {
+                try
+                {
+                    URIResolver resolver = new URIResolver(new URI(href));
+                    InputStream is = resolver.openStream();            
+                    return new GMLUtils(GMLUtils.V3_2).readFeature(is);
+                }
+                catch (URISyntaxException e)
+                {
+                    throw new ResolveException("Bad URI", e);
+                }
+            }
+        };
     }
     
     
     public FeatureRef(String href)
     { 
         this.href = href;
-    }
-
-
-
-    @Override
-    protected GenericFeature fetchTarget(String href)
-    {
-        try
-        {
-            URIResolver resolver = new URIResolver(new URI(href));
-            InputStream is = resolver.openStream();            
-            return new GMLUtils(GMLUtils.V3_2).readFeature(is);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 
 

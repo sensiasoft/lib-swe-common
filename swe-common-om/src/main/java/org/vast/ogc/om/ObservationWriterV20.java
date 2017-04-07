@@ -188,7 +188,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
                     valueElt.appendChild(importedElt);
                 }
                 else
-                    throw new RuntimeException("Unsupported parameter type: " + value.getClass());
+                    throw new XMLWriterException("Unsupported parameter type: " + value.getClass());
             }
         }
         

@@ -24,12 +24,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.regex.Pattern;
-import org.vast.ogc.OGCException;
-import org.vast.ogc.OGCExceptionReader;
 import org.vast.ogc.OGCRegistry;
-import org.vast.swe.SWEFilter;
 import org.vast.xml.DOMHelper;
-import org.vast.xml.DOMHelperException;
 import org.vast.xml.IXMLReaderDOM;
 import org.vast.xml.IXMLWriterDOM;
 import org.vast.xml.XMLReaderException;
@@ -109,32 +105,6 @@ public class OMUtils
         catch (Exception e)
         {
             throw new XMLReaderException("Error while reading inputstream", e);
-        }
-    }
-    
-    
-    public IObservation readObservationSeries(InputStream inputStream) throws XMLReaderException
-    {
-        try
-        {
-            // install SWE Filter to skip inline data
-            SWEFilter streamFilter = new SWEFilter(inputStream);
-            streamFilter.setDataElementName("values");
-            
-            // parse xml header using DOMReader
-            DOMHelper dom = new DOMHelper(streamFilter, false);
-            OGCExceptionReader.checkException(dom);
-            
-            // TODO read obs series
-            return null;//this.read(dom, dom.getRootElement());
-        }
-        catch (DOMHelperException e)
-        {
-            throw new XMLReaderException("Error while parsing XML document", e);
-        }
-        catch (OGCException e)
-        {
-            throw new XMLReaderException(e.getMessage());
         }
     }
     

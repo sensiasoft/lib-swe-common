@@ -25,15 +25,20 @@
 
 package org.vast.ogc.om;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.IDefinition;
 import org.vast.ogc.gml.FeatureRef;
+import org.vast.ogc.gml.GenericFeature;
+import org.vast.ogc.xlink.IReferenceResolver;
 import org.vast.ogc.xlink.IXlinkReference;
+import org.vast.util.ResolveException;
 import org.vast.util.TimeExtent;
 import org.vast.util.URIResolver;
 
@@ -50,30 +55,32 @@ import org.vast.util.URIResolver;
 public class ObservationRef extends FeatureRef implements IObservation
 {
 
+    
     public ObservationRef()
     {
+        this.resolver = new IReferenceResolver<GenericFeature>()
+        {            
+            @Override
+            public IObservation fetchTarget(String uri) throws IOException
+            {
+                try
+                {
+                    URIResolver resolver = new URIResolver(new URI(href));
+                    InputStream is = resolver.openStream();            
+                    return new OMUtils(OMUtils.V2_0).readObservation(is);
+                }
+                catch (URISyntaxException e)
+                {
+                    throw new ResolveException("Bad URI", e);
+                }
+            }
+        };
     }
     
     
     public ObservationRef(String href)
     {
         setHref(href);
-    }
-    
-    
-    @Override
-    protected IObservation fetchTarget(String href)
-    {
-        try
-        {
-            URIResolver resolver = new URIResolver(new URI(href));
-            InputStream is = resolver.openStream();            
-            return new OMUtils(OMUtils.V2_0).readObservation(is);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 
 
