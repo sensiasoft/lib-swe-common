@@ -270,8 +270,8 @@ public class EnvelopeImpl implements Envelope
     {
         return obj instanceof Envelope &&
                Objects.equals(getSrsName(), ((Envelope)obj).getSrsName()) &&
-               Objects.equals(getLowerCorner(), ((Envelope)obj).getLowerCorner()) &&
-               Objects.equals(getUpperCorner(), ((Envelope)obj).getUpperCorner());
+               Arrays.equals(getLowerCorner(), ((Envelope)obj).getLowerCorner()) &&
+               Arrays.equals(getUpperCorner(), ((Envelope)obj).getUpperCorner());
     }
     
     
