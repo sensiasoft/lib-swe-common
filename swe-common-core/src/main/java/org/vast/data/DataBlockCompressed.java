@@ -31,8 +31,7 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockCompressed extends AbstractDataBlock
 {
-	private static final long serialVersionUID = -6396843894262396349L;
-    protected byte[] compressedData;
+	protected byte[] compressedData;
     protected DataBlock uncompressedData;
     protected int compressionType;
 	
@@ -358,6 +357,6 @@ public class DataBlockCompressed extends AbstractDataBlock
 	
 	private void throwUnsupportedException()
 	{
-	    throw new RuntimeException("Individual values of a compressed data block cannot be set directly");
+	    throw new UnsupportedOperationException("Individual values of a compressed data block cannot be set directly");
 	}
 }

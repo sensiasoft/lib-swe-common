@@ -29,8 +29,7 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockMixed extends AbstractDataBlock
 {
-	private static final long serialVersionUID = 2573107762518456783L;
-    protected AbstractDataBlock[] blockArray;
+	protected AbstractDataBlock[] blockArray;
 	protected int blockIndex;
 	protected int localIndex;
     //protected int lastBlockIndex, lastIndex, lastCumulIndex;

@@ -210,7 +210,7 @@ public class DataBlockShort extends AbstractDataBlock
 
 	public void setBooleanValue(int index, boolean value)
 	{
-		primitiveArray[startIndex + index] = (short)(value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal);
+		primitiveArray[startIndex + index] = (short)(value ? DataBlockBoolean.TRUE_VAL : DataBlockBoolean.FALSE_VAL);
 	}
 
 
@@ -258,7 +258,7 @@ public class DataBlockShort extends AbstractDataBlock
 
 	public void setBooleanValue(boolean value)
 	{
-		primitiveArray[startIndex] = (short)(value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal);
+		primitiveArray[startIndex] = (short)(value ? DataBlockBoolean.TRUE_VAL : DataBlockBoolean.FALSE_VAL);
 	}
 
 

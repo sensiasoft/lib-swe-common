@@ -39,7 +39,6 @@ import net.opengis.swe.v20.ValidationException;
  * */
 public class DataList extends AbstractArrayImpl implements DataArray, DataStream, BlockComponent
 {
-    private static final long serialVersionUID = 3525149069812989611L;
     protected ListIterator<DataBlock> blockIterator;
     protected AbstractDataComponentImpl tempComponent = null;
     

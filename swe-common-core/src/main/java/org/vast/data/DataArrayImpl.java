@@ -41,7 +41,6 @@ import net.opengis.swe.v20.ValidationException;
  * */
 public class DataArrayImpl extends AbstractArrayImpl
 {
-    private static final long serialVersionUID = -585236845658753642L;
     protected final static String errorBlockMixed = "Error: DataArrays should never contain a DataBlockMixed";
     public final static String ARRAY_SIZE_FIELD = "elementCount";
     

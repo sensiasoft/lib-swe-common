@@ -26,7 +26,7 @@ import net.opengis.swe.v20.DataType;
  */
 public class BinaryComponentImpl extends AbstractSWEImpl implements BinaryComponent, HasCopy
 {
-    public static String DATATYPE_URI_PREFIX = "http://www.opengis.net/def/dataType/OGC/0/";
+    public static final String DATATYPE_URI_PREFIX = "http://www.opengis.net/def/dataType/OGC/0/";
     static final long serialVersionUID = 1L;
     protected String encryption;
     protected Integer significantBits;
@@ -374,7 +374,7 @@ public class BinaryComponentImpl extends AbstractSWEImpl implements BinaryCompon
                 break;
                 
             default:
-                throw new RuntimeException("Unsupported datatype " + dataType);
+                throw new IllegalArgumentException("Unsupported datatype " + dataType);
         }
     }
     

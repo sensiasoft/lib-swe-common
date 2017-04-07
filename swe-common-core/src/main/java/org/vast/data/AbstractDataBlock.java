@@ -14,12 +14,10 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
-import java.io.Serializable;
 import net.opengis.swe.v20.DataBlock;
 
 
-@SuppressWarnings("serial")
-public abstract class AbstractDataBlock implements DataBlock, Serializable
+public abstract class AbstractDataBlock implements DataBlock
 {
 	protected int atomCount;
 	protected int startIndex = 0;

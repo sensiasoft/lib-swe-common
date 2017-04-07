@@ -39,7 +39,6 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRange
 {
-    static final long serialVersionUID = 1L;
     protected UnitReferenceImpl uom = new UnitReferenceImpl();
     protected OgcProperty<AllowedTimes> constraint;
     protected IDateTime referenceTime;

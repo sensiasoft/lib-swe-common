@@ -27,7 +27,6 @@ import net.opengis.swe.v20.AllowedTimes;
  */
 public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
 {
-    static final long serialVersionUID = 1L;
     protected List<IDateTime> valueList = new ArrayList<IDateTime>();
     protected List<IDateTime[]> intervalList = new ArrayList<IDateTime[]>();
     protected Integer significantFigures;

@@ -31,9 +31,9 @@ import net.opengis.swe.v20.ValidationException;
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * @since Aug 30, 2014
- */public class CountRangeImpl extends AbstractRangeComponentImpl implements CountRange
+ */
+public class CountRangeImpl extends AbstractRangeComponentImpl implements CountRange
 {
-    static final long serialVersionUID = 1L;
     protected OgcProperty<AllowedValues> constraint;
     protected int[] tmpValue = new int[2];
     

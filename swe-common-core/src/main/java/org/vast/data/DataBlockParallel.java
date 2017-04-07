@@ -28,8 +28,7 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockParallel extends AbstractDataBlock
 {
-	private static final long serialVersionUID = 8610635426607515415L;
-    protected AbstractDataBlock[] blockArray;
+	protected AbstractDataBlock[] blockArray;
 	protected int blockIndex;
 	protected int localIndex;
 

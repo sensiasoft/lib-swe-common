@@ -62,7 +62,7 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Error while parsing encoded values", e);
+            throw new IllegalStateException("Cannot parse encoded values", e);
         }        
     }
 
@@ -85,7 +85,7 @@ public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> imple
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Error while writing encoded values", e);
+            throw new IllegalStateException("Cannot write encoded values", e);
         }
         
         // convert byte array to string

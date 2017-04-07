@@ -32,7 +32,6 @@ import net.opengis.swe.v20.BinaryComponent;
  */
 public class BinaryEncodingImpl extends AbstractEncodingImpl implements BinaryEncoding
 {
-    static final long serialVersionUID = 1L;
     protected List<BinaryMember> memberList = new ArrayList<BinaryMember>();
     protected ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
     protected ByteEncoding byteEncoding;

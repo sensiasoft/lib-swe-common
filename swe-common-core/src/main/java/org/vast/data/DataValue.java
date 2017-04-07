@@ -29,9 +29,7 @@ import net.opengis.swe.v20.ScalarComponent;
  * */
 public abstract class DataValue extends AbstractSimpleComponentImpl implements ScalarComponent
 {
-    private static final long serialVersionUID = -7411819306997320628L;
-    
-    
+        
     public DataValue()
     {
         this.scalarCount = 1;
@@ -117,7 +115,7 @@ public abstract class DataValue extends AbstractSimpleComponentImpl implements S
             	return new DataBlockString(1);
                 
             default:
-            	throw new RuntimeException("Data Type not allowed for a DataValue: " + dataType);
+            	throw new IllegalStateException("Unsupported data type " + dataType);
         }
     }
 }

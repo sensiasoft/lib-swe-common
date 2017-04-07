@@ -26,7 +26,6 @@ import net.opengis.swe.v20.BinaryBlock;
  */
 public class BinaryBlockImpl extends AbstractSWEImpl implements BinaryBlock, HasCopy
 {
-    static final long serialVersionUID = 1L;
     protected String compression;
     protected String encryption;
     protected Integer paddingBytesAfter;

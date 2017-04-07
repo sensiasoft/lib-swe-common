@@ -33,7 +33,6 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockList extends AbstractDataBlock
 {
-    private static final long serialVersionUID = -9032080133600839734L;
     protected List<DataBlock> blockList;
 	protected int blockAtomCount = -1;
 	protected int blockIndex;

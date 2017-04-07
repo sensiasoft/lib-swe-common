@@ -26,7 +26,6 @@ import net.opengis.swe.v20.AllowedValues;
  */
 public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
 {
-    static final long serialVersionUID = 1L;
     protected List<Double> valueList = new ArrayList<Double>();
     protected List<double[]> intervalList = new ArrayList<double[]>();
     protected Integer significantFigures;
@@ -53,7 +52,7 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
     public boolean isValid(double value)
     {
         for (double allowedValue: valueList)
-            if (allowedValue == value)
+            if (Double.doubleToLongBits(allowedValue) == Double.doubleToLongBits(value))
                 return true;
         
         for (double[] allowedRange: intervalList)

@@ -24,7 +24,6 @@ import net.opengis.swe.v20.AbstractSWEIdentifiable;
  */
 public abstract class AbstractSWEIdentifiableImpl extends AbstractSWEImpl implements AbstractSWEIdentifiable
 {
-    static final long serialVersionUID = 1L;
     protected String identifier;
     protected String label;
     protected String description;

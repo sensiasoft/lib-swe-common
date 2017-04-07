@@ -35,7 +35,6 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class QuantityRangeImpl extends AbstractRangeComponentImpl implements QuantityRange
 {
-    static final long serialVersionUID = 1L;
     protected UnitReferenceImpl uom = new UnitReferenceImpl();
     protected OgcProperty<AllowedValues> constraint;
     protected double[] tmpValue = new double[2];

@@ -28,9 +28,8 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockBoolean extends AbstractDataBlock
 {
-	private static final long serialVersionUID = 6984929839422362525L;
-    public static byte trueVal = 1;
-	public static byte falseVal = 0;
+	public static final byte TRUE_VAL = 1;
+	public static final byte FALSE_VAL = 0;
 	protected boolean[] primitiveArray;
 	
 	
@@ -122,37 +121,37 @@ public class DataBlockBoolean extends AbstractDataBlock
 
 	public byte getByteValue(int index)
 	{
-		return primitiveArray[startIndex + index] ? trueVal : falseVal;
+		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public short getShortValue(int index)
 	{
-		return primitiveArray[startIndex + index] ? trueVal : falseVal;
+		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public int getIntValue(int index)
 	{
-		return primitiveArray[startIndex + index] ? trueVal : falseVal;
+		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public long getLongValue(int index)
 	{
-		return primitiveArray[startIndex + index] ? trueVal : falseVal;
+		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public float getFloatValue(int index)
 	{
-		return primitiveArray[startIndex + index] ? trueVal : falseVal;
+		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public double getDoubleValue(int index)
 	{
-		return primitiveArray[startIndex + index] ? trueVal : falseVal;
+		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
@@ -170,37 +169,37 @@ public class DataBlockBoolean extends AbstractDataBlock
 
 	public byte getByteValue()
 	{
-		return primitiveArray[startIndex] ? trueVal : falseVal;
+		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public short getShortValue()
 	{
-		return primitiveArray[startIndex] ? trueVal : falseVal;
+		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public int getIntValue()
 	{
-		return primitiveArray[startIndex] ? trueVal : falseVal;
+		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public long getLongValue()
 	{
-		return primitiveArray[startIndex] ? trueVal : falseVal;
+		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public float getFloatValue()
 	{
-		return primitiveArray[startIndex] ? trueVal : falseVal;
+		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
 	public double getDoubleValue()
 	{
-		return primitiveArray[startIndex] ? trueVal : falseVal;
+		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
@@ -242,13 +241,13 @@ public class DataBlockBoolean extends AbstractDataBlock
 
 	public void setFloatValue(int index, float value)
 	{
-		primitiveArray[startIndex + index] = (Float.isNaN(value) || value == 0) ? false : true;
+		primitiveArray[startIndex + index] = (Float.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
 	}
 
 
 	public void setDoubleValue(int index, double value)
 	{
-		primitiveArray[startIndex + index] = (Double.isNaN(value) || value == 0) ? false : true;
+		primitiveArray[startIndex + index] = (Double.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
 	}
 
 
@@ -290,13 +289,13 @@ public class DataBlockBoolean extends AbstractDataBlock
 
 	public void setFloatValue(float value)
 	{
-		primitiveArray[startIndex] = (Float.isNaN(value) || value == 0) ? false : true;
+		primitiveArray[startIndex] = (Float.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
 	}
 
 
 	public void setDoubleValue(double value)
 	{
-		primitiveArray[startIndex] = (Double.isNaN(value) || value == 0) ? false : true;
+		primitiveArray[startIndex] = (Double.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
 	}
 
 

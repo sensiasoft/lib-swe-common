@@ -26,7 +26,6 @@ import net.opengis.swe.v20.AbstractSWE;
  */
 public abstract class AbstractSWEImpl implements AbstractSWE
 {
-    static final long serialVersionUID = 1L;
     protected List<Object> extensionList = new ArrayList<Object>();
     protected String id;
     

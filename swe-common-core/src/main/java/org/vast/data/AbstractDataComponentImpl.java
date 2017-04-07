@@ -14,7 +14,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
-import java.io.Serializable;
 import java.util.*;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.DataBlock;
@@ -29,11 +28,10 @@ import net.opengis.swe.v20.ValidationException;
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
  * */
-@SuppressWarnings("serial")
-public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableImpl implements DataComponent, Serializable
+public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableImpl implements DataComponent
 {
-    public static int MAX_ARRAY_ERRORS = 10;
-    protected final static String INDENT = "  ";
+    public static final int MAX_ARRAY_ERRORS = 10;
+    protected static final String INDENT = "  ";
     
     protected Boolean updatable;
     protected Boolean optional;

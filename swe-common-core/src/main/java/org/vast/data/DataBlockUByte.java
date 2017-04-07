@@ -211,7 +211,7 @@ public class DataBlockUByte extends AbstractDataBlock
 
 	public void setBooleanValue(int index, boolean value)
 	{
-		primitiveArray[startIndex + index] = value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal;
+		primitiveArray[startIndex + index] = value ? DataBlockBoolean.TRUE_VAL : DataBlockBoolean.FALSE_VAL;
 	}
 
 
@@ -260,7 +260,7 @@ public class DataBlockUByte extends AbstractDataBlock
 
 	public void setBooleanValue(boolean value)
 	{
-		primitiveArray[startIndex] = value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal;
+		primitiveArray[startIndex] = value ? DataBlockBoolean.TRUE_VAL : DataBlockBoolean.FALSE_VAL;
 	}
 
 

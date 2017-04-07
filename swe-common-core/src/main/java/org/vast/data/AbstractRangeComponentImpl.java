@@ -28,8 +28,6 @@ import net.opengis.swe.v20.DataBlock;
  * */
 public abstract class AbstractRangeComponentImpl extends AbstractSimpleComponentImpl implements SimpleComponent
 {
-    private static final long serialVersionUID = -7411819306997320628L;
-    
     protected DataValue min;
     protected DataValue max;
     
@@ -153,7 +151,7 @@ public abstract class AbstractRangeComponentImpl extends AbstractSimpleComponent
             	return new DataBlockString(2);
                 
             default:
-            	throw new RuntimeException("Data type not allowed for a range component: " + dataType);
+            	throw new IllegalStateException("Unsupported data type " + dataType);
         }
     }
 }

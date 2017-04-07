@@ -29,8 +29,6 @@ import net.opengis.swe.v20.Text;
 
 public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentImpl implements SimpleComponent
 {
-    private static final long serialVersionUID = 8170666086821263672L;
-   
     protected DataType dataType;
     protected OgcPropertyList<SimpleComponent> qualityList = new OgcPropertyList<SimpleComponent>();
     protected OgcProperty<NilValues> nilValues;

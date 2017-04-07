@@ -28,8 +28,7 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockByte extends AbstractDataBlock
 {
-	private static final long serialVersionUID = 3073014348738463661L;
-    protected byte[] primitiveArray;
+	protected byte[] primitiveArray;
 	
 	
 	public DataBlockByte()
@@ -210,7 +209,7 @@ public class DataBlockByte extends AbstractDataBlock
 
 	public void setBooleanValue(int index, boolean value)
 	{
-		primitiveArray[startIndex + index] = value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal;
+		primitiveArray[startIndex + index] = value ? DataBlockBoolean.TRUE_VAL : DataBlockBoolean.FALSE_VAL;
 	}
 
 
@@ -258,7 +257,7 @@ public class DataBlockByte extends AbstractDataBlock
 
 	public void setBooleanValue(boolean value)
 	{
-		primitiveArray[startIndex] = value ? DataBlockBoolean.trueVal : DataBlockBoolean.falseVal;
+		primitiveArray[startIndex] = value ? DataBlockBoolean.TRUE_VAL : DataBlockBoolean.FALSE_VAL;
 	}
 
 
