@@ -66,12 +66,14 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
+    @Override
     public List<IXlinkReference<IObservation>> getRelatedObservations()
     {
         return relatedObservations;
     }
 
 
+    @Override
     public void addRelatedObservation(IXlinkReference<IObservation> relatedObservation)
     {
         if (this.relatedObservations == null)
@@ -81,18 +83,21 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
+    @Override
     public TimeExtent getPhenomenonTime()
     {
         return phenomenonTime;
     }
 
 
+    @Override
     public void setPhenomenonTime(TimeExtent phenomenonTime)
     {
         this.phenomenonTime = phenomenonTime;
     }
 
 
+    @Override
     public TimeExtent getResultTime()
     {
         if (resultTime == null)
@@ -102,42 +107,49 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
+    @Override
     public void setResultTime(TimeExtent resultTime)
     {
         this.resultTime = resultTime;
     }
 
 
+    @Override
     public TimeExtent getValidTime()
     {
         return validTime;
     }
 
 
+    @Override
     public void setValidTime(TimeExtent validTime)
     {
         this.validTime = validTime;
     }
 
 
+    @Override
     public IProcedure getProcedure()
     {
         return procedure;
     }
 
 
+    @Override
     public void setProcedure(IProcedure procedure)
     {
         this.procedure = procedure;
     }
 
 
+    @Override
     public Map<String, Object> getParameters()
     {
         return parameters;
     }
 
 
+    @Override
     public void addParameter(String name, Object value)
     {
         if (this.parameters == null)
@@ -147,36 +159,42 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
+    @Override
     public IXlinkReference<IDefinition> getObservedProperty()
     {
         return this.observedProperty;
     }
     
     
+    @Override
     public void setObservedProperty(IXlinkReference<IDefinition> observedProperty)
     {
         this.observedProperty = observedProperty;
     }
 
 
+    @Override
     public AbstractFeature getFeatureOfInterest()
     {
         return featureOfInterest;
     }
 
 
+    @Override
     public void setFeatureOfInterest(AbstractFeature featureOfInterest)
     {
         this.featureOfInterest = featureOfInterest;
     }
 
 
+    @Override
     public List<Object> getResultQuality()
     {
         return resultQuality;
     }
 
 
+    @Override
     public void addResultQuality(Object resultQuality)
     {
         if (this.resultQuality == null)
@@ -186,12 +204,14 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
+    @Override
     public DataComponent getResult()
     {
         return result;
     }
 
 
+    @Override
     public void setResult(DataComponent result)
     {
         this.result = result;

@@ -54,12 +54,14 @@ public class GMLFactory implements Factory
     }
     
     
+    @Override
     public final FeatureCollection newFeatureCollection()
     {
         return new FeatureCollectionImpl();
     }
     
     
+    @Override
     public final TimeInstant newTimeInstant()
     {
         return new TimeInstantImpl();
@@ -74,6 +76,7 @@ public class GMLFactory implements Factory
     }
     
     
+    @Override
     public final TimePeriod newTimePeriod()
     {
         return new TimePeriodImpl();
@@ -89,6 +92,7 @@ public class GMLFactory implements Factory
     }
     
     
+    @Override
     public final TimePosition newTimePosition()
     {
         return new TimePositionImpl();
@@ -111,48 +115,56 @@ public class GMLFactory implements Factory
     }
     
     
+    @Override
     public final TimeIntervalLength newTimeIntervalLength()
     {
         return new TimeIntervalLengthImpl();
     }
         
     
+    @Override
     public final Envelope newEnvelope()
     {
         return new EnvelopeImpl(2);
     }
     
     
+    @Override
     public final Reference newReference()
     {
         return new ReferenceImpl();
     }
     
     
+    @Override
     public final Code newCode()
     {
         return new CodeImpl();
     }
     
     
+    @Override
     public final CodeWithAuthority newCodeWithAuthority()
     {
         return new CodeWithAuthorityImpl();
     }
     
     
+    @Override
     public final CodeList newCodeList()
     {
         return new CodeListImpl();
     }
     
     
+    @Override
     public final CodeOrNilReasonList newCodeOrNilReasonList()
     {
         return new CodeOrNilReasonListImpl();
     }
 
 
+    @Override
     public final Point newPoint()
     {
         Point point;
@@ -166,6 +178,7 @@ public class GMLFactory implements Factory
     }
     
     
+    @Override
     public final LinearRing newLinearRing()
     {
         if (useJTS)
@@ -175,6 +188,7 @@ public class GMLFactory implements Factory
     }
 
 
+    @Override
     public final Polygon newPolygon()
     {
         Polygon poly;
@@ -188,6 +202,7 @@ public class GMLFactory implements Factory
     }
 
 
+    @Override
     public final LineString newLineString()
     {
         LineString line;

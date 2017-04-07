@@ -77,120 +77,140 @@ public class ObservationRef extends FeatureRef implements IObservation
     }
 
 
+    @Override
     public List<IXlinkReference<IObservation>> getRelatedObservations()
     {
         return getTarget().getRelatedObservations();
     }
 
 
+    @Override
     public void addRelatedObservation(IXlinkReference<IObservation> obsUri)
     {
         getTarget().addRelatedObservation(obsUri);
     }
 
 
+    @Override
     public TimeExtent getPhenomenonTime()
     {
         return getTarget().getPhenomenonTime();
     }
 
 
+    @Override
     public void setPhenomenonTime(TimeExtent time)
     {
         getTarget().setPhenomenonTime(time);
     }
 
 
+    @Override
     public TimeExtent getResultTime()
     {
         return getTarget().getResultTime();
     }
 
 
+    @Override
     public void setResultTime(TimeExtent time)
     {
         getTarget().setResultTime(time);
     }
 
 
+    @Override
     public TimeExtent getValidTime()
     {
         return getTarget().getValidTime();
     }
 
 
+    @Override
     public void setValidTime(TimeExtent time)
     {
         getTarget().setValidTime(time);
     }
 
 
+    @Override
     public IXlinkReference<IDefinition> getObservedProperty()
     {
         return getTarget().getObservedProperty();
     }
 
 
+    @Override
     public void setObservedProperty(IXlinkReference<IDefinition> propRef)
     {
         getTarget().setObservedProperty(propRef);
     }
 
 
+    @Override
     public AbstractFeature getFeatureOfInterest()
     {
         return getTarget().getFeatureOfInterest();
     }
 
 
+    @Override
     public void setFeatureOfInterest(AbstractFeature foi)
     {
         getTarget().setFeatureOfInterest(foi);
     }
 
 
+    @Override
     public IProcedure getProcedure()
     {
         return getTarget().getProcedure();
     }
 
 
+    @Override
     public void setProcedure(IProcedure procedure)
     {
         getTarget().setProcedure(procedure);
     }
     
     
+    @Override
     public Map<String, Object> getParameters()
     {
         return getTarget().getParameters();
     }
     
     
+    @Override
     public void addParameter(String name, Object value)
     {
         getTarget().addParameter(name, value);
     }
 
 
+    @Override
     public List<Object> getResultQuality()
     {
         return getTarget().getResultQuality();
     }
 
 
+    @Override
     public void addResultQuality(Object qualityInfo)
     {
         getTarget().addResultQuality(qualityInfo);
     }
 
 
+    @Override
     public DataComponent getResult()
     {
         return getTarget().getResult();
     }
 
 
+    @Override
     public void setResult(DataComponent result)
     {
         getTarget().setResult(result);

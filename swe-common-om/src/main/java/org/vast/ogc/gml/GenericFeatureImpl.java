@@ -48,18 +48,21 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     }
     
     
+    @Override
     public QName getQName()
     {
         return qname;
     }
 
     
+    @Override
     public Map<QName, Object> getProperties()
     {
         return properties;
     }
   
     
+    @Override
     public void setProperty(QName qname, Object prop)
     {
         if (prop != null)
@@ -67,12 +70,14 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     }
     
     
+    @Override
     public Object getProperty(QName qname)
     {
         return properties.get(qname);
     }
     
     
+    @Override
     public void setProperty(String name, Object prop)
     {
         if (prop != null)
@@ -80,18 +85,21 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     }
     
     
+    @Override
     public Object getProperty(String name)
     {
         return properties.get(new QName(name));
     }
 
 
+    @Override
     public String getType()
     {
         return type;
     }
 
 
+    @Override
     public void setType(String type)
     {
         this.type = type;

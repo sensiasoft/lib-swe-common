@@ -80,238 +80,238 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
     }
 
 
-
+    @Override
     public OgcPropertyList<Object> getMetaDataPropertyList()
     {
         return getTarget().getMetaDataPropertyList();
     }
 
 
-
+    @Override
     public Envelope getBoundedBy()
     {
         return getTarget().getBoundedBy();
     }
 
 
-
+    @Override
     public boolean isSetBoundedBy()
     {
         return getTarget().isSetBoundedBy();
     }
 
 
-
+    @Override
     public String getDescription()
     {
         return getTarget().getDescription();
     }
 
 
-
+    @Override
     public void setBoundedByAsEnvelope(Envelope boundedBy)
     {
         getTarget().setBoundedByAsEnvelope(boundedBy);
     }
 
 
-
+    @Override
     public boolean isSetDescription()
     {
         return getTarget().isSetDescription();
     }
 
 
-
+    @Override
     public AbstractGeometry getLocation()
     {
         return getTarget().getLocation();
     }
 
 
-
+    @Override
     public void setDescription(String description)
     {
         getTarget().setDescription(description);
     }
 
 
-
+    @Override
     public QName getQName()
     {
         return getTarget().getQName();
     }
 
 
-
+    @Override
     public OgcProperty<AbstractGeometry> getLocationProperty()
     {
         return getTarget().getLocationProperty();
     }
 
 
-
+    @Override
     public Reference getDescriptionReference()
     {
         return getTarget().getDescriptionReference();
     }
 
 
-
+    @Override
     public String getType()
     {
         return getTarget().getType();
     }
 
 
-
+    @Override
     public void setType(String type)
     {
         getTarget().setType(type);
     }
 
 
-
+    @Override
     public Map<QName, Object> getProperties()
     {
         return getTarget().getProperties();
     }
 
 
-
+    @Override
     public boolean isSetDescriptionReference()
     {
         return getTarget().isSetDescriptionReference();
     }
 
 
-
+    @Override
     public Object getProperty(String name)
     {
         return getTarget().getProperty(name);
     }
 
 
-
+    @Override
     public boolean isSetLocation()
     {
         return getTarget().isSetLocation();
     }
 
 
-
+    @Override
     public void setProperty(String name, Object value)
     {
         getTarget().setProperty(name, value);
     }
 
 
-
+    @Override
     public Object getProperty(QName qname)
     {
         return getTarget().getProperty(qname);
     }
 
 
-
+    @Override
     public void setLocation(AbstractGeometry location)
     {
         getTarget().setLocation(location);
     }
 
 
-
+    @Override
     public void setDescriptionReference(Reference descriptionReference)
     {
         getTarget().setDescriptionReference(descriptionReference);
     }
 
 
-
+    @Override
     public void setProperty(QName qname, Object value)
     {
         getTarget().setProperty(qname, value);
     }
 
 
-
+    @Override
     public CodeWithAuthority getIdentifier()
     {
         return getTarget().getIdentifier();
     }
 
 
-
+    @Override
     public String getUniqueIdentifier()
     {
         return getTarget().getUniqueIdentifier();
     }
 
 
-
+    @Override
     public boolean isSetIdentifier()
     {
         return getTarget().isSetIdentifier();
     }
 
 
-
+    @Override
     public void setIdentifier(CodeWithAuthority identifier)
     {
         getTarget().setIdentifier(identifier);
     }
 
 
-
+    @Override
     public void setUniqueIdentifier(String identifier)
     {
         getTarget().setUniqueIdentifier(identifier);
     }
 
 
-
+    @Override
     public List<Code> getNameList()
     {
         return getTarget().getNameList();
     }
 
 
-
+    @Override
     public int getNumNames()
     {
         return getTarget().getNumNames();
     }
 
 
-
+    @Override
     public void addName(Code name)
     {
         getTarget().addName(name);
     }
 
 
-
+    @Override
     public void setName(String name)
     {
         getTarget().setName(name);
     }
 
 
-
+    @Override
     public String getName()
     {
         return getTarget().getName();
     }
 
 
-
+    @Override
     public String getId()
     {
         return getTarget().getId();
     }
 
 
-
+    @Override
     public void setId(String id)
     {
         getTarget().setId(id);

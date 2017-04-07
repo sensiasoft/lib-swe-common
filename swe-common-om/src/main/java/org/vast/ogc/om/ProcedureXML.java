@@ -64,12 +64,14 @@ public class ProcedureXML implements IProcedure
     }
        
     
+    @Override
     public QName getQName()
     {
         return new QName(domElt.getNamespaceURI(), domElt.getLocalName());
     }
     
     
+    @Override
     public String getType()
     {
         if (procedure == null)
@@ -79,6 +81,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public void setType(String type)
     {
         if (procedure == null)
@@ -106,6 +109,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public String getUniqueIdentifier()
     {
         if (procedure == null)
@@ -124,6 +128,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public String getDescription()
     {
         if (procedure == null)
@@ -133,6 +138,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public void setDescription(String desc)
     {
         if (procedure == null)
@@ -142,6 +148,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public String getName()
     {
         if (procedure == null)
@@ -151,6 +158,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public void setName(String name)
     {
         if (procedure == null)
@@ -161,6 +169,7 @@ public class ProcedureXML implements IProcedure
 
 
 
+    @Override
     public Map<QName, Object> getProperties()
     {
         if (procedure == null)
@@ -170,6 +179,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public Object getProperty(String name)
     {
         if (procedure == null)
@@ -179,6 +189,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public void setProperty(String name, Object value)
     {
         if (procedure == null)
@@ -188,6 +199,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public Object getProperty(QName qname)
     {
         if (procedure == null)
@@ -197,6 +209,7 @@ public class ProcedureXML implements IProcedure
     }
 
 
+    @Override
     public void setProperty(QName qname, Object value)
     {
         if (procedure == null)

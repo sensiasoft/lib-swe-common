@@ -45,6 +45,7 @@ public enum TimeIndeterminateValue
     /**
      * To convert an enum constant to its String representation
      */
+    @Override
     public String toString()
     {
         return text;

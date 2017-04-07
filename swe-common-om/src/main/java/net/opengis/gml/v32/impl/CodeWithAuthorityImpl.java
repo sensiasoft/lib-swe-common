@@ -36,34 +36,4 @@ public class CodeWithAuthorityImpl extends CodeImpl implements CodeWithAuthority
         this.codeSpace = codeSpace;
         this.value = value;
     }
-    
-    
-    /**
-     * Gets the codeSpace property
-     */
-    @Override
-    public String getCodeSpace()
-    {
-        return codeSpace;
-    }
-    
-    
-    /**
-     * Checks if codeSpace is set
-     */
-    @Override
-    public boolean isSetCodeSpace()
-    {
-        return (codeSpace != null);
-    }
-    
-    
-    /**
-     * Sets the codeSpace property
-     */
-    @Override
-    public void setCodeSpace(String codeSpace)
-    {
-        this.codeSpace = codeSpace;
-    }
 }

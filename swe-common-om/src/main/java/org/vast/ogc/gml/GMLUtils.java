@@ -69,10 +69,10 @@ public class GMLUtils extends XMLBindingsUtils
     
     enum ObjectType
     {
-        Envelope { public String toString() { return "GML Envelope"; } },
-        Geometry { public String toString() { return "GML Geometry"; } },
-        TimePrimitive { public String toString() { return "GML Time Primitive"; } },
-        Feature { public String toString() { return "GML Feature"; } }
+        Envelope { @Override public String toString() { return "GML Envelope"; } },
+        Geometry { @Override public String toString() { return "GML Geometry"; } },
+        TimePrimitive { @Override public String toString() { return "GML Time Primitive"; } },
+        Feature { @Override public String toString() { return "GML Feature"; } }
     }
     
     
@@ -292,9 +292,9 @@ public class GMLUtils extends XMLBindingsUtils
         Envelope env = bboxToEnvelope(bbox, gmlFactory);
         return writeEnvelope(dom, env);
     }
+        
     
-    
-    
+    @Override
     protected Object readFromXmlStream(XMLStreamReader reader, Enum<?> eltType) throws XMLStreamException
     {
         reader.nextTag();
@@ -319,6 +319,7 @@ public class GMLUtils extends XMLBindingsUtils
     }
     
     
+    @Override
     protected void writeToXmlStream(XMLStreamWriter writer, Object gmlObj, Enum<?> eltType) throws XMLStreamException
     {
         GMLStaxBindings gmlBindings = (GMLStaxBindings)staxBindings;

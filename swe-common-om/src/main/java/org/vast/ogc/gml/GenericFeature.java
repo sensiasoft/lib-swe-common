@@ -38,8 +38,6 @@ import net.opengis.gml.v32.AbstractFeature;
  * */
 public interface GenericFeature extends AbstractFeature
 {
-    public QName getQName();
-    
     public String getType();
     
     public void setType(String type);
