@@ -304,7 +304,7 @@ public class TextDataWriter extends AbstractDataWriter
             addToProcessorTree(new RoundingDecimalWriter(sigFigures));
         }
         else
-            addToProcessorTree(/*new DecimalWriter()*/new RoundingDecimalWriter(4));
+            addToProcessorTree(new DecimalWriter());
     }
     
     

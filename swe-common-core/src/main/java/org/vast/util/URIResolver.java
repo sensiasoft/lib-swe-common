@@ -111,12 +111,12 @@ public class URIResolver
                     }
                     else
                     {
-                        throw new ResolveException("URI " + uri + " cannot be resolved");
+                        throw new ResolveException("Cannot resolve URI " + uri);
                     }
                 }
                 catch (MalformedURLException e1)
                 {
-                    e1.printStackTrace();
+                    throw new IllegalStateException(e1);
                 }
             }
             else

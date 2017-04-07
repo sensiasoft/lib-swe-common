@@ -59,7 +59,7 @@ public class DataOutputStreamBI extends DataOutputStream implements DataOutputEx
     public void writeUnsignedShort(int v) throws IOException
     {
         // MSB first
-        tmpBuf[0] = (byte)(0xff & (v >> 8) & 0xff);
+        tmpBuf[0] = (byte)(0xff & (v >> 8));
         tmpBuf[1] = (byte)(0xff & v);
         
         this.write(tmpBuf, 0, 2);

@@ -14,7 +14,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.fast;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,7 +21,6 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Count;
@@ -30,14 +28,10 @@ import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
-import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.Time;
-import org.vast.cdm.common.DataStreamParser;
-import org.vast.cdm.common.DataStreamWriter;
-import org.vast.swe.SWEHelper;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.ReaderException;
 
@@ -397,120 +391,5 @@ public class TextDataParser extends AbstractDataParser
         for (DataComponent item: choice.getItemList())
             item.accept(this);        
         processorStack.pop();
-    }
-    
-    
-    public static final void main(String[] args) throws Exception
-    {
-        SWEHelper fac = new SWEHelper();
-        int arraySize = 5;
-        
-        DataArray array = fac.newDataArray(arraySize);
-        array.setName("array");
-        DataRecord rec = fac.newDataRecord();
-        rec.addComponent("f0", fac.newTimeStampIsoUTC());
-        rec.addComponent("f1", fac.newQuantity());
-        rec.addComponent("f2", fac.newQuantity());
-        DataRecord rec2 = fac.newDataRecord();
-        rec2.addComponent("f3", fac.newCount());
-        rec2.addComponent("f4", fac.newQuantity());
-        rec.addComponent("rec2", rec2);  
-        DataChoice choice = fac.newDataChoice();
-        choice.addComponent("f5", fac.newCategory());
-        choice.addComponent("f6", fac.newQuantity());
-        rec.addComponent("choice", choice);
-        array.setElementType("elt", rec);
-        
-        // generate data
-        String tokenSep = "!";
-        String blockSep = "@@\n"; 
-        DateTimeFormat timeFormat = new DateTimeFormat();
-        double now = new Date().getTime()/1000.;
-        StringBuilder buf = new StringBuilder();
-        for (int r=0; r<100000; r++)
-        {
-            for (int i=0; i<arraySize; i++)
-            {
-                double val = i + r*10;
-                buf.append(timeFormat.formatIso(now+val, 0)).append(tokenSep)
-                   .append(val/1000.).append(tokenSep)
-                   .append(val+100).append(tokenSep)
-                   .append(((int)val)+200).append(tokenSep)
-                   .append(val+300).append(tokenSep)
-                   .append("f5").append(tokenSep)
-                   .append("test" + i);
-                if (i == arraySize-1)
-                    buf.append(blockSep);
-                else
-                    buf.append(tokenSep);
-            }
-        }
-                
-        /*for (int it=0; it<10; it++)
-        {
-            ByteArrayInputStream is = new ByteArrayInputStream(buf.toString().getBytes()); 
-            
-            // init & launch parser
-            //DataStreamParser parser = new AsciiDataParser();
-            DataStreamParser parser = new TextDataParser();
-            parser.setDataComponents(array);
-            parser.setDataEncoding(fac.newTextEncoding(tokenSep, blockSep));
-            parser.setInput(is);
-            parser.setRenewDataBlock(false);
-            
-            long t0 = System.currentTimeMillis();
-            DataBlock dataBlk;
-            do
-            {
-                //System.out.println();
-                dataBlk = parser.parseNextBlock();
-                //if (dataBlk != null)
-                {
-                //    for (int i=0; i<dataBlk.getAtomCount();i++)
-                //    System.out.print(dataBlk.getStringValue(i) + ",");
-                }
-            }
-            while (dataBlk != null);        
-            System.out.println("Exec Time = " + (System.currentTimeMillis()-t0));
-        }*/
-        
-        for (int it=0; it<10; it++)
-        {
-            ByteArrayInputStream is = new ByteArrayInputStream(buf.toString().getBytes()); 
-            
-            // init parser
-            DataStreamParser parser = new TextDataParser();
-            parser.setDataComponents(array);
-            parser.setDataEncoding(fac.newTextEncoding(tokenSep, blockSep));
-            parser.setInput(is);
-            parser.setRenewDataBlock(false);
-            
-            // init writer
-            /*DataStreamWriter writer = new TextDataWriter();
-            writer.setDataComponents(array);
-            writer.setDataEncoding(fac.newTextEncoding(tokenSep, blockSep));*/
-            DataStreamWriter writer = new XmlDataWriter();
-            writer.setDataComponents(array);
-            writer.setDataEncoding(fac.newXMLEncoding());
-            /*DataStreamWriter writer = new JsonDataWriter();
-            writer.setDataComponents(array);
-            writer.setDataEncoding(fac.newXMLEncoding());*/
-            writer.setOutput(System.out);//new ByteArrayOutputStream(1024*1024));            
-            
-            long t0 = System.currentTimeMillis();
-            DataBlock dataBlk;
-            do
-            {
-                dataBlk = parser.parseNextBlock();
-                if (dataBlk != null)
-                {
-                    writer.write(dataBlk);
-                    writer.flush();
-                }
-            }
-            while (dataBlk != null); 
-            
-            System.out.println("Exec Time = " + (System.currentTimeMillis()-t0));
-        }
     }
 }

@@ -35,6 +35,7 @@ public class TestNumberUtils
         
         assertTrue(NumberUtils.ulpEqual(val1, val2));
         assertTrue(NumberUtils.ulpEqual(val1, val1+Math.ulp(val1)));
+        assertTrue(NumberUtils.ulpEqual(0.0f, Math.signum(-1f)*0.0f));
         
         assertFalse(NumberUtils.ulpEqual(f, f + 2*Math.ulp(f)));
         assertFalse(NumberUtils.ulpEqual(f, 1.0000001*f));
@@ -55,6 +56,7 @@ public class TestNumberUtils
         
         assertTrue(NumberUtils.ulpEqual(val1, val2));
         assertTrue(NumberUtils.ulpEqual(val1, val1+Math.ulp(val1)));
+        assertTrue(NumberUtils.ulpEqual(0.0, Math.signum(-1.0)*0.0));
         
         assertFalse(NumberUtils.ulpEqual(f, f + 2*Math.ulp(f)));
         assertFalse(NumberUtils.ulpEqual(f, 1.0000001*f));
