@@ -29,8 +29,10 @@ import org.vast.util.URIResolver;
 
 public class URIStreamHandler
 {
-	
-	public static synchronized InputStream openStream(String uri) throws IOException
+    static final String ERR_MSG = "Cannot connect to data stream ";
+    
+    
+    public static synchronized InputStream openStream(String uri) throws IOException
 	{
 		try
 		{
@@ -39,7 +41,7 @@ public class URIStreamHandler
 		}
 		catch (URISyntaxException e)
 		{
-			throw new IOException("Invalid URI syntax");
+			throw new IOException(ERR_MSG, e);
 		}	
 	}
 
@@ -53,7 +55,7 @@ public class URIStreamHandler
 		}
 		catch (IOException e)
 		{
-			throw new IOException("Error while connecting to the data stream: " + uri);
+			throw new IOException(ERR_MSG + uri, e);
 		}
 	}
 }

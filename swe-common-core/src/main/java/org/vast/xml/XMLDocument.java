@@ -24,21 +24,25 @@ import java.util.*;
 import java.util.Map.Entry;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSException;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSParser;
 import org.w3c.dom.ls.LSParserFilter;
 import org.w3c.dom.ls.LSSerializer;
 import org.w3c.dom.traversal.NodeFilter;
+import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -46,7 +50,7 @@ import javax.xml.transform.stream.StreamResult;
 
 /**
  * <p>
- * TODO XMLDocument type description
+ * Wrapper class for a DOM XML document
  * </p>
  *
  * @author Alex Robin <alex.robin@sensiasoftware.com>
@@ -237,10 +241,6 @@ public class XMLDocument
             else
                 return parseDOM_JAXP(inputStream, validate, schemaLocations);
         }
-	    catch (DOMHelperException e)
-        {
-            throw e;
-        }
         catch (Exception e)
         {
             throw new DOMHelperException("Error while reading XML document", e);
@@ -248,7 +248,7 @@ public class XMLDocument
     }
 
 
-    protected Document parseDOM_LS(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws Exception
+    protected Document parseDOM_LS(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws DOMHelperException, IOException
     {
         DOMImplementationLS impl = ((DOMImplementationLS)XMLImplFinder.getDOMImplementation());
         
@@ -342,7 +342,7 @@ public class XMLDocument
     }
     
     
-    protected Document parseDOM_JAXP(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws Exception
+    protected Document parseDOM_JAXP(InputStream inputStream, boolean validate, Map<String, String> schemaLocations) throws ParserConfigurationException, IOException, SAXException
     {
         // create document builder
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -396,7 +396,7 @@ public class XMLDocument
         }
         catch (Exception e)
         {
-            throw new IllegalStateException("Error while writing namespaces", e);
+            throw new IOException("Error while writing namespaces", e);
         }  
             
         try
@@ -410,12 +410,12 @@ public class XMLDocument
         }
         catch (Exception e)
         {
-            throw new IllegalStateException("Impossible to initialize DOM implementation for serialization", e);
+            throw new IOException("Error while serializing XML document", e);
         }
     }
     
     
-    protected void serializeDOM_LS(Element elt, OutputStream out, boolean pretty) throws Exception
+    protected void serializeDOM_LS(Element elt, OutputStream out, boolean pretty) throws LSException
     {
         DOMImplementationLS impl = (DOMImplementationLS)XMLImplFinder.getDOMImplementation(); 
         
@@ -433,7 +433,7 @@ public class XMLDocument
     }
     
     
-    protected void serializeDOM_JAXP(Element elt, OutputStream out, boolean pretty) throws Exception
+    protected void serializeDOM_JAXP(Element elt, OutputStream out, boolean pretty) throws TransformerException
     {
         // create transformer
         Transformer serializer = TransformerFactory.newInstance().newTransformer();

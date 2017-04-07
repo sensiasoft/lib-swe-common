@@ -47,6 +47,7 @@ public class DataOutputStreamBI extends DataOutputStream implements DataOutputEx
 	}
 	
 	
+    @Override
     public void writeUnsignedByte(short v) throws IOException
     {
         byte b = (byte)(0xff & v);
@@ -54,6 +55,7 @@ public class DataOutputStreamBI extends DataOutputStream implements DataOutputEx
     }
     
     
+    @Override
     public void writeUnsignedShort(int v) throws IOException
     {
         // MSB first
@@ -64,7 +66,8 @@ public class DataOutputStreamBI extends DataOutputStream implements DataOutputEx
     }
     
     
-	public void writeUnsignedInt(long v) throws IOException
+    @Override
+    public void writeUnsignedInt(long v) throws IOException
 	{
 	    // MSB first
 	    tmpBuf[0] = (byte)(0xff & (v >> 24));
@@ -76,13 +79,15 @@ public class DataOutputStreamBI extends DataOutputStream implements DataOutputEx
 	}
 		
 
-	public void writeUnsignedLong(long v) throws IOException
+    @Override
+    public void writeUnsignedLong(long v) throws IOException
 	{
 		this.writeLong(v);
 	}
 	
 	
-	public void writeASCII(String s) throws IOException
+    @Override
+    public void writeASCII(String s) throws IOException
 	{
 		this.writeBytes(s);
 		this.writeByte(0);

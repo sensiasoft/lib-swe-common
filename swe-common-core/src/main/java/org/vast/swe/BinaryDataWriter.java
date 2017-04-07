@@ -218,7 +218,7 @@ public class BinaryDataWriter extends AbstractDataWriter
                     break;
                     
                 default:
-                    throw new RuntimeException("Unsupported datatype " + dataType);
+                    throw new IllegalStateException("Unsupported datatype " + dataType);
             }
         }
         catch (Exception e)

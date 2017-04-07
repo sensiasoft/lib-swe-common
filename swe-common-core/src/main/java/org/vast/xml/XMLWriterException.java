@@ -38,7 +38,7 @@ import org.w3c.dom.Node;
 public class XMLWriterException extends IOException
 {
     private static final long serialVersionUID = 8646321646816484864L;
-    protected Node nodeWithError;
+    protected transient Node nodeWithError;
     
 
     public XMLWriterException(Exception e)

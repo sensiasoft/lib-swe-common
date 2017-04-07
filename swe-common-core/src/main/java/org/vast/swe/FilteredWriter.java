@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
+import org.vast.cdm.common.CDMException;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.ScalarComponent;
@@ -92,7 +93,7 @@ public class FilteredWriter extends AbstractDataWriter
     
     
     @Override
-    protected void endDataBlock() throws Exception
+    protected void endDataBlock() throws CDMException, IOException
     {
         writer.endDataBlock();
     }

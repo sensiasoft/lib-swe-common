@@ -147,14 +147,8 @@ public class BinaryDataParser extends AbstractDataParser
 		}
 		finally
 		{
-			try
-			{
-				inputStream.close();
-                //dataComponents.clearData();
-			}
-			catch (IOException e)
-			{
-			}
+		    inputStream.close();
+            //dataComponents.clearData();
 		}
 	}
 	
@@ -216,10 +210,32 @@ public class BinaryDataParser extends AbstractDataParser
 	        reader.init(blockComponent, binaryOpts);
 	    }
     }
+    
+    
+    /**
+     * Checks if more data is available from the stream
+     * @return true if more data needs to be parsed, false otherwise
+     * @throws IOException
+     */
+    public boolean moreData() throws IOException
+    {
+        dataInput.mark(1);
+        int result = dataInput.read();
+        
+        if (result == -1)
+        {
+            return false;
+        }
+        else
+        {
+            dataInput.reset();
+            return true;
+        }
+    }
 	
 	
 	@Override
-	protected void processAtom(ScalarComponent scalarComponent) throws CDMException, IOException
+	protected void processAtom(ScalarComponent scalarComponent) throws IOException
 	{
 		// get next encoding block
 	    BinaryMember binaryInfo = ((AbstractDataComponentImpl)scalarComponent).getEncodingInfo();
@@ -230,7 +246,7 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	
 	@Override
-	protected boolean processBlock(DataComponent blockComponent) throws CDMException, IOException
+	protected boolean processBlock(DataComponent blockComponent) throws IOException
 	{
 		if (blockComponent instanceof DataChoiceImpl)
 		{
@@ -242,13 +258,9 @@ public class BinaryDataParser extends AbstractDataParser
 				choiceIndex = dataInput.readByte();
 				((DataChoiceImpl)blockComponent).setSelectedItem(choiceIndex);
 			}
-			catch (IllegalStateException e)
+			catch (Exception e)
 			{
-				throw new CDMException(CHOICE_ERROR + choiceIndex);
-			}
-			catch (IOException e)
-			{
-				throw new CDMException(STREAM_ERROR);
+				throw new ReaderException(CHOICE_ERROR + choiceIndex, e);
 			}
 		}
 		else
@@ -269,41 +281,13 @@ public class BinaryDataParser extends AbstractDataParser
 	
 	
 	/**
-	 * Checks if more data is available from the stream
-	 * @return true if more data needs to be parsed, false otherwise
-	 */
-	public boolean moreData() throws IOException
-	{
-		try
-		{
-			dataInput.mark(1);
-			int result = dataInput.read();
-			
-			if (result == -1)
-			{
-				return false;
-			}
-			else
-			{
-				dataInput.reset();
-				return true;
-			}				
-		}
-		catch (IOException e)
-		{
-			throw new ReaderException(STREAM_ERROR, e);
-		}
-	}
-	
-	
-	/**
 	 * Parse binary block using DataInfo and DataEncoding structures
 	 * Decoded value is assigned to each DataValue
 	 * @param scalarInfo
 	 * @param binaryInfo
-	 * @throws CDMException
+	 * @throws IOException
 	 */
-	private void parseBinaryAtom(ScalarComponent scalarInfo, BinaryMember binaryInfo) throws CDMException, IOException
+	private void parseBinaryAtom(ScalarComponent scalarInfo, BinaryMember binaryInfo) throws IOException
 	{
 		DataType dataType = ((BinaryComponentImpl)binaryInfo).getCdmDataType();
 		
@@ -377,12 +361,12 @@ public class BinaryDataParser extends AbstractDataParser
 					break;
 					
 				default:
-                    throw new RuntimeException("Unsupported datatype " + dataType);
+                    throw new ReaderException("Unsupported datatype " + dataType);
 			}
 		}
 		catch (RuntimeException e)
 		{
-            throw new CDMException("Error while parsing component " + scalarInfo.getName(), e);
+            throw new ReaderException("Error while parsing component " + scalarInfo.getName(), e);
 		}
 	}
 
@@ -394,31 +378,38 @@ public class BinaryDataParser extends AbstractDataParser
 	 * @param binaryInfo
 	 * @throws CDMException
 	 */
-	private void parseBinaryBlock(DataComponent blockComponent, BinaryBlockImpl binaryInfo) throws CDMException, IOException
+	private void parseBinaryBlock(DataComponent blockComponent, BinaryBlockImpl binaryInfo) throws IOException
 	{
-		// TODO: PADDING IS TAKEN CARE OF HERE... 
-	    
-	    DataBlock dataBlock = blockComponent.getData();
-	    
-	    if (dataBlock instanceof DataBlockCompressed)
-	    {
-	        // read block size
-            int blockSize = dataInput.readInt();
-            byte[] bytes = new byte[blockSize];
-            dataInput.readFully(bytes);
-            dataBlock.setUnderlyingObject(bytes);
-	    }
-	    
-	    // otherwise need to uncompress on-the-fly
-	    else
-	    {
-	        // if decoder is specified, uncompress data now
-    	    CompressedStreamParser reader = binaryInfo.getBlockReader();
-    	    if (reader != null)
-    	    {
-    	        reader.decode(dataInput, blockComponent);
-    	    }
-	    }
+		try
+        {
+            // TODO: PADDING IS TAKEN CARE OF HERE... 
+            
+            DataBlock dataBlock = blockComponent.getData();
+            
+            if (dataBlock instanceof DataBlockCompressed)
+            {
+                // read block size
+                int blockSize = dataInput.readInt();
+                byte[] bytes = new byte[blockSize];
+                dataInput.readFully(bytes);
+                dataBlock.setUnderlyingObject(bytes);
+            }
+            
+            // otherwise need to uncompress on-the-fly
+            else
+            {
+                // if decoder is specified, uncompress data now
+                CompressedStreamParser reader = binaryInfo.getBlockReader();
+                if (reader != null)
+                {
+                    reader.decode(dataInput, blockComponent);
+                }
+            }
+        }
+        catch (IOException | CDMException e)
+        {
+            throw new ReaderException("Cannot parse binary block", e);
+        }
 	}
 	
 	

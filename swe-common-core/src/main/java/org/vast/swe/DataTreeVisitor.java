@@ -20,12 +20,14 @@
 
 package org.vast.swe;
 
+import java.io.IOException;
 import java.util.Stack;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataEncoding;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.ScalarComponent;
+import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataHandler;
 import org.vast.cdm.common.ErrorHandler;
 import org.vast.cdm.common.RawDataHandler;
@@ -72,23 +74,28 @@ public abstract class DataTreeVisitor
 	}
 	
 	
-	protected abstract void processAtom(ScalarComponent component) throws Exception;
+	/**
+	 * Processes a scalar component
+	 * @param component
+	 * @throws CDMException
+	 */
+	protected abstract void processAtom(ScalarComponent component) throws CDMException, IOException;
 	
 	
 	/**
-	 * Process an aggregate component
-	 * @param scalarComponent
+	 * Processes an aggregate component
+	 * @param component
 	 * @return true if children should be processed, false otherwise
-	 * @throws Exception
+	 * @throws CDMException
 	 */
-	protected abstract boolean processBlock(DataComponent component) throws Exception;
+	protected abstract boolean processBlock(DataComponent component) throws CDMException, IOException;
 	
 	
 	/**
 	 * Process the next scalar element in the stream
 	 * @throws Exception 
 	 */
-	public void processNextElement() throws Exception
+	public void processNextElement() throws CDMException, IOException
 	{
         // reset iterator if new block is starting
 		if (newBlock)
@@ -234,7 +241,7 @@ public abstract class DataTreeVisitor
 	}
 	
 	
-	protected void endDataBlock() throws Exception
+	protected void endDataBlock() throws CDMException, IOException
     {        
     }
 	

@@ -94,21 +94,23 @@ public class DateTimePrecise
     
     
     @Override
-    public boolean equals(Object o)
+    public boolean equals(Object other)
     {
-        if (o instanceof DateTimePrecise)
-            return equals((DateTimePrecise)o);
-                
+        if (other instanceof DateTimePrecise)
+        {
+            DateTimePrecise otherDate = (DateTimePrecise)other;
+            if (otherDate.seconds == seconds && Double.compare(fractionOfSeconds, otherDate.fractionOfSeconds) == 0)
+                return true;
+        }
+        
         return false;
     }
     
     
-    public boolean equals(DateTimePrecise other)
+    @Override
+    public final int hashCode()
     {
-        if (other.seconds == seconds && other.fractionOfSeconds == fractionOfSeconds)
-            return true;
-        
-        return false;
+        return Long.hashCode(seconds) + 31*Double.hashCode(fractionOfSeconds) + 67*timeZoneOffset;
     }
     
     

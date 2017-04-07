@@ -20,7 +20,8 @@
 
 package org.vast.xml;
 
-import org.vast.util.ExceptionSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vast.util.URIResolver;
 import org.w3c.dom.*;
 import java.io.IOException;
@@ -51,9 +52,10 @@ import javax.xml.transform.dom.DOMSource;
  * */
 public class DOMHelper
 {
-    public final static String XML_NS_URI = "http://www.w3.org/2000/xmlns/";
-    public final static String XSI_NS_URI = "http://www.w3.org/2001/XMLSchema-instance";
-    protected final static String PATH_SEPARATOR = "/";
+    public static final String XML_NS_URI = "http://www.w3.org/2000/xmlns/";
+    public static final String XSI_NS_URI = "http://www.w3.org/2001/XMLSchema-instance";
+    protected static final String PATH_SEPARATOR = "/";
+    private static final Logger log = LoggerFactory.getLogger(DOMHelper.class);
     
     /** User prefix to domain map **/
     protected Map<String, String> userPrefixTable = new HashMap<String, String>();
@@ -119,12 +121,7 @@ public class DOMHelper
     public DOMHelper(InputStream inputStream, boolean validation, Map<String, String> schemaLocations) throws DOMHelperException
     {
         this.validation = validation;
-        try {
-			mainFragment = parseStream(inputStream, true, schemaLocations);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        this.mainFragment = parseStream(inputStream, true, schemaLocations);
     }
 
 
@@ -1012,7 +1009,7 @@ public class DOMHelper
                     }
                     catch (DOMHelperException e)
                     {
-                        ExceptionSystem.display(new DOMHelperException("Linked object at " + href + " not found"));
+                        log.error("Linked object at " + href + " not found", e);
                     }
 
                     if (fragment != null)
@@ -1067,7 +1064,7 @@ public class DOMHelper
      * @throws DOMHelperException
      * @throws IOException 
      */
-    protected XMLFragment parseStream(InputStream inputStream, boolean addToTable, Map<String, String> schemaLocations) throws DOMHelperException, IOException
+    protected XMLFragment parseStream(InputStream inputStream, boolean addToTable, Map<String, String> schemaLocations) throws DOMHelperException
     {
         XMLDocument newDocument;
         
@@ -1099,7 +1096,7 @@ public class DOMHelper
         XMLFragment xmlFragment = new XMLFragment();
 
         if (href == null)
-            throw new IllegalArgumentException("Uri can't be null");
+            throw new IllegalArgumentException("URI cannot be null");
 
         // construct a new URL object from the String argument
         try
@@ -1108,58 +1105,51 @@ public class DOMHelper
             href = href.replace(" ", "%20");
             uri = new URI(href);
             uriResolver = new URIResolver(uri);
-            uri = uriResolver.getResolvedUri();
-        }
-        catch (URISyntaxException e)
-        {
-            throw new DOMHelperException("URI " + href + " is malformed");
-        }
+            uri = uriResolver.getResolvedUri();        
         
-        // get docUri string w/o the fragment
-        String docUri = uri.toString();
-        int fragIndex = docUri.indexOf('#');
-        if (fragIndex != -1)
-            docUri = docUri.substring(0, fragIndex);
-
-        // check if the same document is already opened
-        // forces reload if uri contains a query string
-        if (uri.getQuery() == null)
-            xmlFragment.xmlDocument = (XMLDocument)loadedDocuments.get(docUri);
-
-        // parse doc only if not already present in the table or forceReload is true
-        if ((xmlFragment.xmlDocument == null) || (forceReload == true))
-        {
-            try
+            // get docUri string w/o the fragment
+            String docUri = uri.toString();
+            int fragIndex = docUri.indexOf('#');
+            if (fragIndex != -1)
+                docUri = docUri.substring(0, fragIndex);
+    
+            // check if the same document is already opened
+            // forces reload if uri contains a query string
+            if (uri.getQuery() == null)
+                xmlFragment.xmlDocument = (XMLDocument)loadedDocuments.get(docUri);
+    
+            // parse doc only if not already present in the table or forceReload is true
+            if ((xmlFragment.xmlDocument == null) || (forceReload == true))
             {
                 // parses the xml stream !!
                 xmlFragment = parseStream(uriResolver.openStream(), false, null);
+    
+                // add an entry to the linkedDocuments table
+                // don't do it if url includes a query string (usually means dynamic document!)
+                if (uri.getQuery() == null)
+                    loadedDocuments.put(docUri, xmlFragment.xmlDocument);
+    
+                // also set the uri in the document
+                xmlFragment.xmlDocument.setUri(uri);
             }
-            catch (IOException e)
+            else
             {
-                throw new DOMHelperException("Error while opening XML stream", e);
+                xmlFragment.baseElement = xmlFragment.xmlDocument.getDocumentElement();
             }
-
-            // add an entry to the linkedDocuments table
-            // don't do it if url includes a query string (usually means dynamic document!)
-            if (uri.getQuery() == null)
-                loadedDocuments.put(docUri, xmlFragment.xmlDocument);
-
-            // also set the uri in the document
-            xmlFragment.xmlDocument.setUri(uri);
+    
+            // change base element if there is an ID
+            String id = uri.getFragment();
+            if (id != null)
+            {
+                xmlFragment.baseElement = xmlFragment.xmlDocument.getElementByID(id);
+            }
+    
+            return xmlFragment;
         }
-        else
+        catch (Exception e)
         {
-            xmlFragment.baseElement = xmlFragment.xmlDocument.getDocumentElement();
+            throw new DOMHelperException("Cannot parse document with URI " + href, e);
         }
-
-        // change base element if there is an ID
-        String id = uri.getFragment();
-        if (id != null)
-        {
-            xmlFragment.baseElement = xmlFragment.xmlDocument.getElementByID(id);
-        }
-
-        return xmlFragment;
     }
     
     
@@ -1194,7 +1184,7 @@ public class DOMHelper
             }
             catch (URISyntaxException e)
             {
-                throw new DOMHelperException("URI " + idRef + " is malformed");
+                throw new DOMHelperException("Cannot retrieve fragment with ID " + idRef, e);
             }
         }
 

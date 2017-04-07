@@ -23,6 +23,8 @@ package org.vast.ogc;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
@@ -41,13 +43,14 @@ import org.w3c.dom.NodeList;
  * */
 public class OGCRegistry
 {
-    public final static String XLINK = "XLINK";
-    protected final static String DEFAULT_OWS_VERSION = "1.0";
-    protected final static Pattern versionNormalizePattern = Pattern.compile("(\\.0)+$");
+    public static final String XLINK = "XLINK";
+    protected static final String DEFAULT_OWS_VERSION = "1.0";
+    protected static final Pattern VERSION_NORMALIZE_PATTERN = Pattern.compile("(\\.0)+$");
     protected static Map<String, String> readerClasses;
     protected static Map<String, String> writerClasses;
     protected static Map<String, String> namespaces;
     protected static Map<String, String> owsVersions;
+    protected static final Logger log = LoggerFactory.getLogger(OGCRegistry.class);
     
 
     static
@@ -200,9 +203,8 @@ public class OGCRegistry
      * @param subType
      * @param version
      * @param className
-     * @throws IllegalStateException
      */
-    private static void addClass(Map<String, String> table, String type, String subType, String version, String className) throws IllegalStateException
+    private static void addClass(Map<String, String> table, String type, String subType, String version, String className)
     {
         type = normalizeTypeString(type);
         subType = normalizeSubtypeString(subType);
@@ -401,15 +403,7 @@ public class OGCRegistry
                 String subType = dom.getAttributeValue(readerElt, "subType");
                 String version = dom.getAttributeValue(readerElt, "version");
                 String className = dom.getAttributeValue(readerElt, "class");
-
-                try
-                {
-                    addClass(readerClasses, type, subType, version, className);
-                }
-                catch (IllegalStateException e)
-                {
-                    System.err.println(e.getLocalizedMessage());
-                }
+                addClass(readerClasses, type, subType, version, className);
             }
 
             // add writer hashtable entries
@@ -421,20 +415,12 @@ public class OGCRegistry
                 String subType = dom.getAttributeValue(writerElt, "subType");
                 String version = dom.getAttributeValue(writerElt, "version");
                 String className = dom.getAttributeValue(writerElt, "class");
-
-                try
-                {
-                    addClass(writerClasses, type, subType, version, className);
-                }
-                catch (IllegalStateException e)
-                {
-                    System.err.println(e.getLocalizedMessage());
-                }
+                addClass(writerClasses, type, subType, version, className);
             }            
         }
         catch (DOMHelperException e)
         {
-            throw new IllegalStateException("Invalid OWSRegistry mapping file");
+            throw new IllegalStateException("Invalid OWSRegistry mapping file", e);
         }
     }
 
@@ -461,7 +447,7 @@ public class OGCRegistry
     {
         if (version != null && version.length() > 0 && !version.equalsIgnoreCase("*"))
         {
-            version = versionNormalizePattern.matcher(version).replaceAll("");
+            version = VERSION_NORMALIZE_PATTERN.matcher(version).replaceAll("");
             return version;
         }
         else

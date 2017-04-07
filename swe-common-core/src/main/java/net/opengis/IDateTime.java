@@ -47,7 +47,8 @@ public interface IDateTime
      * @param other
      * @return true if condition is satisfied
      */
-    public boolean equals(IDateTime other);
+    @Override
+    public boolean equals(Object other);
     
     
     /**

@@ -73,7 +73,7 @@ public class OGCExceptionReader
         }
         catch (DOMHelperException e)
         {
-            e.printStackTrace();
+            throw new OGCException("Invalid Exception", e);
         }
         
 		return;

@@ -24,6 +24,7 @@
 package org.vast.ogc.xlink;
 
 import java.io.IOException;
+import org.vast.util.ResolveException;
 
 
 /**
@@ -123,7 +124,7 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
         }
         catch (IOException e)
         {
-            throw new RuntimeException("Error while fetching linked content", e);
+            throw new ResolveException("Error while fetching linked content", e);
         }
         
         return value;

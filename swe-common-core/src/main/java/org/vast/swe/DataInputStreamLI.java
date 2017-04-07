@@ -48,6 +48,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
 	}
     
     
+	@Override
     public boolean readBoolean() throws IOException
     {
         int ch = in.read();
@@ -57,6 +58,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     }
     
     
+    @Override
     public byte readByte() throws IOException
     {
         int ch = in.read();
@@ -66,6 +68,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     }
 
 
+    @Override
     public int readUnsignedByte() throws IOException
     {
         int ch = in.read();
@@ -75,39 +78,40 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     }
     
     
+    @Override
     public short readShort() throws IOException
     {
         this.readFully(b, 0, 2);
         
-        int val = ((int)(b[1] & 0xff) << 8) |
-                  ((int)(b[0] & 0xff) << 0);
+        int val = ((int)(b[1] & 0xff) << 8) | ((int)(b[0] & 0xff));
         
         return (short)val;
     }
 
 
+    @Override
     public int readUnsignedShort() throws IOException
     {
         this.readFully(b, 0, 2);
         
-        int val = ((int)(b[1] & 0xff) << 8) |
-                  ((int)(b[0] & 0xff) << 0);
+        int val = ((int)(b[1] & 0xff) << 8) | ((int)(b[0] & 0xff));
         
         return val;
     }
     
     
+    @Override
     public char readChar() throws IOException
     {
         this.readFully(b, 0, 2);
         
-        int val = ((int)(b[1] & 0xff) << 8) |
-                  ((int)(b[0] & 0xff) << 0);
+        int val = ((int)(b[1] & 0xff) << 8) | ((int)(b[0] & 0xff));
         
         return (char)val; 
     }
     
     
+    @Override
     public int readInt() throws IOException
     {
         this.readFully(b, 0, 4);
@@ -115,25 +119,27 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
         int val = ((int)(b[3] & 0xff) << 24) |
                   ((int)(b[2] & 0xff) << 16) |
                   ((int)(b[1] & 0xff) <<  8) |
-                  ((int)(b[0] & 0xff) <<  0);
+                  ((int)(b[0] & 0xff));
         
         return val;
     }
     
     
-	public long readUnsignedInt() throws IOException
+    @Override
+    public long readUnsignedInt() throws IOException
 	{
         this.readFully(b, 0, 4);
 		 
         long val = ((long)(b[3] & 0xff) << 24) |
                    ((long)(b[2] & 0xff) << 16) |
                    ((long)(b[1] & 0xff) <<  8) |
-                   ((long)(b[0] & 0xff) <<  0);
+                   ((long)(b[0] & 0xff));
         
         return val;
 	}
     
     
+    @Override
     public long readLong() throws IOException
     {
         this.readFully(b, 0, 8);
@@ -145,30 +151,34 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
                    ((long)(b[3] & 0xff) << 24) |
                    ((long)(b[2] & 0xff) << 16) |
                    ((long)(b[1] & 0xff) <<  8) |
-                   ((long)(b[0] & 0xff) <<  0);
+                   ((long)(b[0] & 0xff));
         
         return val;
     }
     
     
+    @Override
     public long readUnsignedLong() throws IOException
     {
         return readLong();
     }
 
 
+    @Override
     public float readFloat() throws IOException
     {
         return Float.intBitsToFloat(this.readInt());
     }
 
 
+    @Override
     public double readDouble() throws IOException
     {
         return Double.longBitsToDouble(this.readLong());
     }
 
 
+    @Override
     public String readLine() throws IOException
     {
         // TODO readLine method??
@@ -176,13 +186,15 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     }
 
 
+    @Override
     public String readUTF() throws IOException
     {
         return DataInputStream.readUTF(this);
     }
 	
 	
-	public String readASCII() throws IOException
+    @Override
+    public String readASCII() throws IOException
 	{
 		int val;
 		StringBuffer buf = new StringBuffer();
@@ -196,12 +208,14 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
 	}
 
 
+    @Override
     public void readFully(byte[] b) throws IOException
     {
         readFully(b, 0, b.length);        
     }
 
 
+    @Override
     public void readFully(byte[] b, int off, int len) throws IOException
     {
         if (len < 0)
@@ -218,6 +232,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     }
 
 
+    @Override
     public int skipBytes(int n) throws IOException
     {
         int total = 0;

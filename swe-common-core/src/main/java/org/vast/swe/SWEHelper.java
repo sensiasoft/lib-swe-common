@@ -728,7 +728,7 @@ public class SWEHelper extends SWEFactory
         }
         catch (CDMException e)
         {
-            throw new CDMException("Unknown component " + path);
+            throw new CDMException("Unknown component " + path, e);
         }
     }
     

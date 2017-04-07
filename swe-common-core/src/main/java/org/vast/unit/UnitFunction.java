@@ -40,47 +40,47 @@ public abstract class UnitFunction
     {
         UnitFunction func = null;
         
-        if (functionName.equalsIgnoreCase("ln"))
+        if ("ln".equalsIgnoreCase(functionName))
         {
             func = new UnitFunctionLog();
             func.setScaleFactor(scaleFactor);
         }
-        else if (functionName.equalsIgnoreCase("ld"))
+        else if ("ld".equalsIgnoreCase(functionName))
         {
             func = new UnitFunctionLog(2);
             func.setScaleFactor(scaleFactor);
         }
-        else if (functionName.equalsIgnoreCase("lg"))
+        else if ("lg".equalsIgnoreCase(functionName))
         {
             func = new UnitFunctionLog(10);
             func.setScaleFactor(scaleFactor);
         }
-        else if (functionName.equalsIgnoreCase("2lg"))
+        else if ("2lg".equalsIgnoreCase(functionName))
         {
             func = new UnitFunctionLog(10);
             func.setScaleFactor(0.5 * scaleFactor);
         }
-        else if (functionName.equalsIgnoreCase("cel"))
+        else if ("cel".equalsIgnoreCase(functionName))
         {
             func = new UnitFunctionOffset(-273.15);
             func.setScaleFactor(scaleFactor);
         }
-        else if (functionName.equalsIgnoreCase("degf"))
+        else if ("degf".equalsIgnoreCase(functionName))
         {
             func = new UnitFunctionOffset(-9*273.15+32*5);
             func.setScaleFactor(scaleFactor);
         }
-        else if (functionName.equalsIgnoreCase("ph"))
+        else if ("ph".equalsIgnoreCase(functionName))
         {
             func = new UnitFunctionLog(10);
             func.setScaleFactor(-scaleFactor);
         }
-        else if (functionName.equalsIgnoreCase("hpx"))
+        else if ("hpx".equalsIgnoreCase(functionName))
         {
             func = new UnitFunctionLog(10);
             func.setScaleFactor(-scaleFactor);
         }
-        else if (functionName.equalsIgnoreCase("hpc"))
+        else if ("hpc".equalsIgnoreCase(functionName))
         {
             func = new UnitFunctionLog(10);
             func.setScaleFactor(-scaleFactor);
@@ -92,7 +92,12 @@ public abstract class UnitFunction
     
     public abstract double toProperUnit(double value);
     public abstract double fromProperUnit(double value);
-    public abstract boolean equals(Object obj);
+    
+    @Override
+    public abstract boolean equals(Object obj);    
+    
+    @Override
+    public abstract int hashCode();
     
 
     public double getScaleFactor()

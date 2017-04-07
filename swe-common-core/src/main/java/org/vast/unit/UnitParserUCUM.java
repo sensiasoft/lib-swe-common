@@ -25,8 +25,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.vast.util.ExceptionSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.DOMHelperException;
 import org.w3c.dom.Element;
@@ -44,7 +44,8 @@ import org.w3c.dom.NodeList;
  * */
 public class UnitParserUCUM implements UnitParser
 {
-	private static Hashtable<String, Double> prefixTable;
+	private static Logger log = LoggerFactory.getLogger(UnitParserUCUM.class);
+    private static Hashtable<String, Double> prefixTable;
     private static String termRegex = "[./]?[0-9 a-z A-Z \\[ \\] \\- \\+ \\! \\# \\* \\_]+";
     private static String intRegex = "[./]?[-+]?[0-9]+([-+][0-9])?";
     private static String funcRegex = "^[0-9 a-z A-Z]+\\(.+\\)$";
@@ -217,8 +218,7 @@ public class UnitParserUCUM implements UnitParser
             unit.scaleToSI *= prefixScale;
         
         // raise unit to given power
-        if (power != 1.0)
-            unit.power(power);
+        unit.power(power);
         
         // combine unit with current uom
         uom.multiply(unit);
@@ -366,12 +366,12 @@ public class UnitParserUCUM implements UnitParser
                     ucumUnit.setName(unitName);
                     ucumUnit.setProperty(property);
     
-                    if (isMetric != null && isMetric.equals("yes"))
+                    if ("yes".equals(isMetric))
                         ucumUnit.setMetric(true);
                 }
                 catch (RuntimeException e)
                 {
-                    System.out.println(unitCode + " = ? [ERROR]");
+                    log.error(unitCode + " = ? [ERROR]", e);
                     continue;
                 }
     
@@ -388,7 +388,7 @@ public class UnitParserUCUM implements UnitParser
         }
         catch (DOMHelperException e)
         {
-            ExceptionSystem.display(e);
+            log.error("Error while parsing UCUM definition file", e);
         }
     }
     

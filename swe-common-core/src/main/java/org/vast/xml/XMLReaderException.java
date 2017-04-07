@@ -40,7 +40,7 @@ import org.w3c.dom.Node;
 public class XMLReaderException extends ReaderException
 {
     private static final long serialVersionUID = 3623156292080498179L;
-    protected Node nodeWithError;
+    protected transient Node nodeWithError;
     
 
     public XMLReaderException(Exception e)

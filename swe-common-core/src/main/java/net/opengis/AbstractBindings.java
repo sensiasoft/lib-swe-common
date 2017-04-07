@@ -14,9 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis;
 
-import java.text.ParseException;
 import org.vast.util.DateTimeFormat;
-import org.vast.util.NumberUtils;
 
 
 /**
@@ -106,17 +104,20 @@ public abstract class AbstractBindings
     {
         double time;
         
-        try { time = getDoubleFromString(val); }
-        catch (NumberFormatException e)
+        try
         {
             try
             {
+                time = getDoubleFromString(val);
+            }
+            catch (NumberFormatException e)
+            {
                 time = isoFormat.parseIso(val.trim());
             }
-            catch (ParseException e1)
-            {
-                throw new RuntimeException("Invalid ISO or decimal date/time", e1);
-            }
+        }
+        catch (Exception e)
+        {
+            throw new IllegalArgumentException("Cannot parse date/time", e);
         }
         
         return new DateTimeDouble(time);      
@@ -125,16 +126,20 @@ public abstract class AbstractBindings
     
     protected double getDurationFromString(String val)
     {
-        if (NumberUtils.isNumeric(val))
-            return getDoubleFromString(val);
-        
         try
         {
-            return isoFormat.parseIsoPeriod(val.trim());
+            try
+            {
+                return getDoubleFromString(val);
+            }
+            catch (NumberFormatException e)
+            {
+                return isoFormat.parseIsoPeriod(val.trim());
+            }
         }
-        catch (ParseException e)
+        catch (Exception e)
         {
-            throw new IllegalArgumentException("Invalid ISO or decimal duration", e);
+            throw new IllegalArgumentException("Cannot parse duration", e);
         }
     }
     

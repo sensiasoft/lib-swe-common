@@ -27,6 +27,8 @@ package org.vast.xml;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 
@@ -41,6 +43,7 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
  */
 public class XMLImplFinder
 {
+    static final Logger log = LoggerFactory.getLogger(XMLImplFinder.class);
     static DOMImplementation domImplementation;
     static XMLInputFactory staxInputFactory;
     static XMLOutputFactory staxOutputFactory;
@@ -59,15 +62,17 @@ public class XMLImplFinder
         }
         catch (Exception e)
         {
+            log.warn("Cannot find DOM LS implementation", e);
+            
             try
             {
                 // otherwise fallback to simple implementation
                 DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
-                return registry.getDOMImplementation("LS");
+                return registry.getDOMImplementation("XML 1.0");
             }
             catch (Exception e1)
             {
-                throw new IllegalStateException("Impossible to initialize DOM implementation");
+                throw new IllegalStateException("Cannot find DOM implementation", e1);
             }
         }
     }

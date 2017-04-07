@@ -38,11 +38,11 @@ public class DateTimeFormat extends SimpleDateFormat
     static final long serialVersionUID = 0;
     
     public static final int LOCAL = 255;
-	public static int SECONDS_IN_MINUTE = 60;
-	public static int SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE;
-	public static int SECONDS_IN_DAY = 24 * SECONDS_IN_HOUR;
-	public static int SECONDS_IN_MONTH = 30 * SECONDS_IN_DAY;
-	public static int SECONDS_IN_YEAR = 365 * SECONDS_IN_MONTH;
+	public static final int SECONDS_IN_MINUTE = 60;
+	public static final int SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE;
+	public static final int SECONDS_IN_DAY = 24 * SECONDS_IN_HOUR;
+	public static final int SECONDS_IN_MONTH = 30 * SECONDS_IN_DAY;
+	public static final int SECONDS_IN_YEAR = 365 * SECONDS_IN_MONTH;
 	
 	Calendar calendar = new GregorianCalendar();
 	
@@ -208,7 +208,9 @@ public class DateTimeFormat extends SimpleDateFormat
 		}
 		catch (Exception e)
 		{
-			throw new ParseException("Invalid ISO 8601 time string: " + iso8601, 0);
+		    ParseException pe = new ParseException("Invalid ISO 8601 time string: " + iso8601, 0);
+		    pe.initCause(e);
+		    throw pe;
 		}
 	}
 	

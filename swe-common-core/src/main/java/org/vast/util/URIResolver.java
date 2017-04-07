@@ -111,7 +111,7 @@ public class URIResolver
                     }
                     else
                     {
-                        throw new RuntimeException("URI " + uri + " cannot be resolved");
+                        throw new ResolveException("URI " + uri + " cannot be resolved");
                     }
                 }
                 catch (MalformedURLException e1)

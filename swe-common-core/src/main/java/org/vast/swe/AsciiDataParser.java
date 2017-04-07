@@ -85,16 +85,30 @@ public class AsciiDataParser extends AbstractDataParser
         }
 		finally
 		{
-			try
-			{
-				inputStream.close();
-				// dataComponents.clearData();
-			}
-			catch (IOException e)
-			{
-			}
+			inputStream.close();
+			// dataComponents.clearData();
 		}
 	}
+    
+    
+    /**
+     * Checks if more data is available from the stream
+     * @return true if more data needs to be parsed, false otherwise
+     * @throws IOException
+     */
+    protected boolean moreData() throws IOException
+    {
+        lastToken = readToken();
+        return !(lastToken == null);
+    }
+    
+    
+    @Override
+    protected void processAtom(ScalarComponent component) throws IOException
+    {
+        String token = readToken();
+        parseToken(component, token, decimalSep);
+    }
 	
 	
 	/**
@@ -210,27 +224,8 @@ public class AsciiDataParser extends AbstractDataParser
 		}
 		catch (IOException e)
 		{
-			throw new ReaderException(STREAM_ERROR, e);
+			throw new ReaderException("Cannot read next token", e);
 		}
-	}
-	
-	
-    @Override
-	protected void processAtom(ScalarComponent component) throws IOException
-	{
-        String token = readToken();
-        parseToken(component, token, decimalSep);
-	}
-    
-    
-    /**
-	 * Checks if more data is available from the stream
-	 * @return true if more data needs to be parsed, false otherwise
-	 */
-	protected boolean moreData() throws IOException
-	{
-	    lastToken = readToken();
-        return !(lastToken == null);
 	}
     
         
@@ -240,9 +235,9 @@ public class AsciiDataParser extends AbstractDataParser
      * @param token
      * @param decimalSep character to be used as the decimal separator. (don't change anything and assume '.' if 0)
      * @param dataBlock the DataBlock to contain the read data
-     * @throws ReaderException
+     * @throws IOException
      */
-    protected void parseToken(ScalarComponent component, String token, char decimalSep) throws ReaderException
+    protected void parseToken(ScalarComponent component, String token, char decimalSep) throws IOException
     {
         // get component data type
         DataBlock data = component.getData();
@@ -313,15 +308,12 @@ public class AsciiDataParser extends AbstractDataParser
                     break;
                     
                 default:
-                    throw new IllegalArgumentException("Unsupported datatype " + dataType);
+                    throw new ReaderException("Unsupported datatype " + dataType);
             }
         }
-        catch (Exception e)
+        catch (NumberFormatException | ParseException e)
         {
-            if ((e instanceof NumberFormatException) || (e instanceof ParseException))
-                throw new ReaderException("Invalid value '" + token + "' for scalar component '" + component.getName() + "'", e);
-            else
-                throw new ReaderException(STREAM_ERROR, e);
+            throw new ReaderException("Invalid value '" + token + "' for scalar component '" + component.getName() + "'", e);
         }
     }
 
@@ -339,9 +331,9 @@ public class AsciiDataParser extends AbstractDataParser
 				token = readToken();
 				((DataChoiceImpl)component).setSelectedItem(token);
 			}
-			catch (IllegalStateException e)
+			catch (Exception e)
 			{
-				throw new ReaderException(CHOICE_ERROR + token);
+				throw new ReaderException(CHOICE_ERROR + token, e);
 			}
 		}
 		

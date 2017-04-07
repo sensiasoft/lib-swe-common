@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis;
 
 import java.io.IOException;
+import org.vast.util.ResolveException;
 
 
 public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
@@ -176,8 +177,7 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
         }
         catch (IOException e)
         {
-            // output message?
-            return null;
+            throw new ResolveException("Cannot load property value from href", e);
         }
     }
     

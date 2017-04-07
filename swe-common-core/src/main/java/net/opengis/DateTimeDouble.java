@@ -27,7 +27,7 @@ package net.opengis;
 public class DateTimeDouble implements IDateTime
 {
     double julianTime;
-    int timeZoneOffset;
+    byte timeZoneOffset;
     
     
     public DateTimeDouble()
@@ -44,7 +44,7 @@ public class DateTimeDouble implements IDateTime
     public DateTimeDouble(double julianTime, int timeZoneOffset)
     {
         this.julianTime = julianTime;
-        this.timeZoneOffset = timeZoneOffset;
+        this.timeZoneOffset = (byte)timeZoneOffset;
     }
     
     
@@ -67,21 +67,23 @@ public class DateTimeDouble implements IDateTime
     
     
     @Override
-    public final boolean equals(Object o)
+    public final boolean equals(Object other)
     {
-        if (o instanceof DateTimeDouble)
-            return equals((DateTimeDouble)o);                
+        if (other instanceof DateTimePrecise)
+        {
+            double otherVal = ((DateTimeDouble)other).getAsDouble();
+            if (Double.compare(julianTime, otherVal) == 0)
+                return true;
+        }
+        
         return false;
     }
     
     
     @Override
-    public final boolean equals(IDateTime other)
+    public final int hashCode()
     {
-        if (julianTime == other.getAsDouble())
-            return true;
-        
-        return false;
+        return Double.hashCode(julianTime) + 31*timeZoneOffset;
     }
     
     
