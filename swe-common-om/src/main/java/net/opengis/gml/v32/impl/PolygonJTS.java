@@ -37,12 +37,12 @@ import net.opengis.gml.v32.Reference;
  */
 public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements Polygon
 {
-    static final long serialVersionUID = 1L;
-    AbstractGeometryImpl geom = new AbstractGeometryImpl() { };
-    protected LinearRing exterior;
+    private static final long serialVersionUID = 1L;    
+    transient AbstractGeometryImpl geom = new AbstractGeometryImpl() { };
+    transient LinearRing exterior;
     
     @SuppressWarnings("serial")
-    protected List<LinearRing> interiorList = new ArrayList<LinearRing>() {
+    transient List<LinearRing> interiorList = new ArrayList<LinearRing>() {
         @Override
         public boolean add(LinearRing interior)
         {

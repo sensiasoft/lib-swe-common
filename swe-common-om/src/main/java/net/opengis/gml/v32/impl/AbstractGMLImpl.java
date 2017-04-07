@@ -31,7 +31,6 @@ import net.opengis.gml.v32.Reference;
  */
 public abstract class AbstractGMLImpl implements AbstractGML
 {
-    static final long serialVersionUID = 1L;
     public final static String UUID_CODE = "uid";
     protected OgcPropertyList<Object> metaDataPropertyList = new OgcPropertyList<Object>();
     protected String description;

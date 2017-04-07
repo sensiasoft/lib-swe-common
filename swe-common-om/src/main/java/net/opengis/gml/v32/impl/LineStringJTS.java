@@ -35,9 +35,9 @@ import net.opengis.gml.v32.Reference;
  */
 public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implements LineString
 {
-    static final long serialVersionUID = 1L;
-    AbstractGeometryImpl geom = new AbstractGeometryImpl() { };
-    protected double[] posList;
+    private static final long serialVersionUID = 1L;    
+    transient AbstractGeometryImpl geom = new AbstractGeometryImpl() { };
+    double[] posList;
     
     
     public LineStringJTS(GeometryFactory jtsFactory, int numDims)
