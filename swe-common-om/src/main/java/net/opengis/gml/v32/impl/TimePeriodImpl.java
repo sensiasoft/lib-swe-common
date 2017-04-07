@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.util.Objects;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.gml.v32.TimeInstant;
@@ -80,6 +81,8 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
     @Override
     public TimeInstant getBegin()
     {
+        if (begin == null)
+            return null;
         return begin.getValue();
     }
     
@@ -154,6 +157,8 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
     @Override
     public TimeInstant getEnd()
     {
+        if (end == null)
+            return null;
         return end.getValue();
     }
     
@@ -272,21 +277,20 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof TimePeriod))
-            return false;
-        
-        if (beginPosition != null && !beginPosition.equals(((TimePeriod)obj).getBeginPosition()))
-            return false;
-        
-        if (endPosition != null && !endPosition.equals(((TimePeriod)obj).getEndPosition()))
-            return false;
-        
-        if (isSetBegin() && !begin.getValue().equals(((TimePeriod)obj).getBegin()))
-            return false;
-        
-        if (end != null && !end.getValue().equals(((TimePeriod)obj).getEnd()))
-            return false;
-        
-        return true;
+        return obj instanceof TimePeriod &&
+               Objects.equals(beginPosition, ((TimePeriod)obj).getBeginPosition()) &&
+               Objects.equals(endPosition, ((TimePeriod)obj).getEndPosition()) &&
+               Objects.equals(getBegin(), ((TimePeriod)obj).getBegin()) &&
+               Objects.equals(getEnd(), ((TimePeriod)obj).getEnd());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(beginPosition,
+                            endPosition,
+                            getBegin(),
+                            getEnd());
     }
 }

@@ -41,6 +41,12 @@ public class NumberUtils
      */
     public static boolean ulpEqual(float f1, float f2)
     {
+        // handle special cases with NaN and infinity
+        if (Float.isNaN(f1) && Float.isNaN(f2))
+            return true;        
+        if (Float.isInfinite(f1) || Float.isInfinite(f2))
+            return f1 == f2;
+        
         float max = Math.max(Math.abs(f1), Math.abs(f2));
         return Math.abs(f1 - f2) <= Math.ulp(max);
     }
@@ -54,6 +60,12 @@ public class NumberUtils
      */
     public static boolean ulpEqual(double d1, double d2)
     {
+        // handle special cases with NaN and infinity
+        if (Double.isNaN(d1) && Double.isNaN(d2))
+            return true;        
+        if (Double.isInfinite(d1) || Double.isInfinite(d2))
+            return d1 == d2;
+        
         double max = Math.max(Math.abs(d1), Math.abs(d2));
         return Math.abs(d1 - d2) <= Math.ulp(max);
     }

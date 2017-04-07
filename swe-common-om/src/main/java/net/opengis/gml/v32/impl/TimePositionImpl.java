@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.util.Objects;
 import net.opengis.DateTimeDouble;
 import net.opengis.IDateTime;
 import net.opengis.gml.v32.TimeIndeterminateValue;
@@ -195,17 +196,22 @@ public class TimePositionImpl implements TimePosition
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof TimePosition))
-            return false;
-        
-        TimePosition other = (TimePosition)obj;
-        
-        if (getDecimalValue() != other.getDecimalValue())
-            return false;
-        
-        if (getTextValue() != other.getTextValue())
-            return false;
-        
-        return true;
+        return obj instanceof TimePosition &&
+               Objects.equals(getFrame(), ((TimePosition)obj).getFrame()) &&
+               Objects.equals(getCalendarEraName(), ((TimePosition)obj).getCalendarEraName()) &&
+               Objects.equals(getDecimalValue(), ((TimePosition)obj).getDecimalValue()) &&
+               Objects.equals(getTextValue(), ((TimePosition)obj).getTextValue()) &&
+               Objects.equals(getIndeterminatePosition(), ((TimePosition)obj).getIndeterminatePosition());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(getFrame(),
+                            getCalendarEraName(),
+                            getDecimalValue(),
+                            getTextValue(),
+                            getIndeterminatePosition());
     }
 }

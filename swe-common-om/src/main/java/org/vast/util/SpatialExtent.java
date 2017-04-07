@@ -13,6 +13,8 @@
 
 package org.vast.util;
 
+import java.util.Objects;
+import net.opengis.gml.v32.TimePeriod;
 
 /**
  * <p>
@@ -285,26 +287,21 @@ public class SpatialExtent
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof SpatialExtent))
-            return false;
-        
-        SpatialExtent otherBbox = (SpatialExtent)obj;
-        if  ((crs != null && otherBbox.crs == null) || (crs == null && otherBbox.crs != null))
-            return false;
-            
-        if  (crs != null && otherBbox.crs != null && !crs.equals(otherBbox.crs))
-            return false;
-        
-        if  (minX != otherBbox.minX || maxX != otherBbox.maxX)
-            return false;
-        
-        if  (minY != otherBbox.minY || maxY != otherBbox.maxY)
-            return false;
-        
-        if  (minZ != otherBbox.minZ || maxZ != otherBbox.maxZ)
-            return false;
-        
-        return true;
+        return obj instanceof SpatialExtent &&
+               Objects.equals(crs, ((SpatialExtent)obj).crs) &&
+               NumberUtils.ulpEqual(minX, ((SpatialExtent)obj).minX) &&
+               NumberUtils.ulpEqual(maxX, ((SpatialExtent)obj).maxX) &&
+               NumberUtils.ulpEqual(minY, ((SpatialExtent)obj).minY) &&
+               NumberUtils.ulpEqual(maxY, ((SpatialExtent)obj).maxY) &&
+               NumberUtils.ulpEqual(minZ, ((SpatialExtent)obj).minZ) &&
+               NumberUtils.ulpEqual(maxZ, ((SpatialExtent)obj).maxZ);
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(crs, minX, maxX, minY, maxY, minZ, maxZ);
     }
     
     

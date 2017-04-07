@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.util.Objects;
 import net.opengis.gml.v32.TimeInstant;
 import net.opengis.gml.v32.TimePosition;
 
@@ -57,12 +58,15 @@ public class TimeInstantImpl extends AbstractTimeGeometricPrimitiveImpl implemen
     @Override
     public boolean equals(Object obj)
     {
-        if (!(obj instanceof TimeInstant))
-            return false;
-        
-        if (!timePosition.equals(((TimeInstant)obj).getTimePosition()))
-            return false;
-        
-        return true;
+        return obj instanceof TimeInstant &&
+               Objects.equals(timePosition, ((TimeInstant)obj).getTimePosition());
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(frame,
+                            timePosition);
     }
 }

@@ -26,7 +26,7 @@ package org.vast.util;
  * */
 public class TimeExtent
 {
-    public final static double NOW_ACCURACY = 1000;    
+    public final static double NOW_ACCURACY = 1000.;    
     public final static double UNKNOWN = Double.MAX_VALUE;
     public final static double NOW = Double.MIN_VALUE;
     
@@ -307,6 +307,7 @@ public class TimeExtent
     }
 
 
+    @Override
     public String toString()
     {
         String tString = new String("TimeExtent:");
@@ -342,12 +343,12 @@ public class TimeExtent
     {
     	if (!baseAtNow)
     	{
-    	   	if (( this.getAdjustedLagTime() != timeExtent.getAdjustedLagTime() ) &&
-	    	   !( this.isBeginNow() && timeExtent.isBeginNow() ))
+    	   	if (!NumberUtils.ulpEqual(this.getAdjustedLagTime(), timeExtent.getAdjustedLagTime()) &&
+	    	    !(this.isBeginNow() && timeExtent.isBeginNow()))
 	            return false;
 	        
-	        if (( this.getAdjustedLeadTime() != timeExtent.getAdjustedLeadTime() ) &&
-	    	   !( this.isEndNow() && timeExtent.isEndNow() ))
+	        if (!NumberUtils.ulpEqual(this.getAdjustedLeadTime(), timeExtent.getAdjustedLeadTime()) &&
+	    	    !(this.isEndNow() && timeExtent.isEndNow()))
 	            return false;
     	}
     	else
@@ -355,14 +356,45 @@ public class TimeExtent
     		if (!timeExtent.isBaseAtNow())
     			return false;
     		
-    		if (this.getLagTimeDelta() != timeExtent.getLagTimeDelta())
+    		if (!NumberUtils.ulpEqual(this.getLagTimeDelta(), timeExtent.getLagTimeDelta()))
     			return false;
     		
-    		if (this.getLeadTimeDelta() != timeExtent.getLeadTimeDelta())
-    			return false;    		
+    		if (!NumberUtils.ulpEqual(this.getLeadTimeDelta(), timeExtent.getLeadTimeDelta()))
+    			return false;
     	}
+    	
+    	if (!NumberUtils.ulpEqual(this.getTimeBias(), timeExtent.getTimeBias()))
+            return false;
+    	
+    	if (!NumberUtils.ulpEqual(this.getTimeZone(), timeExtent.getTimeZone()))
+            return false;
         
         return true;
+    }
+    
+    
+    @Override
+    public int hashCode()
+    {
+        int prime = 31;
+        int hash = 1;
+        
+        hash = prime*hash + (baseAtNow ? 0 : 1);
+        hash = prime*hash + Double.hashCode(getTimeBias());
+        hash = prime*hash + getTimeZone();
+        
+        if (!baseAtNow)
+        {
+            hash = isBeginNow() ? hash : prime*hash + Double.hashCode(getAdjustedLagTime());
+            hash = isEndNow() ? hash : prime*hash + Double.hashCode(getAdjustedLeadTime());
+        }
+        else
+        {
+            hash = prime*hash + Double.hashCode(getLagTimeDelta());
+            hash = prime*hash + Double.hashCode(getLeadTimeDelta());
+        }
+        
+        return hash;
     }
     
     
@@ -507,7 +539,7 @@ public class TimeExtent
     
     /**
      * Return latest value for now. This would return a new 'now' value
-     * only if previous call was made more than NOW_ACCURACY second ago.
+     * only if previous call was made more than NOW_ACCURACY seconds ago.
      */
     private double now = 0;
     private double getNow()

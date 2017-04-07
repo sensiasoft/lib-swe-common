@@ -94,13 +94,6 @@ public class Bbox extends SpatialExtent
         bbox.setMaxZ(this.maxZ);
         return bbox;
     }
-
-
-	@Override
-    public boolean equals(Object obj)
-    {
-	    return super.equals(obj);
-    }
 	
 	
 	public com.vividsolutions.jts.geom.Envelope toJtsEnvelope()

@@ -36,10 +36,15 @@ public class TestNumberUtils
         assertTrue(NumberUtils.ulpEqual(val1, val2));
         assertTrue(NumberUtils.ulpEqual(val1, val1+Math.ulp(val1)));
         assertTrue(NumberUtils.ulpEqual(0.0f, Math.signum(-1f)*0.0f));
+        assertTrue(NumberUtils.ulpEqual(Float.NaN, Float.NaN));
+        assertTrue(NumberUtils.ulpEqual(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY));
         
         assertFalse(NumberUtils.ulpEqual(f, f + 2*Math.ulp(f)));
         assertFalse(NumberUtils.ulpEqual(f, 1.0000001*f));
         assertFalse(NumberUtils.ulpEqual(f, f+1e-6f));
+        assertFalse(NumberUtils.ulpEqual(Float.NaN, Float.POSITIVE_INFINITY));
+        assertFalse(NumberUtils.ulpEqual(Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY));
+        
     }
     
     
@@ -57,9 +62,13 @@ public class TestNumberUtils
         assertTrue(NumberUtils.ulpEqual(val1, val2));
         assertTrue(NumberUtils.ulpEqual(val1, val1+Math.ulp(val1)));
         assertTrue(NumberUtils.ulpEqual(0.0, Math.signum(-1.0)*0.0));
+        assertTrue(NumberUtils.ulpEqual(Double.NaN, Double.NaN));
+        assertTrue(NumberUtils.ulpEqual(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
         
         assertFalse(NumberUtils.ulpEqual(f, f + 2*Math.ulp(f)));
         assertFalse(NumberUtils.ulpEqual(f, 1.0000001*f));
         assertFalse(NumberUtils.ulpEqual(f, f+1e-10));
+        assertFalse(NumberUtils.ulpEqual(Double.NaN, Double.POSITIVE_INFINITY));
+        assertFalse(NumberUtils.ulpEqual(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY));
     }
 }
