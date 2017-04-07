@@ -243,7 +243,7 @@ public class DateTimeFormat extends SimpleDateFormat
      */
     public String formatIsoPeriod(double periodInSeconds, char biggestUnit)
     {
-        if (NumberUtils.ulpEqual(periodInSeconds, 0.0))
+        if (NumberUtils.ulpEquals(periodInSeconds, 0.0))
             return "PT0S";
         
         StringBuffer buf = new StringBuffer(20);

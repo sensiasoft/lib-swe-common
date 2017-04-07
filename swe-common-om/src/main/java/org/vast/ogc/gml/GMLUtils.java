@@ -41,6 +41,7 @@ import net.opengis.gml.v32.TimePeriod;
 import net.opengis.gml.v32.TimePosition;
 import net.opengis.gml.v32.impl.GMLFactory;
 import org.vast.util.Bbox;
+import org.vast.util.NumberUtils;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IndentingXMLStreamWriter;
@@ -462,13 +463,13 @@ public class GMLUtils extends XMLBindingsUtils
                     beginPosition.setDecimalValue(now - timeExtent.getLagTimeDelta());
                     endPosition.setDecimalValue(now + timeExtent.getLeadTimeDelta());
                 }
-                else if (timeExtent.getLagTimeDelta() == 0.0)
+                else if (NumberUtils.ulpEquals(timeExtent.getLagTimeDelta(), 0.0))
                 {
                     beginPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
                     endPosition.setIndeterminatePosition(TimeIndeterminateValue.AFTER);
                     timePeriod.setDuration(timeExtent.getLeadTimeDelta());
                 }
-                else if (timeExtent.getLeadTimeDelta() == 0.0)
+                else if (NumberUtils.ulpEquals(timeExtent.getLeadTimeDelta(), 0.0))
                 {
                     beginPosition.setIndeterminatePosition(TimeIndeterminateValue.BEFORE);
                     endPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
@@ -493,7 +494,7 @@ public class GMLUtils extends XMLBindingsUtils
             }
             
             // time step
-            if (timeExtent.getTimeStep() != 0)
+            if (!NumberUtils.ulpEquals(timeExtent.getTimeStep(), 0.0))
                 timePeriod.setTimeInterval(timeExtent.getTimeStep());
                         
             return timePeriod;

@@ -263,7 +263,7 @@ public class TimeExtent
      */
     public int getNumberOfSteps()
     {
-        if (timeStep == 0.0)
+        if (NumberUtils.ulpEquals(timeStep, 0.0))
             return 1;
         else
             return (int) ((getAdjustedLeadTime() - getAdjustedLagTime()) / timeStep);
@@ -282,17 +282,15 @@ public class TimeExtent
         double lagTime = getAdjustedLagTime();
 
         // if step is 0 returns two extreme points
-        if (timeStep == 0.0)
-        {
+        if (NumberUtils.ulpEquals(timeStep, 0.0))
             return new double[] {time, lagTime};
-        }
             
         double timeRange = Math.abs(time - lagTime);
         double remainder = timeRange % timeStep;
         int steps = (int) (timeRange / timeStep) + 1;       
 
         double[] times;
-        if (remainder != 0.0)
+        if (!NumberUtils.ulpEquals(remainder, 0.0))
         {
             times = new double[steps + 1];
             times[steps] = lagTime;
@@ -343,11 +341,11 @@ public class TimeExtent
     {
     	if (!baseAtNow)
     	{
-    	   	if (!NumberUtils.ulpEqual(this.getAdjustedLagTime(), timeExtent.getAdjustedLagTime()) &&
+    	   	if (!NumberUtils.ulpEquals(this.getAdjustedLagTime(), timeExtent.getAdjustedLagTime()) &&
 	    	    !(this.isBeginNow() && timeExtent.isBeginNow()))
 	            return false;
 	        
-	        if (!NumberUtils.ulpEqual(this.getAdjustedLeadTime(), timeExtent.getAdjustedLeadTime()) &&
+	        if (!NumberUtils.ulpEquals(this.getAdjustedLeadTime(), timeExtent.getAdjustedLeadTime()) &&
 	    	    !(this.isEndNow() && timeExtent.isEndNow()))
 	            return false;
     	}
@@ -356,17 +354,17 @@ public class TimeExtent
     		if (!timeExtent.isBaseAtNow())
     			return false;
     		
-    		if (!NumberUtils.ulpEqual(this.getLagTimeDelta(), timeExtent.getLagTimeDelta()))
+    		if (!NumberUtils.ulpEquals(this.getLagTimeDelta(), timeExtent.getLagTimeDelta()))
     			return false;
     		
-    		if (!NumberUtils.ulpEqual(this.getLeadTimeDelta(), timeExtent.getLeadTimeDelta()))
+    		if (!NumberUtils.ulpEquals(this.getLeadTimeDelta(), timeExtent.getLeadTimeDelta()))
     			return false;
     	}
     	
-    	if (!NumberUtils.ulpEqual(this.getTimeBias(), timeExtent.getTimeBias()))
+    	if (!NumberUtils.ulpEquals(this.getTimeBias(), timeExtent.getTimeBias()))
             return false;
     	
-    	if (!NumberUtils.ulpEqual(this.getTimeZone(), timeExtent.getTimeZone()))
+    	if (!NumberUtils.ulpEquals(this.getTimeZone(), timeExtent.getTimeZone()))
             return false;
         
         return true;
@@ -487,10 +485,10 @@ public class TimeExtent
      */
 	public boolean isTimeInstant()
 	{
-        if (leadTimeDelta != 0)
+        if (!NumberUtils.ulpEquals(leadTimeDelta, 0.0))
             return false;
         
-        if (lagTimeDelta != 0)
+        if (!NumberUtils.ulpEquals(lagTimeDelta, 0.0))
             return false;
         
         if (!baseAtNow && (beginNow || endNow))

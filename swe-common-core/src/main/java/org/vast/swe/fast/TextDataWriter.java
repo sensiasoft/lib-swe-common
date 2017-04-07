@@ -129,7 +129,7 @@ public class TextDataWriter extends AbstractDataWriter
             
             if (Double.isFinite(val))
             {
-                if (NumberUtils.ulpEqual(val, 0.0))
+                if (NumberUtils.ulpEquals(val, 0.0))
                     writer.write('0');
                 else
                 {

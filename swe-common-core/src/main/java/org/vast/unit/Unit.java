@@ -98,14 +98,14 @@ public class Unit
     public boolean isCompatible(Unit unit)
     {
         // check that powers are equal for all SI base units
-        return (NumberUtils.ulpEqual(this.meter, unit.meter) &&
-                NumberUtils.ulpEqual(this.kilogram, unit.kilogram) &&
-                NumberUtils.ulpEqual(this.second, unit.second) &&
-                NumberUtils.ulpEqual(this.radian, unit.radian) &&
-                NumberUtils.ulpEqual(this.ampere, unit.ampere) &&
-                NumberUtils.ulpEqual(this.kelvin, unit.kelvin) &&
-                NumberUtils.ulpEqual(this.mole, unit.mole) &&
-                NumberUtils.ulpEqual(this.candela, unit.candela));
+        return (NumberUtils.ulpEquals(this.meter, unit.meter) &&
+                NumberUtils.ulpEquals(this.kilogram, unit.kilogram) &&
+                NumberUtils.ulpEquals(this.second, unit.second) &&
+                NumberUtils.ulpEquals(this.radian, unit.radian) &&
+                NumberUtils.ulpEquals(this.ampere, unit.ampere) &&
+                NumberUtils.ulpEquals(this.kelvin, unit.kelvin) &&
+                NumberUtils.ulpEquals(this.mole, unit.mole) &&
+                NumberUtils.ulpEquals(this.candela, unit.candela));
     }
     
     
@@ -116,8 +116,8 @@ public class Unit
     public boolean isEquivalent(Unit unit)
     {
         return (isCompatible(unit) &&
-                NumberUtils.ulpEqual(this.scaleToSI, unit.scaleToSI) &&
-                NumberUtils.ulpEqual(this.pi, unit.pi));
+                NumberUtils.ulpEquals(this.scaleToSI, unit.scaleToSI) &&
+                NumberUtils.ulpEquals(this.pi, unit.pi));
     }
     
     
@@ -443,7 +443,7 @@ public class Unit
         addUnitString(buf, mole, "mol");
         addUnitString(buf, candela, "cd");
         
-        if (NumberUtils.ulpEqual(scaleToSI, 1.0))
+        if (NumberUtils.ulpEquals(scaleToSI, 1.0))
             buf.insert(0, getScaleToSI() + "*");
         
         return buf.toString();

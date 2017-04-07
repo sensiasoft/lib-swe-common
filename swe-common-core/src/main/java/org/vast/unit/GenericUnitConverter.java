@@ -44,7 +44,7 @@ public class GenericUnitConverter extends AbstractUnitConverter
     public GenericUnitConverter(double conversionFactor)
     {
         this.conversionFactor = conversionFactor;
-        if (!NumberUtils.ulpEqual(conversionFactor, 1.0))
+        if (!NumberUtils.ulpEquals(conversionFactor, 1.0))
             conversionNeeded = true;
         conversionPossible = true;
     }
@@ -63,7 +63,7 @@ public class GenericUnitConverter extends AbstractUnitConverter
         {
             computeConversionFactor();
             
-            if (!NumberUtils.ulpEqual(conversionFactor, 1.0))
+            if (!NumberUtils.ulpEquals(conversionFactor, 1.0))
                 conversionNeeded = true;
             
             // if src or dest or both have functions            

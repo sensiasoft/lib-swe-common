@@ -66,7 +66,7 @@ public class UnitFunctionLog extends UnitFunction
     {
         if (eBase)
             return Math.log(value) / scaleFactor;
-        else if (NumberUtils.ulpEqual(logBase, 10.0))
+        else if (NumberUtils.ulpEquals(logBase, 10.0))
             return Math.log10(value) / scaleFactor;
         else
             return logN(logBase, value) / scaleFactor;
@@ -90,7 +90,7 @@ public class UnitFunctionLog extends UnitFunction
     {
         return (obj instanceof UnitFunctionLog &&
                 this.eBase == ((UnitFunctionLog)obj).eBase &&
-                NumberUtils.ulpEqual(this.logBase, ((UnitFunctionLog)obj).logBase));
+                NumberUtils.ulpEquals(this.logBase, ((UnitFunctionLog)obj).logBase));
     }
     
     

@@ -289,12 +289,12 @@ public class SpatialExtent
     {
         return obj instanceof SpatialExtent &&
                Objects.equals(crs, ((SpatialExtent)obj).crs) &&
-               NumberUtils.ulpEqual(minX, ((SpatialExtent)obj).minX) &&
-               NumberUtils.ulpEqual(maxX, ((SpatialExtent)obj).maxX) &&
-               NumberUtils.ulpEqual(minY, ((SpatialExtent)obj).minY) &&
-               NumberUtils.ulpEqual(maxY, ((SpatialExtent)obj).maxY) &&
-               NumberUtils.ulpEqual(minZ, ((SpatialExtent)obj).minZ) &&
-               NumberUtils.ulpEqual(maxZ, ((SpatialExtent)obj).maxZ);
+               NumberUtils.ulpEquals(minX, ((SpatialExtent)obj).minX) &&
+               NumberUtils.ulpEquals(maxX, ((SpatialExtent)obj).maxX) &&
+               NumberUtils.ulpEquals(minY, ((SpatialExtent)obj).minY) &&
+               NumberUtils.ulpEquals(maxY, ((SpatialExtent)obj).maxY) &&
+               NumberUtils.ulpEquals(minZ, ((SpatialExtent)obj).minZ) &&
+               NumberUtils.ulpEquals(maxZ, ((SpatialExtent)obj).maxZ);
     }
     
     

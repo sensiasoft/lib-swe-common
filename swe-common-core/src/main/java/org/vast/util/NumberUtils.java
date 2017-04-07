@@ -39,7 +39,7 @@ public class NumberUtils
      * @param f2
      * @return true if both numbers are within 1 ULP, false otherwise
      */
-    public static boolean ulpEqual(float f1, float f2)
+    public static boolean ulpEquals(float f1, float f2)
     {
         // handle special cases with NaN and infinity
         if (Float.isNaN(f1) && Float.isNaN(f2))
@@ -56,9 +56,9 @@ public class NumberUtils
      * Checks that double arguments are within one ULP of each other
      * @param d1
      * @param d2
-     * @return true if both numbers are within 1 ULP, false otherwise
+     * @return true if both numbers are within 1 ULP of each other, false otherwise
      */
-    public static boolean ulpEqual(double d1, double d2)
+    public static boolean ulpEquals(double d1, double d2)
     {
         // handle special cases with NaN and infinity
         if (Double.isNaN(d1) && Double.isNaN(d2))
@@ -68,6 +68,30 @@ public class NumberUtils
         
         double max = Math.max(Math.abs(d1), Math.abs(d2));
         return Math.abs(d1 - d2) <= Math.ulp(max);
+    }
+    
+    
+    /**
+     * Exact float equality check
+     * @param f1
+     * @param f2
+     * @return true if float arguments have the same exact binary value
+     */
+    public static boolean exactEquals(float f1, float f2)
+    {
+        return Float.compare(f1, f2) == 0;
+    }
+    
+    
+    /**
+     * Exact double equality check
+     * @param d1
+     * @param d2
+     * @return true if float arguments have the same exact binary value
+     */
+    public static boolean exactEquals(double d1, double d2)
+    {
+        return Double.compare(d1, d2) == 0;
     }
     
     

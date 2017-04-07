@@ -61,7 +61,7 @@ public class UnitFunctionOffset extends UnitFunction
     public boolean equals(Object obj)
     {
         return (obj instanceof UnitFunctionOffset &&
-                NumberUtils.ulpEqual(this.offset, ((UnitFunctionOffset)obj).offset));
+                NumberUtils.ulpEquals(this.offset, ((UnitFunctionOffset)obj).offset));
     }
     
     
