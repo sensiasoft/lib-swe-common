@@ -38,6 +38,11 @@ import net.opengis.swe.v20.DataEncoding;
  */
 public abstract class AbstractDataParser extends DataBlockProcessor implements DataStreamParser
 {
+    static final String INVALID_BOOLEAN_MSG = "Invalid boolean value: ";
+    static final String INVALID_INTEGER_MSG = "Invalid integer value: ";
+    static final String INVALID_DECIMAL_MSG = "Invalid decimal value: ";    
+    static final String INVALID_CHOICE_MSG = "Invalid choice selector value: ";
+    
     BlockComponent parentArray;
     int parentArrayIndex;
     

@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.NumberUtils;
-import org.vast.util.ReaderException;
+import org.vast.util.WriterException;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Count;
@@ -208,7 +208,7 @@ public class TextDataWriter extends AbstractDataWriter
         {
             int selectedIndex = data.getIntValue(index);
             if (selectedIndex < 0 || selectedIndex >= choiceTokens.size())
-                throw new ReaderException(TextDataParser.INVALID_CHOICE_MSG + selectedIndex);
+                throw new WriterException(AbstractDataParser.INVALID_CHOICE_MSG + selectedIndex);
             
             writeSeparator();
             writer.write(choiceTokens.get(selectedIndex));

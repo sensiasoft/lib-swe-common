@@ -48,11 +48,6 @@ import org.vast.util.ReaderException;
  */
 public class TextDataParser extends AbstractDataParser
 {
-    static final String INVALID_BOOLEAN_MSG = "Invalid boolean value: ";
-    static final String INVALID_INTEGER_MSG = "Invalid integer value: ";
-    static final String INVALID_DECIMAL_MSG = "Invalid decimal value: ";
-    static final String INVALID_CHOICE_MSG = "Invalid choice selector value: ";
-    
     Reader reader;
     String tokenSep = ",";
     char[] blockSep = "\n".toCharArray();

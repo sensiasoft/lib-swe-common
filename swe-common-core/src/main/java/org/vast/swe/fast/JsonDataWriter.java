@@ -19,6 +19,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
 import net.opengis.swe.v20.Boolean;
@@ -386,23 +387,48 @@ public class JsonDataWriter extends AbstractDataWriter
     protected class ChoiceWriter extends ChoiceProcessor implements JsonWriter
     {
         String eltName;
+        boolean onlyScalars = false;
+        ArrayList<String> choiceTokens;
         
-        public ChoiceWriter(String eltName)
+        public ChoiceWriter(DataChoice choice)
         {
-            this.eltName = eltName;
+            this.eltName = choice.getName();
+            choiceTokens = new ArrayList<String>(choice.getNumItems());
+            for (DataComponent item: choice.getItemList())
+                choiceTokens.add(item.getName());
         }
         
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
             int selectedIndex = data.getIntValue(index);
+            if (selectedIndex < 0 || selectedIndex >= choiceTokens.size())
+                throw new WriterException(AbstractDataParser.INVALID_CHOICE_MSG + selectedIndex);
             
             try
             {
-                //writeStartObject(eltName);
-                int newIndex = super.process(data, ++index, selectedIndex);
-                //writer.write("}\n");
-                return newIndex;
+                writer.write('{');
+                
+                depth++;
+                if (!onlyScalars)
+                {
+                    writer.write('\n');
+                    indent();
+                }
+                
+                writer.append('"').append(choiceTokens.get(selectedIndex)).append('"');
+                writer.write(": ");
+                index = super.process(data, ++index, selectedIndex);
+                                
+                depth--;
+                if (!onlyScalars)
+                {
+                    writer.write('\n');
+                    indent();
+                }
+                writer.write('}');
+                
+                return index;
             }
             catch (IOException e)
             {
@@ -642,7 +668,7 @@ public class JsonDataWriter extends AbstractDataWriter
     @Override
     public void visit(DataChoice choice)
     {
-        addToProcessorTree(new ChoiceWriter(choice.getName()));
+        addToProcessorTree(new ChoiceWriter(choice));
         for (DataComponent item: choice.getItemList())
             item.accept(this);
         processorStack.pop();
