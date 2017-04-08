@@ -23,7 +23,7 @@ import net.opengis.swe.v20.DataType;
  * Helper to create DataBlocks using existing arrays of data.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jan 27, 2006
  * */
 public class DataBlockFactory

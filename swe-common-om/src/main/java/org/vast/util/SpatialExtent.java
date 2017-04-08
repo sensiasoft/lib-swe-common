@@ -22,7 +22,7 @@ import net.opengis.gml.v32.TimePeriod;
  * This mainly includes enveloppe coordinates and a crs.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 15, 2005
  * */
 public class SpatialExtent

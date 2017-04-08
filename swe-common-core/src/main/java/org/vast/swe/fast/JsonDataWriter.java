@@ -47,7 +47,7 @@ import net.opengis.swe.v20.Vector;
  * while iterating through the component tree.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 7, 2016
  */
 public class JsonDataWriter extends AbstractDataWriter

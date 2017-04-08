@@ -21,7 +21,7 @@ import org.vast.cdm.common.CompressedStreamWriter;
  * These factories are meant to be discovered via the java services mechanism
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 9, 2013
  */
 public interface ICodecFactory

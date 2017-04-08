@@ -36,7 +36,7 @@ import javax.xml.stream.XMLStreamWriter;
  * By default, all methods are delegated to the underlying writer;
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 10, 2014
  */
 public abstract class DelegatingXMLStreamWriter implements XMLStreamWriter

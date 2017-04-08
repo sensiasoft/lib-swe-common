@@ -36,7 +36,7 @@ import org.vast.cdm.common.IDataProvider;
  * Implementations of this class can buffer or provide live access to the stream.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 28, 2012
  * */
 public interface ISweInputDataStream extends IDataProvider

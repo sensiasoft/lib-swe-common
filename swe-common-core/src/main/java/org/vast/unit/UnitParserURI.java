@@ -26,7 +26,7 @@ package org.vast.unit;
  * the corresponding Unit object ready for conversion.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since May 4, 2006
  * */
 public class UnitParserURI implements UnitParser

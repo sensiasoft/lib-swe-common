@@ -47,7 +47,7 @@ import org.vast.util.ReaderException;
  * and the binary encoding information.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 22, 2005
  * */
 public class BinaryDataParser extends AbstractDataParser

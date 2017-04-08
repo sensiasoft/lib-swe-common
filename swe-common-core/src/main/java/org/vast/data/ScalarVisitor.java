@@ -36,7 +36,7 @@ import net.opengis.swe.v20.TimeRange;
  * call the {@link #visitSimple(SimpleComponent)} method which does nothing.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 9, 2015
  */
 public abstract class ScalarVisitor extends BaseTreeVisitor

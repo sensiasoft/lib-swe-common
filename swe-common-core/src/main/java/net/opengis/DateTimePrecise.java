@@ -20,7 +20,7 @@ package net.opengis;
  * Immutable implementation of a DateTime object
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 26, 2014
  */
 public class DateTimePrecise

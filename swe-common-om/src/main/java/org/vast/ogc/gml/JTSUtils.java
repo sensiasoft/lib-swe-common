@@ -23,7 +23,7 @@ import com.vividsolutions.jts.geom.Geometry;
  * Utility methods for implementing JTS based GML geometries
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 23, 2014
  */
 public class JTSUtils

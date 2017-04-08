@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  * to version specific bindings.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 2, 2007
  * */
 public class SWEUtils extends XMLBindingsUtils

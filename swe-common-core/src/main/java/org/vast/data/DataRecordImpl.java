@@ -26,7 +26,7 @@ import net.opengis.swe.v20.DataRecord;
  * Implementation of SWE Common DataRecord
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public class DataRecordImpl extends AbstractRecordImpl<DataComponent> implements DataRecord
 {

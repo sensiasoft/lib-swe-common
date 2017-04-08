@@ -38,7 +38,7 @@ import org.w3c.dom.NodeList;
  * obtains the default mappings from the OGCRegistry.xml file. 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jan 16, 2007
  * */
 public class OGCRegistry

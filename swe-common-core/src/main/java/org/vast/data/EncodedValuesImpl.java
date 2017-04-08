@@ -36,7 +36,7 @@ import net.opengis.swe.v20.EncodedValues;
  * parsers/writers allowing decoding/encoding of any encoded array or stream
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 3, 2014
  */
 public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> implements EncodedValues

@@ -27,7 +27,7 @@ import net.opengis.swe.v20.DataComponent;
  * for each data component added to the list.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @param <ComponentType> Type of data component this list can hold
  * @since Nov 9, 2014
  */

@@ -22,7 +22,7 @@ import net.opengis.gml.v32.Envelope;
  * Implementation of GML Envelope derived from JTS Envelope class.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 23, 2014
  */
 public class EnvelopeJTS extends com.vividsolutions.jts.geom.Envelope implements Envelope

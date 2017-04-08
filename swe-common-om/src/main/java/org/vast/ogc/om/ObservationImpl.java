@@ -42,7 +42,7 @@ import org.vast.util.TimeExtent;
  * Implementation of a single observation
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 20, 2007
  * */
 public class ObservationImpl extends GenericFeatureImpl implements IObservation

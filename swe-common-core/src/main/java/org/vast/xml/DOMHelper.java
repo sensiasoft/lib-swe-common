@@ -47,7 +47,7 @@ import javax.xml.transform.dom.DOMSource;
  * TODO try to avoid calls to xerces specific classes
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 3, 2005
  * */
 public class DOMHelper

@@ -53,7 +53,7 @@ import javax.xml.transform.stream.StreamResult;
  * Wrapper class for a DOM XML document
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 3, 2005
  * */
 public class XMLDocument

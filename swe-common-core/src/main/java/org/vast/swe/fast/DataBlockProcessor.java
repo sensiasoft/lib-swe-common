@@ -38,7 +38,7 @@ import net.opengis.swe.v20.Vector;
  * fast on many data blocks matching the same components structure.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 7, 2016
  */
 public abstract class DataBlockProcessor implements DataComponentVisitor

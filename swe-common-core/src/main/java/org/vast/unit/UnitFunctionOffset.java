@@ -28,7 +28,7 @@ import org.vast.util.NumberUtils;
  * such as Cel...
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 10, 2007
  * */
 public class UnitFunctionOffset extends UnitFunction

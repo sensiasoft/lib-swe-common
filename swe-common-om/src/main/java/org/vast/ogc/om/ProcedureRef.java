@@ -32,7 +32,7 @@ import org.vast.ogc.gml.FeatureRef;
  * This enables fetching and instantiating the target object lazily.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 28, 2012
  * */
 public class ProcedureRef extends FeatureRef implements IProcedure

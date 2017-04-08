@@ -24,7 +24,7 @@ import net.opengis.swe.v20.Vector;
  * Helper class to create SWE structures used in vector math
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since March 2016
  */
 public class VectorHelper extends SWEHelper

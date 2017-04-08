@@ -24,7 +24,7 @@ import net.opengis.swe.v20.DataType;
  * thus be read in parallel.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public class DataBlockParallel extends AbstractDataBlock
 {

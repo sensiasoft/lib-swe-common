@@ -36,7 +36,7 @@ import org.vast.cdm.common.IDataConsumer;
  * Implementations of this class can buffer or write directly to live streams.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 28, 2012
  * */
 public interface ISweOutputDataStream extends IDataConsumer

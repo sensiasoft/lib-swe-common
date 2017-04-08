@@ -22,7 +22,7 @@ import net.opengis.OgcProperty;
  * Tagging interface for all block components
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 8, 2014
  */
 @SuppressWarnings("javadoc")

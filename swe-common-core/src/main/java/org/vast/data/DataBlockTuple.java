@@ -26,7 +26,7 @@ import net.opengis.swe.v20.DataType;
  * case of a group of scalars of different data types)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public class DataBlockTuple extends AbstractDataBlock
 {

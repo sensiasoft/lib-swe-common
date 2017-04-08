@@ -32,7 +32,7 @@ import net.opengis.gml.v32.Reference;
  * Implementation of GML Polygon derived from JTS Polygon class.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 23, 2014
  */
 public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements Polygon

@@ -34,7 +34,7 @@ import org.w3c.dom.Text;
  * 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since 6 oct. 2008
  * */
 public class DataSinkDOM implements DataSink

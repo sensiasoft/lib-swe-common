@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * in a version agnostic manner.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 22, 2007
  * */
 public class OMUtils

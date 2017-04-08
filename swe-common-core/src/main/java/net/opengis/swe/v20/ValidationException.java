@@ -20,7 +20,7 @@ package net.opengis.swe.v20;
  * Used for errors occuring when validating SWE Common component values
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 10, 2014
  */
 public class ValidationException extends Exception

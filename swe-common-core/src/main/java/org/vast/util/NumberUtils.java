@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  * Utility math functions
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Apr 6, 2017
  */
 public class NumberUtils

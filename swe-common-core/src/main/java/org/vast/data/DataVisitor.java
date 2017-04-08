@@ -22,7 +22,7 @@ import net.opengis.swe.v20.DataBlock;
  * Common interface for all mappers
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Apr 4, 2006
  * */
 public interface DataVisitor

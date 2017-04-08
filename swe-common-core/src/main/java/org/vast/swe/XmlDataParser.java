@@ -33,7 +33,7 @@ import net.opengis.swe.v20.ScalarComponent;
  * Parser for data streams written using SWE Common XML encoding
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb, 28 2008
  * */
 public class XmlDataParser extends AbstractDataParser

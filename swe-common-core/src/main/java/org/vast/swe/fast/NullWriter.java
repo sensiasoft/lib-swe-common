@@ -23,7 +23,7 @@ import java.io.Writer;
  * Null writer used to skip data, thus it doesn't actually write anything!
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 20, 2017
  */
 public class NullWriter extends Writer

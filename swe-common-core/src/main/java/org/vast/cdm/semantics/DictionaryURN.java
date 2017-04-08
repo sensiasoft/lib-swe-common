@@ -26,7 +26,7 @@ package org.vast.cdm.semantics;
  * TODO DictionaryURN type description
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public class DictionaryURN
 {

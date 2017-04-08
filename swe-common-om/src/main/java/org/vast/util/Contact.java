@@ -25,7 +25,7 @@ package org.vast.util;
  * SensorML Contact
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 16, 2006
  * */
 public abstract class Contact

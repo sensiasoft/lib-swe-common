@@ -37,7 +37,7 @@ import java.util.Stack;
  * closing tags for all elements previously recorded, then EOF. 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 19, 2005
  * */
 public class SWEFilter extends InputStream

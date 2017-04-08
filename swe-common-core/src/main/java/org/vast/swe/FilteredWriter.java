@@ -30,7 +30,7 @@ import net.opengis.swe.v20.ScalarComponent;
  * This is used to implement filtering by observed property in SOS. 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 9, 2015
  */
 public class FilteredWriter extends AbstractDataWriter

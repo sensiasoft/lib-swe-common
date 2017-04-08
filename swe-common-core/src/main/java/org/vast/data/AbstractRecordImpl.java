@@ -28,7 +28,7 @@ import net.opengis.swe.v20.ValidationException;
  * This is the base type for DataRecord and Vector
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * * @param <ComponentType> 
  */
 public abstract class AbstractRecordImpl<ComponentType extends DataComponent> extends AbstractDataComponentImpl

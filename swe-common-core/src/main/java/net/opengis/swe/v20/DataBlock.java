@@ -29,7 +29,7 @@ package net.opengis.swe.v20;
  * IndexOutOfBoundException can be thrown in some cases.  
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 14, 2005
  * */
 public interface DataBlock extends Cloneable

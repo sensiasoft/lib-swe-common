@@ -20,7 +20,7 @@ package net.opengis.swe.v20;
  * Tagging interface for all scalar data components
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 9, 2014
  */
 public interface ScalarComponent extends SimpleComponent

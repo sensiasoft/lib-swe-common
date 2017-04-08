@@ -21,7 +21,7 @@ package net.opengis;
  * representing julian time (numer of decimal seconds past the 1970-01-01T00:00:00 epoch)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 26, 2014
  */
 public class DateTimeDouble implements IDateTime

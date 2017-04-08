@@ -33,7 +33,7 @@ import net.opengis.swe.v20.DataEncoding;
  * Base class for all SWE Common data stream parsers (text, binary, xml, json)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 7, 2016
  */
 public abstract class AbstractDataParser extends DataBlockProcessor implements DataStreamParser

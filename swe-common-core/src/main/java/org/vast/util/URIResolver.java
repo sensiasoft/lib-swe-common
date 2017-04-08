@@ -31,7 +31,7 @@ import java.net.*;
  * class if the URI is already a URL.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 19, 2005
  * */
 public class URIResolver

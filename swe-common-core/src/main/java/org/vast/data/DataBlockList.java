@@ -29,7 +29,7 @@ import net.opengis.swe.v20.DataType;
  * This class also implements the DataBlock interface. 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public class DataBlockList extends AbstractDataBlock
 {

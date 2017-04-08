@@ -42,7 +42,7 @@ import org.vast.cdm.common.OutputStreamProvider;
  * suited for the given encoding.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 10, 2006
  * */
 public abstract class SWEWriter implements OutputStreamProvider

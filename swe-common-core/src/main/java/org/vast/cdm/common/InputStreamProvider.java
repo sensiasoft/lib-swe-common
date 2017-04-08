@@ -30,7 +30,7 @@ import java.io.InputStream;
  * read the CDM data according to the previously obtained description.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 12, 2005
  * */
 public interface InputStreamProvider

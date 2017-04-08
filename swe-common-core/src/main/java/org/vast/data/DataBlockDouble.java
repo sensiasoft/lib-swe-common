@@ -23,7 +23,7 @@ import net.opengis.swe.v20.DataType;
  * All data is casted to other types when requested.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 23, 2005
  * */
 public class DataBlockDouble extends AbstractDataBlock

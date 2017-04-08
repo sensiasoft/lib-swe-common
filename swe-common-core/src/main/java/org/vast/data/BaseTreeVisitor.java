@@ -39,7 +39,7 @@ import net.opengis.swe.v20.Vector;
  * do nothing.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 9, 2015
  */
 public abstract class BaseTreeVisitor implements DataComponentVisitor

@@ -31,7 +31,7 @@ import org.vast.cdm.common.DataHandler;
  * from the data stream to the list within the SWE Data.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 23, 2007
  * */
 public class DefaultParserHandler implements DataHandler

@@ -30,7 +30,7 @@ import net.opengis.gml.v32.Reference;
  * Implementation of GML Point derived from JTS Point class.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 23, 2014
  */
 public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point

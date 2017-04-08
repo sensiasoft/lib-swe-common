@@ -38,7 +38,7 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
  * Helper class to manage what XML implementations are used
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jan 23, 2015
  */
 public class XMLImplFinder

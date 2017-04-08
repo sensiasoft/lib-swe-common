@@ -23,7 +23,7 @@ import net.opengis.gml.v32.LinearRing;
  * Implementation of GML LinearRing derived from JTS LinearRing class.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 23, 2014
  */
 public class LinearRingJTS extends com.vividsolutions.jts.geom.LinearRing implements LinearRing

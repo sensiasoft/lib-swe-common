@@ -32,7 +32,7 @@ import org.vast.cdm.common.DataStreamWriter;
  * from the data list within the SWE Data.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 23, 2007
  * */
 public class DefaultWriterHandler implements DataHandler

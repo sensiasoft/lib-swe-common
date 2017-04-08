@@ -32,7 +32,7 @@ import org.vast.ogc.xlink.CachedReference;
  * TODO DefinitionRef type description
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 29, 2012
  * */
 public class DefinitionRef extends CachedReference<IDefinition> implements IDefinition

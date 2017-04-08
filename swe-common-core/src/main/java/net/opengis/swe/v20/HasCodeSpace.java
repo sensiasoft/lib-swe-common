@@ -20,7 +20,7 @@ package net.opengis.swe.v20;
  * Tagging interface for data components that have a code space
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 7, 2014
  */
 @SuppressWarnings("javadoc")

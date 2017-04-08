@@ -33,7 +33,7 @@ import net.opengis.gml.v32.AbstractFeature;
  * Basic interface for a feature object
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 28, 2012
  * */
 public interface GenericFeature extends AbstractFeature

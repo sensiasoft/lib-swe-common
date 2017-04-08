@@ -20,7 +20,7 @@ package org.vast.data;
  * Abstract base class for all Data Indexers
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Apr 4, 2006
  * */
 public abstract class DataIndexer

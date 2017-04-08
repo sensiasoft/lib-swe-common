@@ -24,7 +24,7 @@ import net.opengis.swe.v20.DataType;
  * that returns unsigned values even for values > 2^15
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 23, 2005
  * */
 public class DataBlockUShort extends AbstractDataBlock

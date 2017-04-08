@@ -26,7 +26,7 @@ import net.opengis.swe.v20.DataType;
  * All data is casted to the correct types when requested.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jan 10, 2015
  * */
 public class DataBlockCompressed extends AbstractDataBlock

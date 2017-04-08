@@ -28,7 +28,7 @@ import java.util.List;
  * SensorML ResponsibleParty
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 16, 2006
  * */
 public class ResponsibleParty extends Contact

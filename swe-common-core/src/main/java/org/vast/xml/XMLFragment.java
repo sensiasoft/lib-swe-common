@@ -29,7 +29,7 @@ import org.w3c.dom.*;
  * and a base element node
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 3, 2005
  * */
 public class XMLFragment

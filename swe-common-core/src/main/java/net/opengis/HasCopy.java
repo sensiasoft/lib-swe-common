@@ -21,7 +21,7 @@ package net.opengis;
  * This is used when deep-copying an OgcProperty object
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 8, 2014
  */
 public interface HasCopy

@@ -20,7 +20,7 @@ package org.vast.data;
  * TODO DataArrayIndexer type description
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 15, 2005
  * */
 public class DataArrayIndexer extends DataIndexer

@@ -24,7 +24,7 @@ import net.opengis.swe.v20.DataComponent;
  * DataComponent APIs in order to filter a component tree.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Apr 9, 2015
  */
 public interface IComponentFilter

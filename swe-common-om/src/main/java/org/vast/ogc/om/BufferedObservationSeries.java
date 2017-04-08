@@ -41,7 +41,7 @@ import org.vast.util.TimeExtent;
  * and is fully mutable. Data is stored internally using a DataList object.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 20, 2012
  * */
 public class BufferedObservationSeries extends GenericFeatureImpl implements IObservationSeries

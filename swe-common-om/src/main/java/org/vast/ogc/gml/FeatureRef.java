@@ -49,7 +49,7 @@ import org.vast.util.URIResolver;
  * This enables fetching and instantiating the target object lazily.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 28, 2012
  * */
 public class FeatureRef extends CachedReference<GenericFeature> implements GenericFeature

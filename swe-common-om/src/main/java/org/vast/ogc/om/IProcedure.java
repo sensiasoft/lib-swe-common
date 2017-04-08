@@ -31,7 +31,7 @@ import org.vast.ogc.gml.GenericFeature;
  * Interface for all procedure implementations
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 28, 2012
  * */
 public interface IProcedure extends GenericFeature

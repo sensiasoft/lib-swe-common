@@ -28,7 +28,7 @@ import org.vast.util.NumberUtils;
  * and custom functions.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since May 4, 2006
  * */
 public class GenericUnitConverter extends AbstractUnitConverter

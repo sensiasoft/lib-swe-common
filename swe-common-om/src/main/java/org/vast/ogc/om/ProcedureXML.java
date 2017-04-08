@@ -43,7 +43,7 @@ import org.w3c.dom.Element;
  * object.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 30, 2012
  * */
 public class ProcedureXML implements IProcedure

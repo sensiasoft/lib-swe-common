@@ -40,7 +40,7 @@ import org.vast.util.WriterException;
  * structure and encoding information.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 29, 2008
  * */
 public class XmlDataWriter extends AbstractDataWriter

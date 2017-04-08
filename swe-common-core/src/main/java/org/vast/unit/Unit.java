@@ -27,7 +27,7 @@ import org.vast.util.NumberUtils;
  * Unit object containing relationship to SI base units.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since May 4, 2006
  * */
 public class Unit

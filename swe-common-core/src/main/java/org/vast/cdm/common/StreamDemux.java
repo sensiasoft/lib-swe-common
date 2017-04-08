@@ -28,7 +28,7 @@ package org.vast.cdm.common;
  * a given parser will be used for a given cluster ID.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 12, 2005
  * */
 public interface StreamDemux

@@ -26,7 +26,7 @@ import net.opengis.swe.v20.DataComponent;
  * This does not iterate through each array value.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 19, 2013
  */
 public class DataIterator implements Iterator<DataComponent>, Iterable<DataComponent>

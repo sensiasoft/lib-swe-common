@@ -19,7 +19,7 @@ import org.vast.data.SWEFactory;
  * Helper wrapping the auto-generated SWE Common StAX bindings
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 25, 2014
  */
 public class SWEStaxBindings extends XMLStreamBindings

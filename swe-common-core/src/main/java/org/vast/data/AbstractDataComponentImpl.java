@@ -26,7 +26,7 @@ import net.opengis.swe.v20.ValidationException;
  * Abstract DataComponent base
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableImpl implements DataComponent
 {

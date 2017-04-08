@@ -24,7 +24,7 @@ import net.opengis.swe.v20.DataBlock;
  * referenced in an Indexer Tree.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Apr 3, 2007
  * */
 public class VarSizeMapper implements DataVisitor

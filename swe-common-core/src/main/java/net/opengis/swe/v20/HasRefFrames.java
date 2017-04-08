@@ -20,7 +20,7 @@ package net.opengis.swe.v20;
  * Tagging interface for data components with local and reference frames
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 8, 2014
  */
 @SuppressWarnings("javadoc")

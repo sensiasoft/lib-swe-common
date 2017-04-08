@@ -27,7 +27,7 @@ package org.vast.unit;
  * manage a local dictionary of units.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since May 4, 2006
  * */
 public class UnitConversion

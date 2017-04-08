@@ -21,7 +21,7 @@ import org.vast.cdm.common.CompressedStreamWriter;
  * Class for looking up codecs in the classpath
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 9, 2013
  */
 public class CodecLookup

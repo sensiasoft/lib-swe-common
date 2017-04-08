@@ -26,7 +26,7 @@ package org.vast.unit;
  * Base abstract class for all unit converters
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since May 4, 2006
  * */
 public abstract class AbstractUnitConverter implements UnitConverter

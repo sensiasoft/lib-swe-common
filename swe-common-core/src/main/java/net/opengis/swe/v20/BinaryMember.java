@@ -20,7 +20,7 @@ package net.opengis.swe.v20;
  * Base interface for binary encoding members: BinaryComponent and BinaryBlock
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 26, 2014
  */
 @SuppressWarnings("javadoc")

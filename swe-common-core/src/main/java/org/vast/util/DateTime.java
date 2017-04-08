@@ -29,7 +29,7 @@ import java.util.Date;
  * Extension of java Date to provide julian time output as a double.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 29, 2005
  * */
 public class DateTime extends Date

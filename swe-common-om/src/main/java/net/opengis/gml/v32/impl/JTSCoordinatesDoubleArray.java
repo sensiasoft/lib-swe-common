@@ -24,7 +24,7 @@ import com.vividsolutions.jts.geom.Envelope;
  * Implementation of JTS coordinate sequence wrapping a double array
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 23, 2014
  */
 public class JTSCoordinatesDoubleArray implements CoordinateSequence

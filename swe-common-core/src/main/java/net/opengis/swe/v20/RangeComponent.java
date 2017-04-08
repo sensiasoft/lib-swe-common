@@ -20,7 +20,7 @@ package net.opengis.swe.v20;
  * Tagging interface for all range components
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 8, 2014
  */
 public interface RangeComponent extends SimpleComponent

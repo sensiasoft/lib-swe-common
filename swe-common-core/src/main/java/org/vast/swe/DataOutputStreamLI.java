@@ -32,7 +32,7 @@ import org.vast.cdm.common.DataOutputExt;
  * (i.e Least Significant Byte first)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jan 10, 2009
  * */
 public class DataOutputStreamLI extends FilterOutputStream implements DataOutputExt

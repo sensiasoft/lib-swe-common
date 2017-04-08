@@ -23,7 +23,7 @@ import org.vast.util.DateTimeFormat;
  * This class is not thread safe.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 14, 2014
  */
 public abstract class AbstractBindings

@@ -30,7 +30,7 @@ import javax.xml.stream.XMLStreamWriter;
  * Base abstract class for all XML bindings using XML Stream API
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jul 28, 2014
  */
 public abstract class AbstractXMLStreamBindings extends AbstractBindings

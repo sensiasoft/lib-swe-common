@@ -40,7 +40,7 @@ import org.vast.cdm.common.*;
  * suited for a given encoding.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 16, 2005
  * */
 public abstract class SWEReader implements InputStreamProvider

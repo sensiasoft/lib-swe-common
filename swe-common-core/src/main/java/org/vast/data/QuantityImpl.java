@@ -30,7 +30,7 @@ import net.opengis.swe.v20.ValidationException;
  * Extended SWE Quantity implementation adapted to old VAST framework
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 30, 2014
  */
 public class QuantityImpl extends DataValue implements Quantity

@@ -26,7 +26,7 @@ package org.vast.unit;
  * 
  * </p>
  * 
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 19, 2005
  * */
 public interface UnitConverter

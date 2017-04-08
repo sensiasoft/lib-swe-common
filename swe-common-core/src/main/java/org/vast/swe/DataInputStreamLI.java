@@ -34,7 +34,7 @@ import org.vast.cdm.common.DataInputExt;
  * (i.e. Lower Significant Byte first)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 28, 2005
  * */
 public class DataInputStreamLI extends FilterInputStream implements DataInputExt

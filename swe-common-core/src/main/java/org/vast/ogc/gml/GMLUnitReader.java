@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * TODO GMLUnitReader type description
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 9, 2007
  * */
 public class GMLUnitReader

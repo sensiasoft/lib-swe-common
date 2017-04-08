@@ -30,7 +30,7 @@ import com.google.gson.stream.JsonWriter;
  * Stream writer implementation for serializing SWE metadata as JSON
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jun 4, 2016
  */
 public class JsonStreamWriter implements XMLStreamWriter, JsonConstants

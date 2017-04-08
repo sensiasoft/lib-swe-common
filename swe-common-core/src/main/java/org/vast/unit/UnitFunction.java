@@ -27,7 +27,7 @@ package org.vast.unit;
  * Example of functions are log, ln, degF, degC, etc...
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 9, 2007
  * */
 public abstract class UnitFunction

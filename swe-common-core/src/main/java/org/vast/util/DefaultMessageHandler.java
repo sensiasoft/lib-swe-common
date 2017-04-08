@@ -27,7 +27,7 @@ package org.vast.util;
  * or System.err if error is true.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Apr 29, 2006
  * */
 public class DefaultMessageHandler implements MessageHandler

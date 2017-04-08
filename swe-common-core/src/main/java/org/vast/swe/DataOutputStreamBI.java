@@ -33,7 +33,7 @@ import org.vast.cdm.common.DataOutputExt;
  * is for big endian order (i.e. Most Significant Byte first)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 10, 2006
  * */
 public class DataOutputStreamBI extends DataOutputStream implements DataOutputExt

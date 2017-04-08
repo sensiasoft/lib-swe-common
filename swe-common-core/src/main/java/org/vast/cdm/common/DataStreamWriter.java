@@ -35,7 +35,7 @@ import net.opengis.swe.v20.DataComponent;
  * Result data should be written in the outputStream.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 12, 2005
  * */
 public interface DataStreamWriter

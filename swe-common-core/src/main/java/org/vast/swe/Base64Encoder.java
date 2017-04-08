@@ -30,7 +30,7 @@ import java.io.*;
  * Commons Base64 encoder/decoder class.  
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 14, 2006
  * */
 public class Base64Encoder extends FilterOutputStream

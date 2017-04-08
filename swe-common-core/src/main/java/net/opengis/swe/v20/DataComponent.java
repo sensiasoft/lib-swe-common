@@ -25,7 +25,7 @@ import net.opengis.HasCopy;
  * API that useful to navigate a component tree in a more generic manner.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 10, 2014
  */
 public interface DataComponent extends AbstractSWEIdentifiable, HasCopy

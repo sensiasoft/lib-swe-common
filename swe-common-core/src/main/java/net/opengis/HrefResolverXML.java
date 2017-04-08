@@ -28,7 +28,7 @@ import javax.xml.stream.XMLStreamReader;
  * Implementation of xlink resolution and parsing for remote XML content
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 29, 2014
  */
 public abstract class HrefResolverXML implements HrefResolver

@@ -21,7 +21,7 @@ import net.opengis.OgcProperty;
  * Tagging interface for data components with constraints
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 8, 2014
  */
 @SuppressWarnings("javadoc")

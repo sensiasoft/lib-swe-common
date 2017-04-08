@@ -32,7 +32,7 @@ import net.opengis.gml.v32.impl.GMLFactory;
  * Helper wrapping the auto-generated GML StAX bindings
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 25, 2014
  */
 public class GMLStaxBindings extends XMLStreamBindings

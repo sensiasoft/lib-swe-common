@@ -28,7 +28,7 @@ import org.vast.util.NumberUtils;
  * such as B, B[SPL], B[V], etc...
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 10, 2007
  * */
 public class UnitFunctionLog extends UnitFunction

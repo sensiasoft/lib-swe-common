@@ -27,7 +27,7 @@ import net.opengis.gml.v32.AbstractFeature;
  * Interface for StAX bindings of specific feature types 
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since May 30, 2015
  */
 public interface IFeatureStaxBindings

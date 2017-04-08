@@ -38,7 +38,7 @@ import com.google.gson.stream.JsonToken;
  * used with existing StAX parsers.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Jan 26, 2017
  */
 public class JsonStreamReader implements XMLStreamReader, JsonConstants

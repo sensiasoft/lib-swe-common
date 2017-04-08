@@ -38,7 +38,7 @@ import org.vast.data.DataList;
  * This class also contains methods for parsing/writing the stored data.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 21, 2007
  * */
 public class SWEData extends DataList implements ISweInputDataStream, ISweOutputDataStream

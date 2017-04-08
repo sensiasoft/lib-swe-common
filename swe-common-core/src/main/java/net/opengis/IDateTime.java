@@ -21,7 +21,7 @@ package net.opengis;
  * All implementations must be immutable.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 7, 2014
  */
 public interface IDateTime

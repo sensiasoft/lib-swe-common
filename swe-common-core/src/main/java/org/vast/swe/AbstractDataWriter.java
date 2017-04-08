@@ -34,7 +34,7 @@ import org.vast.util.WriterException;
  * Abstract class for writing a CDM data stream.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 10, 2006
  * */
 public abstract class AbstractDataWriter extends DataTreeVisitor implements DataStreamWriter

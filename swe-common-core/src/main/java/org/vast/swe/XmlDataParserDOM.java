@@ -43,7 +43,7 @@ import org.w3c.dom.NodeList;
  * structure directly inside a DOM.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 29, 2008
  * */
 public class XmlDataParserDOM extends AbstractDataParser

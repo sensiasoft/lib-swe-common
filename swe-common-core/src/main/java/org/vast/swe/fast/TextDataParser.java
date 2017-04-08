@@ -43,7 +43,7 @@ import org.vast.util.ReaderException;
  * while iterating through the component tree.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 7, 2016
  */
 public class TextDataParser extends AbstractDataParser

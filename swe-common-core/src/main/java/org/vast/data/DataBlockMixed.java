@@ -25,7 +25,7 @@ import net.opengis.swe.v20.DataType;
  * Children datablocks will be read sequentially.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public class DataBlockMixed extends AbstractDataBlock
 {

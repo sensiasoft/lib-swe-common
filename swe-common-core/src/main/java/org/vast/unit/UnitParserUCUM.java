@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
  * a Unit object with the right scale factors and powers.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since May 4, 2006
  * */
 public class UnitParserUCUM implements UnitParser

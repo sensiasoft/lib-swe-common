@@ -58,7 +58,7 @@ import org.w3c.dom.Element;
  * This class is not thread-safe.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 8, 2014
  */
 public class GMLUtils extends XMLBindingsUtils

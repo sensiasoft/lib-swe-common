@@ -40,7 +40,7 @@ import net.opengis.swe.v20.DataComponent;
  * the same datablock can be efficiently reused + do impl
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 12, 2005
  * */
 public interface DataStreamParser

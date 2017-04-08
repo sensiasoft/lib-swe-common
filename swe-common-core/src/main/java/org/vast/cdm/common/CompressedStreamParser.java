@@ -32,7 +32,7 @@ import net.opengis.swe.v20.DataComponent;
  * Interface for all SWE compressed block decoders
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 17, 2009
  * */
 public interface CompressedStreamParser

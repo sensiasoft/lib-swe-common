@@ -30,7 +30,7 @@ import java.util.*;
  * Contains helper routines to convert to and from ISO8601
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 29, 2005
  * */
 public class DateTimeFormat extends SimpleDateFormat

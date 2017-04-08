@@ -27,7 +27,7 @@ import javax.xml.namespace.NamespaceContext;
  * serializing the XML
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 21, 2014
  */
 public class NamespaceRegister implements NamespaceContext

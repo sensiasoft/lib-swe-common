@@ -47,7 +47,7 @@ import org.w3c.dom.*;
  * Reader for O&M observations v2.0
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 30, 2012
  * */
 public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>

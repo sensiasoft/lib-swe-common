@@ -20,7 +20,7 @@ package org.vast.util;
  * Exception thrown when linked data cannot be resolved
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Apr 6, 2017
  */
 public class ResolveException extends RuntimeException

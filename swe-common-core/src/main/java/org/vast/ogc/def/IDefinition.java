@@ -31,7 +31,7 @@ import java.util.List;
  * Interface for basic term definitions
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 28, 2012
  * */
 public interface IDefinition

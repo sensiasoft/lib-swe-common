@@ -26,7 +26,7 @@ package org.vast.swe;
  * Constants defined by SWE Common standard and other commonly used URIs
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Mar 5, 2008
  * */
 public class SWEConstants

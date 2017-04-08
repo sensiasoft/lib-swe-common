@@ -31,7 +31,7 @@ import net.opengis.gml.v32.impl.AbstractFeatureImpl;
  * Generic implementation of a GML feature.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 20, 2007
  * */
 public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFeature

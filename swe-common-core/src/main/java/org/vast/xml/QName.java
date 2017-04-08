@@ -26,7 +26,7 @@ package org.vast.xml;
  * Utility class to store element name with namespace prefix and URI.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 15, 2006
  * */
 class QName

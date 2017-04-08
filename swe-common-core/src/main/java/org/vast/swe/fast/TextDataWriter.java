@@ -43,7 +43,7 @@ import net.opengis.swe.v20.Time;
  * while iterating through the component tree.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 7, 2016
  */
 public class TextDataWriter extends AbstractDataWriter

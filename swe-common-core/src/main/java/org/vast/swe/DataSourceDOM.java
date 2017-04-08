@@ -35,7 +35,7 @@ import org.w3c.dom.Element;
  * content using the common DataStreamParser interface.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb, 28 2008
  * */
 public class DataSourceDOM implements DataSource

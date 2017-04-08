@@ -29,7 +29,7 @@ package org.vast.ogc.om;
  * Interface for arrays of procedures (homogeneous or not)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 30, 2012
  * */
 public interface IProcedureArray extends IProcedure

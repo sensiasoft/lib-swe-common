@@ -31,7 +31,7 @@ import javax.xml.stream.XMLStreamWriter;
  * Interface for all XML readers implemented using StAX
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @param <ObjectType> Type of object handled by this writer
  * @since Sep 30, 2012
  * */

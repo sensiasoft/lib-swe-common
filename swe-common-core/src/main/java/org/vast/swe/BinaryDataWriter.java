@@ -47,7 +47,7 @@ import org.vast.data.DataChoiceImpl;
  * binary and base64 for now.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Feb 10, 2006
  * */
 public class BinaryDataWriter extends AbstractDataWriter

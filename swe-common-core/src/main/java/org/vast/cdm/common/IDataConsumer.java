@@ -36,7 +36,7 @@ import net.opengis.swe.v20.DataComponent;
  * Interface for consuming a stream of CDM data objects.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 28, 2012
  * */
 public interface IDataConsumer

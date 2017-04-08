@@ -31,7 +31,7 @@ import net.opengis.swe.v20.DataEncoding;
  * Base class for all SWE Common data stream writers (text, binary, xml, json)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Dec 7, 2016
  */
 public abstract class AbstractDataWriter extends DataBlockProcessor implements DataStreamWriter

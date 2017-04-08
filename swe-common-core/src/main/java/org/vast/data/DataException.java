@@ -21,7 +21,7 @@ package org.vast.data;
  * </p>
  *
  * <p>Company: University of Alabama in Huntsville - VAST</p>
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * */
 public class DataException extends Exception
 {

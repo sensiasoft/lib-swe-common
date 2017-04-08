@@ -29,7 +29,7 @@ import net.opengis.swe.v20.EncodedValues;
  * Provides common methods for all implementations of block components
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 10, 2014
  */
 public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implements DataArray, BlockComponent

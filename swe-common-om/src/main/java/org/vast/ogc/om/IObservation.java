@@ -38,7 +38,7 @@ import org.vast.util.TimeExtent;
  * Interface for an Observation as defined by the O&M standard
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Sep 28, 2012
  * */
 public interface IObservation extends GenericFeature

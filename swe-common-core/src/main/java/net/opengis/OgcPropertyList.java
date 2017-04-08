@@ -31,7 +31,7 @@ import java.util.ListIterator;
  * with getProperty() methods.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @param <ValueType> Type of the properties value
  * @since Nov 8, 2014
  */

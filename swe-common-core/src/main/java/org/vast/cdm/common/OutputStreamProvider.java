@@ -31,7 +31,7 @@ import java.io.OutputStream;
  * buffer or an XML element.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Aug 12, 2005
  * */
 public interface OutputStreamProvider

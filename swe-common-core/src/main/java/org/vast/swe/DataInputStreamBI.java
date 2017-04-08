@@ -33,7 +33,7 @@ import org.vast.cdm.common.DataInputExt;
  * This is for big endian order (i.e. Most Significant Byte first)
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Nov 28, 2005
  * */
 public class DataInputStreamBI extends DataInputStream implements DataInputExt
