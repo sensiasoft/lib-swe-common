@@ -28,7 +28,8 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockByte extends AbstractDataBlock
 {
-	protected byte[] primitiveArray;
+	private static final long serialVersionUID = 9112814840259970633L;
+    protected byte[] primitiveArray;
 	
 	
 	public DataBlockByte()

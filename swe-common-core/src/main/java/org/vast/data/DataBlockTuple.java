@@ -30,7 +30,8 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockTuple extends AbstractDataBlock
 {
-	protected AbstractDataBlock[] blockArray;
+	private static final long serialVersionUID = -1435102674147112451L;
+    protected AbstractDataBlock[] blockArray;
 
 
 	public DataBlockTuple()

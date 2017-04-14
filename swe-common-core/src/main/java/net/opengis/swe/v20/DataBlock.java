@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.swe.v20;
 
+import java.io.Serializable;
 
 /**
  * <p>
@@ -32,7 +33,7 @@ package net.opengis.swe.v20;
  * @author Alex Robin
  * @since Aug 14, 2005
  * */
-public interface DataBlock extends Cloneable
+public interface DataBlock extends Cloneable, Serializable
 {
 	public DataType getDataType();
 	

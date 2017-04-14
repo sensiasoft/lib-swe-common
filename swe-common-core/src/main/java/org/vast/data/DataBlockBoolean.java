@@ -28,7 +28,8 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockBoolean extends AbstractDataBlock
 {
-	public static final byte TRUE_VAL = 1;
+	private static final long serialVersionUID = -6524352354000350972L;
+    public static final byte TRUE_VAL = 1;
 	public static final byte FALSE_VAL = 0;
 	protected boolean[] primitiveArray;
 	

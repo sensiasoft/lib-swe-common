@@ -19,7 +19,8 @@ import net.opengis.swe.v20.DataBlock;
 
 public abstract class AbstractDataBlock implements DataBlock
 {
-	protected int atomCount;
+	private static final long serialVersionUID = -1767089410818419892L;
+    protected int atomCount;
 	protected int startIndex = 0;
 	
 	

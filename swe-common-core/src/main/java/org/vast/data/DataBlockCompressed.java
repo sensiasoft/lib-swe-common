@@ -31,7 +31,8 @@ import net.opengis.swe.v20.DataType;
  * */
 public class DataBlockCompressed extends AbstractDataBlock
 {
-	protected byte[] compressedData;
+	private static final long serialVersionUID = 2808433335202338950L;
+    protected byte[] compressedData;
     protected DataBlock uncompressedData;
     protected int compressionType;
 	
