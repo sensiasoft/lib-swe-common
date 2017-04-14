@@ -14,10 +14,11 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.swe.v20;
 
+import java.io.Serializable;
 import net.opengis.HasCopy;
 
 
-public interface DataConstraint extends HasCopy
+public interface DataConstraint extends Serializable, HasCopy
 {
 
 }
