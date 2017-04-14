@@ -83,7 +83,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     {
         this.readFully(b, 0, 2);
         
-        int val = ((int)(b[1] & 0xff) << 8) | ((int)(b[0] & 0xff));
+        int val = ((b[1] & 0xff) << 8) | (b[0] & 0xff);
         
         return (short)val;
     }
@@ -94,7 +94,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     {
         this.readFully(b, 0, 2);
         
-        int val = ((int)(b[1] & 0xff) << 8) | ((int)(b[0] & 0xff));
+        int val = ((b[1] & 0xff) << 8) | (b[0] & 0xff);
         
         return val;
     }
@@ -105,7 +105,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     {
         this.readFully(b, 0, 2);
         
-        int val = ((int)(b[1] & 0xff) << 8) | ((int)(b[0] & 0xff));
+        int val = ((b[1] & 0xff) << 8) | (b[0] & 0xff);
         
         return (char)val; 
     }
@@ -116,10 +116,10 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     {
         this.readFully(b, 0, 4);
         
-        int val = ((int)(b[3] & 0xff) << 24) |
-                  ((int)(b[2] & 0xff) << 16) |
-                  ((int)(b[1] & 0xff) <<  8) |
-                  ((int)(b[0] & 0xff));
+        int val = ((b[3] & 0xff) << 24) |
+                  ((b[2] & 0xff) << 16) |
+                  ((b[1] & 0xff) <<  8) |
+                  (b[0] & 0xff);
         
         return val;
     }
@@ -133,7 +133,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
         long val = ((long)(b[3] & 0xff) << 24) |
                    ((long)(b[2] & 0xff) << 16) |
                    ((long)(b[1] & 0xff) <<  8) |
-                   ((long)(b[0] & 0xff));
+                   (b[0] & 0xff);
         
         return val;
 	}
@@ -151,7 +151,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
                    ((long)(b[3] & 0xff) << 24) |
                    ((long)(b[2] & 0xff) << 16) |
                    ((long)(b[1] & 0xff) <<  8) |
-                   ((long)(b[0] & 0xff));
+                   (b[0] & 0xff);
         
         return val;
     }
@@ -238,7 +238,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
         int total = 0;
         int cur = 0;
         
-        while ((total < n) && ((cur = (int) in.skip((long)(n-total))) > 0))
+        while ((total < n) && ((cur = (int) in.skip(n-total)) > 0))
         {
             total += cur;
         }

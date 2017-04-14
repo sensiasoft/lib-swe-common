@@ -48,7 +48,8 @@ public class AsciiDataParser extends AbstractDataParser
 	}
 	
 	
-	public void setInput(InputStream inputStream) throws IOException
+	@Override
+    public void setInput(InputStream inputStream) throws IOException
 	{
 		reader = inputStream;
 		tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator().toCharArray();
@@ -61,7 +62,8 @@ public class AsciiDataParser extends AbstractDataParser
 	/**
 	 * Start parsing data coming from the given stream
 	 */
-	public void parse(InputStream inputStream) throws IOException
+	@Override
+    public void parse(InputStream inputStream) throws IOException
 	{
         stopParsing = false;
         
@@ -96,6 +98,7 @@ public class AsciiDataParser extends AbstractDataParser
      * @return true if more data needs to be parsed, false otherwise
      * @throws IOException
      */
+    @Override
     protected boolean moreData() throws IOException
     {
         lastToken = readToken();

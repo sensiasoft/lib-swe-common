@@ -14,7 +14,6 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.swe.test;
 
-import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -25,11 +24,9 @@ import org.vast.cdm.common.DataStreamWriter;
 import org.vast.swe.SWEHelper;
 import org.vast.swe.fast.TextDataParser;
 import org.vast.swe.fast.TextDataWriter;
-import org.vast.swe.fast.XmlDataWriter;
 import org.vast.util.DateTimeFormat;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
-import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataRecord;
 
 

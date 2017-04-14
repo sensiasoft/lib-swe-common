@@ -182,7 +182,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
         if (this.dataBlock == null)
     	    this.dataBlock = new DataBlockList();
         
-        ((DataBlockList)this.dataBlock).add((AbstractDataBlock)dataBlock);
+        ((DataBlockList)this.dataBlock).add(dataBlock);
     }
     
     
@@ -223,6 +223,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     }
 
 
+    @Override
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();

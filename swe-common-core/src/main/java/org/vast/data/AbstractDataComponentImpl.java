@@ -69,7 +69,7 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
 	@Override
     public AbstractDataComponentImpl clone()
     {
-        AbstractDataComponentImpl newComponent = (AbstractDataComponentImpl)this.copy();
+        AbstractDataComponentImpl newComponent = this.copy();
         if (this.dataBlock != null)
             newComponent.dataBlock = this.dataBlock.clone();
         return newComponent;
@@ -183,7 +183,8 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
 	public abstract String toString(String indent);
 
 
-	public String toString()
+	@Override
+    public String toString()
 	{
 		return this.toString("");
 	}

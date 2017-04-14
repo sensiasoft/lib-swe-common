@@ -70,7 +70,7 @@ public class DateTime extends Date
 	
 	public double getJulianTime()
 	{
-		return ((double)this.getTime()) / 1000.0;
+		return (this.getTime()) / 1000.0;
 	}
 	
 	

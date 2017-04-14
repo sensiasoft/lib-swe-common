@@ -68,7 +68,7 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
         StringBuffer msg = new StringBuffer();
         msg.append("It should ");
         
-        if (valueList.size() > 0)
+        if (!valueList.isEmpty())
         {
             msg.append("be one of {");  
             int i = 0;
@@ -83,9 +83,9 @@ public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
             msg.append('}');
         }
         
-        if (intervalList.size() > 0)
+        if (!intervalList.isEmpty())
         {
-            if (valueList.size() > 0)
+            if (!valueList.isEmpty())
                 msg.append(" OR ");
                 
             msg.append("be within one of {");

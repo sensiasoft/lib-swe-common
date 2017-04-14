@@ -45,7 +45,8 @@ public class DataBlockTuple extends AbstractDataBlock
 	}
 	
 	
-	public DataBlockTuple copy()
+	@Override
+    public DataBlockTuple copy()
 	{
 		DataBlockTuple newBlock = new DataBlockTuple();
 		newBlock.startIndex = this.startIndex;
@@ -55,6 +56,7 @@ public class DataBlockTuple extends AbstractDataBlock
 	}
     
     
+    @Override
     public DataBlockTuple renew()
     {
         DataBlockTuple newBlock = new DataBlockTuple();
@@ -70,6 +72,7 @@ public class DataBlockTuple extends AbstractDataBlock
     }
     
     
+    @Override
     public DataBlockTuple clone()
     {
         DataBlockTuple newBlock = new DataBlockTuple();
@@ -85,6 +88,7 @@ public class DataBlockTuple extends AbstractDataBlock
     }
     
     
+    @Override
     public AbstractDataBlock[] getUnderlyingObject()
     {
         return blockArray;
@@ -97,31 +101,36 @@ public class DataBlockTuple extends AbstractDataBlock
     }
     
     
+    @Override
     public void setUnderlyingObject(Object obj)
     {
     	this.blockArray = (AbstractDataBlock[])obj;
     }
 	
 	
-	public DataType getDataType()
+	@Override
+    public DataType getDataType()
 	{
 		return DataType.MIXED;
 	}
 
 
-	public DataType getDataType(int index)
+	@Override
+    public DataType getDataType(int index)
 	{
 		return blockArray[startIndex + index].getDataType();
 	}
 
 
-	public void resize(int size)
+	@Override
+    public void resize(int size)
 	{
 		
 	}
 
 
-	public String toString()
+	@Override
+    public String toString()
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("TUPLE[" + atomCount + "]: ");
@@ -141,200 +150,232 @@ public class DataBlockTuple extends AbstractDataBlock
 	}
 
 
-	public boolean getBooleanValue(int index)
+	@Override
+    public boolean getBooleanValue(int index)
 	{
 		return blockArray[startIndex + index].getBooleanValue();
 	}
 
 
-	public byte getByteValue(int index)
+	@Override
+    public byte getByteValue(int index)
 	{
 		return blockArray[startIndex + index].getByteValue();
 	}
 
 
-	public short getShortValue(int index)
+	@Override
+    public short getShortValue(int index)
 	{
 		return blockArray[startIndex + index].getShortValue();
 	}
 
 
-	public int getIntValue(int index)
+	@Override
+    public int getIntValue(int index)
 	{
 		return blockArray[startIndex + index].getIntValue();
 	}
 
 
-	public long getLongValue(int index)
+	@Override
+    public long getLongValue(int index)
 	{
 		return blockArray[startIndex + index].getLongValue();
 	}
 
 
-	public float getFloatValue(int index)
+	@Override
+    public float getFloatValue(int index)
 	{
 		return blockArray[startIndex + index].getFloatValue();
 	}
 
 
-	public double getDoubleValue(int index)
+	@Override
+    public double getDoubleValue(int index)
 	{
 		return blockArray[startIndex + index].getDoubleValue();
 	}
 
 
-	public String getStringValue(int index)
+	@Override
+    public String getStringValue(int index)
 	{
 		
 		return blockArray[startIndex + index].getStringValue();
 	}
 
 
-	public boolean getBooleanValue()
+	@Override
+    public boolean getBooleanValue()
 	{
 		return blockArray[startIndex].getBooleanValue();
 	}
 
 
-	public byte getByteValue()
+	@Override
+    public byte getByteValue()
 	{
 		return blockArray[startIndex].getByteValue();
 	}
 
 
-	public short getShortValue()
+	@Override
+    public short getShortValue()
 	{
 		return blockArray[startIndex].getShortValue();
 	}
 
 
-	public int getIntValue()
+	@Override
+    public int getIntValue()
 	{
 		return blockArray[startIndex].getIntValue();
 	}
 
 
-	public long getLongValue()
+	@Override
+    public long getLongValue()
 	{
 		return blockArray[startIndex].getLongValue();
 	}
 
 
-	public float getFloatValue()
+	@Override
+    public float getFloatValue()
 	{
 		return blockArray[startIndex].getFloatValue();
 	}
 
 
-	public double getDoubleValue()
+	@Override
+    public double getDoubleValue()
 	{
 		return blockArray[startIndex].getDoubleValue();
 	}
 
 
-	public String getStringValue()
+	@Override
+    public String getStringValue()
 	{
 		return blockArray[startIndex].getStringValue();
 	}
 
 
-	public void setBooleanValue(int index, boolean value)
+	@Override
+    public void setBooleanValue(int index, boolean value)
 	{
 		
 		blockArray[startIndex + index].setBooleanValue(value);
 	}
 
 
-	public void setByteValue(int index, byte value)
+	@Override
+    public void setByteValue(int index, byte value)
 	{
 		
 		blockArray[startIndex + index].setByteValue(value);
 	}
 
 
-	public void setShortValue(int index, short value)
+	@Override
+    public void setShortValue(int index, short value)
 	{
 		
 		blockArray[startIndex + index].setShortValue(value);
 	}
 
 
-	public void setIntValue(int index, int value)
+	@Override
+    public void setIntValue(int index, int value)
 	{
 		
 		blockArray[startIndex + index].setIntValue(value);
 	}
 
 
-	public void setLongValue(int index, long value)
+	@Override
+    public void setLongValue(int index, long value)
 	{
 		
 		blockArray[startIndex + index].setLongValue(value);
 	}
 
 
-	public void setFloatValue(int index, float value)
+	@Override
+    public void setFloatValue(int index, float value)
 	{
 		
 		blockArray[startIndex + index].setFloatValue(value);
 	}
 
 
-	public void setDoubleValue(int index, double value)
+	@Override
+    public void setDoubleValue(int index, double value)
 	{
 		blockArray[startIndex + index].setDoubleValue(value);
 	}
 
 
-	public void setStringValue(int index, String value)
+	@Override
+    public void setStringValue(int index, String value)
 	{
 		blockArray[startIndex + index].setStringValue(value);
 	}
 
 
-	public void setBooleanValue(boolean value)
+	@Override
+    public void setBooleanValue(boolean value)
 	{
 		blockArray[startIndex].setBooleanValue(value);
 	}
 
 
-	public void setByteValue(byte value)
+	@Override
+    public void setByteValue(byte value)
 	{
 		blockArray[startIndex].setByteValue(value);
 	}
 
 
-	public void setShortValue(short value)
+	@Override
+    public void setShortValue(short value)
 	{
 		blockArray[startIndex].setShortValue(value);
 	}
 
 
-	public void setIntValue(int value)
+	@Override
+    public void setIntValue(int value)
 	{
 		blockArray[startIndex].setIntValue(value);
 	}
 
 
-	public void setLongValue(long value)
+	@Override
+    public void setLongValue(long value)
 	{
 		blockArray[startIndex].setLongValue(value);
 	}
 
 
-	public void setFloatValue(float value)
+	@Override
+    public void setFloatValue(float value)
 	{
 		blockArray[startIndex].setFloatValue(value);
 	}
 
 
-	public void setDoubleValue(double value)
+	@Override
+    public void setDoubleValue(double value)
 	{
 		blockArray[startIndex].setDoubleValue(value);
 	}
 
 
-	public void setStringValue(String value)
+	@Override
+    public void setStringValue(String value)
 	{
 		blockArray[startIndex].setStringValue(value);
 	}

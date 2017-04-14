@@ -109,10 +109,10 @@ public class Base64Encoder extends FilterOutputStream
             byte c3 = (byte) (((b2 & 0x0F) << 2) | ((b3 >> 6) & 0x03));
             byte c4 = (byte) (b3 & 0x3F);
 
-            charBuf[0] = ValToBase64[(int)(c1&0xFF)];
-            charBuf[1] = ValToBase64[(int)(c2&0xFF)];
-            charBuf[2] = ValToBase64[(int)(c3&0xFF)];
-            charBuf[3] = ValToBase64[(int)(c4&0xFF)];
+            charBuf[0] = ValToBase64[c1&0xFF];
+            charBuf[1] = ValToBase64[c2&0xFF];
+            charBuf[2] = ValToBase64[c3&0xFF];
+            charBuf[3] = ValToBase64[c4&0xFF];
 
             out.write(charBuf, 0, 4);
             addCR();
@@ -155,9 +155,9 @@ public class Base64Encoder extends FilterOutputStream
                 byte c2 = (byte) (((b1 & 0x03) << 4) | ((b2 >> 4) & 0x0F));
                 byte c3 = (byte) ((b2 & 0x0F) << 2);
     
-                charBuf[0] = ValToBase64[(int)(c1&0xFF)];
-                charBuf[1] = ValToBase64[(int)(c2&0xFF)];
-                charBuf[2] = ValToBase64[(int)(c3&0xFF)];
+                charBuf[0] = ValToBase64[c1&0xFF];
+                charBuf[1] = ValToBase64[c2&0xFF];
+                charBuf[2] = ValToBase64[c3&0xFF];
                 charBuf[3] = '=';
             }
             else if (unusedByte == 1)
@@ -167,8 +167,8 @@ public class Base64Encoder extends FilterOutputStream
                 byte c1 = (byte) ((b1 >> 2) & 0x3F);
                 byte c2 = (byte) ((b1 & 0x03) << 4);
     
-                charBuf[0] = ValToBase64[(int)(c1&0xFF)];
-                charBuf[1] = ValToBase64[(int)(c2&0xFF)];
+                charBuf[0] = ValToBase64[c1&0xFF];
+                charBuf[1] = ValToBase64[c2&0xFF];
                 charBuf[2] = '=';
                 charBuf[3] = '=';
             }

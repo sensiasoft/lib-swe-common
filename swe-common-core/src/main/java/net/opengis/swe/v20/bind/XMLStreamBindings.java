@@ -131,6 +131,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
                 else if (fieldProp.hasHref())
                 {
                     fieldProp.setHrefResolver(new HrefResolverXML() {
+                        @Override
                         public void parseContent(XMLStreamReader reader) throws XMLStreamException
                         {
                             fieldProp.setValue(readDataComponent(reader));

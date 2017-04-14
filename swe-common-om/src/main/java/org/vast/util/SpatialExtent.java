@@ -14,7 +14,6 @@
 package org.vast.util;
 
 import java.util.Objects;
-import net.opengis.gml.v32.TimePeriod;
 
 /**
  * <p>

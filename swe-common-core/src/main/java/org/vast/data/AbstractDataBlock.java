@@ -28,7 +28,8 @@ public abstract class AbstractDataBlock implements DataBlock
      * Shallow copy of datablock structure
      * The underlying object is shared
      */
-	public abstract AbstractDataBlock copy();
+	@Override
+    public abstract AbstractDataBlock copy();
     
     
     /**
@@ -36,6 +37,7 @@ public abstract class AbstractDataBlock implements DataBlock
      * size with a new underlying object
      * @return new data block
      */
+    @Override
     public abstract AbstractDataBlock renew();
     
     
@@ -43,6 +45,7 @@ public abstract class AbstractDataBlock implements DataBlock
      * Full copy of datablock structure and values
      * A new underlying object is created with the same values
      */
+    @Override
     public abstract AbstractDataBlock clone();
     
     
@@ -51,6 +54,7 @@ public abstract class AbstractDataBlock implements DataBlock
      * the data (usually a primitive array or composite)
      * @return underlying object
      */
+    @Override
     public abstract Object getUnderlyingObject();
     
     
@@ -58,19 +62,22 @@ public abstract class AbstractDataBlock implements DataBlock
      * Allows to set the underlying object directly
      * @param obj
      */
+    @Override
     public abstract void setUnderlyingObject(Object obj);
     
 	
     /**
      * Returns number of scalar values in this DataBlock
      */
-	public int getAtomCount()
+	@Override
+    public int getAtomCount()
 	{
 		return atomCount;
 	}
 	
 
-	public String toString()
+	@Override
+    public String toString()
 	{
 		return new String(getDataType() + "[" + getAtomCount() + "]");
 	}

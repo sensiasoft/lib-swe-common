@@ -44,16 +44,19 @@ public class ScalarIndexer
     {
         int offset;
         
+        @Override
         public int getOffset(int startOffset, DataBlock dataBlk)
         {
             return startOffset + offset;
         }
         
+        @Override
         public void addOffset(int offset)
         {
             this.offset += offset;
         }
         
+        @Override
         public void addIndexer(IndexerPart indexer)
         {            
         }
@@ -66,6 +69,7 @@ public class ScalarIndexer
     {
         List<IndexerPart> subIndexers = new ArrayList<IndexerPart>();
         
+        @Override
         public int getOffset(int startOffset, DataBlock dataBlk)
         {
             for (IndexerPart part: subIndexers)
@@ -73,6 +77,7 @@ public class ScalarIndexer
             return startOffset;
         }
         
+        @Override
         public void addOffset(int offset)
         {
             IndexerPart lastIndexer;
@@ -95,6 +100,7 @@ public class ScalarIndexer
             lastIndexer.addOffset(offset);
         }
         
+        @Override
         public void addIndexer(IndexerPart indexer)
         {
             subIndexers.add(indexer);
@@ -118,6 +124,7 @@ public class ScalarIndexer
     {
         List<IndexerPart> itemIndexers = new ArrayList<IndexerPart>();
         
+        @Override
         public int getOffset(int startOffset, DataBlock dataBlk)
         {
             int choiceIndex = dataBlk.getIntValue(startOffset);
@@ -132,6 +139,7 @@ public class ScalarIndexer
             return itemIndexer.getOffset(startOffset + 1, dataBlk);
         }
         
+        @Override
         public void addOffset(int offset)
         {
             IndexerPart fixedIndexer = new FixedIndexer();
@@ -139,6 +147,7 @@ public class ScalarIndexer
             itemIndexers.add(fixedIndexer);
         }
         
+        @Override
         public void addIndexer(IndexerPart indexer)
         {
             itemIndexers.add(indexer);

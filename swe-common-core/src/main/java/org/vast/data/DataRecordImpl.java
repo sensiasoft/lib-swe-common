@@ -62,6 +62,7 @@ public class DataRecordImpl extends AbstractRecordImpl<DataComponent> implements
     }
     
     
+    @Override
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
@@ -121,7 +122,7 @@ public class DataRecordImpl extends AbstractRecordImpl<DataComponent> implements
     @Override
     public void addField(String name, DataComponent field)
     {
-        fieldList.add(new OgcPropertyImpl<DataComponent>(name, (AbstractDataComponentImpl)field));
+        fieldList.add(new OgcPropertyImpl<DataComponent>(name, field));
     }
 
 

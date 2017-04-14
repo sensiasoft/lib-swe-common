@@ -43,6 +43,7 @@ public class TestGMLBindingsV32 extends XMLTestCase
 {
     
     
+    @Override
     public void setUp() throws Exception
     {
         XMLUnit.setIgnoreComments(true);

@@ -283,6 +283,7 @@ public class TextDataParser extends AbstractDataParser
     }
     
     
+    @Override
     protected void init()
     {
         this.tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator();

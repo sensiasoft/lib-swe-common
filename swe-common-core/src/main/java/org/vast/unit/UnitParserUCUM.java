@@ -90,6 +90,7 @@ public class UnitParserUCUM implements UnitParser
     /**
      * Call this to get a Unit object corresponding to the given ucum string
      */
+    @Override
     public Unit getUnit(String ucumDef)
     {
         ucumDef = ucumDef.trim();

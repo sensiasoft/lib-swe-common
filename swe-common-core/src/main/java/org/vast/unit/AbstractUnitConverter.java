@@ -53,6 +53,7 @@ public abstract class AbstractUnitConverter implements UnitConverter
      * Converts a double value expressed in sourceUnit to
      * the corresponding value expressed in destinationUnit.
      */
+    @Override
     public abstract double convert(double value);
     
 

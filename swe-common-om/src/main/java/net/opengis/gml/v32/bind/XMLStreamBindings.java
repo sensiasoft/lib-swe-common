@@ -152,7 +152,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetBoundedBy())
         {
             writer.writeStartElement(NS_URI, "boundedBy");
-            this.writeEnvelope(writer, (Envelope)bean.getBoundedBy());
+            this.writeEnvelope(writer, bean.getBoundedBy());
             writer.writeEndElement();
         }
         

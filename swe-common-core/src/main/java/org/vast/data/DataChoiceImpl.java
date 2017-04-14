@@ -256,7 +256,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
 			int prevAtomCount = dataBlock.atomCount;
 			
 			// generate selected component data block
-			DataComponent selectedComponent = (DataComponent)itemList.get(index);
+			DataComponent selectedComponent = itemList.get(index);
             selectedComponent.assignNewDataBlock();
             AbstractDataBlock childData = (AbstractDataBlock)selectedComponent.getData();
             
@@ -294,6 +294,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     }
 
 
+    @Override
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();
@@ -396,7 +397,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     @Override
     public void addItem(String name, DataComponent item)
     {
-        itemList.add(new OgcPropertyImpl<DataComponent>(name, (AbstractDataComponentImpl)item));
+        itemList.add(new OgcPropertyImpl<DataComponent>(name, item));
     }
 
 

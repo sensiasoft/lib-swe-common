@@ -259,11 +259,13 @@ public class XMLDocument
         // prepare filter to extract IDs and namespaces
         LSParserFilter filter = new LSParserFilter()
         {
+            @Override
             public int getWhatToShow()
             {
                 return NodeFilter.SHOW_ELEMENT;
             }
             
+            @Override
             public short acceptNode(Node node)
             {
                 if (!(node instanceof Element))
@@ -276,6 +278,7 @@ public class XMLDocument
                 return LSParserFilter.FILTER_ACCEPT;
             }
 
+            @Override
             public short startElement(Element arg0)
             {
                 return LSParserFilter.FILTER_ACCEPT;

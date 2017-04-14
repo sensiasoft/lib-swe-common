@@ -302,6 +302,7 @@ public class JsonDataWriter extends AbstractDataWriter
             }
         }
         
+        @Override
         public void add(AtomProcessor processor)
         {
             fieldProcessors.add(processor);
@@ -369,6 +370,7 @@ public class JsonDataWriter extends AbstractDataWriter
             }
         }
         
+        @Override
         public void add(AtomProcessor processor)
         {
             super.add(processor);

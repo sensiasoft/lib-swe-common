@@ -64,7 +64,8 @@ public class XmlDataParserDOM extends AbstractDataParser
 	}
 	
 	
-	public void setInput(InputStream inputStream) throws IOException
+	@Override
+    public void setInput(InputStream inputStream) throws IOException
 	{
 		try
 		{
@@ -77,7 +78,8 @@ public class XmlDataParserDOM extends AbstractDataParser
 	}
 	
 	
-	public void parse(InputStream inputStream) throws IOException
+	@Override
+    public void parse(InputStream inputStream) throws IOException
 	{
 		setInput(inputStream);
 		read(dom, dom.getRootElement());
@@ -122,7 +124,8 @@ public class XmlDataParserDOM extends AbstractDataParser
 	 * Checks if more data is available from the stream
 	 * @return true if more data needs to be parsed, false otherwise
 	 */
-	protected boolean moreData()
+	@Override
+    protected boolean moreData()
 	{
 		if (newBlock && recordCounter >= numRecord)
 			return false;

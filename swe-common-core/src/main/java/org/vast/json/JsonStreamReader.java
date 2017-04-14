@@ -387,16 +387,19 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     {
         return new NamespaceContext() {
 
+            @Override
             public String getNamespaceURI(String prefix)
             {
                 return XMLConstants.NULL_NS_URI;
             }
 
+            @Override
             public String getPrefix(String namespaceURI)
             {
                 return null;
             }
 
+            @Override
             public Iterator<String> getPrefixes(String namespaceURI)
             {
                 return Collections.EMPTY_LIST.iterator();

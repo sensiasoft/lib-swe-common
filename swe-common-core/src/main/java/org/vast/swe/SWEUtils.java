@@ -56,9 +56,12 @@ public class SWEUtils extends XMLBindingsUtils
     
     enum ObjectType
     {
-        DataComponent { public String toString() { return "SWE Data Component"; } },
-        Encoding { public String toString() { return "SWE Encoding"; } },
-        DataStream { public String toString() { return "SWE Data Stream"; } }
+        DataComponent { @Override
+        public String toString() { return "SWE Data Component"; } },
+        Encoding { @Override
+        public String toString() { return "SWE Encoding"; } },
+        DataStream { @Override
+        public String toString() { return "SWE Data Stream"; } }
     }
     
     
@@ -143,6 +146,7 @@ public class SWEUtils extends XMLBindingsUtils
     }
     
     
+    @Override
     protected Object readFromXmlStream(XMLStreamReader reader, Enum<?> eltType) throws XMLStreamException
     {
         reader.nextTag();
@@ -164,6 +168,7 @@ public class SWEUtils extends XMLBindingsUtils
     }
     
     
+    @Override
     protected void writeToXmlStream(XMLStreamWriter writer, Object sweObj, Enum<?> eltType) throws XMLStreamException
     {
         SWEStaxBindings sweBindings = (SWEStaxBindings)staxBindings;

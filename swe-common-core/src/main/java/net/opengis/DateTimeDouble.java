@@ -54,12 +54,14 @@ public class DateTimeDouble implements IDateTime
     }
     
     
+    @Override
     public final int getTimeZoneOffset()
     {
         return timeZoneOffset;
     }
 
 
+    @Override
     public final double getAsDouble()
     {
         return julianTime;

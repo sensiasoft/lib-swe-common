@@ -62,7 +62,8 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 	
 	
-	public void setInput(InputStream inputStream) throws IOException
+	@Override
+    public void setInput(InputStream inputStream) throws IOException
 	{
 		InputStream dataIn = null;
 		
@@ -91,7 +92,8 @@ public class BinaryDataParser extends AbstractDataParser
 	}
 
 	
-	public void parse(InputStream inputStream) throws IOException
+	@Override
+    public void parse(InputStream inputStream) throws IOException
 	{
 		stopParsing = false;
 		
@@ -217,6 +219,7 @@ public class BinaryDataParser extends AbstractDataParser
      * @return true if more data needs to be parsed, false otherwise
      * @throws IOException
      */
+    @Override
     public boolean moreData() throws IOException
     {
         dataInput.mark(1);

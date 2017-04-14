@@ -254,6 +254,7 @@ public class BinaryComponentImpl extends AbstractSWEImpl implements BinaryCompon
     }
 
 
+    @Override
     public DataType getCdmDataType()
     {
         if (cdmDataType == null)
@@ -318,6 +319,7 @@ public class BinaryComponentImpl extends AbstractSWEImpl implements BinaryCompon
     }
     
     
+    @Override
     public void setCdmDataType(DataType cdmDataType)
     {
         this.cdmDataType = cdmDataType;

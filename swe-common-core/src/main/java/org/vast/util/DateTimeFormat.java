@@ -204,7 +204,7 @@ public class DateTimeFormat extends SimpleDateFormat
 			calendar.set(year, month-1, day, hour, minute, second);			
 			calendar.setTimeZone(TimeZone.getTimeZone(timeZone));
 
-			return ((double)calendar.getTimeInMillis()) / 1000.0 + secondFraction;
+			return (calendar.getTimeInMillis()) / 1000.0 + secondFraction;
 		}
 		catch (Exception e)
 		{

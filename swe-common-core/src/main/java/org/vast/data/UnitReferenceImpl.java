@@ -45,6 +45,7 @@ public class UnitReferenceImpl extends net.opengis.OgcPropertyImpl<Unit> impleme
     }
     
     
+    @Override
     public UnitReferenceImpl copy()
     {
         UnitReferenceImpl newObj = new UnitReferenceImpl();

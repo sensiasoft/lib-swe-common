@@ -61,6 +61,7 @@ public class TestSweStaxBindingsV20 extends XMLTestCase
     static final boolean enableDecoding = true;
     
     
+    @Override
     public void setUp() throws Exception
     {
         XMLUnit.setIgnoreComments(true);

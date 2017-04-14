@@ -53,17 +53,23 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
 	}
 
 
-	public abstract void setOutput(OutputStream os) throws IOException;
+	@Override
+    public abstract void setOutput(OutputStream os) throws IOException;
 	
-	public abstract void close() throws IOException;
+	@Override
+    public abstract void close() throws IOException;
 	
+    @Override
     public abstract void flush() throws IOException;
                 
+    @Override
     protected abstract void processAtom(ScalarComponent component) throws IOException;
 
+    @Override
     protected abstract boolean processBlock(DataComponent component) throws IOException;
     
     
+    @Override
     public void write(OutputStream outputStream) throws IOException
     {
         // error if no dataHandler is registered
@@ -92,6 +98,7 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
     }
     
     
+    @Override
     public void write(DataBlock dataBlock) throws IOException
     {
         dataComponents.setData(dataBlock);
@@ -124,7 +131,8 @@ public abstract class AbstractDataWriter extends DataTreeVisitor implements Data
     }
     
     
-	public synchronized void stop()
+	@Override
+    public synchronized void stop()
 	{
         stopWriting = true;
 	}

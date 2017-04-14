@@ -49,7 +49,8 @@ public class DataBlockCompressed extends AbstractDataBlock
 	}
 	
 	
-	public DataBlockCompressed copy()
+	@Override
+    public DataBlockCompressed copy()
 	{
 		DataBlockCompressed newBlock = new DataBlockCompressed();
 		newBlock.compressedData = this.compressedData;
@@ -59,6 +60,7 @@ public class DataBlockCompressed extends AbstractDataBlock
 	}
     
     
+    @Override
     public DataBlockCompressed renew()
     {
         DataBlockCompressed newBlock = new DataBlockCompressed();
@@ -69,6 +71,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
     
     
+    @Override
     public DataBlockCompressed clone()
     {
         DataBlockCompressed newBlock = new DataBlockCompressed();
@@ -91,6 +94,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public byte[] getUnderlyingObject()
     {
         return compressedData;
@@ -103,18 +107,21 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
     
     
+    @Override
     public void setUnderlyingObject(Object obj)
     {
     	this.compressedData = (byte[])obj;
     }
     
     
+    @Override
     public final int getAtomCount()
     {
         return this.atomCount;
     }
 
 
+    @Override
     public void resize(int size)
     {
         if (uncompressedData != null)
@@ -123,7 +130,8 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 	
 	
-	public DataType getDataType()
+	@Override
+    public DataType getDataType()
 	{
 	    if (uncompressedData != null)
 	        return uncompressedData.getDataType();
@@ -131,7 +139,8 @@ public class DataBlockCompressed extends AbstractDataBlock
 	}
 
 
-	public DataType getDataType(int index)
+	@Override
+    public DataType getDataType(int index)
 	{
 	    if (uncompressedData != null)
             return uncompressedData.getDataType(index);
@@ -139,13 +148,15 @@ public class DataBlockCompressed extends AbstractDataBlock
 	}
 	
 	
-	public final boolean getBooleanValue(int index)
+	@Override
+    public final boolean getBooleanValue(int index)
     {
         ensureUncompressed();
         return uncompressedData.getBooleanValue(index);
     }
 
 
+    @Override
     public final byte getByteValue(int index)
     {
         ensureUncompressed();
@@ -153,6 +164,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final short getShortValue(int index)
     {
         ensureUncompressed();
@@ -160,6 +172,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final int getIntValue(int index)
     {
         ensureUncompressed();
@@ -167,6 +180,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final long getLongValue(int index)
     {
         ensureUncompressed();
@@ -174,6 +188,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final float getFloatValue(int index)
     {
         ensureUncompressed();
@@ -181,6 +196,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final double getDoubleValue(int index)
     {
         ensureUncompressed();
@@ -188,6 +204,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final String getStringValue(int index)
     {
         ensureUncompressed();
@@ -195,6 +212,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final boolean getBooleanValue()
     {
         ensureUncompressed();
@@ -202,6 +220,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final byte getByteValue()
     {
         ensureUncompressed();
@@ -209,6 +228,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final short getShortValue()
     {
         ensureUncompressed();
@@ -216,6 +236,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final int getIntValue()
     {
         ensureUncompressed();
@@ -223,6 +244,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final long getLongValue()
     {
         ensureUncompressed();
@@ -230,6 +252,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final float getFloatValue()
     {
         ensureUncompressed();
@@ -237,6 +260,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final double getDoubleValue()
     {
         ensureUncompressed();
@@ -244,6 +268,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
 
 
+    @Override
     public final String getStringValue()
     {
         ensureUncompressed();
@@ -260,97 +285,113 @@ public class DataBlockCompressed extends AbstractDataBlock
 	}
 
 
-	public void setBooleanValue(int index, boolean value)
+	@Override
+    public void setBooleanValue(int index, boolean value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setByteValue(int index, byte value)
+	@Override
+    public void setByteValue(int index, byte value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setShortValue(int index, short value)
+	@Override
+    public void setShortValue(int index, short value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setIntValue(int index, int value)
+	@Override
+    public void setIntValue(int index, int value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setLongValue(int index, long value)
+	@Override
+    public void setLongValue(int index, long value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setFloatValue(int index, float value)
+	@Override
+    public void setFloatValue(int index, float value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setDoubleValue(int index, double value)
+	@Override
+    public void setDoubleValue(int index, double value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setStringValue(int index, String value)
+	@Override
+    public void setStringValue(int index, String value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setBooleanValue(boolean value)
+	@Override
+    public void setBooleanValue(boolean value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setByteValue(byte value)
+	@Override
+    public void setByteValue(byte value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setShortValue(short value)
+	@Override
+    public void setShortValue(short value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setIntValue(int value)
+	@Override
+    public void setIntValue(int value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setLongValue(long value)
+	@Override
+    public void setLongValue(long value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setFloatValue(float value)
+	@Override
+    public void setFloatValue(float value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setDoubleValue(double value)
+	@Override
+    public void setDoubleValue(double value)
 	{
 	    throwUnsupportedException();
 	}
 
 
-	public void setStringValue(String value)
+	@Override
+    public void setStringValue(String value)
 	{
 	    throwUnsupportedException();
 	}

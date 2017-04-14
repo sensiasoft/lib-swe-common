@@ -38,6 +38,7 @@ public class DataValueIndexer extends DataIndexer
     }
     
     
+    @Override
     public DataValueIndexer copy()
     {
         DataValueIndexer newIndexer = new DataValueIndexer();

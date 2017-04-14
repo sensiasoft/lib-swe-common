@@ -42,11 +42,13 @@ public class XMLNodeList implements NodeList
         return this.nodeList;
     }
 
+    @Override
     public int getLength()
     {
         return nodeList.size();
     }
 
+    @Override
     public Node item(int i)
     {
         return nodeList.get(i);

@@ -36,6 +36,7 @@ public class DataSourceInline implements DataSource
     }
     
     
+    @Override
     public InputStream getDataStream() throws IOException
     {
         return dataStream;

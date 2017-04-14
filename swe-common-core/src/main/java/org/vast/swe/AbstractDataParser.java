@@ -58,7 +58,8 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	/**
 	 * Stop the parsing from another thread
 	 */
-	public synchronized void stop()
+	@Override
+    public synchronized void stop()
 	{
 		stopParsing = true;
 	}
@@ -78,7 +79,8 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	/**
 	 * Default parse method from a URI string
 	 */
-	public void parse(String uri) throws IOException
+	@Override
+    public void parse(String uri) throws IOException
 	{
 		InputStream in = URIStreamHandler.openStream(uri);
 		this.parse(new BufferedInputStream(in));
@@ -88,7 +90,8 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	/**
 	 * Default parse method from a URI object
 	 */
-	public void parse(URI uri) throws IOException
+	@Override
+    public void parse(URI uri) throws IOException
 	{
 		InputStream in = URIStreamHandler.openStream(uri);
 		this.parse(new BufferedInputStream(in));
@@ -98,7 +101,8 @@ public abstract class AbstractDataParser extends DataTreeVisitor implements Data
 	/**
 	 * Parse next atom from stream
 	 */
-	public DataBlock parseNextBlock() throws IOException
+	@Override
+    public DataBlock parseNextBlock() throws IOException
 	{
 		try
         {

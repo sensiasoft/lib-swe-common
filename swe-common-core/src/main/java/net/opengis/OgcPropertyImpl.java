@@ -48,6 +48,7 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     }
     
     
+    @Override
     public OgcPropertyImpl<ValueType> copy()
     {
         OgcPropertyImpl<ValueType> newProp = new OgcPropertyImpl<ValueType>();

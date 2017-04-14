@@ -69,11 +69,13 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     {
         boolean enabled = true;
         
+        @Override
         public void setEnabled(boolean enabled)
         {
             this.enabled = enabled;
         }
         
+        @Override
         public boolean isEnabled()
         {
             return this.enabled;
@@ -85,6 +87,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     {
         List<AtomProcessor> fieldProcessors = new ArrayList<AtomProcessor>();
         
+        @Override
         public int process(DataBlock data, int index) throws IOException
         {
             for (AtomProcessor p: fieldProcessors)
@@ -92,6 +95,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
             return index;
         }
         
+        @Override
         public void add(AtomProcessor processor)
         {
             fieldProcessors.add(processor);
@@ -104,6 +108,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
         AtomProcessor eltProcessor;
         int arraySize;
         
+        @Override
         public int process(DataBlock data, int index) throws IOException
         {
             for (int i = 0; i < arraySize; i++)
@@ -116,6 +121,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
             this.arraySize = arraySize;
         }
         
+        @Override
         public void add(AtomProcessor processor)
         {
             this.eltProcessor = processor;
@@ -132,6 +138,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
             return itemProcessors.get(selectedIndex).process(data, index);
         }
         
+        @Override
         public void add(AtomProcessor processor)
         {
             itemProcessors.add(processor);

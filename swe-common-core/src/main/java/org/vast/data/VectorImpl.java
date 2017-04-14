@@ -72,6 +72,7 @@ public class VectorImpl extends AbstractRecordImpl<ScalarComponent> implements V
     }
     
     
+    @Override
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();

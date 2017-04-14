@@ -42,6 +42,7 @@ import org.xml.sax.InputSource;
 public class TestSweDomBindingsV20 extends XMLTestCase
 {
     
+    @Override
     public void setUp() throws Exception
     {
         XMLUnit.setIgnoreComments(true);

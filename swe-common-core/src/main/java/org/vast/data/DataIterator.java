@@ -71,7 +71,8 @@ public class DataIterator implements Iterator<DataComponent>, Iterable<DataCompo
 	 * (non-Javadoc)
 	 * @see java.util.Iterator#next()
 	 */
-	public DataComponent next()
+	@Override
+    public DataComponent next()
 	{   	
         if (!hasNext())
             throw new NoSuchElementException();
@@ -118,7 +119,8 @@ public class DataIterator implements Iterator<DataComponent>, Iterable<DataCompo
 	}
 	
 	
-	public boolean hasNext()
+	@Override
+    public boolean hasNext()
 	{
 	    return !componentStack.isEmpty();
 	}
@@ -135,6 +137,7 @@ public class DataIterator implements Iterator<DataComponent>, Iterable<DataCompo
 	}
 
 
+    @Override
     public void remove()
     {
         throw new UnsupportedOperationException();

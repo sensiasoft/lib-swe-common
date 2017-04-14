@@ -93,7 +93,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
         if (elementType.hasValue())
             throw new IllegalStateException("The array element type is already set. Use setElementType() to replace it");
             
-        setElementType(name, (DataComponent)component);
+        setElementType(name, component);
     }
     
     
@@ -114,16 +114,18 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     @Override
     public boolean hasConstraints()
     {
-        return ((DataComponent)elementType.getValue()).hasConstraints();
+        return elementType.getValue().hasConstraints();
     }
     
     
+    @Override
     public final boolean isVariableSize()
     {
         return elementCount.hasHref() || isImplicitSize();
     }
     
     
+    @Override
     public final boolean isImplicitSize()
     {
         return !elementCount.hasHref() && elementCount.hasValue() && !elementCount.getValue().isSetValue();
@@ -185,7 +187,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     @Override
     public DataComponent getElementType()
     {
-        return (DataComponent)elementType.getValue();
+        return elementType.getValue();
     }
 
 
@@ -233,7 +235,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     @Override
     public void setEncoding(DataEncoding encoding)
     {
-        this.encoding = (AbstractEncodingImpl) encoding;
+        this.encoding = encoding;
     }
 
 

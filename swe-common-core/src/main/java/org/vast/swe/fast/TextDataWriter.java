@@ -240,6 +240,7 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
+    @Override
     protected void init()
     {
         this.tokenSep = ((TextEncoding)dataEncoding).getTokenSeparator();

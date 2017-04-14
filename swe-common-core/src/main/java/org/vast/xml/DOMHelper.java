@@ -559,11 +559,11 @@ public class DOMHelper
             
             // lookup namespace URI
             String nsUri = userPrefixTable.get(userPrefix);            
-            list = ((Element) startElement).getElementsByTagNameNS(nsUri, localName);
+            list = startElement.getElementsByTagNameNS(nsUri, localName);
         }
         else
         {
-            list = ((Element) startElement).getElementsByTagName(tagName);
+            list = startElement.getElementsByTagName(tagName);
         }
 
         return list;
@@ -1116,7 +1116,7 @@ public class DOMHelper
             // check if the same document is already opened
             // forces reload if uri contains a query string
             if (uri.getQuery() == null)
-                xmlFragment.xmlDocument = (XMLDocument)loadedDocuments.get(docUri);
+                xmlFragment.xmlDocument = loadedDocuments.get(docUri);
     
             // parse doc only if not already present in the table or forceReload is true
             if ((xmlFragment.xmlDocument == null) || (forceReload == true))

@@ -39,14 +39,16 @@ import net.opengis.swe.v20.ScalarComponent;
 public class XmlDataParser extends AbstractDataParser
 {
 
-	public void setInput(InputStream inputStream) throws IOException
+	@Override
+    public void setInput(InputStream inputStream) throws IOException
 	{
 		// TODO Auto-generated method stub
 		
 	}
 	
 	
-	public void parse(InputStream inputStream) throws IOException
+	@Override
+    public void parse(InputStream inputStream) throws IOException
 	{
 		// TODO Auto-generated method stub
 		

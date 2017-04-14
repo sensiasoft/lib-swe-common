@@ -73,7 +73,7 @@ public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
         StringBuffer msg = new StringBuffer();
         msg.append("It should ");
                 
-        if (valueList.size() > 0)
+        if (!valueList.isEmpty())
         {
             msg.append("be one of {");
             
@@ -90,7 +90,7 @@ public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
         
         if (pattern != null)
         {
-            if (valueList.size() > 0)
+            if (!valueList.isEmpty())
                 msg.append(" OR ");
                 
             msg.append("match the pattern '");

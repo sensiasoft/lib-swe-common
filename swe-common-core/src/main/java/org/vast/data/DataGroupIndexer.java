@@ -42,6 +42,7 @@ public class DataGroupIndexer extends DataIndexer
     }
     
     
+    @Override
     public DataGroupIndexer copy()
     {
         DataGroupIndexer newIndexer = new DataGroupIndexer();

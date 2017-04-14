@@ -44,6 +44,7 @@ public abstract class DataValue extends AbstractSimpleComponentImpl implements S
     }
     
     
+    @Override
     public abstract DataValue copy();
     
     

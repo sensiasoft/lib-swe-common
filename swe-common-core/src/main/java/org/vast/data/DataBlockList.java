@@ -64,6 +64,7 @@ public class DataBlockList extends AbstractDataBlock
     }
     
     
+    @Override
     public DataBlockList copy()
     {
         DataBlockList newBlock = new DataBlockList();
@@ -146,7 +147,7 @@ public class DataBlockList extends AbstractDataBlock
 		if (blockList instanceof ArrayList)
 		    ((ArrayList<DataBlock>)blockList).ensureCapacity(size);
 	    
-	    if (blockList.isEmpty())
+	    if (!blockList.isEmpty())
         {
 		    DataBlock childBlock = get(0);
 		    atomCount = childBlock.getAtomCount() * size;

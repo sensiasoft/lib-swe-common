@@ -65,7 +65,8 @@ public class DataBlockParallel extends AbstractDataBlock
 	}
 	
 	
-	public DataBlockParallel copy()
+	@Override
+    public DataBlockParallel copy()
 	{
 		DataBlockParallel newBlock = new DataBlockParallel();
 		newBlock.startIndex = this.startIndex;
@@ -80,6 +81,7 @@ public class DataBlockParallel extends AbstractDataBlock
 	}
     
     
+    @Override
     public DataBlockParallel renew()
     {
         DataBlockParallel newBlock = new DataBlockParallel();
@@ -95,6 +97,7 @@ public class DataBlockParallel extends AbstractDataBlock
     }
     
     
+    @Override
     public DataBlockParallel clone()
     {
         DataBlockParallel newBlock = new DataBlockParallel();
@@ -110,6 +113,7 @@ public class DataBlockParallel extends AbstractDataBlock
     }
     
     
+    @Override
     public AbstractDataBlock[] getUnderlyingObject()
     {
         return blockArray;
@@ -127,26 +131,30 @@ public class DataBlockParallel extends AbstractDataBlock
     }
     
     
+    @Override
     public void setUnderlyingObject(Object obj)
     {
     	this.blockArray = (AbstractDataBlock[])obj;
     }
 	
 	
-	public DataType getDataType()
+	@Override
+    public DataType getDataType()
 	{
 		return DataType.MIXED;
 	}
 
 
-	public DataType getDataType(int index)
+	@Override
+    public DataType getDataType(int index)
 	{
 		selectBlock(index);
 		return blockArray[blockIndex].getDataType();
 	}
 
 
-	public void resize(int size)
+	@Override
+    public void resize(int size)
 	{
 		// resize all sub blocks
 		for (int i=0; i<blockArray.length; i++)
@@ -164,7 +172,8 @@ public class DataBlockParallel extends AbstractDataBlock
 	}
 
 
-	public String toString()
+	@Override
+    public String toString()
 	{
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("PARALLEL: ");
@@ -187,49 +196,56 @@ public class DataBlockParallel extends AbstractDataBlock
 	}
 
 
-	public boolean getBooleanValue(int index)
+	@Override
+    public boolean getBooleanValue(int index)
 	{
 		selectBlock(index);
 		return blockArray[blockIndex].getBooleanValue(localIndex);
 	}
 
 
-	public byte getByteValue(int index)
+	@Override
+    public byte getByteValue(int index)
 	{
 		selectBlock(index);
 		return blockArray[blockIndex].getByteValue(localIndex);
 	}
 
 
-	public short getShortValue(int index)
+	@Override
+    public short getShortValue(int index)
 	{
 		selectBlock(index);
 		return blockArray[blockIndex].getShortValue(localIndex);
 	}
 
 
-	public int getIntValue(int index)
+	@Override
+    public int getIntValue(int index)
 	{
 		selectBlock(index);
 		return blockArray[blockIndex].getIntValue(localIndex);
 	}
 
 
-	public long getLongValue(int index)
+	@Override
+    public long getLongValue(int index)
 	{
 		selectBlock(index);
 		return blockArray[blockIndex].getLongValue(localIndex);
 	}
 
 
-	public float getFloatValue(int index)
+	@Override
+    public float getFloatValue(int index)
 	{
 		selectBlock(index);
 		return blockArray[blockIndex].getFloatValue(localIndex);
 	}
 
 
-	public double getDoubleValue(int index)
+	@Override
+    public double getDoubleValue(int index)
 	{
 		selectBlock(index);
         //System.out.println(blockIndex + " " + localIndex);
@@ -237,175 +253,200 @@ public class DataBlockParallel extends AbstractDataBlock
 	}
 
 
-	public String getStringValue(int index)
+	@Override
+    public String getStringValue(int index)
 	{
 		selectBlock(index);
 		return blockArray[blockIndex].getStringValue(localIndex);
 	}
 
 
-	public boolean getBooleanValue()
+	@Override
+    public boolean getBooleanValue()
 	{
 		selectBlock(0);
 		return blockArray[blockIndex].getBooleanValue(localIndex);
 	}
 
 
-	public byte getByteValue()
+	@Override
+    public byte getByteValue()
 	{
 		selectBlock(0);
 		return blockArray[blockIndex].getByteValue(localIndex);
 	}
 
 
-	public short getShortValue()
+	@Override
+    public short getShortValue()
 	{
 		selectBlock(0);
 		return blockArray[blockIndex].getShortValue(localIndex);
 	}
 
 
-	public int getIntValue()
+	@Override
+    public int getIntValue()
 	{
 		selectBlock(0);
 		return blockArray[blockIndex].getIntValue(localIndex);
 	}
 
 
-	public long getLongValue()
+	@Override
+    public long getLongValue()
 	{
 		selectBlock(0);
 		return blockArray[blockIndex].getLongValue(localIndex);
 	}
 
 
-	public float getFloatValue()
+	@Override
+    public float getFloatValue()
 	{
 		selectBlock(0);
 		return blockArray[blockIndex].getFloatValue(localIndex);
 	}
 
 
-	public double getDoubleValue()
+	@Override
+    public double getDoubleValue()
 	{
 		selectBlock(0);
 		return blockArray[blockIndex].getDoubleValue(localIndex);
 	}
 
 
-	public String getStringValue()
+	@Override
+    public String getStringValue()
 	{
 		selectBlock(0);
 		return blockArray[blockIndex].getStringValue(localIndex);
 	}
 
 
-	public void setBooleanValue(int index, boolean value)
+	@Override
+    public void setBooleanValue(int index, boolean value)
 	{
 		selectBlock(index);
 		blockArray[blockIndex].setBooleanValue(localIndex, value);
 	}
 
 
-	public void setByteValue(int index, byte value)
+	@Override
+    public void setByteValue(int index, byte value)
 	{
 		selectBlock(index);
 		blockArray[blockIndex].setByteValue(localIndex, value);
 	}
 
 
-	public void setShortValue(int index, short value)
+	@Override
+    public void setShortValue(int index, short value)
 	{
 		selectBlock(index);
 		blockArray[blockIndex].setShortValue(localIndex, value);
 	}
 
 
-	public void setIntValue(int index, int value)
+	@Override
+    public void setIntValue(int index, int value)
 	{
 		selectBlock(index);
 		blockArray[blockIndex].setIntValue(localIndex, value);
 	}
 
 
-	public void setLongValue(int index, long value)
+	@Override
+    public void setLongValue(int index, long value)
 	{
 		selectBlock(index);
 		blockArray[blockIndex].setLongValue(localIndex, value);
 	}
 
 
-	public void setFloatValue(int index, float value)
+	@Override
+    public void setFloatValue(int index, float value)
 	{
 		selectBlock(index);
 		blockArray[blockIndex].setFloatValue(localIndex, value);
 	}
 
 
-	public void setDoubleValue(int index, double value)
+	@Override
+    public void setDoubleValue(int index, double value)
 	{
 		selectBlock(index);
 		blockArray[blockIndex].setDoubleValue(localIndex, value);
 	}
 
 
-	public void setStringValue(int index, String value)
+	@Override
+    public void setStringValue(int index, String value)
 	{
 		selectBlock(index);
 		blockArray[blockIndex].setStringValue(localIndex, value);
 	}
 
 
-	public void setBooleanValue(boolean value)
+	@Override
+    public void setBooleanValue(boolean value)
 	{
 		selectBlock(0);
 		blockArray[blockIndex].setBooleanValue(localIndex, value);
 	}
 
 
-	public void setByteValue(byte value)
+	@Override
+    public void setByteValue(byte value)
 	{
 		selectBlock(0);
 		blockArray[blockIndex].setByteValue(localIndex, value);
 	}
 
 
-	public void setShortValue(short value)
+	@Override
+    public void setShortValue(short value)
 	{
 		selectBlock(0);
 		blockArray[blockIndex].setShortValue(localIndex, value);
 	}
 
 
-	public void setIntValue(int value)
+	@Override
+    public void setIntValue(int value)
 	{
 		selectBlock(0);
 		blockArray[blockIndex].setIntValue(localIndex, value);
 	}
 
 
-	public void setLongValue(long value)
+	@Override
+    public void setLongValue(long value)
 	{
 		selectBlock(0);
 		blockArray[blockIndex].setLongValue(localIndex, value);
 	}
 
 
-	public void setFloatValue(float value)
+	@Override
+    public void setFloatValue(float value)
 	{
 		selectBlock(0);
 		blockArray[blockIndex].setFloatValue(localIndex, value);
 	}
 
 
-	public void setDoubleValue(double value)
+	@Override
+    public void setDoubleValue(double value)
 	{
 		selectBlock(0);
 		blockArray[blockIndex].setDoubleValue(localIndex, value);
 	}
 
 
-	public void setStringValue(String value)
+	@Override
+    public void setStringValue(String value)
 	{
 		selectBlock(0);
 		blockArray[blockIndex].setStringValue(localIndex, value);

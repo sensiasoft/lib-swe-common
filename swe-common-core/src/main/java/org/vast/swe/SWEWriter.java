@@ -53,7 +53,8 @@ public abstract class SWEWriter implements OutputStreamProvider
 
 	public abstract void write(OutputStream inputStream) throws IOException;
 	
-	public abstract OutputStream getDataStream() throws IOException;
+	@Override
+    public abstract OutputStream getDataStream() throws IOException;
 	
 	
 	public DataStreamWriter getDataWriter() throws CDMException

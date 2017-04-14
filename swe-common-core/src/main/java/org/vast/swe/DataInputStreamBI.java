@@ -45,7 +45,8 @@ public class DataInputStreamBI extends DataInputStream implements DataInputExt
 	}
 	
 	
-	public long readUnsignedInt() throws IOException
+	@Override
+    public long readUnsignedInt() throws IOException
 	{
 		byte[] b = new byte[4];
 		this.read(b);
@@ -53,17 +54,19 @@ public class DataInputStreamBI extends DataInputStream implements DataInputExt
         return (((long)(b[0] & 0xff) << 24) +
                 ((long)(b[1] & 0xff) << 16) +
                 ((long)(b[2] & 0xff) <<  8) +
-                ((long)(b[3] & 0xff)));
+                (b[3] & 0xff));
 	}
 	
 	
-	public long readUnsignedLong() throws IOException
+	@Override
+    public long readUnsignedLong() throws IOException
 	{
 		return readLong();
 	}
 	
 	
-	public String readASCII() throws IOException
+	@Override
+    public String readASCII() throws IOException
 	{
 		int val;
 		StringBuffer buf = new StringBuffer();

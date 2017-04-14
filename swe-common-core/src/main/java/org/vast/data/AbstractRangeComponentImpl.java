@@ -45,6 +45,7 @@ public abstract class AbstractRangeComponentImpl extends AbstractSimpleComponent
     }
     
     
+    @Override
     public DataValue getComponent(int index)
     {
         if (index == 0)

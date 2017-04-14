@@ -43,7 +43,8 @@ public class DataBlockString extends AbstractDataBlock
 	}
 	
 	
-	public DataBlockString copy()
+	@Override
+    public DataBlockString copy()
 	{
 		DataBlockString newBlock = new DataBlockString();
 		newBlock.primitiveArray = this.primitiveArray;
@@ -53,6 +54,7 @@ public class DataBlockString extends AbstractDataBlock
 	}
     
     
+    @Override
     public DataBlockString renew()
     {
         DataBlockString newBlock = new DataBlockString();
@@ -63,6 +65,7 @@ public class DataBlockString extends AbstractDataBlock
     }
     
     
+    @Override
     public DataBlockString clone()
     {
         // TODO make sure new Strings are created
@@ -75,6 +78,7 @@ public class DataBlockString extends AbstractDataBlock
     }
     
     
+    @Override
     public String[] getUnderlyingObject()
     {
         return primitiveArray;
@@ -88,86 +92,100 @@ public class DataBlockString extends AbstractDataBlock
     }
     
     
+    @Override
     public void setUnderlyingObject(Object obj)
     {
     	this.primitiveArray = (String[])obj;
     }
 	
 	
-	public DataType getDataType()
+	@Override
+    public DataType getDataType()
 	{
 		return DataType.UTF_STRING;
 	}
 
 
-	public DataType getDataType(int index)
+	@Override
+    public DataType getDataType(int index)
 	{
 		return DataType.UTF_STRING;
 	}
 	
 	
-	public void resize(int size)
+	@Override
+    public void resize(int size)
 	{
 		primitiveArray = new String[size];
 		this.atomCount = size;
 	}
 
 
-	public boolean getBooleanValue(int index)
+	@Override
+    public boolean getBooleanValue(int index)
 	{
 		return Boolean.parseBoolean(primitiveArray[startIndex + index]);
 	}
 
 
-	public byte getByteValue(int index)
+	@Override
+    public byte getByteValue(int index)
 	{
 		return Byte.parseByte(primitiveArray[startIndex + index]);
 	}
 
 
-	public short getShortValue(int index)
+	@Override
+    public short getShortValue(int index)
 	{
 		return Short.parseShort(primitiveArray[startIndex + index]);
 	}
 
 
-	public int getIntValue(int index)
+	@Override
+    public int getIntValue(int index)
 	{
 		return Integer.parseInt(primitiveArray[startIndex + index]);
 	}
 
 
-	public long getLongValue(int index)
+	@Override
+    public long getLongValue(int index)
 	{
 		return Long.parseLong(primitiveArray[startIndex + index]);
 	}
 
 
-	public float getFloatValue(int index)
+	@Override
+    public float getFloatValue(int index)
 	{
 		return Float.parseFloat(primitiveArray[startIndex + index]);
 	}
 
 
-	public double getDoubleValue(int index)
+	@Override
+    public double getDoubleValue(int index)
 	{
 		return Double.parseDouble(primitiveArray[startIndex + index]);
 	}
 
 
-	public String getStringValue(int index)
+	@Override
+    public String getStringValue(int index)
 	{
 		return primitiveArray[startIndex + index];
 	}
 
 
-	public boolean getBooleanValue()
+	@Override
+    public boolean getBooleanValue()
 	{
 		return Boolean.parseBoolean(primitiveArray[startIndex]);
 	}
 
 
-	public byte getByteValue()
+	@Override
+    public byte getByteValue()
 	{
 	    byte val;
         
@@ -184,7 +202,8 @@ public class DataBlockString extends AbstractDataBlock
 	}
 
 
-	public short getShortValue()
+	@Override
+    public short getShortValue()
 	{
 	    short val;
         
@@ -201,7 +220,8 @@ public class DataBlockString extends AbstractDataBlock
 	}
 
 
-	public int getIntValue()
+	@Override
+    public int getIntValue()
 	{
 	    int val;
         
@@ -218,7 +238,8 @@ public class DataBlockString extends AbstractDataBlock
 	}
 
 
-	public long getLongValue()
+	@Override
+    public long getLongValue()
 	{
 	    long val;
         
@@ -235,7 +256,8 @@ public class DataBlockString extends AbstractDataBlock
 	}
 
 
-	public float getFloatValue()
+	@Override
+    public float getFloatValue()
 	{
 	    float val;
         
@@ -252,7 +274,8 @@ public class DataBlockString extends AbstractDataBlock
 	}
 
 
-	public double getDoubleValue()
+	@Override
+    public double getDoubleValue()
 	{
         double val;
         
@@ -269,103 +292,120 @@ public class DataBlockString extends AbstractDataBlock
 	}
 
 
-	public String getStringValue()
+	@Override
+    public String getStringValue()
 	{
 		return primitiveArray[startIndex];
 	}
 
 
-	public void setBooleanValue(int index, boolean value)
+	@Override
+    public void setBooleanValue(int index, boolean value)
 	{
 		primitiveArray[startIndex + index] = Boolean.toString(value);
 	}
 
 
-	public void setByteValue(int index, byte value)
+	@Override
+    public void setByteValue(int index, byte value)
 	{
 		primitiveArray[startIndex + index] = Byte.toString(value);
 	}
 
 
-	public void setShortValue(int index, short value)
+	@Override
+    public void setShortValue(int index, short value)
 	{
 		primitiveArray[startIndex + index] = Short.toString(value);
 	}
 
 
-	public void setIntValue(int index, int value)
+	@Override
+    public void setIntValue(int index, int value)
 	{
 		primitiveArray[startIndex + index] = Integer.toString(value);
 	}
 
 
-	public void setLongValue(int index, long value)
+	@Override
+    public void setLongValue(int index, long value)
 	{
 		primitiveArray[startIndex + index] = Long.toString(value);
 	}
 
 
-	public void setFloatValue(int index, float value)
+	@Override
+    public void setFloatValue(int index, float value)
 	{
 		primitiveArray[startIndex + index] = Float.toString(value);
 	}
 
 
-	public void setDoubleValue(int index, double value)
+	@Override
+    public void setDoubleValue(int index, double value)
 	{
 		primitiveArray[startIndex + index] = Double.toString(value);
 	}
 
 
-	public void setStringValue(int index, String value)
+	@Override
+    public void setStringValue(int index, String value)
 	{
 		primitiveArray[startIndex + index] = value;
 	}
 
 
-	public void setBooleanValue(boolean value)
+	@Override
+    public void setBooleanValue(boolean value)
 	{
 		primitiveArray[startIndex] = Boolean.toString(value);;
 	}
 
 
-	public void setByteValue(byte value)
+	@Override
+    public void setByteValue(byte value)
 	{
 		primitiveArray[startIndex] = Byte.toString(value);;
 	}
 
 
-	public void setShortValue(short value)
+	@Override
+    public void setShortValue(short value)
 	{
 		primitiveArray[startIndex] = Short.toString(value);
 	}
 
 
-	public void setIntValue(int value)
+	@Override
+    public void setIntValue(int value)
 	{
 		primitiveArray[startIndex] = Integer.toString(value);
 	}
 
 
-	public void setLongValue(long value)
+	@Override
+    public void setLongValue(long value)
 	{
 		primitiveArray[startIndex] = Long.toString(value);
 	}
 
 
-	public void setFloatValue(float value)
+	@Override
+    public void setFloatValue(float value)
 	{
 		primitiveArray[startIndex] = Float.toString(value);
 	}
 
 
-	public void setDoubleValue(double value)
+	@Override
+    public void setDoubleValue(double value)
 	{
 		primitiveArray[startIndex] = Double.toString(value);
 	}
 
 
-	public void setStringValue(String value)
+	@Override
+    public void setStringValue(String value)
 	{
 		primitiveArray[startIndex] = value;
 	}

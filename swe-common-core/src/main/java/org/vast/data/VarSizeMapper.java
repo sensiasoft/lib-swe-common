@@ -38,6 +38,7 @@ public class VarSizeMapper implements DataVisitor
     }
 
 
+    @Override
     public void mapData(DataBlock data)
     {
         arrayIndexer.setArraySize(data.getIntValue());

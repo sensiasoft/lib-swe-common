@@ -55,7 +55,8 @@ public abstract class SWEReader implements InputStreamProvider
 	public abstract void parse(InputStream inputStream, DataHandler handler) throws IOException;
 	
 	
-	public abstract InputStream getDataStream() throws IOException;
+	@Override
+    public abstract InputStream getDataStream() throws IOException;
 
 	
 	public void setDataComponents(DataComponent dataComponents)

@@ -45,7 +45,8 @@ public class DataBlockBoolean extends AbstractDataBlock
 	}
 	
 	
-	public DataBlockBoolean copy()
+	@Override
+    public DataBlockBoolean copy()
 	{
 		DataBlockBoolean newBlock = new DataBlockBoolean();
 		newBlock.primitiveArray = this.primitiveArray;
@@ -55,6 +56,7 @@ public class DataBlockBoolean extends AbstractDataBlock
 	}
     
     
+    @Override
     public DataBlockBoolean renew()
     {
         DataBlockBoolean newBlock = new DataBlockBoolean();
@@ -65,6 +67,7 @@ public class DataBlockBoolean extends AbstractDataBlock
     }
     
     
+    @Override
     public DataBlockBoolean clone()
     {
         DataBlockBoolean newBlock = new DataBlockBoolean();
@@ -76,6 +79,7 @@ public class DataBlockBoolean extends AbstractDataBlock
     }
     
     
+    @Override
     public boolean[] getUnderlyingObject()
     {
         return primitiveArray;
@@ -89,218 +93,254 @@ public class DataBlockBoolean extends AbstractDataBlock
     }
     
     
+    @Override
     public void setUnderlyingObject(Object obj)
     {
     	this.primitiveArray = (boolean[])obj;
     }
 	
 	
-	public DataType getDataType()
+	@Override
+    public DataType getDataType()
 	{
 		return DataType.BOOLEAN;
 	}
 
 
-	public DataType getDataType(int index)
+	@Override
+    public DataType getDataType(int index)
 	{
 		return DataType.BOOLEAN;
 	}
 	
 	
-	public void resize(int size)
+	@Override
+    public void resize(int size)
 	{
 		primitiveArray = new boolean[size];
 		this.atomCount = size;
 	}
 
 
-	public boolean getBooleanValue(int index)
+	@Override
+    public boolean getBooleanValue(int index)
 	{
 		return primitiveArray[startIndex + index];
 	}
 
 
-	public byte getByteValue(int index)
+	@Override
+    public byte getByteValue(int index)
 	{
 		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public short getShortValue(int index)
+	@Override
+    public short getShortValue(int index)
 	{
 		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public int getIntValue(int index)
+	@Override
+    public int getIntValue(int index)
 	{
 		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public long getLongValue(int index)
+	@Override
+    public long getLongValue(int index)
 	{
 		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public float getFloatValue(int index)
+	@Override
+    public float getFloatValue(int index)
 	{
 		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public double getDoubleValue(int index)
+	@Override
+    public double getDoubleValue(int index)
 	{
 		return primitiveArray[startIndex + index] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public String getStringValue(int index)
+	@Override
+    public String getStringValue(int index)
 	{
 		return Boolean.toString(primitiveArray[startIndex + index]);
 	}
 
 
-	public boolean getBooleanValue()
+	@Override
+    public boolean getBooleanValue()
 	{
 		return primitiveArray[startIndex];
 	}
 
 
-	public byte getByteValue()
+	@Override
+    public byte getByteValue()
 	{
 		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public short getShortValue()
+	@Override
+    public short getShortValue()
 	{
 		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public int getIntValue()
+	@Override
+    public int getIntValue()
 	{
 		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public long getLongValue()
+	@Override
+    public long getLongValue()
 	{
 		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public float getFloatValue()
+	@Override
+    public float getFloatValue()
 	{
 		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public double getDoubleValue()
+	@Override
+    public double getDoubleValue()
 	{
 		return primitiveArray[startIndex] ? TRUE_VAL : FALSE_VAL;
 	}
 
 
-	public String getStringValue()
+	@Override
+    public String getStringValue()
 	{
 		return Boolean.toString(primitiveArray[startIndex]);
 	}
 
 
-	public void setBooleanValue(int index, boolean value)
+	@Override
+    public void setBooleanValue(int index, boolean value)
 	{
 		primitiveArray[startIndex + index] = value;
 	}
 
 
-	public void setByteValue(int index, byte value)
+	@Override
+    public void setByteValue(int index, byte value)
 	{
 		primitiveArray[startIndex + index] = (value == 0) ? false : true;
 	}
 
 
-	public void setShortValue(int index, short value)
+	@Override
+    public void setShortValue(int index, short value)
 	{
 		primitiveArray[startIndex + index] = (value == 0) ? false : true;
 	}
 
 
-	public void setIntValue(int index, int value)
+	@Override
+    public void setIntValue(int index, int value)
 	{
 		primitiveArray[startIndex + index] = (value == 0) ? false : true;
 	}
 
 
-	public void setLongValue(int index, long value)
+	@Override
+    public void setLongValue(int index, long value)
 	{
 		primitiveArray[startIndex + index] = (value == 0) ? false : true;
 	}
 
 
-	public void setFloatValue(int index, float value)
+	@Override
+    public void setFloatValue(int index, float value)
 	{
 		primitiveArray[startIndex + index] = (Float.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
 	}
 
 
-	public void setDoubleValue(int index, double value)
+	@Override
+    public void setDoubleValue(int index, double value)
 	{
 		primitiveArray[startIndex + index] = (Double.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
 	}
 
 
-	public void setStringValue(int index, String value)
+	@Override
+    public void setStringValue(int index, String value)
 	{
 		primitiveArray[startIndex + index] = Boolean.parseBoolean(value);
 	}
 
 
-	public void setBooleanValue(boolean value)
+	@Override
+    public void setBooleanValue(boolean value)
 	{
 		primitiveArray[startIndex] = value;
 	}
 
 
-	public void setByteValue(byte value)
+	@Override
+    public void setByteValue(byte value)
 	{
 		primitiveArray[startIndex] = (value == 0) ? false : true;
 	}
 
 
-	public void setShortValue(short value)
+	@Override
+    public void setShortValue(short value)
 	{
 		primitiveArray[startIndex] = (value == 0) ? false : true;
 	}
 
 
-	public void setIntValue(int value)
+	@Override
+    public void setIntValue(int value)
 	{
 		primitiveArray[startIndex] = (value == 0) ? false : true;
 	}
 
 
-	public void setLongValue(long value)
+	@Override
+    public void setLongValue(long value)
 	{
 		primitiveArray[startIndex] = (value == 0) ? false : true;
 	}
 
 
-	public void setFloatValue(float value)
+	@Override
+    public void setFloatValue(float value)
 	{
 		primitiveArray[startIndex] = (Float.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
 	}
 
 
-	public void setDoubleValue(double value)
+	@Override
+    public void setDoubleValue(double value)
 	{
 		primitiveArray[startIndex] = (Double.isNaN(value) || Math.abs(value) < Math.ulp(0.0)) ? false : true;
 	}
 
 
-	public void setStringValue(String value)
+	@Override
+    public void setStringValue(String value)
 	{
 		primitiveArray[startIndex] = Boolean.parseBoolean(value);
 	}

@@ -58,12 +58,14 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
     }
     
     
+    @Override
     public DataType getDataType()
     {
         return dataType;
     }
 
 
+    @Override
     public void setDataType(DataType type)
     {
         this.dataType = type;
@@ -271,6 +273,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
         throw new UnsupportedOperationException();
     }
     
+    @Override
     public AbstractDataComponentImpl getComponent(int index)
     {
         throw new UnsupportedOperationException();

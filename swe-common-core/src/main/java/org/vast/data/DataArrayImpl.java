@@ -370,7 +370,7 @@ public class DataArrayImpl extends AbstractArrayImpl
             	dataBlock.resize(scalarCount);
             	
             	// reassign a copy of dataBlock to child
-            	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
+            	AbstractDataBlock childBlock = dataBlock.copy();
         		childBlock.atomCount = getArrayComponent().scalarCount;
         		getArrayComponent().setData(childBlock);
             }
@@ -388,6 +388,7 @@ public class DataArrayImpl extends AbstractArrayImpl
      * Dynamically update size of a VARIABLE SIZE array
      * Note that elementCount component must carry the right value at this time
      */
+    @Override
     public void updateSize()
     {
     	if (isVariableSize())
@@ -436,6 +437,7 @@ public class DataArrayImpl extends AbstractArrayImpl
      * Automatically updates the sizeData component value.
      * @param newSize
      */
+    @Override
     public void updateSize(int newSize)
     {
     	if (newSize == this.currentSize)
@@ -526,6 +528,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     }
     
 
+    @Override
     public String toString(String indent)
     {
         StringBuffer text = new StringBuffer();

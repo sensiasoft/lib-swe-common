@@ -296,6 +296,7 @@ public class XmlDataWriter extends AbstractDataWriter
     }
     
     
+    @Override
     protected void init()
     {
         namespace = ((XMLEncodingImpl)dataEncoding).getNamespace();

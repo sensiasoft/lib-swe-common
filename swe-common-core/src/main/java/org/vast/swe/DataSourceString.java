@@ -36,6 +36,7 @@ public class DataSourceString implements DataSource
     }
     
     
+    @Override
     public InputStream getDataStream()
     {
         return this.textData;

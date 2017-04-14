@@ -68,6 +68,7 @@ public class DataSourceDOM implements DataSource
      * @return input stream to read data from
      * @throws IOException
      */
+    @Override
     public InputStream getDataStream() throws IOException
     {
     	String values = parentElt.getTextContent();

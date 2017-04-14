@@ -102,7 +102,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
     public DataStreamParser getDataParser()
     {
         DataStreamParser parser = SWEHelper.createDataParser(getEncoding());
-        parser.setDataComponents((DataComponent)getElementType());
+        parser.setDataComponents(getElementType());
         return parser;
     }
     
@@ -115,7 +115,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
     public DataStreamWriter getDataWriter()
     {
         DataStreamWriter writer = SWEHelper.createDataWriter(getEncoding());
-        writer.setDataComponents((DataComponent)getElementType());
+        writer.setDataComponents(getElementType());
         return writer;
     }
     
@@ -148,7 +148,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
         	DataSourceDOM domSrc = (DataSourceDOM)dataSource;
         	XmlDataParserDOM parser = new XmlDataParserDOM();
         	parser.setDataEncoding(encoding);
-        	parser.setDataComponents((DataComponent)getElementType());
+        	parser.setDataComponents(getElementType());
         	parser.setDataHandler(new DefaultParserHandler(this));
         	parser.read(domSrc.getDom(), domSrc.getParentElt());
         }
@@ -158,7 +158,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
                 encoding = SWEHelper.ensureXmlCompatible(encoding);
        
             DataStreamParser parser = SWEHelper.createDataParser(encoding);
-            parser.setDataComponents((DataComponent)getElementType());
+            parser.setDataComponents(getElementType());
         	parser.setDataHandler(new DefaultParserHandler(this));        	
         	parser.parse(dataSource.getDataStream());
         }
@@ -180,7 +180,7 @@ public class SWEData extends DataList implements ISweInputDataStream, ISweOutput
         	DataSinkDOM domSink = (DataSinkDOM)dataSink;
         	XmlDataWriterDOM writer = new XmlDataWriterDOM();
         	writer.setDataEncoding(encoding);
-        	writer.setDataComponents((DataComponent)getElementType());
+        	writer.setDataComponents(getElementType());
         	writer.setDataHandler(new DefaultWriterHandler(this, writer));
         	writer.write(domSink.getDom(), domSink.getParentElt());
         }

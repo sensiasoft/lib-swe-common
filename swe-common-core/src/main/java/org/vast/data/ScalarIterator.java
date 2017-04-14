@@ -36,6 +36,7 @@ public class ScalarIterator extends DataIterator
     }
 
 
+    @Override
     public DataValue next()
     {
         DataComponent nextComponent = null;
@@ -61,6 +62,6 @@ public class ScalarIterator extends DataIterator
         
         Collections.reverse(componentList);
         
-        return (DataComponent[])componentList.toArray(new DataComponent[0]);
+        return componentList.toArray(new DataComponent[0]);
     }
 }

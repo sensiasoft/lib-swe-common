@@ -63,14 +63,16 @@ public class DataSinkDOM implements DataSink
 	}
 
 
-	public OutputStream getDataStream() throws IOException
+	@Override
+    public OutputStream getDataStream() throws IOException
 	{
 		this.textData = new ByteArrayOutputStream(1024);
 		return this.textData;
 	}
 	
 	
-	public void flush()
+	@Override
+    public void flush()
 	{
 		String text = textData.toString();
 		Text textNode = parentElt.getOwnerDocument().createTextNode(text);

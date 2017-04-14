@@ -25,6 +25,7 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public DataRecord newDataRecord()
     {
         return new DataRecordImpl();
@@ -37,12 +38,14 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public Vector newVector()
     {
         return new VectorImpl();
     }
     
     
+    @Override
     public DataArray newDataArray()
     {
         return new DataArrayImpl();
@@ -55,6 +58,7 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public Matrix newMatrix()
     {
         return new MatrixImpl();
@@ -67,36 +71,42 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public DataStream newDataStream()
     {
         return new DataList();
     }
     
     
+    @Override
     public BinaryBlock newBinaryBlock()
     {
         return new BinaryBlockImpl();
     }
     
     
+    @Override
     public BinaryEncoding newBinaryEncoding()
     {
         return new BinaryEncodingImpl();
     }
     
     
+    @Override
     public BinaryComponent newBinaryComponent()
     {
         return new BinaryComponentImpl();
     }
     
     
+    @Override
     public DataChoice newDataChoice()
     {
         return new DataChoiceImpl();
     }
     
     
+    @Override
     public Count newCount()
     {
         return new CountImpl();
@@ -109,12 +119,14 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public CategoryRange newCategoryRange()
     {
         return new CategoryRangeImpl();
     }
     
     
+    @Override
     public QuantityRange newQuantityRange()
     {
         return new QuantityRangeImpl();
@@ -127,6 +139,7 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public Time newTime()
     {
         return new TimeImpl();
@@ -139,6 +152,7 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public TimeRange newTimeRange()
     {
         return new TimeRangeImpl();
@@ -151,24 +165,28 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public net.opengis.swe.v20.Boolean newBoolean()
     {
         return new BooleanImpl();
     }
     
     
+    @Override
     public Text newText()
     {
         return new TextImpl();
     }
     
     
+    @Override
     public Category newCategory()
     {
         return new CategoryImpl();
     }
     
     
+    @Override
     public Quantity newQuantity()
     {
         return new QuantityImpl();
@@ -181,6 +199,7 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public CountRange newCountRange()
     {
         return new CountRangeImpl();
@@ -193,54 +212,63 @@ public class SWEFactory implements Factory
     }
     
     
+    @Override
     public NilValues newNilValues()
     {
         return new NilValuesImpl();
     }
     
     
+    @Override
     public AllowedTokens newAllowedTokens()
     {
         return new AllowedTokensImpl();
     }
     
     
+    @Override
     public AllowedValues newAllowedValues()
     {
         return new AllowedValuesImpl();
     }
     
     
+    @Override
     public AllowedTimes newAllowedTimes()
     {
         return new AllowedTimesImpl();
     }
     
     
+    @Override
     public XMLEncoding newXMLEncoding()
     {
         return new XMLEncodingImpl();
     }
     
     
+    @Override
     public TextEncoding newTextEncoding()
     {
         return new TextEncodingImpl();
     }
     
     
+    @Override
     public UnitReference newUnitReference()
     {
         return new UnitReferenceImpl();
     }
     
     
+    @Override
     public NilValue newNilValue()
     {
         return new NilValueImpl();
     }
     
     
+    @Override
     public EncodedValues newEncodedValuesProperty()
     {
         return new EncodedValuesImpl();

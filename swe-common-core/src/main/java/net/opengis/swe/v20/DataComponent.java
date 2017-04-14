@@ -227,6 +227,7 @@ public interface DataComponent extends AbstractSWEIdentifiable, HasCopy
      * The copy is done recursively, but only the structure is copied (not the data)
      * @return copy of this component, including sub-components
      */
+    @Override
     public DataComponent copy();
     
     

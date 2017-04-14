@@ -37,6 +37,7 @@ public class NilValuesImpl extends AbstractSWEImpl implements NilValues, HasCopy
     }
     
     
+    @Override
     public NilValuesImpl copy()
     {
         NilValuesImpl newObj = new NilValuesImpl();

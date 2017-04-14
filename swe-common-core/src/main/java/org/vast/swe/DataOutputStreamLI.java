@@ -46,7 +46,8 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
 	}
 	
 	
-	public void writeBoolean(boolean v) throws IOException
+	@Override
+    public void writeBoolean(boolean v) throws IOException
     {
 	    this.write(v ? 1 : 0);        
     }
@@ -58,12 +59,14 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
 	}
 	
 	
-	public void writeByte(int v) throws IOException
+	@Override
+    public void writeByte(int v) throws IOException
     {
         this.write(v);        
     }
 	
 	
+    @Override
     public void writeUnsignedByte(short v) throws IOException
     {
         byte b = (byte)(0xff & v);
@@ -71,6 +74,7 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
     }
     
     
+    @Override
     public void writeShort(int v) throws IOException
     {
         this.writeShort((short)v);
@@ -87,6 +91,7 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
     }
     
     
+    @Override
     public void writeUnsignedShort(int v) throws IOException
     {
         // LSB first
@@ -97,6 +102,7 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
     }
     
     
+    @Override
     public void writeInt(int v) throws IOException
     {
         // LSB first
@@ -109,7 +115,8 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
     }
     
     
-	public void writeUnsignedInt(long v) throws IOException
+	@Override
+    public void writeUnsignedInt(long v) throws IOException
 	{
 	    // LSB first
 	    tmpBuf[3] = (byte)(0xff & (v >> 24));
@@ -121,7 +128,8 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
 	}
 	
 	
-	public void writeLong(long v) throws IOException
+	@Override
+    public void writeLong(long v) throws IOException
     {
 	    // LSB first
 	    tmpBuf[7] = (byte)(0xff & (v >> 56));
@@ -137,44 +145,51 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
     }
 	
 	
-	public void writeUnsignedLong(long v) throws IOException
+	@Override
+    public void writeUnsignedLong(long v) throws IOException
 	{
 		this.writeLong(v);
 	}
 	
 	
-	public void writeFloat(float v) throws IOException
+	@Override
+    public void writeFloat(float v) throws IOException
     {
         writeInt(Float.floatToIntBits(v));
     }
 	
 	
-	public void writeDouble(double v) throws IOException
+	@Override
+    public void writeDouble(double v) throws IOException
     {
 	    writeLong(Double.doubleToLongBits(v));
     }
 	
 	
-	public void writeChar(int c) throws IOException
+	@Override
+    public void writeChar(int c) throws IOException
     {
         this.writeInt(c);
     }
 	
 	
-	public void writeASCII(String s) throws IOException
+	@Override
+    public void writeASCII(String s) throws IOException
 	{
 		this.writeBytes(s);
 		this.write(0);
     }
 	
 	
-	public void writeUTF(String s) throws IOException
+	@Override
+    public void writeUTF(String s) throws IOException
 	{
 	    this.writeInt(s.length());
 	    this.write(s.getBytes());
 	}
 
 
+    @Override
     public void writeChars(String s) throws IOException
     {
         char[] chars = s.toCharArray();
@@ -183,6 +198,7 @@ public class DataOutputStreamLI extends FilterOutputStream implements DataOutput
     }
     
     
+    @Override
     public void writeBytes(String s) throws IOException
     {
         char[] chars = s.toCharArray();

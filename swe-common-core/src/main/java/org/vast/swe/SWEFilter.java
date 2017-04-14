@@ -61,7 +61,8 @@ public class SWEFilter extends InputStream
 	}
 	
 	
-	public int read() throws IOException
+	@Override
+    public int read() throws IOException
 	{
 		if (dataEltName == null)
 			throw new IOException("Cannot start filtering if data element name is not set");
@@ -156,7 +157,8 @@ public class SWEFilter extends InputStream
 	}
 	
 	
-	public void close() throws IOException
+	@Override
+    public void close() throws IOException
 	{
 		// don't close the stream unless we are parsing the data
 		if (readData)

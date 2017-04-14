@@ -92,7 +92,7 @@ public class AsciiDataWriter extends AbstractDataWriter
 	{
         try
         {
-            String val = dataTypeUtils.getStringValue((DataValue)component);
+            String val = dataTypeUtils.getStringValue(component);
             writeToken(val);
         }
         catch (IOException e)

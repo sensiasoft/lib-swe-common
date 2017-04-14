@@ -36,6 +36,7 @@ public class DataSourceURI implements DataSource
     }
     
     
+    @Override
     public InputStream getDataStream() throws IOException
     {
         return URIStreamHandler.openStream(streamUri);

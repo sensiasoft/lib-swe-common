@@ -33,6 +33,7 @@ package org.vast.util;
 public class DefaultMessageHandler implements MessageHandler
 {
 
+    @Override
     public void handleMessage(String message, boolean error)
     {
         if (error)
