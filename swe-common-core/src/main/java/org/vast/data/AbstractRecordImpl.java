@@ -33,6 +33,7 @@ import net.opengis.swe.v20.ValidationException;
  */
 public abstract class AbstractRecordImpl<ComponentType extends DataComponent> extends AbstractDataComponentImpl
 {
+    private static final long serialVersionUID = -8053251170642596902L;
     protected DataComponentPropertyList<ComponentType> fieldList;
 
         

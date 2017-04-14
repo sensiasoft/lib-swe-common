@@ -15,10 +15,11 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis;
 
 import java.io.IOException;
+import java.io.Serializable;
 import org.vast.ogc.xlink.IXlinkReference;
 
 
-public interface OgcProperty<ValueType> extends IXlinkReference<ValueType>
+public interface OgcProperty<ValueType> extends IXlinkReference<ValueType>, Serializable
 {
 
     public OgcProperty<ValueType> copy();

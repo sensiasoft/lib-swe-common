@@ -38,6 +38,7 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class TimeImpl extends DataValue implements Time
 {
+    private static final long serialVersionUID = 2074207595957800332L;
     protected UnitReferenceImpl uom = new UnitReferenceImpl();
     protected OgcProperty<AllowedTimes> constraint;
     protected IDateTime referenceTime;

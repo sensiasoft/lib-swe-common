@@ -24,7 +24,7 @@ import net.opengis.swe.v20.XMLEncoding;
  */
 public class XMLEncodingImpl extends AbstractEncodingImpl implements XMLEncoding
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4491450481030614280L;
     String namespace;
     String prefix;
     

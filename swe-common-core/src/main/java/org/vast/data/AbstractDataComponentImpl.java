@@ -30,6 +30,7 @@ import net.opengis.swe.v20.ValidationException;
  * */
 public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableImpl implements DataComponent
 {
+    private static final long serialVersionUID = -4958766459432096787L;
     public static final int MAX_ARRAY_ERRORS = 10;
     protected static final String INDENT = "  ";
     

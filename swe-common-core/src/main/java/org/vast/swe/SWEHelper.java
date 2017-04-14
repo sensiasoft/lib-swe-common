@@ -20,13 +20,14 @@
 
 package org.vast.swe;
 
-import java.nio.ByteOrder;
+import java.io.Serializable;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.BinaryComponent;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.ByteEncoding;
+import net.opengis.swe.v20.ByteOrder;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
@@ -105,7 +106,7 @@ public class SWEHelper extends SWEFactory
     
     public static OgcProperty<?> newLinkProperty(String name, String href, String role)
     {
-        OgcProperty<?> prop = new OgcPropertyImpl<Object>();
+        OgcProperty<?> prop = new OgcPropertyImpl<Serializable>();
         prop.setName(name);
         prop.setHref(href);
         prop.setRole(role);

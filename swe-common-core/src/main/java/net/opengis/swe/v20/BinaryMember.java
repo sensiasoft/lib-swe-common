@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.swe.v20;
 
+import java.io.Serializable;
 
 /**
  * <p>
@@ -24,7 +25,7 @@ package net.opengis.swe.v20;
  * @since Oct 26, 2014
  */
 @SuppressWarnings("javadoc")
-public interface BinaryMember
+public interface BinaryMember extends Serializable
 {
     /**
      * Gets the ref property

@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
+import net.opengis.OgcProperty;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
@@ -47,15 +48,16 @@ import org.vast.util.TimeExtent;
  * */
 public class ObservationImpl extends GenericFeatureImpl implements IObservation
 {
-    protected List<IXlinkReference<IObservation>> relatedObservations;
+    private static final long serialVersionUID = 1525908516530863277L;
+    protected ArrayList<IXlinkReference<IObservation>> relatedObservations;
     protected TimeExtent phenomenonTime;
     protected TimeExtent resultTime;
     protected TimeExtent validTime;
     protected IProcedure procedure;
-    protected Map<String, Object> parameters;
-    protected IXlinkReference<IDefinition> observedProperty;
+    protected HashMap<String, Object> parameters;
+    protected OgcProperty<IDefinition> observedProperty;
     protected AbstractFeature featureOfInterest;
-    protected List<Object> resultQuality;
+    protected ArrayList<Object> resultQuality;
     protected DataComponent result;
 
 
@@ -160,14 +162,14 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
 
 
     @Override
-    public IXlinkReference<IDefinition> getObservedProperty()
+    public OgcProperty<IDefinition> getObservedProperty()
     {
         return this.observedProperty;
     }
     
     
     @Override
-    public void setObservedProperty(IXlinkReference<IDefinition> observedProperty)
+    public void setObservedProperty(OgcProperty<IDefinition> observedProperty)
     {
         this.observedProperty = observedProperty;
     }

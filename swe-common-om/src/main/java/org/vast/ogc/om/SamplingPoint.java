@@ -19,7 +19,8 @@ import net.opengis.gml.v32.Point;
 
 public class SamplingPoint extends SamplingFeature<Point>
 {
-    public final static String TYPE = "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint";
+    private static final long serialVersionUID = 8727871950869069501L;
+    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint";
             
             
     public SamplingPoint()

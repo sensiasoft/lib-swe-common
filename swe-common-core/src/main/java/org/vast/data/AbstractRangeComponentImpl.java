@@ -28,6 +28,7 @@ import net.opengis.swe.v20.DataBlock;
  * */
 public abstract class AbstractRangeComponentImpl extends AbstractSimpleComponentImpl implements SimpleComponent
 {
+    private static final long serialVersionUID = 5987133295365471520L;
     protected DataValue min;
     protected DataValue max;
     

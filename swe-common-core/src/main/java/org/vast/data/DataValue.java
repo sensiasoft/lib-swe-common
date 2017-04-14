@@ -29,7 +29,9 @@ import net.opengis.swe.v20.ScalarComponent;
  * */
 public abstract class DataValue extends AbstractSimpleComponentImpl implements ScalarComponent
 {
-        
+    private static final long serialVersionUID = 1377464329731768275L;
+
+
     public DataValue()
     {
         this.scalarCount = 1;

@@ -33,6 +33,7 @@ import org.vast.util.NumberUtils;
  * */
 public class UnitFunctionOffset extends UnitFunction
 {
+    private static final long serialVersionUID = 3668307227162151405L;
     protected double offset;
     
     

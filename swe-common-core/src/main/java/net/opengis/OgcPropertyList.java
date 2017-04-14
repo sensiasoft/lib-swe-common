@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,8 +36,9 @@ import java.util.ListIterator;
  * @param <ValueType> Type of the properties value
  * @since Nov 8, 2014
  */
-public class OgcPropertyList<ValueType> implements List<ValueType>
+public class OgcPropertyList<ValueType extends Serializable> implements List<ValueType>, Serializable
 {
+    private static final long serialVersionUID = -7381244771009281275L;
     protected ArrayList<OgcProperty<ValueType>> items;
     protected HashMap<String, OgcProperty<ValueType>> nameMap;
     

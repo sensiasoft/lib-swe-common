@@ -34,6 +34,7 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class CategoryImpl extends DataValue implements Category
 {
+    private static final long serialVersionUID = -8819399062433113779L;
     protected String codeSpace;
     protected OgcProperty<AllowedTokens> constraint;
     

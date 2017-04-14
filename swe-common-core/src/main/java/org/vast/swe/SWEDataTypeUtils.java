@@ -53,7 +53,7 @@ public class SWEDataTypeUtils
      * @return decoded value
      * @throws NumberFormatException if argument doesn't contain a valid double string
      */
-    public final double parseDoubleOrInf(String text) throws NumberFormatException
+    public static final double parseDoubleOrInf(String text) throws NumberFormatException
     {
         double val;
         
@@ -65,6 +65,24 @@ public class SWEDataTypeUtils
             val = Double.parseDouble(text);
         
         return val;
+    }
+    
+    
+    /**
+     * @param val
+     * @return String representation of double value as per SWE specification
+     * (i.e. actually the XML Schema standard representation for infinity)
+     */
+    public static final String getDoubleOrInfAsString(double val)
+    {
+        if (val == Double.POSITIVE_INFINITY)
+            return "+INF";
+        else if (val == Double.NEGATIVE_INFINITY)
+            return "-INF";
+        else if (Double.isNaN(val))
+            return "NaN";
+        else
+            return Double.toString(val);
     }
     
     
@@ -107,6 +125,19 @@ public class SWEDataTypeUtils
     }
     
     
+    public final String getDoubleOrTimeAsString(double val, boolean useIso)
+    {
+        if (val == Double.POSITIVE_INFINITY)
+            return "+INF";
+        else if (val == Double.NEGATIVE_INFINITY)
+            return "-INF";
+        else if (useIso)
+            return timeFormat.formatIso(val, 0);
+        else
+            return Double.toString(val);
+    }
+    
+    
     /**
      * Retrieve string representation of value of component
      * This will convert to an ISO string for appropriate time components
@@ -135,18 +166,5 @@ public class SWEDataTypeUtils
             val = data.getStringValue();
         
         return val;
-    }
-    
-    
-    public final String getDoubleOrTimeAsString(double doubleVal, boolean useIso)
-    {
-        if (doubleVal == Double.POSITIVE_INFINITY)
-            return "+INF";
-        else if (doubleVal == Double.NEGATIVE_INFINITY)
-            return "-INF";
-        else if (useIso)
-            return timeFormat.formatIso(doubleVal, 0);
-        else
-            return Double.toString(doubleVal);
     }
 }

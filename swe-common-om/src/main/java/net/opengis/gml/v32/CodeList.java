@@ -14,7 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
-
+import java.io.Serializable;
 
 /**
  * POJO class for XML type CodeListType(@http://www.opengis.net/gml/3.2).
@@ -22,7 +22,7 @@ package net.opengis.gml.v32;
  * This is a list type whose items are java.lang.String.
  */
 @SuppressWarnings("javadoc")
-public interface CodeList
+public interface CodeList extends Serializable
 {
     
     /**

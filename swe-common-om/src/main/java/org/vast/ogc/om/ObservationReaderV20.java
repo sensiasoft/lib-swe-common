@@ -23,9 +23,11 @@
 
 package org.vast.ogc.om;
 
-import net.opengis.gml.v32.impl.CodeImpl;
+import net.opengis.OgcProperty;
+import net.opengis.OgcPropertyImpl;
+import net.opengis.gml.v32.impl.CodeWithAuthorityImpl;
 import net.opengis.swe.v20.DataComponent;
-import org.vast.ogc.def.DefinitionRef;
+import org.vast.ogc.def.IDefinition;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.gml.GenericFeature;
@@ -86,16 +88,16 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
             Element nameElt = (Element)nameElts.item(i);
             String name = dom.getElementValue(nameElt);
             String codeSpace = dom.getAttributeValue(nameElt, "@codeSpace");
-            obs.getNameList().add(new CodeImpl(codeSpace, name));
+            obs.getNameList().add(new CodeWithAuthorityImpl(codeSpace, name));
         }
         
         // type
         obs.setType(dom.getAttributeValue(obsElt, "type/href"));
         
         // metadata as raw XML
-        Element metadata = dom.getElement(obsElt, "metadata/*");
+        /*Element metadata = dom.getElement(obsElt, "metadata/*");
         if (metadata != null)
-            obs.getMetaDataPropertyList().add(metadata.cloneNode(true));
+            obs.getMetaDataPropertyList().add(metadata.cloneNode(true));*/
         
         // related observations
         NodeList relObsElts = dom.getElements(obsElt, "relatedObservation/ObservationContext");
@@ -176,7 +178,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         Element obsPropElt = dom.getElement(obsElt, "observedProperty");
         if (obsPropElt != null && !obsPropElt.hasAttribute("nil"))
         {
-            DefinitionRef ref = new DefinitionRef();
+            OgcProperty<IDefinition> ref = new OgcPropertyImpl<IDefinition>();
             XlinkUtils.readXlinkAttributes(dom, obsPropElt, ref);
             obs.setObservedProperty(ref);
         }

@@ -50,10 +50,7 @@ public interface Factory
     public Reference newReference();
     
     
-    public Code newCode();
-    
-    
-    public CodeWithAuthority newCodeWithAuthority();
+    public CodeWithAuthority newCode();
     
     
     public CodeList newCodeList();

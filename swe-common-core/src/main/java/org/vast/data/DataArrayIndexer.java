@@ -124,7 +124,7 @@ public class DataArrayIndexer extends DataIndexer
         // datablock mixed not allowed
         if (data instanceof DataBlockMixed)
         {
-            throw new IllegalStateException(DataArrayImpl.errorBlockMixed);
+            throw new IllegalStateException(DataArrayImpl.MIXED_BLOCK_ERROR_MSG);
         }
         else if (data instanceof DataBlockParallel)
         {

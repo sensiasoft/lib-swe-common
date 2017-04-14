@@ -24,8 +24,8 @@ import net.opengis.gml.v32.AbstractCurve;
  */
 public abstract class AbstractCurveImpl extends AbstractGeometryImpl implements AbstractCurve
 {
-    static final long serialVersionUID = 1L;
-    
+    private static final long serialVersionUID = -3214279818075172477L;
+
     
     public AbstractCurveImpl()
     {

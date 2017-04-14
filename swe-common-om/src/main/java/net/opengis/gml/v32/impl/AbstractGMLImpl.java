@@ -14,11 +14,11 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGML;
-import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Reference;
 
@@ -31,12 +31,13 @@ import net.opengis.gml.v32.Reference;
  */
 public abstract class AbstractGMLImpl implements AbstractGML
 {
-    public final static String UUID_CODE = "uid";
-    protected OgcPropertyList<Object> metaDataPropertyList = new OgcPropertyList<Object>();
+    private static final long serialVersionUID = -5559560460456343028L;
+    public static final String UUID_CODE = "uid";
+    protected OgcPropertyList<Serializable> metaDataPropertyList = new OgcPropertyList<Serializable>();
     protected String description;
     protected Reference descriptionReference;
     protected CodeWithAuthority identifier;
-    protected List<Code> nameList = new ArrayList<Code>();
+    protected ArrayList<CodeWithAuthority> nameList = new ArrayList<CodeWithAuthority>();
     protected String id = "";
     
     
@@ -49,7 +50,7 @@ public abstract class AbstractGMLImpl implements AbstractGML
      * Gets the list of metaDataProperty properties
      */
     @Override
-    public OgcPropertyList<Object> getMetaDataPropertyList()
+    public OgcPropertyList<Serializable> getMetaDataPropertyList()
     {
         return metaDataPropertyList;
     }
@@ -166,7 +167,7 @@ public abstract class AbstractGMLImpl implements AbstractGML
      * Gets the list of name properties
      */
     @Override
-    public List<Code> getNameList()
+    public List<CodeWithAuthority> getNameList()
     {
         return nameList;
     }
@@ -197,7 +198,7 @@ public abstract class AbstractGMLImpl implements AbstractGML
      * Adds a new name property
      */
     @Override
-    public void addName(Code name)
+    public void addName(CodeWithAuthority name)
     {
         this.nameList.add(name);
     }
@@ -206,7 +207,7 @@ public abstract class AbstractGMLImpl implements AbstractGML
     @Override
     public void setName(String name)
     {
-        addName(new CodeImpl(name));
+        addName(new CodeWithAuthorityImpl(name));
     }
     
 

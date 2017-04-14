@@ -24,7 +24,7 @@ import net.opengis.swe.v20.TextEncoding;
  */
 public class TextEncodingImpl extends AbstractEncodingImpl implements TextEncoding
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -2462346983639710029L;
     protected Boolean collapseWhiteSpaces = true;
     protected String decimalSeparator = ".";
     protected String tokenSeparator = ",";

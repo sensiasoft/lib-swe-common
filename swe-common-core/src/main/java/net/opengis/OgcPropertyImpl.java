@@ -15,11 +15,13 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis;
 
 import java.io.IOException;
+import java.io.Serializable;
 import org.vast.util.ResolveException;
 
 
-public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
+public class OgcPropertyImpl<ValueType extends Serializable> implements OgcProperty<ValueType>
 {
+    private static final long serialVersionUID = -4533173517189205779L;
     protected ValueType value;
     protected String name;
     protected String title;
@@ -27,7 +29,7 @@ public class OgcPropertyImpl<ValueType> implements OgcProperty<ValueType>
     protected String role;
     protected String arcRole;
     protected String nilReason;
-    protected HrefResolver hrefResolver;
+    protected transient HrefResolver hrefResolver;
     
     
     public OgcPropertyImpl()

@@ -39,8 +39,9 @@ import net.opengis.swe.v20.ValidationException;
  * */
 public class DataList extends AbstractArrayImpl implements DataArray, DataStream, BlockComponent
 {
-    protected ListIterator<DataBlock> blockIterator;
-    protected AbstractDataComponentImpl tempComponent = null;
+    private static final long serialVersionUID = 5597119200425453510L;
+    protected transient ListIterator<DataBlock> blockIterator;
+    protected transient AbstractDataComponentImpl tempComponent = null;
     
 
     public DataList()
@@ -48,6 +49,8 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
         // special property object to correctly set parent
         elementType = new OgcPropertyImpl<DataComponent>()
         {
+            private static final long serialVersionUID = -1548152803152171355L;
+
             @Override
             public void setValue(DataComponent value)
             {
@@ -201,7 +204,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     /**
      * Check that the integer index given is in range: 0 to size of array - 1 
      * @param index int
-     * @throws DataException
+     * @throws IndexOutOfBoundsException
      */
     protected void checkIndex(int index)
     {

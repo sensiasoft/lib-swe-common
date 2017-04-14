@@ -34,6 +34,7 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class CategoryRangeImpl extends AbstractRangeComponentImpl implements CategoryRange
 {
+    private static final long serialVersionUID = 814746758956938727L;
     protected String codeSpace;
     protected OgcProperty<AllowedTokens> constraint;
     protected String[] tmpValue = new String[2];

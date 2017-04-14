@@ -37,6 +37,8 @@ import org.vast.ogc.gml.FeatureRef;
  * */
 public class ProcedureRef extends FeatureRef implements IProcedure
 {
+    private static final long serialVersionUID = -3202005872457706178L;
+
 
     public ProcedureRef()
     {        

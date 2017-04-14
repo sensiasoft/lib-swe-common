@@ -14,14 +14,14 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.swe.v20;
 
-
+import java.io.Serializable;
 
 /**
  * POJO class for XML type NilValue(@http://www.opengis.net/swe/2.0).
  *
  */
 @SuppressWarnings("javadoc")
-public interface NilValue
+public interface NilValue extends Serializable
 {
     
     
@@ -40,11 +40,11 @@ public interface NilValue
     /**
      * Gets the inline value
      */
-    public Object getValue();
+    public String getValue();
     
     
     /**
      * Sets the inline value
      */
-    public void setValue(Object value);
+    public void setValue(String value);
 }

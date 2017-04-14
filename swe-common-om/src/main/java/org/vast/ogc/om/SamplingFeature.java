@@ -23,6 +23,7 @@ import org.vast.ogc.xlink.CachedReference;
 
 public abstract class SamplingFeature<GeomType extends AbstractGeometry> extends GenericFeatureImpl
 {
+    private static final long serialVersionUID = 6351566323396110876L;
     public static final String SAMS_NS_PREFIX = "sams";
     public static final String SAMS_NS_URI = "http://www.opengis.net/samplingSpatial/2.0";
     public static final String SF_NS_PREFIX = "sf";

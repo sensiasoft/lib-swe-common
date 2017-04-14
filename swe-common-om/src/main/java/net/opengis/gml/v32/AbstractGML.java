@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
+import java.io.Serializable;
 import java.util.List;
 import net.opengis.OgcPropertyList;
 
@@ -24,13 +25,13 @@ import net.opengis.OgcPropertyList;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface AbstractGML
+public interface AbstractGML extends Serializable
 {
         
     /**
      * Gets the list of metaDataProperty properties
      */
-    public OgcPropertyList<Object> getMetaDataPropertyList();
+    public OgcPropertyList<Serializable> getMetaDataPropertyList();
     
     
     /**
@@ -102,7 +103,7 @@ public interface AbstractGML
     /**
      * Gets the list of name properties
      */
-    public List<Code> getNameList();
+    public List<CodeWithAuthority> getNameList();
     
     
     /**
@@ -114,7 +115,7 @@ public interface AbstractGML
     /**
      * Adds a new name property
      */
-    public void addName(Code name);
+    public void addName(CodeWithAuthority name);
     
     
     /**

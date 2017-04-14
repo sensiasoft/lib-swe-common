@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -233,7 +234,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     }
     
     
-    public Object readExtension(XMLStreamReader reader) throws XMLStreamException
+    public Serializable readExtension(XMLStreamReader reader) throws XMLStreamException
     {
         // by default we skip the extension element and all its children
         // sub-classes can override to implement some extensions

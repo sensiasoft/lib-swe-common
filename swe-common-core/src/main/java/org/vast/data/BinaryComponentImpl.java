@@ -26,8 +26,8 @@ import net.opengis.swe.v20.DataType;
  */
 public class BinaryComponentImpl extends AbstractSWEImpl implements BinaryComponent, HasCopy
 {
+    private static final long serialVersionUID = 3193570816134252948L;
     public static final String DATATYPE_URI_PREFIX = "http://www.opengis.net/def/dataType/OGC/0/";
-    static final long serialVersionUID = 1L;
     protected String encryption;
     protected Integer significantBits;
     protected Integer bitLength;

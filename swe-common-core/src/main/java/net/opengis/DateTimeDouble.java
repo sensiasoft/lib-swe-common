@@ -26,6 +26,7 @@ package net.opengis;
  */
 public class DateTimeDouble implements IDateTime
 {
+    private static final long serialVersionUID = 6784991803827485545L;
     double julianTime;
     byte timeZoneOffset;
     

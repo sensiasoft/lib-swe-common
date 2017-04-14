@@ -24,7 +24,7 @@ import net.opengis.gml.v32.CodeList;
  */
 public class CodeListImpl implements CodeList
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -3471326706841398524L;
     protected String codeSpace;
     protected String[] value;
     

@@ -23,8 +23,9 @@ package net.opengis;
  * @author Alex Robin
  * @since Oct 26, 2014
  */
-public class DateTimePrecise
+public class DateTimePrecise implements IDateTime
 {
+    private static final long serialVersionUID = 7084487956502841127L;
     long seconds;
     double fractionOfSeconds;
     byte timeZoneOffset;
@@ -81,15 +82,111 @@ public class DateTimePrecise
     }
     
     
-    public byte getTimeZoneOffset()
+    @Override
+    public int getTimeZoneOffset()
     {
         return timeZoneOffset;
     }
 
 
+    @Override
     public double getAsDouble()
     {
         return seconds + fractionOfSeconds;
+    }
+    
+    
+    /**
+     * Check if this date is before the specified date
+     * @param other
+     * @return true if condition is satisfied
+     */
+    @Override
+    public boolean isBefore(IDateTime other)
+    {
+        if (other instanceof DateTimePrecise)
+        {
+            DateTimePrecise otherTime = (DateTimePrecise)other;
+            if (seconds < otherTime.seconds)
+                return true;            
+            else if (seconds == otherTime.seconds && fractionOfSeconds < otherTime.fractionOfSeconds)
+                return true;
+            return false;
+        }
+        
+        return getAsDouble() < other.getAsDouble();
+    }
+    
+    
+    /**
+     * Check if this date is before or equal to the specified date
+     * @param other
+     * @return true if condition is satisfied
+     */
+    @Override
+    public boolean isBeforeOrEqual(IDateTime other)
+    {
+        if (equals(other) || isBefore(other))
+            return true;
+        return false;
+    }
+    
+    
+    /**
+     * Check if this date is after the specified date
+     * @param other
+     * @return true if condition is satisfied
+     */
+    @Override
+    public boolean isAfter(IDateTime other)
+    {
+        if (other instanceof DateTimePrecise)
+        {
+            DateTimePrecise otherTime = (DateTimePrecise)other;
+            if (seconds > otherTime.seconds)
+                return true;            
+            else if (seconds == otherTime.seconds && fractionOfSeconds > otherTime.fractionOfSeconds)
+                return true;
+            return false;
+        }
+        
+        return getAsDouble() > other.getAsDouble();
+    }
+    
+    
+    /**
+     * Check if this date is after or equal to the specified date
+     * @param other
+     * @return true if condition is satisfied
+     */
+    @Override
+    public boolean isAfterOrEqual(IDateTime other)
+    {
+        if (equals(other) || isAfter(other))
+            return true;
+        return false;
+    }
+    
+    
+    @Override
+    public boolean isPositiveInfinity()
+    {
+        return (seconds == Long.MAX_VALUE);
+    }
+    
+    
+    @Override
+    public boolean isNegativeInfinity()
+    {
+        return (seconds == Long.MIN_VALUE);
+    }
+
+
+    @Override
+    public boolean isNow()
+    {
+        // TODO add 'now' support
+        return false;
     }
     
     
@@ -111,84 +208,5 @@ public class DateTimePrecise
     public final int hashCode()
     {
         return Long.hashCode(seconds) + 31*Double.hashCode(fractionOfSeconds) + 67*timeZoneOffset;
-    }
-    
-    
-    /**
-     * Check if this date is before the specified date
-     * @param other
-     * @return true if condition is satisfied
-     */
-    public boolean isBefore(DateTimePrecise other)
-    {
-        if (seconds < other.seconds)
-            return true;
-        
-        if (seconds == other.seconds && fractionOfSeconds < other.fractionOfSeconds)
-            return true;
-        
-        return false;
-    }
-    
-    
-    /**
-     * Check if this date is before or equal to the specified date
-     * @param other
-     * @return true if condition is satisfied
-     */
-    public boolean isBeforeOrEqual(DateTimePrecise other)
-    {
-        if (equals(other) || isBefore(other))
-            return true;
-        return false;
-    }
-    
-    
-    /**
-     * Check if this date is after the specified date
-     * @param other
-     * @return true if condition is satisfied
-     */
-    public boolean isAfter(DateTimePrecise other)
-    {
-        if (seconds > other.seconds)
-            return true;
-        
-        if (seconds == other.seconds && fractionOfSeconds > other.fractionOfSeconds)
-            return true;
-        
-        return false;
-    }
-    
-    
-    /**
-     * Check if this date is after or equal to the specified date
-     * @param other
-     * @return true if condition is satisfied
-     */
-    public boolean isAfterOrEqual(DateTimePrecise other)
-    {
-        if (equals(other) || isAfter(other))
-            return true;
-        return false;
-    }
-    
-    
-    public boolean isPositiveInfinity()
-    {
-        return (seconds == Long.MAX_VALUE);
-    }
-    
-    
-    public boolean isNegativeInfinity()
-    {
-        return (seconds == Long.MIN_VALUE);
-    }
-
-
-    public boolean isNow()
-    {
-        // TODO add 'now' support
-        return false;
     }
 }

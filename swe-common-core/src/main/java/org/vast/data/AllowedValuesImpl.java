@@ -26,8 +26,9 @@ import net.opengis.swe.v20.AllowedValues;
  */
 public class AllowedValuesImpl extends AbstractSWEImpl implements AllowedValues
 {
-    protected List<Double> valueList = new ArrayList<Double>();
-    protected List<double[]> intervalList = new ArrayList<double[]>();
+    private static final long serialVersionUID = 2438220995583472801L;
+    protected ArrayList<Double> valueList = new ArrayList<Double>();
+    protected ArrayList<double[]> intervalList = new ArrayList<double[]>();
     protected Integer significantFigures;
     
     

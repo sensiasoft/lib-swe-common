@@ -23,9 +23,9 @@ import net.opengis.swe.v20.NilValue;
  */
 public class NilValueImpl implements NilValue
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7281813971940522932L;
     protected String reason = "";
-    protected Object value;
+    protected String value;
     
     
     public NilValueImpl()
@@ -33,7 +33,7 @@ public class NilValueImpl implements NilValue
     }
     
     
-    public NilValueImpl(String reason, Object value)
+    public NilValueImpl(String reason, String value)
     {
         this.reason = reason;
         this.value = value;
@@ -64,7 +64,7 @@ public class NilValueImpl implements NilValue
      * Gets the inline value
      */
     @Override
-    public Object getValue()
+    public String getValue()
     {
         return value;
     }
@@ -74,7 +74,7 @@ public class NilValueImpl implements NilValue
      * Sets the inline value
      */
     @Override
-    public void setValue(Object value)
+    public void setValue(String value)
     {
         this.value = value;
     }

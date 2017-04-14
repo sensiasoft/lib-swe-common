@@ -34,7 +34,8 @@ import net.opengis.swe.v20.EncodedValues;
  */
 public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implements DataArray, BlockComponent
 {
-    public final static String ELT_COUNT_NAME = "elementCount";
+    private static final long serialVersionUID = -6508481468764422077L;
+    public static final String ELT_COUNT_NAME = "elementCount";
     
     protected OgcPropertyImpl<Count> elementCount = new OgcPropertyImpl<Count>();
     protected OgcPropertyImpl<DataComponent> elementType;
@@ -47,6 +48,8 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
         // special property object to correctly set parent and name
         elementType = new OgcPropertyImpl<DataComponent>() 
         {
+            private static final long serialVersionUID = 3604877033013079886L;
+
             @Override
             public void setValue(DataComponent value)
             {
@@ -59,6 +62,8 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
         // special property object to correctly set element count name
         elementCount = new OgcPropertyImpl<Count>() 
         {
+            private static final long serialVersionUID = -5136432942948581877L;
+
             @Override
             public void setValue(Count value)
             {

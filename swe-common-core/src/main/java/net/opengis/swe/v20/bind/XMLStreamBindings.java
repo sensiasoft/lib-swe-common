@@ -14,7 +14,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.swe.v20.bind;
 
-import java.nio.ByteOrder;
 import java.util.Map;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -38,6 +37,7 @@ import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.ByteEncoding;
+import net.opengis.swe.v20.ByteOrder;
 import net.opengis.swe.v20.Category;
 import net.opengis.swe.v20.CategoryRange;
 import net.opengis.swe.v20.BinaryComponent;
@@ -876,15 +876,8 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         // byteorder
         val = attrMap.get("byteOrder");
         if (val != null)
-        {
-            ByteOrder byteOrder = null;
-            if (val.equals("bigEndian"))
-                byteOrder = ByteOrder.BIG_ENDIAN;
-            else if (val.equals("littleEndian"))
-                byteOrder = ByteOrder.LITTLE_ENDIAN;
-            bean.setByteOrder(byteOrder);
-        }
-        
+            bean.setByteOrder(ByteOrder.fromString(val));
+
         // byteencoding
         val = attrMap.get("byteEncoding");
         if (val != null)

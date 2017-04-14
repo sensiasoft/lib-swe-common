@@ -28,8 +28,8 @@ import net.opengis.swe.v20.NilValues;
  */
 public class NilValuesImpl extends AbstractSWEImpl implements NilValues, HasCopy
 {
-    static final long serialVersionUID = 1L;
-    protected List<NilValue> nilValueList = new ArrayList<NilValue>();
+    private static final long serialVersionUID = -5131700003111279239L;
+    protected ArrayList<NilValue> nilValueList = new ArrayList<NilValue>();
     
     
     public NilValuesImpl()

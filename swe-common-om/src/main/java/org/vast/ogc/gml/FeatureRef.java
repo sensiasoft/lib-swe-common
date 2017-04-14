@@ -25,6 +25,7 @@ package org.vast.ogc.gml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -33,7 +34,6 @@ import javax.xml.namespace.QName;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGeometry;
-import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.Reference;
@@ -54,8 +54,9 @@ import org.vast.util.URIResolver;
  * */
 public class FeatureRef extends CachedReference<GenericFeature> implements GenericFeature
 {
-        
-    
+    private static final long serialVersionUID = 8523158284557229913L;
+
+
     public FeatureRef()
     {
         this.resolver = new IReferenceResolver<GenericFeature>()
@@ -85,7 +86,7 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public OgcPropertyList<Object> getMetaDataPropertyList()
+    public OgcPropertyList<Serializable> getMetaDataPropertyList()
     {
         return getTarget().getMetaDataPropertyList();
     }
@@ -274,7 +275,7 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public List<Code> getNameList()
+    public List<CodeWithAuthority> getNameList()
     {
         return getTarget().getNameList();
     }
@@ -288,7 +289,7 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public void addName(Code name)
+    public void addName(CodeWithAuthority name)
     {
         getTarget().addName(name);
     }

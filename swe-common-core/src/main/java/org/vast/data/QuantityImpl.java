@@ -35,6 +35,7 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class QuantityImpl extends DataValue implements Quantity
 {
+    private static final long serialVersionUID = -6958705141485869941L;
     protected UnitReferenceImpl uom = new UnitReferenceImpl();
     protected OgcProperty<AllowedValues> constraint;
     

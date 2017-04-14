@@ -31,6 +31,7 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class TextImpl extends DataValue implements Text
 {
+    private static final long serialVersionUID = 705420596393372571L;
     protected OgcProperty<AllowedTokens> constraint;
     
     

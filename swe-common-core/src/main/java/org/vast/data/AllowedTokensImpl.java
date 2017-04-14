@@ -27,7 +27,8 @@ import net.opengis.swe.v20.AllowedTokens;
  */
 public class AllowedTokensImpl extends AbstractSWEImpl implements AllowedTokens
 {
-    protected List<String> valueList = new ArrayList<String>();
+    private static final long serialVersionUID = -1524114903160966177L;
+    protected ArrayList<String> valueList = new ArrayList<String>();
     protected String pattern;
     protected Pattern compiledPattern;
     

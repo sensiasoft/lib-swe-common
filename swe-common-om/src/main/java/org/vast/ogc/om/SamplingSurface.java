@@ -19,7 +19,8 @@ import net.opengis.gml.v32.Polygon;
 
 public class SamplingSurface extends SamplingFeature<Polygon>
 {
-    public final static String TYPE = "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface";
+    private static final long serialVersionUID = -6246743491466530101L;
+    public static final String TYPE = "http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingSurface";
     
     
     public SamplingSurface()

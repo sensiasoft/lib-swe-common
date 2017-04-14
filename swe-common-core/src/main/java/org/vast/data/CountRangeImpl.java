@@ -34,6 +34,7 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class CountRangeImpl extends AbstractRangeComponentImpl implements CountRange
 {
+    private static final long serialVersionUID = -6977589403453119057L;
     protected OgcProperty<AllowedValues> constraint;
     protected int[] tmpValue = new int[2];
     

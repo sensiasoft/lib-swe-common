@@ -22,11 +22,11 @@ package org.vast.swe;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteOrder;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.ByteEncoding;
+import net.opengis.swe.v20.ByteOrder;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataType;

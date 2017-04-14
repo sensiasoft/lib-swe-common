@@ -26,7 +26,7 @@ import net.opengis.swe.v20.ScalarComponent;
  */
 public class MatrixImpl extends DataArrayImpl implements Matrix
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 991093969460307371L;
     protected String referenceFrame;
     protected String localFrame;
     

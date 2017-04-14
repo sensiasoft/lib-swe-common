@@ -20,6 +20,7 @@
 
 package org.vast.unit;
 
+import java.io.Serializable;
 
 /**
  * <p>
@@ -30,8 +31,9 @@ package org.vast.unit;
  * @author Alex Robin
  * @since Feb 9, 2007
  * */
-public abstract class UnitFunction
+public abstract class UnitFunction implements Serializable
 {
+    private static final long serialVersionUID = -8673301679624127006L;
     protected String printSymbol;
     protected double scaleFactor;
     

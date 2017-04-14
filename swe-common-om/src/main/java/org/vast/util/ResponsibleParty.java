@@ -114,7 +114,7 @@ public class ResponsibleParty extends Contact
 
     public String getDeliveryPoint()
     {
-        if (deliveryPoints.size() == 0)
+        if (deliveryPoints.isEmpty())
             return null;
         
         return deliveryPoints.get(0);
@@ -135,7 +135,7 @@ public class ResponsibleParty extends Contact
     
     public String getEmail()
     {
-        if (emails.size() == 0)
+        if (emails.isEmpty())
             return null;
         
         return emails.get(0);
@@ -168,7 +168,7 @@ public class ResponsibleParty extends Contact
     
     public String getFaxNumber()
     {
-        if (faxNumbers.size() == 0)
+        if (faxNumbers.isEmpty())
             return null;
         
 	    return faxNumbers.get(0);
@@ -243,7 +243,7 @@ public class ResponsibleParty extends Contact
 
     public String getVoiceNumber()
     {
-        if (voiceNumbers.size() == 0)
+        if (voiceNumbers.isEmpty())
             return null;
         
         return voiceNumbers.get(0);

@@ -24,7 +24,7 @@ import net.opengis.swe.v20.JSONEncoding;
  */
 public class JSONEncodingImpl extends AbstractEncodingImpl implements JSONEncoding
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -4405790638194989416L;
     boolean pretty;
     
     

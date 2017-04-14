@@ -33,7 +33,7 @@ import java.io.Serializable;
  * @author Alex Robin
  * @since Aug 14, 2005
  * */
-public interface DataBlock extends Cloneable, Serializable
+public interface DataBlock extends Serializable
 {
 	public DataType getDataType();
 	

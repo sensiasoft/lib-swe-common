@@ -20,6 +20,7 @@
 
 package org.vast.ogc.gml;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -36,9 +37,10 @@ import net.opengis.gml.v32.impl.AbstractFeatureImpl;
  * */
 public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFeature
 {
+    private static final long serialVersionUID = -5445631329812411360L;
     protected QName qname;
     protected String type;
-    protected Map<QName, Object> properties;
+    protected HashMap<QName, Object> properties;
 
 
     public GenericFeatureImpl(QName qname)

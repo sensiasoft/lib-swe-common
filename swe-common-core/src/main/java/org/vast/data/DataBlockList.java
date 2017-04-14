@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -34,7 +35,7 @@ import net.opengis.swe.v20.DataType;
 public class DataBlockList extends AbstractDataBlock
 {
     private static final long serialVersionUID = -413032909256132305L;
-    protected List<DataBlock> blockList;
+    protected List<DataBlock> blockList; // either ArrayList or LinkedList so it's serializable
 	protected int blockAtomCount = -1;
 	protected int blockIndex;
 	protected int localIndex;
@@ -122,7 +123,7 @@ public class DataBlockList extends AbstractDataBlock
     @Override
     public void setUnderlyingObject(Object obj)
     {
-    	this.blockList = (List<DataBlock>)obj;
+    	this.blockList = (List<DataBlock>)(Serializable)obj;
     }
     
     

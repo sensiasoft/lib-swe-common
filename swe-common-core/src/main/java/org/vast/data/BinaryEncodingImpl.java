@@ -14,7 +14,6 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
 import net.opengis.HasCopy;
@@ -22,6 +21,7 @@ import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.ByteEncoding;
+import net.opengis.swe.v20.ByteOrder;
 import net.opengis.swe.v20.BinaryComponent;
 
 
@@ -32,7 +32,8 @@ import net.opengis.swe.v20.BinaryComponent;
  */
 public class BinaryEncodingImpl extends AbstractEncodingImpl implements BinaryEncoding
 {
-    protected List<BinaryMember> memberList = new ArrayList<BinaryMember>();
+    private static final long serialVersionUID = -4794883578805724635L;
+    protected ArrayList<BinaryMember> memberList = new ArrayList<BinaryMember>();
     protected ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
     protected ByteEncoding byteEncoding;
     protected Long byteLength;

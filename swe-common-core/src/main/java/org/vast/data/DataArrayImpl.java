@@ -41,8 +41,9 @@ import net.opengis.swe.v20.ValidationException;
  * */
 public class DataArrayImpl extends AbstractArrayImpl
 {
-    protected final static String errorBlockMixed = "Error: DataArrays should never contain a DataBlockMixed";
-    public final static String ARRAY_SIZE_FIELD = "elementCount";
+    private static final long serialVersionUID = 5562931581112417074L;
+    protected static final String MIXED_BLOCK_ERROR_MSG = "DataArrays should never contain a DataBlockMixed";
+    public static final String ARRAY_SIZE_FIELD = "elementCount";
     
     protected int currentSize;
     protected CountImpl implicitElementCount;
@@ -92,7 +93,7 @@ public class DataArrayImpl extends AbstractArrayImpl
         
         if (dataBlock instanceof DataBlockMixed)
         {
-            throw new IllegalStateException(errorBlockMixed);
+            throw new IllegalStateException(MIXED_BLOCK_ERROR_MSG);
         }
         else if (dataBlock instanceof DataBlockParallel)
         {
@@ -148,7 +149,7 @@ public class DataArrayImpl extends AbstractArrayImpl
             
             if (dataBlock instanceof DataBlockMixed)
             {
-                throw new IllegalStateException(errorBlockMixed);
+                throw new IllegalStateException(MIXED_BLOCK_ERROR_MSG);
             }            
             else if (dataBlock instanceof DataBlockParallel)
             {
@@ -335,7 +336,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     /**
      * Check that the integer index given is in range: 0 to size of array - 1
      * @param index int
-     * @throws DataException
+     * @throws IndexOutOfBoundsException
      */
     protected void checkIndex(int index)
     {

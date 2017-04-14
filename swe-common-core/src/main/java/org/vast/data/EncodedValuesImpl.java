@@ -22,6 +22,7 @@ import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
 import org.vast.swe.SWEHelper;
 import net.opengis.swe.v20.DataEncoding;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.ByteEncoding;
@@ -39,10 +40,11 @@ import net.opengis.swe.v20.EncodedValues;
  * @author Alex Robin
  * @since Oct 3, 2014
  */
-public class EncodedValuesImpl extends net.opengis.OgcPropertyImpl<Object> implements EncodedValues
+public class EncodedValuesImpl extends OgcPropertyImpl<byte[]> implements EncodedValues
 {
-        
-    
+    private static final long serialVersionUID = 5065676107640449321L;
+
+
     @Override
     public boolean resolveHref()
     {

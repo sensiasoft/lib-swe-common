@@ -20,6 +20,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import org.vast.swe.SWEDataTypeUtils;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
 import net.opengis.swe.v20.Boolean;
@@ -139,20 +140,7 @@ public class JsonDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
-            
-            if (Double.isFinite(val))
-            {
-                writer.write(Double.toString(val));
-            }
-            else
-            {
-                if (val == Double.POSITIVE_INFINITY)
-                    writer.write("+INF");
-                else if (val == Double.NEGATIVE_INFINITY)
-                    writer.write("-INF");
-                else if (Double.isNaN(val))
-                    writer.write("NaN");
-            }
+            writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));
         }
     }
     

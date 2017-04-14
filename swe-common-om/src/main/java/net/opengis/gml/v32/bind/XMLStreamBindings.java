@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.bind;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -30,10 +31,9 @@ import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.AbstractSurface;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.AbstractTimePrimitive;
-import net.opengis.gml.v32.Code;
+import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.CodeList;
 import net.opengis.gml.v32.CodeOrNilReasonList;
-import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.FeatureCollection;
 import net.opengis.gml.v32.LineString;
@@ -1495,7 +1495,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             found = checkElementName(reader, "metaDataProperty");
             if (found)
             {
-                OgcProperty<Object> metaDataPropertyProp = new OgcPropertyImpl<Object>();
+                OgcProperty<Serializable> metaDataPropertyProp = new OgcPropertyImpl<Serializable>();
                 readPropertyAttributes(reader, metaDataPropertyProp);
                 
                 if (metaDataPropertyProp.getHref() == null)
@@ -1539,7 +1539,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         found = checkElementName(reader, "identifier");
         if (found)
         {
-            CodeWithAuthority identifier = this.readCodeWithAuthorityType(reader);
+            CodeWithAuthority identifier = this.readCodeType(reader);
             if (identifier != null)
                 bean.setIdentifier(identifier);
             
@@ -1552,7 +1552,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             found = checkElementName(reader, "name");
             if (found)
             {
-                Code name = this.readCodeType(reader);
+                CodeWithAuthority name = this.readCodeType(reader);
                 if (name != null)
                     bean.addName(name);
                 
@@ -1584,7 +1584,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         numItems = bean.getMetaDataPropertyList().size();
         for (int i = 0; i < numItems; i++)
         {
-            OgcProperty<Object> item = bean.getMetaDataPropertyList().getProperty(i);
+            OgcProperty<Serializable> item = bean.getMetaDataPropertyList().getProperty(i);
             if (!item.hasValue() || canWriteExtension(item.getValue()))
             {
                 writer.writeStartElement(NS_URI, "metaDataProperty");
@@ -1615,7 +1615,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetIdentifier())
         {
             writer.writeStartElement(NS_URI, "identifier");
-            this.writeCodeWithAuthorityType(writer, bean.getIdentifier());
+            this.writeCodeType(writer, bean.getIdentifier());
             writer.writeEndElement();
         }
         
@@ -1623,7 +1623,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         numItems = bean.getNameList().size();
         for (int i = 0; i < numItems; i++)
         {
-            Code item = bean.getNameList().get(i);
+            CodeWithAuthority item = bean.getNameList().get(i);
             writer.writeStartElement(NS_URI, "name");
             this.writeCodeType(writer, item);
             writer.writeEndElement();
@@ -1695,9 +1695,9 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Read method for CodeType complex type
      */
-    public Code readCodeType(XMLStreamReader reader) throws XMLStreamException
+    public CodeWithAuthority readCodeType(XMLStreamReader reader) throws XMLStreamException
     {
-        Code bean = factory.newCode();
+        CodeWithAuthority bean = factory.newCode();
         
         Map<String, String> attrMap = collectAttributes(reader);
         this.readCodeTypeAttributes(attrMap, bean);
@@ -1713,7 +1713,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Reads attributes of CodeType complex type
      */
-    public void readCodeTypeAttributes(Map<String, String> attrMap, Code bean) throws XMLStreamException
+    public void readCodeTypeAttributes(Map<String, String> attrMap, CodeWithAuthority bean) throws XMLStreamException
     {
         String val;
         
@@ -1727,7 +1727,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Write method for CodeType complex type
      */
-    public void writeCodeType(XMLStreamWriter writer, Code bean) throws XMLStreamException
+    public void writeCodeType(XMLStreamWriter writer, CodeWithAuthority bean) throws XMLStreamException
     {
         this.writeCodeTypeAttributes(writer, bean);
         
@@ -1738,59 +1738,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Writes attributes of CodeType complex type
      */
-    public void writeCodeTypeAttributes(XMLStreamWriter writer, Code bean) throws XMLStreamException
+    public void writeCodeTypeAttributes(XMLStreamWriter writer, CodeWithAuthority bean) throws XMLStreamException
     {
         
         // codeSpace
         if (bean.isSetCodeSpace())
             writer.writeAttribute("codeSpace", getStringValue(bean.getCodeSpace()));
-    }
-    
-    
-    /**
-     * Read method for CodeWithAuthorityType complex type
-     */
-    public CodeWithAuthority readCodeWithAuthorityType(XMLStreamReader reader) throws XMLStreamException
-    {
-        CodeWithAuthority bean = factory.newCodeWithAuthority();
-        
-        Map<String, String> attrMap = collectAttributes(reader);
-        this.readCodeWithAuthorityTypeAttributes(attrMap, bean);
-        
-        String val = reader.getElementText();
-        if (val != null)
-            bean.setValue(trimStringValue(val));
-        
-        return bean;
-    }
-    
-    
-    /**
-     * Reads attributes of CodeWithAuthorityType complex type
-     */
-    public void readCodeWithAuthorityTypeAttributes(Map<String, String> attrMap, CodeWithAuthority bean) throws XMLStreamException
-    {
-        this.readCodeTypeAttributes(attrMap, bean);
-    }
-    
-    
-    /**
-     * Write method for CodeWithAuthorityType complex type
-     */
-    public void writeCodeWithAuthorityType(XMLStreamWriter writer, CodeWithAuthority bean) throws XMLStreamException
-    {
-        this.writeCodeWithAuthorityTypeAttributes(writer, bean);
-        
-        writer.writeCharacters(getStringValue(bean.getValue()));
-    }
-    
-    
-    /**
-     * Writes attributes of CodeWithAuthorityType complex type
-     */
-    public void writeCodeWithAuthorityTypeAttributes(XMLStreamWriter writer, CodeWithAuthority bean) throws XMLStreamException
-    {
-        this.writeCodeTypeAttributes(writer, bean);
     }
     
     
@@ -2468,7 +2421,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Read method for LocationKeyWord elements
      */
-    public Code readLocationKeyWord(XMLStreamReader reader) throws XMLStreamException
+    public CodeWithAuthority readLocationKeyWord(XMLStreamReader reader) throws XMLStreamException
     {
         boolean found = checkElementName(reader, "LocationKeyWord");
         if (!found)
@@ -2481,7 +2434,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Write method for LocationKeyWord element
      */
-    public void writeLocationKeyWord(XMLStreamWriter writer, Code bean) throws XMLStreamException
+    public void writeLocationKeyWord(XMLStreamWriter writer, CodeWithAuthority bean) throws XMLStreamException
     {
         writer.writeStartElement(NS_URI, "LocationKeyWord");
         this.writeNamespaces(writer);

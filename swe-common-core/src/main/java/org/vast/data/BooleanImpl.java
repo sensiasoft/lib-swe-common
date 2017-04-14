@@ -31,7 +31,9 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class BooleanImpl extends DataValue implements Boolean
 {
-        
+    private static final long serialVersionUID = 1009356953574382554L;
+
+
     public BooleanImpl()
     {
         this.dataType = DataType.BOOLEAN;

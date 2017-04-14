@@ -21,6 +21,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.vast.data.AbstractArrayImpl;
 import org.vast.data.XMLEncodingImpl;
+import org.vast.swe.SWEDataTypeUtils;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
 import org.vast.xml.IndentingXMLStreamWriter;
@@ -123,20 +124,7 @@ public class XmlDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws XMLStreamException
         {
             double val = data.getDoubleValue(index);
-            
-            if (Double.isFinite(val))
-            {
-                xmlWriter.writeCharacters(Double.toString(val));
-            }
-            else
-            {
-                if (val == Double.POSITIVE_INFINITY)
-                    xmlWriter.writeCharacters("+INF");
-                else if (val == Double.NEGATIVE_INFINITY)
-                    xmlWriter.writeCharacters("-INF");
-                else if (Double.isNaN(val))
-                    xmlWriter.writeCharacters("NaN");
-            }
+            xmlWriter.writeCharacters(SWEDataTypeUtils.getDoubleOrInfAsString(val));
         }
     }
     

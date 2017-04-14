@@ -34,6 +34,7 @@ import net.opengis.swe.v20.ValidationException;
  */
 public class CountImpl extends DataValue implements Count
 {
+    private static final long serialVersionUID = 2800827132780589L;
     protected OgcProperty<AllowedValues> constraint;
     
     

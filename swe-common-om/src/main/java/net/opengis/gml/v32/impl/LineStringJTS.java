@@ -14,11 +14,11 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.io.Serializable;
 import java.util.List;
 import org.vast.ogc.gml.JTSUtils;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
-import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.LineString;
@@ -35,8 +35,8 @@ import net.opengis.gml.v32.Reference;
  */
 public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implements LineString
 {
-    private static final long serialVersionUID = 1L;    
-    transient AbstractGeometryImpl geom = new AbstractGeometryImpl() { };
+    private static final long serialVersionUID = -8843421116255408427L;
+    transient AbstractGeometryImpl geom = new AbstractGeometryImpl();
     double[] posList;
     
     
@@ -79,7 +79,7 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
 
 
     @Override
-    public final OgcPropertyList<Object> getMetaDataPropertyList()
+    public final OgcPropertyList<Serializable> getMetaDataPropertyList()
     {
         return geom.getMetaDataPropertyList();
     }
@@ -257,7 +257,7 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
 
 
     @Override
-    public final List<Code> getNameList()
+    public final List<CodeWithAuthority> getNameList()
     {
         return geom.getNameList();
     }
@@ -271,7 +271,7 @@ public class LineStringJTS extends com.vividsolutions.jts.geom.LineString implem
 
 
     @Override
-    public final void addName(Code name)
+    public final void addName(CodeWithAuthority name)
     {
         geom.addName(name);
     }

@@ -18,12 +18,14 @@ import net.opengis.gml.v32.CodeWithAuthority;
 
 
 /**
- * POJO class for XML type CodeWithAuthorityType(@http://www.opengis.net/gml/3.2).
+ * POJO class for XML type CodeType(@http://www.opengis.net/gml/3.2).
  *
  */
-public class CodeWithAuthorityImpl extends CodeImpl implements CodeWithAuthority
+public class CodeWithAuthorityImpl implements CodeWithAuthority
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -758584730988314036L;
+    protected String codeSpace;
+    protected String value;
     
     
     public CodeWithAuthorityImpl()
@@ -31,9 +33,65 @@ public class CodeWithAuthorityImpl extends CodeImpl implements CodeWithAuthority
     }
     
     
+    public CodeWithAuthorityImpl(String value)
+    {
+        this.value = value;
+    }
+    
+    
     public CodeWithAuthorityImpl(String codeSpace, String value)
     {
         this.codeSpace = codeSpace;
+        this.value = value;
+    }
+    
+    
+    /**
+     * Gets the codeSpace property
+     */
+    @Override
+    public String getCodeSpace()
+    {
+        return codeSpace;
+    }
+    
+    
+    /**
+     * Checks if codeSpace is set
+     */
+    @Override
+    public boolean isSetCodeSpace()
+    {
+        return (codeSpace != null);
+    }
+    
+    
+    /**
+     * Sets the codeSpace property
+     */
+    @Override
+    public void setCodeSpace(String codeSpace)
+    {
+        this.codeSpace = codeSpace;
+    }
+    
+    
+    /**
+     * Gets the inline value
+     */
+    @Override
+    public String getValue()
+    {
+        return value;
+    }
+    
+    
+    /**
+     * Sets the inline value
+     */
+    @Override
+    public void setValue(String value)
+    {
         this.value = value;
     }
 }

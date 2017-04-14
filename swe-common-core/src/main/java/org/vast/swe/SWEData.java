@@ -43,7 +43,8 @@ import org.vast.data.DataList;
  * */
 public class SWEData extends DataList implements ISweInputDataStream, ISweOutputDataStream
 {
-    protected DataSource dataSource;
+    private static final long serialVersionUID = 1745973314151779348L;
+    protected transient DataSource dataSource;
     
 
     public SWEData()

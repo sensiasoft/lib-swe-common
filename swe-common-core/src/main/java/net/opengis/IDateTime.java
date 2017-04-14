@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis;
 
+import java.io.Serializable;
 
 /**
  * <p>
@@ -24,7 +25,7 @@ package net.opengis;
  * @author Alex Robin
  * @since Nov 7, 2014
  */
-public interface IDateTime
+public interface IDateTime extends Serializable
 {  
     
     /**

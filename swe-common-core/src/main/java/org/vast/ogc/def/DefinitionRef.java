@@ -37,6 +37,8 @@ import org.vast.ogc.xlink.CachedReference;
  * */
 public class DefinitionRef extends CachedReference<IDefinition> implements IDefinition
 {
+    private static final long serialVersionUID = -3868420723911999098L;
+
 
     public DefinitionRef()
     {

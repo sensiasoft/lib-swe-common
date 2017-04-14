@@ -16,10 +16,9 @@ package net.opengis.gml.v32.impl;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.IDateTime;
-import net.opengis.gml.v32.Code;
+import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.CodeList;
 import net.opengis.gml.v32.CodeOrNilReasonList;
-import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.FeatureCollection;
 import net.opengis.gml.v32.LineString;
@@ -137,14 +136,7 @@ public class GMLFactory implements Factory
     
     
     @Override
-    public final Code newCode()
-    {
-        return new CodeImpl();
-    }
-    
-    
-    @Override
-    public final CodeWithAuthority newCodeWithAuthority()
+    public final CodeWithAuthority newCode()
     {
         return new CodeWithAuthorityImpl();
     }

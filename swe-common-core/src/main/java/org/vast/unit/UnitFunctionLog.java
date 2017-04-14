@@ -33,6 +33,7 @@ import org.vast.util.NumberUtils;
  * */
 public class UnitFunctionLog extends UnitFunction
 {
+    private static final long serialVersionUID = -4017878542967337089L;
     protected boolean eBase;
     protected double logBase;
     

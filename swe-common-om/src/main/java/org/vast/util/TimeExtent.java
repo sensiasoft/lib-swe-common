@@ -13,6 +13,7 @@
 
 package org.vast.util;
 
+import java.io.Serializable;
 
 /**
  * <p>
@@ -24,11 +25,12 @@ package org.vast.util;
  * @author Tony Cook, Mike Botts, Alexandre Robin
  * @since Nov 15, 2005
  * */
-public class TimeExtent
+public class TimeExtent implements Serializable
 {
-    public final static double NOW_ACCURACY = 1000.;    
-    public final static double UNKNOWN = Double.MAX_VALUE;
-    public final static double NOW = Double.MIN_VALUE;
+    private static final long serialVersionUID = -5475380061967935208L;
+    public static final double NOW_ACCURACY = 1000.;    
+    public static final double UNKNOWN = Double.MAX_VALUE;
+    public static final double NOW = Double.MIN_VALUE;
     
     protected double baseTime = Double.NaN;
     protected double timeBias = 0;

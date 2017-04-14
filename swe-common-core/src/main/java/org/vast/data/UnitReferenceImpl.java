@@ -17,6 +17,7 @@ package org.vast.data;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
 import org.vast.unit.UnitParserURI;
+import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.UnitReference;
 
 
@@ -25,9 +26,9 @@ import net.opengis.swe.v20.UnitReference;
  *
  * This is a complex type.
  */
-public class UnitReferenceImpl extends net.opengis.OgcPropertyImpl<Unit> implements UnitReference
+public class UnitReferenceImpl extends OgcPropertyImpl<Unit> implements UnitReference
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -8469424674470879793L;
     protected String code;
     
     

@@ -14,11 +14,11 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.io.Serializable;
 import java.util.List;
 import org.vast.ogc.gml.JTSUtils;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
-import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.Point;
@@ -35,8 +35,8 @@ import net.opengis.gml.v32.Reference;
  */
 public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 {
-    static final long serialVersionUID = 1L;
-    transient AbstractGeometryImpl geom = new AbstractGeometryImpl() { };
+    private static final long serialVersionUID = -5151123418510314756L;
+    transient AbstractGeometryImpl geom = new AbstractGeometryImpl();
     double[] pos;
     
     
@@ -80,7 +80,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 
 
     @Override
-    public OgcPropertyList<Object> getMetaDataPropertyList()
+    public OgcPropertyList<Serializable> getMetaDataPropertyList()
     {
         return geom.getMetaDataPropertyList();
     }
@@ -258,7 +258,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 
 
     @Override
-    public List<Code> getNameList()
+    public List<CodeWithAuthority> getNameList()
     {
         return geom.getNameList();
     }
@@ -272,7 +272,7 @@ public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 
 
     @Override
-    public void addName(Code name)
+    public void addName(CodeWithAuthority name)
     {
         geom.addName(name);
     }

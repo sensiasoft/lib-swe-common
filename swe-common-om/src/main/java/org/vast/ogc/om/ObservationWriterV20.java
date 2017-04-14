@@ -26,7 +26,7 @@ package org.vast.ogc.om;
 import java.text.NumberFormat;
 import java.util.Map.Entry;
 import net.opengis.gml.v32.AbstractFeature;
-import net.opengis.gml.v32.Code;
+import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
@@ -94,7 +94,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         }
         
         // names
-        for (Code name: obs.getNameList())
+        for (CodeWithAuthority name: obs.getNameList())
         {
             Element nameElt = dom.addElement(obsElt, "+gml:name");
             dom.setElementValue(nameElt, name.getValue());

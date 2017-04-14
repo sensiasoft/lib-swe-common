@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.swe.v20;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -23,7 +24,7 @@ import java.util.List;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface AbstractSWE
+public interface AbstractSWE extends Serializable
 {
     
     

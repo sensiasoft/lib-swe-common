@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.swe.v20;
 
+import net.opengis.OgcProperty;
 
 
 /**
@@ -21,7 +22,7 @@ package net.opengis.swe.v20;
  *
  * This is a complex type.
  */
-public interface EncodedValues extends net.opengis.OgcProperty<Object>
+public interface EncodedValues extends OgcProperty<byte[]>
 {
    
     public void setAsText(DataArray array, DataEncoding encoding, String text);

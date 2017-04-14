@@ -33,7 +33,7 @@ import net.opengis.swe.v20.Vector;
  */
 public class VectorImpl extends AbstractRecordImpl<ScalarComponent> implements Vector
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -4376114617327479016L;
     protected String referenceFrame = "";
     protected String localFrame;
     

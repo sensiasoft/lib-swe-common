@@ -26,13 +26,14 @@ import net.opengis.swe.v20.BinaryBlock;
  */
 public class BinaryBlockImpl extends AbstractSWEImpl implements BinaryBlock, HasCopy
 {
+    private static final long serialVersionUID = -6788580225905370088L;
     protected String compression;
     protected String encryption;
     protected Integer paddingBytesAfter;
     protected Integer paddingBytesBefore;
     protected Long byteLength;
     protected String ref = "";
-    protected CompressedStreamParser reader;
+    protected transient CompressedStreamParser reader;
     
     
     public BinaryBlockImpl()

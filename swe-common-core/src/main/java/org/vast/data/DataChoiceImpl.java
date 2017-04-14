@@ -35,7 +35,8 @@ import net.opengis.swe.v20.ValidationException;
  * */
 public class DataChoiceImpl extends AbstractDataComponentImpl implements DataChoice
 {
-	protected static int UNSELECTED = -1;
+	private static final long serialVersionUID = 750849855531148406L;
+    protected static int UNSELECTED = -1;
 	protected static String UNSELECTED_ERROR = "No item was selected in DataChoice ";
 	protected int selected = UNSELECTED;
 	protected Category choiceValue;
@@ -212,7 +213,7 @@ public class DataChoiceImpl extends AbstractDataComponentImpl implements DataCho
     /**
      * Check that the integer index given is in range: 0 to item list size
      * @param index int
-     * @throws DataException
+     * @throws IndexOutOfBoundsException
      */
     protected void checkIndex(int index)
     {

@@ -14,7 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
-
+import java.io.Serializable;
+import net.opengis.OgcProperty;
 
 /**
  * POJO class for XML type ReferenceType(@http://www.opengis.net/gml/3.2).
@@ -22,7 +23,7 @@ package net.opengis.gml.v32;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface Reference extends net.opengis.OgcProperty<Object>
+public interface Reference extends OgcProperty<Serializable>
 {
     
     /**

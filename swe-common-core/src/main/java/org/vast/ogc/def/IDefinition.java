@@ -23,6 +23,7 @@
 
 package org.vast.ogc.def;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -34,7 +35,7 @@ import java.util.List;
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public interface IDefinition
+public interface IDefinition extends Serializable
 {
     public String getIdentifier();
     

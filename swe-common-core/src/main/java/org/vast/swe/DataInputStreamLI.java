@@ -237,10 +237,12 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     {
         int total = 0;
         int cur = 0;
+        long remaining = (long)n;
         
-        while ((total < n) && ((cur = (int) in.skip(n-total)) > 0))
+        while ((total < n) && ((cur = (int) in.skip(remaining)) > 0))
         {
             total += cur;
+            remaining -= cur;
         }
 
         return total;

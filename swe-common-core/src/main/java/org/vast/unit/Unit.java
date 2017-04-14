@@ -20,6 +20,7 @@
 
 package org.vast.unit;
 
+import java.io.Serializable;
 import org.vast.util.NumberUtils;
 
 /**
@@ -30,8 +31,10 @@ import org.vast.util.NumberUtils;
  * @author Alex Robin
  * @since May 4, 2006
  * */
-public class Unit
+public class Unit implements Serializable
 {
+    private static final long serialVersionUID = -5219489147804299847L;
+    
     protected String name;
     protected String code;
     protected String printSymbol;

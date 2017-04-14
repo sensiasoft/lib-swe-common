@@ -14,13 +14,42 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
-
+import java.io.Serializable;
 
 /**
- * POJO class for XML type CodeWithAuthorityType(@http://www.opengis.net/gml/3.2).
+ * POJO class for XML type CodeType(@http://www.opengis.net/gml/3.2).
  *
  */
-public interface CodeWithAuthority extends Code
+@SuppressWarnings("javadoc")
+public interface CodeWithAuthority extends Serializable
 {
     
+    /**
+     * Gets the codeSpace property
+     */
+    public String getCodeSpace();
+    
+    
+    /**
+     * Checks if codeSpace is set
+     */
+    public boolean isSetCodeSpace();
+    
+    
+    /**
+     * Sets the codeSpace property
+     */
+    public void setCodeSpace(String codeSpace);
+    
+    
+    /**
+     * Gets the inline value
+     */
+    public String getValue();
+    
+    
+    /**
+     * Sets the inline value
+     */
+    public void setValue(String value);
 }

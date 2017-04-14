@@ -14,12 +14,12 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.vast.ogc.gml.JTSUtils;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.OgcPropertyList;
-import net.opengis.gml.v32.Code;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.LinearRing;
@@ -37,8 +37,8 @@ import net.opengis.gml.v32.Reference;
  */
 public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements Polygon
 {
-    private static final long serialVersionUID = 1L;    
-    transient AbstractGeometryImpl geom = new AbstractGeometryImpl() { };
+    private static final long serialVersionUID = 3200774256059210125L;
+    transient AbstractGeometryImpl geom = new AbstractGeometryImpl();
     transient LinearRing exterior;
     
     @SuppressWarnings("serial")
@@ -120,7 +120,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
 
 
     @Override
-    public final OgcPropertyList<Object> getMetaDataPropertyList()
+    public final OgcPropertyList<Serializable> getMetaDataPropertyList()
     {
         return geom.getMetaDataPropertyList();
     }
@@ -309,7 +309,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
 
 
     @Override
-    public final List<Code> getNameList()
+    public final List<CodeWithAuthority> getNameList()
     {
         return geom.getNameList();
     }
@@ -323,7 +323,7 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
 
 
     @Override
-    public final void addName(Code name)
+    public final void addName(CodeWithAuthority name)
     {
         geom.addName(name);
     }

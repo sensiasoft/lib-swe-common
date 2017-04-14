@@ -33,6 +33,7 @@ import net.opengis.swe.v20.DataComponent;
  */
 public class DataComponentPropertyList<ComponentType extends DataComponent> extends OgcPropertyList<ComponentType>
 {
+    private static final long serialVersionUID = -7810621773444025503L;
     AbstractDataComponentImpl parent;
     
     

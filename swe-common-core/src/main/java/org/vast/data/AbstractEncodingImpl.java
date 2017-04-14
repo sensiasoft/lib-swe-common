@@ -24,8 +24,9 @@ import net.opengis.swe.v20.DataEncoding;
  */
 public abstract class AbstractEncodingImpl extends AbstractSWEImpl implements DataEncoding
 {
-    
-    
+    private static final long serialVersionUID = -5192248899795514105L;
+
+
     public AbstractEncodingImpl()
     {
     }
