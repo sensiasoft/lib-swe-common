@@ -14,13 +14,13 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
-
+import java.io.Serializable;
 
 /**
  * POJO class for XML type AbstractRingType(@http://www.opengis.net/gml/3.2).
  *
  * This is a complex type.
  */
-public interface AbstractRing
+public interface AbstractRing extends Serializable
 {
 }

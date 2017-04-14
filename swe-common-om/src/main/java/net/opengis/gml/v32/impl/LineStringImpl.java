@@ -25,7 +25,7 @@ import net.opengis.gml.v32.LineString;
  */
 public class LineStringImpl extends AbstractCurveImpl implements LineString
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7975794768843147648L;
     protected double[] posList;
     
     

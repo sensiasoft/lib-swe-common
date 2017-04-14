@@ -26,7 +26,7 @@ import net.opengis.gml.v32.TimePosition;
  */
 public class TimeInstantImpl extends AbstractTimeGeometricPrimitiveImpl implements TimeInstant
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -4839211806785133760L;
     protected TimePosition timePosition;
     
     

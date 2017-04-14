@@ -24,7 +24,7 @@ import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
  */
 public abstract class AbstractTimeGeometricPrimitiveImpl extends AbstractTimePrimitiveImpl implements AbstractTimeGeometricPrimitive
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1243705128803944313L;
     protected String frame;
     
     

@@ -14,14 +14,14 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
-
+import java.io.Serializable;
 
 /**
  * POJO class for XML type TimeIntervalLengthType(@http://www.opengis.net/gml/3.2).
  *
  */
 @SuppressWarnings("javadoc")
-public interface TimeIntervalLength
+public interface TimeIntervalLength extends Serializable
 {
     
     /**

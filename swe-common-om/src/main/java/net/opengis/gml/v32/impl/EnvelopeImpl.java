@@ -26,7 +26,7 @@ import net.opengis.gml.v32.Envelope;
  */
 public class EnvelopeImpl implements Envelope
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7116070138059440115L;
     protected double[] lowerCorner;
     protected double[] upperCorner;
     protected String srsName;

@@ -31,7 +31,7 @@ import net.opengis.gml.v32.TimePosition;
  */
 public class TimePositionImpl implements TimePosition
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3817504721461988594L;
     protected String frame;
     protected String calendarEraName;
     protected TimeIndeterminateValue indeterminatePosition;

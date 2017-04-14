@@ -42,22 +42,4 @@ public interface FeatureCollection extends AbstractFeature
      * Adds a new featureMember property
      */
     public void addFeatureMember(AbstractFeature featureMember);
-    
-    
-    /**
-     * Gets the featureMembers property
-     */
-    public AbstractFeature getFeatureMembers();
-    
-    
-    /**
-     * Checks if featureMembers is set
-     */
-    public boolean isSetFeatureMembers();
-    
-    
-    /**
-     * Sets the featureMembers property
-     */
-    public void setFeatureMembers(AbstractFeature featureMembers);
 }

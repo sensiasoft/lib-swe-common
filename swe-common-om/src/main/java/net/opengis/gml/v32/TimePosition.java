@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32;
 
+import java.io.Serializable;
 import net.opengis.IDateTime;
 
 
@@ -27,7 +28,7 @@ import net.opengis.IDateTime;
  *     double
  */
 @SuppressWarnings("javadoc")
-public interface TimePosition
+public interface TimePosition extends Serializable
 {
     
     

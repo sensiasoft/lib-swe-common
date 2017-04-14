@@ -24,7 +24,7 @@ import net.opengis.gml.v32.LinearRing;
  */
 public class LinearRingImpl implements LinearRing
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5727812095477893201L;
     protected double[] posList;
     
     

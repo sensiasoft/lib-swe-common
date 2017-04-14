@@ -24,7 +24,7 @@ import net.opengis.gml.v32.TimeUnit;
  */
 public class TimeIntervalLengthImpl implements TimeIntervalLength
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -2034897023968381686L;
     protected TimeUnit unit = TimeUnit.SECOND;
     protected Integer radix;
     protected Integer factor;

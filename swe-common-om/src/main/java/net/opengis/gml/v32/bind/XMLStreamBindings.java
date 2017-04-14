@@ -208,19 +208,6 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             }
         }
         while (found);
-        
-        // featureMembers
-        found = checkElementName(reader, "featureMembers");
-        if (found)
-        {
-            reader.nextTag();
-            AbstractFeature featureMembers = this.readAbstractFeature(reader);
-            if (featureMembers != null)
-                bean.setFeatureMembers(featureMembers);
-            
-            reader.nextTag(); // end property tag
-            reader.nextTag();
-        }
     }
     
     
@@ -249,14 +236,6 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             writer.writeStartElement(NS_URI, "featureMember");
             writePropertyAttributes(writer, item);
             this.writeAbstractFeature(writer, item.getValue());
-            writer.writeEndElement();
-        }
-        
-        // featureMembers
-        if (bean.isSetFeatureMembers())
-        {
-            writer.writeStartElement(NS_URI, "featureMembers");
-            this.writeAbstractFeature(writer, bean.getFeatureMembers());
             writer.writeEndElement();
         }
     }

@@ -25,7 +25,7 @@ import net.opengis.gml.v32.Point;
  */
 public class PointImpl extends AbstractGeometryImpl implements Point
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 3783995735670295600L;
     protected double[] pos;
     
     

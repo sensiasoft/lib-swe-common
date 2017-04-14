@@ -29,7 +29,7 @@ import net.opengis.gml.v32.Envelope;
  */
 public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements AbstractFeature
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7915849537365579906L;
     protected QName qName;
     protected Envelope boundedBy;
     protected OgcProperty<AbstractGeometry> location;

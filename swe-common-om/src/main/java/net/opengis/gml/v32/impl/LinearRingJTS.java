@@ -28,7 +28,7 @@ import net.opengis.gml.v32.LinearRing;
  */
 public class LinearRingJTS extends com.vividsolutions.jts.geom.LinearRing implements LinearRing
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4092205008825991782L;
     protected double[] posList;
     
     

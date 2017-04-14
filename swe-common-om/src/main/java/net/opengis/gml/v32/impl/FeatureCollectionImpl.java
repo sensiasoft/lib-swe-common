@@ -26,10 +26,9 @@ import net.opengis.gml.v32.FeatureCollection;
  */
 public class FeatureCollectionImpl extends AbstractFeatureImpl implements FeatureCollection
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 205617168330167795L;
     protected OgcPropertyList<AbstractFeature> featureMemberList = new OgcPropertyList<AbstractFeature>();
-    protected AbstractFeature featureMembers;
-    
+        
     
     public FeatureCollectionImpl()
     {
@@ -65,35 +64,5 @@ public class FeatureCollectionImpl extends AbstractFeatureImpl implements Featur
     public void addFeatureMember(AbstractFeature featureMember)
     {
         this.featureMemberList.add(featureMember);
-    }
-    
-    
-    /**
-     * Gets the featureMembers property
-     */
-    @Override
-    public AbstractFeature getFeatureMembers()
-    {
-        return featureMembers;
-    }
-    
-    
-    /**
-     * Checks if featureMembers is set
-     */
-    @Override
-    public boolean isSetFeatureMembers()
-    {
-        return (featureMembers != null);
-    }
-    
-    
-    /**
-     * Sets the featureMembers property
-     */
-    @Override
-    public void setFeatureMembers(AbstractFeature featureMembers)
-    {
-        this.featureMembers = featureMembers;
     }
 }

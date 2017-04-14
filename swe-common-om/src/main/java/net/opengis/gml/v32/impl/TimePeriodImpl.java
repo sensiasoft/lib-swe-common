@@ -31,7 +31,7 @@ import net.opengis.gml.v32.TimeUnit;
  */
 public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implements TimePeriod
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 4613175319083770747L;
     protected TimePosition beginPosition;
     protected OgcProperty<TimeInstant> begin;
     protected TimePosition endPosition;

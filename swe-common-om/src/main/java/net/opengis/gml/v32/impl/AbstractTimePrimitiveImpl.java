@@ -25,7 +25,7 @@ import net.opengis.gml.v32.AbstractTimePrimitive;
  */
 public abstract class AbstractTimePrimitiveImpl extends AbstractGMLImpl implements AbstractTimePrimitive
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -2509273429785476571L;
     protected OgcPropertyList<AbstractTimePrimitive> relatedTimeList = new OgcPropertyList<AbstractTimePrimitive>();
     
     

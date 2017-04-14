@@ -24,7 +24,6 @@ import net.opengis.gml.v32.CodeOrNilReasonList;
  */
 public class CodeOrNilReasonListImpl implements CodeOrNilReasonList
 {
-    static final long serialVersionUID = 1L;
     protected String codeSpace;
     
     

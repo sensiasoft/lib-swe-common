@@ -27,7 +27,7 @@ import net.opengis.gml.v32.Envelope;
  */
 public class EnvelopeJTS extends com.vividsolutions.jts.geom.Envelope implements Envelope
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 9013205842041680887L;
     protected String srsName;
     protected Integer srsDimension;
     protected String[] axisLabels;

@@ -28,9 +28,9 @@ import net.opengis.gml.v32.Polygon;
  */
 public class PolygonImpl extends AbstractGeometryImpl implements Polygon
 {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -3961633226145543311L;
     protected LinearRing exterior;
-    protected List<LinearRing> interiorList = new ArrayList<LinearRing>();
+    protected ArrayList<LinearRing> interiorList = new ArrayList<LinearRing>();
     
     
     @SuppressWarnings("unused")
