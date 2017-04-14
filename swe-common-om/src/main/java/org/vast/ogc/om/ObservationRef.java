@@ -31,10 +31,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
-import net.opengis.OgcProperty;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.swe.v20.DataComponent;
-import org.vast.ogc.def.IDefinition;
+import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.xlink.IReferenceResolver;
@@ -143,14 +142,14 @@ public class ObservationRef extends FeatureRef implements IObservation
 
 
     @Override
-    public OgcProperty<IDefinition> getObservedProperty()
+    public DefinitionRef getObservedProperty()
     {
         return getTarget().getObservedProperty();
     }
 
 
     @Override
-    public void setObservedProperty(OgcProperty<IDefinition> propRef)
+    public void setObservedProperty(DefinitionRef propRef)
     {
         getTarget().setObservedProperty(propRef);
     }

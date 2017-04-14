@@ -25,10 +25,9 @@ package org.vast.ogc.om;
 
 import java.util.List;
 import java.util.Map;
-import net.opengis.OgcProperty;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.swe.v20.DataComponent;
-import org.vast.ogc.def.IDefinition;
+import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
@@ -68,9 +67,9 @@ public interface IObservation extends GenericFeature
     
     public void setValidTime(TimeExtent time);
     
-    public OgcProperty<IDefinition> getObservedProperty();
+    public DefinitionRef getObservedProperty();
     
-    public void setObservedProperty(OgcProperty<IDefinition> propRef);
+    public void setObservedProperty(DefinitionRef propRef);
     
     public AbstractFeature getFeatureOfInterest();
     

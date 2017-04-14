@@ -24,7 +24,7 @@
 package org.vast.ogc.def;
 
 import java.util.List;
-import org.vast.ogc.xlink.CachedReference;
+import net.opengis.OgcPropertyImpl;
 
 
 /**
@@ -35,10 +35,9 @@ import org.vast.ogc.xlink.CachedReference;
  * @author Alex Robin
  * @since Sep 29, 2012
  * */
-public class DefinitionRef extends CachedReference<IDefinition> implements IDefinition
+public class DefinitionRef extends OgcPropertyImpl<IDefinition> implements IDefinition
 {
     private static final long serialVersionUID = -3868420723911999098L;
-
 
     public DefinitionRef()
     {

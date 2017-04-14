@@ -23,11 +23,9 @@
 
 package org.vast.ogc.om;
 
-import net.opengis.OgcProperty;
-import net.opengis.OgcPropertyImpl;
 import net.opengis.gml.v32.impl.CodeWithAuthorityImpl;
 import net.opengis.swe.v20.DataComponent;
-import org.vast.ogc.def.IDefinition;
+import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLUtils;
 import org.vast.ogc.gml.GenericFeature;
@@ -178,7 +176,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         Element obsPropElt = dom.getElement(obsElt, "observedProperty");
         if (obsPropElt != null && !obsPropElt.hasAttribute("nil"))
         {
-            OgcProperty<IDefinition> ref = new OgcPropertyImpl<IDefinition>();
+            DefinitionRef ref = new DefinitionRef();
             XlinkUtils.readXlinkAttributes(dom, obsPropElt, ref);
             obs.setObservedProperty(ref);
         }
