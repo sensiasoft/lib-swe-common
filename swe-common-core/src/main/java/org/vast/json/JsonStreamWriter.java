@@ -19,7 +19,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 import org.vast.util.NumberUtils;
 import com.google.gson.stream.JsonWriter;
@@ -55,7 +54,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     }
 
 
-    public JsonStreamWriter(OutputStream os, String encoding) throws XMLStreamException
+    public JsonStreamWriter(OutputStream os, String encoding) throws JsonStreamException
     {
         try
         {
@@ -67,7 +66,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (UnsupportedEncodingException e)
         {
-            throw new XMLStreamException("Cannot instantiate JSON writer", e);
+            throw new JsonStreamException("Cannot instantiate JSON writer", e);
         }
     }
 
@@ -113,7 +112,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeStartDocument() throws XMLStreamException
+    public void writeStartDocument() throws JsonStreamException
     {
         /*try
         {
@@ -123,27 +122,27 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (IOException e)
         {
-            throw new XMLStreamException("Error when starting root object", e);
+            throw new JsonStreamException("Error when starting root object", e);
         }*/
     }
 
 
     @Override
-    public void writeStartDocument(String version) throws XMLStreamException
+    public void writeStartDocument(String version) throws JsonStreamException
     {
         writeStartDocument();
     }
 
 
     @Override
-    public void writeStartDocument(String encoding, String version) throws XMLStreamException
+    public void writeStartDocument(String encoding, String version) throws JsonStreamException
     {
         writeStartDocument();
     }
 
 
     @Override
-    public void writeEndDocument() throws XMLStreamException
+    public void writeEndDocument() throws JsonStreamException
     {
         try
         {
@@ -154,7 +153,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (IOException e)
         {
-            throw new XMLStreamException("Error when closing root object", e);
+            throw new JsonStreamException("Error when closing root object", e);
         }
     }
 
@@ -195,7 +194,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeStartElement(String prefix, String localName, String namespaceURI) throws XMLStreamException
+    public void writeStartElement(String prefix, String localName, String namespaceURI) throws JsonStreamException
     {
         try
         {
@@ -248,27 +247,27 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (IOException e)
         {
-            throw new XMLStreamException("Error starting JSON object " + localName, e);
+            throw new JsonStreamException("Error starting JSON object " + localName, e);
         }
     }
 
 
     @Override
-    public void writeStartElement(String namespaceURI, String localName) throws XMLStreamException
+    public void writeStartElement(String namespaceURI, String localName) throws JsonStreamException
     {
         writeStartElement(null, localName, namespaceURI);
     }
 
 
     @Override
-    public void writeStartElement(String localName) throws XMLStreamException
+    public void writeStartElement(String localName) throws JsonStreamException
     {
         writeStartElement(null, localName, null);
     }
 
 
     @Override
-    public void writeEmptyElement(String localName) throws XMLStreamException
+    public void writeEmptyElement(String localName) throws JsonStreamException
     {
         try
         {
@@ -280,13 +279,13 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (IOException e)
         {
-            throw new XMLStreamException("Error writing empty JSON object " + localName, e);
+            throw new JsonStreamException("Error writing empty JSON object " + localName, e);
         }
     }
 
 
     @Override
-    public void writeEmptyElement(String namespaceURI, String localName) throws XMLStreamException
+    public void writeEmptyElement(String namespaceURI, String localName) throws JsonStreamException
     {
         // no namespace support -> use only local name
         writeEmptyElement(localName);
@@ -294,7 +293,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeEmptyElement(String prefix, String localName, String namespaceURI) throws XMLStreamException
+    public void writeEmptyElement(String prefix, String localName, String namespaceURI) throws JsonStreamException
     {
         // no namespace support -> use only local name
         writeEmptyElement(localName);
@@ -302,7 +301,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeEndElement() throws XMLStreamException
+    public void writeEndElement() throws JsonStreamException
     {
         try
         {
@@ -333,7 +332,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (IOException e)
         {
-            throw new XMLStreamException("Error closing JSON object", e);
+            throw new JsonStreamException("Error closing JSON object", e);
         }
     }
 
@@ -355,7 +354,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeAttribute(String localName, String value) throws XMLStreamException
+    public void writeAttribute(String localName, String value) throws JsonStreamException
     {
         try
         {
@@ -372,13 +371,13 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (IOException e)
         {
-            throw new XMLStreamException("Error writing attribute " + localName, e);
+            throw new JsonStreamException("Error writing attribute " + localName, e);
         }
     }
 
 
     @Override
-    public void writeAttribute(String namespaceURI, String localName, String value) throws XMLStreamException
+    public void writeAttribute(String namespaceURI, String localName, String value) throws JsonStreamException
     {
         // no namespace support -> use only local name
         writeAttribute(localName, value);
@@ -386,7 +385,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeAttribute(String prefix, String namespaceURI, String localName, String value) throws XMLStreamException
+    public void writeAttribute(String prefix, String namespaceURI, String localName, String value) throws JsonStreamException
     {
         // no namespace support -> use only local name
         writeAttribute(localName, value);
@@ -394,7 +393,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeCharacters(String text) throws XMLStreamException
+    public void writeCharacters(String text) throws JsonStreamException
     {
         try
         {
@@ -414,13 +413,13 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (IOException e)
         {
-            throw new XMLStreamException("Error writing JSON value", e);
+            throw new JsonStreamException("Error writing JSON value", e);
         }
     }
 
 
     @Override
-    public void writeCharacters(char[] text, int start, int len) throws XMLStreamException
+    public void writeCharacters(char[] text, int start, int len) throws JsonStreamException
     {
         writeCharacters(new String(text, start, len));
     }
@@ -435,7 +434,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public String getPrefix(String uri) throws XMLStreamException
+    public String getPrefix(String uri) throws JsonStreamException
     {
         // no namespace support
         return null;
@@ -443,28 +442,28 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void setDefaultNamespace(String uri) throws XMLStreamException
+    public void setDefaultNamespace(String uri) throws JsonStreamException
     {
         // no namespace support
     }
 
 
     @Override
-    public void setNamespaceContext(NamespaceContext context) throws XMLStreamException
+    public void setNamespaceContext(NamespaceContext context) throws JsonStreamException
     {
         // no namespace support
     }
 
 
     @Override
-    public void setPrefix(String prefix, String uri) throws XMLStreamException
+    public void setPrefix(String prefix, String uri) throws JsonStreamException
     {
         // no namespace support
     }
 
 
     @Override
-    public void writeCData(String data) throws XMLStreamException
+    public void writeCData(String data) throws JsonStreamException
     {
         // CData is not supported in JSON
         // ignore silently
@@ -472,7 +471,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeComment(String data) throws XMLStreamException
+    public void writeComment(String data) throws JsonStreamException
     {
         // comments are not supported in JSON
         // ignore silently
@@ -480,7 +479,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeDTD(String dtd) throws XMLStreamException
+    public void writeDTD(String dtd) throws JsonStreamException
     {
         // no DTD support
         // ignore silently
@@ -488,7 +487,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeEntityRef(String name) throws XMLStreamException
+    public void writeEntityRef(String name) throws JsonStreamException
     {
         // entities not supported in JSON
         // ignore silently
@@ -496,7 +495,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeDefaultNamespace(String namespaceURI) throws XMLStreamException
+    public void writeDefaultNamespace(String namespaceURI) throws JsonStreamException
     {
         // no namespace support
         // ignore silently
@@ -504,7 +503,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeNamespace(String prefix, String namespaceURI) throws XMLStreamException
+    public void writeNamespace(String prefix, String namespaceURI) throws JsonStreamException
     {
         // no namespace support
         // ignore silently
@@ -512,7 +511,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeProcessingInstruction(String target) throws XMLStreamException
+    public void writeProcessingInstruction(String target) throws JsonStreamException
     {
         // processing instructions not supported in JSON
         // ignore silently
@@ -520,7 +519,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void writeProcessingInstruction(String target, String data) throws XMLStreamException
+    public void writeProcessingInstruction(String target, String data) throws JsonStreamException
     {
         // processing instructions not supported in JSON
         // ignore silently
@@ -535,7 +534,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
 
     @Override
-    public void flush() throws XMLStreamException
+    public void flush() throws JsonStreamException
     {
         try
         {
@@ -543,13 +542,13 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (IOException e)
         {
-            throw new XMLStreamException("Error when flushing JSON writer", e);
+            throw new JsonStreamException("Error when flushing JSON writer", e);
         }
     }
 
 
     @Override
-    public void close() throws XMLStreamException
+    public void close() throws JsonStreamException
     {
         try
         {
@@ -557,7 +556,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (IOException e)
         {
-            throw new XMLStreamException("Error when closing JSON writer", e);
+            throw new JsonStreamException("Error when closing JSON writer", e);
         }
     }
 }

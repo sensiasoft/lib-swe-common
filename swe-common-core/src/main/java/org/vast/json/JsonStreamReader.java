@@ -25,7 +25,6 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -65,26 +64,10 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
         public boolean isTextOnly;
         public boolean consumeText;
         public boolean insertObject;
-    }    
-    
-    
-    public static class JsonStreamException extends XMLStreamException
-    {
-        private static final long serialVersionUID = -4151694168269965972L;
-
-        public JsonStreamException(String msg)
-        {
-            super(msg);
-        }
-        
-        public JsonStreamException(IOException e)
-        {
-            super(e.getMessage(), e.getCause());
-        }
     }
     
     
-    public JsonStreamReader(InputStream is, String encoding) throws XMLStreamException
+    public JsonStreamReader(InputStream is, String encoding) throws JsonStreamException
     {
         try
         {
@@ -93,7 +76,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
         }
         catch (UnsupportedEncodingException e)
         {
-            throw new XMLStreamException("Cannot instantiate JSON parser", e);
+            throw new JsonStreamException("Cannot instantiate JSON parser", e);
         }
     }
     
@@ -135,7 +118,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     
     
     @Override
-    public int next() throws XMLStreamException
+    public int next() throws JsonStreamException
     {
         if (currentContext != null && currentContext.consumeText)
         {
@@ -149,7 +132,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
 
 
     @Override
-    public int nextTag() throws XMLStreamException
+    public int nextTag() throws JsonStreamException
     {
         // if it was a text only element, generate close event
         if (currentContext.isTextOnly)
@@ -289,7 +272,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
         }
         catch (IOException e)
         {
-            throw new JsonStreamException(e);
+            throw new JsonStreamException("Cannot parse next JSON element", e);
         }
     }
     
@@ -351,7 +334,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
 
 
     @Override
-    public String getElementText() throws XMLStreamException
+    public String getElementText() throws JsonStreamException
     {
         if (currentContext.text == null)
             throw new IllegalStateException();
@@ -490,7 +473,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
 
 
     @Override
-    public int getTextCharacters(int sourceStart, char[] target, int targetStart, int length) throws XMLStreamException
+    public int getTextCharacters(int sourceStart, char[] target, int targetStart, int length) throws JsonStreamException
     {
         throw new UnsupportedOperationException();
     }
@@ -518,7 +501,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
 
 
     @Override
-    public boolean hasNext() throws XMLStreamException
+    public boolean hasNext() throws JsonStreamException
     {
         try
         {
@@ -574,7 +557,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     
 
     @Override
-    public void require(int type, String namespaceURI, String localName) throws XMLStreamException
+    public void require(int type, String namespaceURI, String localName) throws JsonStreamException
     {
         if (type != eventType || (currentContext != null && !localName.equals(currentContext.eltName)))
             throw new JsonStreamException("Unexpected JSON data");
@@ -624,7 +607,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     
     
     @Override
-    public void close() throws XMLStreamException
+    public void close() throws JsonStreamException
     {
         try
         {

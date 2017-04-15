@@ -17,7 +17,7 @@ package org.vast.swe.json;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.stream.XMLStreamException;
+import org.vast.json.JsonStreamException;
 import org.vast.json.JsonStreamWriter;
 
 
@@ -31,7 +31,7 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     protected Map<String, Map<String, String>> numerics = new HashMap<String, Map<String, String>>();
     
     
-    public SWEJsonStreamWriter(OutputStream os, String encoding) throws XMLStreamException
+    public SWEJsonStreamWriter(OutputStream os, String encoding) throws JsonStreamException
     {
         super(os, encoding);
         this.markAttributes = false;
