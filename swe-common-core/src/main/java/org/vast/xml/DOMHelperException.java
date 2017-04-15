@@ -20,8 +20,10 @@
 
 package org.vast.xml;
 
+import java.io.IOException;
 
-public class DOMHelperException extends Exception
+
+public class DOMHelperException extends IOException
 {
     static final long serialVersionUID = 0;
 	
