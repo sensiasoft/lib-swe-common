@@ -459,7 +459,7 @@ public class GMLUtils extends XMLBindingsUtils
             {
                 if (timeExtent.getLeadTimeDelta() > 0.0 && timeExtent.getLagTimeDelta() > 0.0)
                 {
-                    double now = System.currentTimeMillis() / 1000;
+                    double now = System.currentTimeMillis() / 1000.;
                     beginPosition.setDecimalValue(now - timeExtent.getLagTimeDelta());
                     endPosition.setDecimalValue(now + timeExtent.getLeadTimeDelta());
                 }
