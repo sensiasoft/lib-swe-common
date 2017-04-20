@@ -39,7 +39,7 @@ import org.vast.cdm.common.DataInputExt;
  * */
 public class DataInputStreamLI extends FilterInputStream implements DataInputExt
 {
-    private byte b[] = new byte[8];
+    private byte[] b = new byte[8];
     
     
 	public DataInputStreamLI(InputStream is)
@@ -54,7 +54,7 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
         int ch = in.read();
         if (ch < 0)
             throw new EOFException();
-        return (ch != 0);
+        return ch != 0;
     }
     
     
@@ -81,79 +81,61 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     @Override
     public short readShort() throws IOException
     {
-        this.readFully(b, 0, 2);
-        
-        int val = ((b[1] & 0xff) << 8) | (b[0] & 0xff);
-        
-        return (short)val;
+        readFully(b, 0, 2);
+        return (short) (((b[1] & 0xff) << 8) | (b[0] & 0xff));
     }
 
 
     @Override
     public int readUnsignedShort() throws IOException
     {
-        this.readFully(b, 0, 2);
-        
-        int val = ((b[1] & 0xff) << 8) | (b[0] & 0xff);
-        
-        return val;
+        readFully(b, 0, 2);
+        return ((b[1] & 0xff) << 8) | (b[0] & 0xff);
     }
     
     
     @Override
     public char readChar() throws IOException
     {
-        this.readFully(b, 0, 2);
-        
-        int val = ((b[1] & 0xff) << 8) | (b[0] & 0xff);
-        
-        return (char)val; 
+        readFully(b, 0, 2);        
+        return (char) (((b[1] & 0xff) << 8) | (b[0] & 0xff));
     }
     
     
     @Override
     public int readInt() throws IOException
     {
-        this.readFully(b, 0, 4);
-        
-        int val = ((b[3] & 0xff) << 24) |
-                  ((b[2] & 0xff) << 16) |
-                  ((b[1] & 0xff) <<  8) |
-                  (b[0] & 0xff);
-        
-        return val;
+        readFully(b, 0, 4);        
+        return ((b[3] & 0xff) << 24) |
+               ((b[2] & 0xff) << 16) |
+               ((b[1] & 0xff) <<  8) |
+               (b[0] & 0xff);
     }
     
     
     @Override
     public long readUnsignedInt() throws IOException
 	{
-        this.readFully(b, 0, 4);
-		 
-        long val = ((long)(b[3] & 0xff) << 24) |
-                   ((long)(b[2] & 0xff) << 16) |
-                   ((long)(b[1] & 0xff) <<  8) |
-                   (b[0] & 0xff);
-        
-        return val;
+        readFully(b, 0, 4);		 
+        return ((long)(b[3] & 0xff) << 24) |
+               ((long)(b[2] & 0xff) << 16) |
+               ((long)(b[1] & 0xff) <<  8) |
+               (b[0] & 0xff);
 	}
     
     
     @Override
     public long readLong() throws IOException
     {
-        this.readFully(b, 0, 8);
-        
-        long val = ((long)(b[7] & 0xff) << 56) |
-                   ((long)(b[6] & 0xff) << 48) |
-                   ((long)(b[5] & 0xff) << 40) |
-                   ((long)(b[4] & 0xff) << 32) |
-                   ((long)(b[3] & 0xff) << 24) |
-                   ((long)(b[2] & 0xff) << 16) |
-                   ((long)(b[1] & 0xff) <<  8) |
-                   (b[0] & 0xff);
-        
-        return val;
+        this.readFully(b, 0, 8);        
+        return ((long)(b[7] & 0xff) << 56) |
+               ((long)(b[6] & 0xff) << 48) |
+               ((long)(b[5] & 0xff) << 40) |
+               ((long)(b[4] & 0xff) << 32) |
+               ((long)(b[3] & 0xff) << 24) |
+               ((long)(b[2] & 0xff) << 16) |
+               ((long)(b[1] & 0xff) <<  8) |
+               (b[0] & 0xff);
     }
     
     
@@ -181,7 +163,6 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     @Override
     public String readLine() throws IOException
     {
-        // TODO readLine method??
         return null;
     }
 
@@ -197,12 +178,9 @@ public class DataInputStreamLI extends FilterInputStream implements DataInputExt
     public String readASCII() throws IOException
 	{
 		int val;
-		StringBuffer buf = new StringBuffer();
-		
+		StringBuilder buf = new StringBuilder();
 		while ((val = in.read()) != 0) 
-		{
-			buf.append((char)val);
-		}
+		    buf.append((char)val);
 		
 		return buf.toString();
 	}

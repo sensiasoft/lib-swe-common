@@ -38,7 +38,9 @@ import org.vast.cdm.common.DataInputExt;
  * */
 public class DataInputStreamBI extends DataInputStream implements DataInputExt
 {
-	
+    private byte[] b = new byte[4];
+    
+    
 	public DataInputStreamBI(InputStream is)
 	{
 		super(is);
@@ -48,13 +50,11 @@ public class DataInputStreamBI extends DataInputStream implements DataInputExt
 	@Override
     public long readUnsignedInt() throws IOException
 	{
-		byte[] b = new byte[4];
-		this.read(b);
-		 
-        return (((long)(b[0] & 0xff) << 24) +
-                ((long)(b[1] & 0xff) << 16) +
-                ((long)(b[2] & 0xff) <<  8) +
-                (b[3] & 0xff));
+	    readFully(b, 0, 4);		 
+        return ((long)(b[0] & 0xff) << 24) +
+               ((long)(b[1] & 0xff) << 16) +
+               ((long)(b[2] & 0xff) <<  8) +
+               (b[3] & 0xff);
 	}
 	
 	
@@ -69,13 +69,11 @@ public class DataInputStreamBI extends DataInputStream implements DataInputExt
     public String readASCII() throws IOException
 	{
 		int val;
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		
 		while ((val = in.read()) != 0) 
-		{
-			buf.append((char)val);
-		}
-		
+		    buf.append((char)val);
+				
 		return buf.toString();
 	}
 }
