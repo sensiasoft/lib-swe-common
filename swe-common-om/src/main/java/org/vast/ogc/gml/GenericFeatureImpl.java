@@ -38,22 +38,13 @@ import net.opengis.gml.v32.impl.AbstractFeatureImpl;
 public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFeature
 {
     private static final long serialVersionUID = -5445631329812411360L;
-    protected QName qname;
-    protected String type;
     protected HashMap<QName, Object> properties;
 
 
     public GenericFeatureImpl(QName qname)
     {
-        properties = new LinkedHashMap<QName, Object>();
-        this.qname = qname;
-    }
-    
-    
-    @Override
-    public QName getQName()
-    {
-        return qname;
+        properties = new LinkedHashMap<>();
+        this.qName = qname;
     }
 
     
@@ -91,19 +82,5 @@ public class GenericFeatureImpl extends AbstractFeatureImpl implements GenericFe
     public Object getProperty(String name)
     {
         return properties.get(new QName(name));
-    }
-
-
-    @Override
-    public String getType()
-    {
-        return type;
-    }
-
-
-    @Override
-    public void setType(String type)
-    {
-        this.type = type;
     }
 }

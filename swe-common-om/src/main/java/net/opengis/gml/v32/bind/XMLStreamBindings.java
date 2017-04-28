@@ -1199,29 +1199,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             }
         }
         
-        // pointProperty
-        do
-        {
-            found = checkElementName(reader, "pointProperty");
-            if (found)
-            {
-                skipElementAndAllChildren(reader);
-                reader.nextTag();
-            }
-        }
-        while (found);
+        // pointProperty (skip for now)
+        while (checkElementName(reader, "pointProperty"))
+            skipElementAndAllChildren(reader);
         
-        // pointRep
-        do
-        {
-            found = checkElementName(reader, "pointRep");
-            if (found)
-            {
-                skipElementAndAllChildren(reader);
-                reader.nextTag();
-            }
-        }
-        while (found);
+        // pointRep (skip for now)
+        while (checkElementName(reader, "pointRep"))
+            skipElementAndAllChildren(reader);
         
         // posList
         found = checkElementName(reader, "posList");

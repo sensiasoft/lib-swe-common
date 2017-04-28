@@ -48,6 +48,7 @@ import org.vast.util.TimeExtent;
 public class ObservationImpl extends GenericFeatureImpl implements IObservation
 {
     private static final long serialVersionUID = 1525908516530863277L;
+    protected String type;
     protected ArrayList<IXlinkReference<IObservation>> relatedObservations;
     protected TimeExtent phenomenonTime;
     protected TimeExtent resultTime;
@@ -64,6 +65,20 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     {
         super(new QName(OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"), "OM_Observation"));
         phenomenonTime = new TimeExtent();
+    }
+
+
+    @Override
+    public String getType()
+    {
+        return type;
+    }
+
+
+    @Override
+    public void setType(String type)
+    {
+        this.type = type;
     }
 
 

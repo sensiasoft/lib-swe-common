@@ -74,10 +74,11 @@ public class GMLStaxBindings extends XMLStreamBindings
     }
     
     
-    public void registerFeatureBindings(IFeatureStaxBindings featureBindings)
+    public void registerFeatureBindings(IFeatureStaxBindings... featureBindings)
     {
-        for (QName fType: featureBindings.getSupportedFeatureTypes())
-            featureTypesBindings.put(fType, featureBindings);
+        for (IFeatureStaxBindings binding: featureBindings)
+        for (QName fType: binding.getSupportedFeatureTypes())
+            featureTypesBindings.put(fType, binding);
     }
     
     
@@ -93,9 +94,9 @@ public class GMLStaxBindings extends XMLStreamBindings
         this.readAbstractFeatureTypeElements(reader, newFeature);
                 
         // also read all other properties in a generic manner
+        reader.nextTag();
         while (reader.getEventType() != XMLStreamConstants.END_ELEMENT)
         {
-            reader.nextTag();
             QName propName = reader.getName();
             
             if (reader.hasText())
@@ -133,12 +134,12 @@ public class GMLStaxBindings extends XMLStreamBindings
                     
                     newFeature.setProperty(propName, value);
                 }
+                
+                reader.nextTag();
             }
             else
-                this.skipElementAndAllChildren(reader);
-            
-            reader.nextTag();
-        }
+                skipElementAndAllChildren(reader);
+        }        
         
         return newFeature;
     }

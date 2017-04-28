@@ -85,6 +85,13 @@ public class GMLUtils extends XMLBindingsUtils
     }
     
     
+    public GMLUtils(String version, IFeatureStaxBindings... featureBindings)
+    {
+        this(version);
+        ((GMLStaxBindings)staxBindings).registerFeatureBindings(featureBindings);
+    }
+    
+    
     /**
      * Reads a GML generic feature directly from an input stream
      * @param inputStream input stream to parse from
@@ -313,7 +320,7 @@ public class GMLUtils extends XMLBindingsUtils
                 return gmlBindings.readAbstractTimeGeometricPrimitive(reader);
                                 
             case Feature:
-                return gmlBindings.readGenericFeature(reader);
+                return gmlBindings.readAbstractFeature(reader);
         }
         
         return null;

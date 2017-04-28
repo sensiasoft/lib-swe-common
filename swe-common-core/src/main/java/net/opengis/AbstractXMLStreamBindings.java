@@ -36,14 +36,15 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public abstract class AbstractXMLStreamBindings extends AbstractBindings
 {
-    public final static String ERROR_INVALID_ELT = "Invalid Element: ";
-    public final static String ERROR_UNSUPPORTED_TYPE = "Unsupported Type: ";
-    public final static String XLINK_NS_URI = "http://www.w3.org/1999/xlink";
+    public static final String ERROR_INVALID_ELT = "Invalid Element: ";
+    public static final String ERROR_UNSUPPORTED_TYPE = "Unsupported Type: ";
+    public static final String XLINK_NS_URI = "http://www.w3.org/1999/xlink";
+    public static final String XSI_NS_URI = "http://www.w3.org/2001/XMLSchema-instance";
         
     boolean needNamespaceDecl = false;
     boolean resolveAllXlinks = false;
     protected NamespaceRegister nsContext = new NamespaceRegister();
-    protected Map<String, Object> idrefMap = new HashMap<String, Object>();
+    protected Map<String, Object> idrefMap = new HashMap<>();
     
     
     public void declareNamespacesOnRootElement()
@@ -145,8 +146,18 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     {
         // check if tag has right local name
         if (reader.getEventType() == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals(localName))
+        {
+            // skip tag if xsi:nil is true
+            String nil = reader.getAttributeValue(XSI_NS_URI, "nil");
+            if ("true".equalsIgnoreCase(nil))
+            {
+                reader.nextTag();
+                return false;
+            }
+            
             return true;
-
+        }
+        
         return false;
     }
     
@@ -154,11 +165,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     protected final boolean checkElementQName(XMLStreamReader reader, String nsUri, String localName) throws XMLStreamException
     {
         // check if tag has right local name and namespace URI
-        if (reader.getEventType() == XMLStreamConstants.START_ELEMENT 
-                && reader.getNamespaceURI().equals(nsUri) && reader.getLocalName().equals(localName) )
-            return true;
-
-        return false;
+        return checkElementName(reader, localName) && reader.getNamespaceURI().equals(nsUri);
     }
     
     
@@ -213,11 +220,17 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     
     
     /**
-     * Call this to skip an element and all its children and keep parsing
+     * Skip an element and all its children and keep parsing
      * @param reader
      * @throws XMLStreamException
      */
     protected final void skipElementAndAllChildren(XMLStreamReader reader) throws XMLStreamException
+    {
+        skipElementAndAllChildren(reader, true);
+    }
+    
+    
+    protected final void skipElementAndAllChildren(XMLStreamReader reader, boolean skipEndTag) throws XMLStreamException
     {
         int eventCode;
         int levelCount = 1;
@@ -230,7 +243,8 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
                 levelCount--;
         }
         
-        reader.nextTag();
+        if (skipEndTag)
+            reader.nextTag();
     }
     
     

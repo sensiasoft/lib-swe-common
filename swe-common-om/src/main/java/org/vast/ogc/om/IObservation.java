@@ -51,6 +51,10 @@ public interface IObservation extends GenericFeature
     public final static String OBS_TYPE_RECORD = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation";
     public final static String OBS_TYPE_ARRAY = "http://www.opengis.net/def/observationType/OGC-OM/2.0/SWEArrayObservation";
     
+    public String getType();
+    
+    public void setType(String type);
+    
     public List<IXlinkReference<IObservation>> getRelatedObservations();
     
     public void addRelatedObservation(IXlinkReference<IObservation> obsRef);

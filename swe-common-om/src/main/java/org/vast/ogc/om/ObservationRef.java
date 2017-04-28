@@ -86,6 +86,20 @@ public class ObservationRef extends FeatureRef implements IObservation
 
 
     @Override
+    public String getType()
+    {
+        return getTarget().getType();
+    }
+
+
+    @Override
+    public void setType(String type)
+    {
+        getTarget().setType(type);
+    }    
+
+
+    @Override
     public List<IXlinkReference<IObservation>> getRelatedObservations()
     {
         return getTarget().getRelatedObservations();

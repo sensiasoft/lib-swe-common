@@ -163,20 +163,6 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public String getType()
-    {
-        return getTarget().getType();
-    }
-
-
-    @Override
-    public void setType(String type)
-    {
-        getTarget().setType(type);
-    }
-
-
-    @Override
     public Map<QName, Object> getProperties()
     {
         return getTarget().getProperties();

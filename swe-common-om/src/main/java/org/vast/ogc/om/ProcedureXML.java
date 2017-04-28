@@ -70,26 +70,6 @@ public class ProcedureXML implements IProcedure
     {
         return new QName(domElt.getNamespaceURI(), domElt.getLocalName());
     }
-    
-    
-    @Override
-    public String getType()
-    {
-        if (procedure == null)
-            throw getException();
-        else
-            return procedure.getType();
-    }
-
-
-    @Override
-    public void setType(String type)
-    {
-        if (procedure == null)
-            throw getException();
-        else
-            procedure.setType(type);
-    }
 
 
     public String getLocalId()

@@ -53,13 +53,8 @@ import org.w3c.dom.*;
 public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
 {
 	protected SWEFilter streamFilter;
-    protected GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
+    protected GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2, new SamplingFeatureReader());
     protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
-    
-    
-    public ObservationReaderV20()
-    {
-    }
     
     
     @Override
@@ -103,7 +98,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
         {
             Element refElt = (Element)relObsElts.item(i);
             String href = dom.getElementValue(refElt, "relatedObservation");
-            IXlinkReference<IObservation> obsRef = new CachedReference<IObservation>(href);
+            IXlinkReference<IObservation> obsRef = new CachedReference<>(href);
             obsRef.setRole(dom.getElementValue(refElt, "role"));
             obs.addRelatedObservation(obsRef);
         }

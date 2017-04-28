@@ -28,9 +28,10 @@ import org.vast.util.DateTimeFormat;
  */
 public abstract class AbstractBindings
 {
-    static String PLUS_INFINITY = "+INF";
-    static String MINUS_INFINITY = "-INF";
-    static String TIME_NOW = "now";
+    static final String INFINITY = "INF";
+    static final String PLUS_INFINITY = "+" + INFINITY;
+    static final String MINUS_INFINITY = "-" + INFINITY;
+    static final String TIME_NOW = "now";
     
     StringBuilder sb = new StringBuilder();
     DateTimeFormat isoFormat = new DateTimeFormat();
@@ -76,10 +77,10 @@ public abstract class AbstractBindings
     {
         val = val.trim();
         
-        if (val.equals(MINUS_INFINITY))
+        if (MINUS_INFINITY.equals(val))
             return Float.NEGATIVE_INFINITY;
         
-        if (val.equals("INF") || val.equals(PLUS_INFINITY))
+        if (INFINITY.equals(val) || PLUS_INFINITY.equals(val))
             return Float.POSITIVE_INFINITY;
             
         return Float.parseFloat(val);
@@ -90,10 +91,10 @@ public abstract class AbstractBindings
     {
         val = val.trim();
         
-        if (val.equals(MINUS_INFINITY))
+        if (MINUS_INFINITY.equals(val))
             return Double.NEGATIVE_INFINITY;
         
-        if (val.equals("INF") || val.equals(PLUS_INFINITY))
+        if (INFINITY.equals(val) || PLUS_INFINITY.equals(val))
             return Double.POSITIVE_INFINITY;
             
         return Double.parseDouble(val);
