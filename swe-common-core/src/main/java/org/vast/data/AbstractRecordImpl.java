@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import java.util.*;
+import org.vast.util.Asserts;
 import net.opengis.swe.v20.BinaryBlock;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
@@ -39,13 +40,13 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
         
     public AbstractRecordImpl()
     {
-        fieldList = new DataComponentPropertyList<ComponentType>(this);
+        fieldList = new DataComponentPropertyList<>(this);
     }
     
     
     public AbstractRecordImpl(int size)
     {
-        this.fieldList = new DataComponentPropertyList<ComponentType>(this, size);
+        this.fieldList = new DataComponentPropertyList<>(this, size);
     }
     
     
@@ -135,7 +136,7 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
     @Override
     public void setData(DataBlock dataBlock)
     {
-    	assert(dataBlock != null);
+    	Asserts.checkNotNull(dataBlock, DataBlock.class);
     	
     	// HACK makes sure scalar count was properly computed
         if (scalarCount < 0)
@@ -165,7 +166,7 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
         	int currentIndex = 0;
             for (int i = 0; i < fieldList.size(); i++)
             {
-                AbstractDataComponentImpl nextComponent = ((AbstractDataComponentImpl)fieldList.get(i));
+                AbstractDataComponentImpl nextComponent = (AbstractDataComponentImpl)fieldList.get(i);
                 AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
                 childBlock.atomCount = nextComponent.scalarCount;
                 childBlock.startIndex += currentIndex;
@@ -178,7 +179,7 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
     		int currentIndex = 0;
     		for (int i = 0; i < fieldList.size(); i++)
     		{
-    			AbstractDataComponentImpl nextComponent = ((AbstractDataComponentImpl)fieldList.get(i));
+    			AbstractDataComponentImpl nextComponent = (AbstractDataComponentImpl)fieldList.get(i);
     			AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
     			childBlock.atomCount = nextComponent.scalarCount;
     			childBlock.startIndex += currentIndex;
@@ -214,7 +215,7 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
     @Override
     public AbstractDataBlock createDataBlock() 
     {
-    	DataType currentType = DataType.OTHER;
+    	DataType currentType;
         DataType previousType = DataType.OTHER;
         AbstractDataBlock newBlock = null;
         AbstractDataBlock nextBlock = null;
@@ -230,7 +231,7 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
         
         for (int i=0; i<childNumber; i++)
         {
-        	nextComponent = ((AbstractDataComponentImpl)fieldList.get(i));
+        	nextComponent = (AbstractDataComponentImpl)fieldList.get(i);
             nextBlock = nextComponent.createDataBlock();
         	currentType = nextBlock.getDataType();
         	totalSize += nextBlock.atomCount;
@@ -329,7 +330,7 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
         
         for (int i=0; i<groupSize; i++)
         {
-            AbstractDataComponentImpl childComponent = ((AbstractDataComponentImpl)fieldList.get(i));
+            AbstractDataComponentImpl childComponent = (AbstractDataComponentImpl)fieldList.get(i);
             
             if (childComponent instanceof AbstractRecordImpl && childComponent.dataBlock == null)
                 ((AbstractRecordImpl<?>)childComponent).combineDataBlocks();

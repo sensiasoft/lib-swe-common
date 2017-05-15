@@ -62,7 +62,7 @@ public class DataComponentPropertyList<ComponentType extends DataComponent> exte
     {
         if (prop.hasValue())
         {
-            ((AbstractDataComponentImpl)prop.getValue()).setName(prop.getName());
+            prop.getValue().setName(prop.getName());
             ((AbstractDataComponentImpl)prop.getValue()).setParent(parent);
         }
         
@@ -73,7 +73,7 @@ public class DataComponentPropertyList<ComponentType extends DataComponent> exte
     @Override
     public OgcProperty<ComponentType> add(String name, ComponentType component)
     {
-        ((AbstractDataComponentImpl)component).setName(name);
+        component.setName(name);
         ((AbstractDataComponentImpl)component).setParent(parent);
         return super.add(name, component);
     }
@@ -94,7 +94,7 @@ public class DataComponentPropertyList<ComponentType extends DataComponent> exte
         ((AbstractDataComponentImpl)component).setParent(parent);
         String name = component.getName();
         checkName(name);
-        OgcPropertyImpl<ComponentType> prop = new OgcPropertyImpl<ComponentType>(name, component);
+        OgcPropertyImpl<ComponentType> prop = new OgcPropertyImpl<>(name, component);
         items.add(index, prop);
         nameMap.put(name, prop);
     }

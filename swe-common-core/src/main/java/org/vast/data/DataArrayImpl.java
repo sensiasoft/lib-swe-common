@@ -407,16 +407,12 @@ public class DataArrayImpl extends AbstractArrayImpl
             
             // get new size from array size component
             Count sizeComponent = getArraySizeComponent();
-	    	if (sizeComponent != null)
-	    	{
-	    		DataBlock data = sizeComponent.getData();
-	    		if (data != null)
-                {
-	    			// continue only if sized has changed
-	    			newSize = data.getIntValue();
-                    if (newSize == oldSize)
-                        return;
-                }
+	    	if (sizeComponent != null && sizeComponent.hasData())
+            {
+    			// continue only if size has changed
+    			newSize = sizeComponent.getData().getIntValue();
+                if (newSize == oldSize)
+                    return;
 	    	}
             
             // take care of variable size child array
@@ -487,16 +483,12 @@ public class DataArrayImpl extends AbstractArrayImpl
      */
     protected void updateSizeComponent(int newSize)
     {
-    	Count arraySizeComp = getArraySizeComponent();
+    	Count sizeComp = getArraySizeComponent();
         
-        // update value of size data
-    	DataBlock data = arraySizeComp.getData();
-        if (data == null)
-        {
-            arraySizeComp.renewDataBlock();
-        	data = arraySizeComp.getData();
-        }        
-        data.setIntValue(newSize);
+    	// update value of size data
+        if (!sizeComp.hasData())
+            sizeComp.renewDataBlock();        
+        sizeComp.getData().setIntValue(newSize);
         
         // save size so that we can detect if it changes later
         // this avoids resizing arrays for nothing if size does not change!
@@ -507,11 +499,11 @@ public class DataArrayImpl extends AbstractArrayImpl
     @Override
     public int getComponentCount()
     {
-    	DataBlock data = getArraySizeComponent().getData();
-    	    	
-    	if (data != null)
+        DataComponent sizeComp = getArraySizeComponent();
+            	
+    	if (sizeComp.hasData())
     	{
-    		int arraySize = data.getIntValue();
+    		int arraySize = sizeComp.getData().getIntValue();
     		if (arraySize >= 0)
     			return arraySize;
     	}
