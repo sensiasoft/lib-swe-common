@@ -17,10 +17,12 @@ package net.opengis;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 
 /**
@@ -45,15 +47,15 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
     
     public OgcPropertyList()
     {
-        items = new ArrayList<OgcProperty<ValueType>>();
-        nameMap = new HashMap<String, OgcProperty<ValueType>>();
+        items = new ArrayList<>();
+        nameMap = new HashMap<>();
     }
     
     
     public OgcPropertyList(int size)
     {
-        items = new ArrayList<OgcProperty<ValueType>>(size);
-        nameMap = new HashMap<String, OgcProperty<ValueType>>(size);
+        items = new ArrayList<>(size);
+        nameMap = new HashMap<>(size);
     }
     
     
@@ -64,6 +66,12 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
     }
     
     
+    public boolean hasProperty(String name)
+    {
+        return nameMap.containsKey(name);
+    }
+    
+    
     /**
      * Retrieves property value by name
      * @param name
@@ -71,11 +79,8 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
      */
     public ValueType get(String name)
     {
-        OgcProperty<ValueType> prop = nameMap.get(name);
-        if (prop != null)
-            return prop.getValue();
-        
-        return null;
+        OgcProperty<ValueType> prop = getProperty(name);        
+        return prop.getValue();
     }
     
     
@@ -87,7 +92,10 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
      */
     public OgcProperty<ValueType> getProperty(String name)
     {
-        return nameMap.get(name);
+        OgcProperty<ValueType> prop = nameMap.get(name);
+        if (prop == null)
+            throw new IllegalArgumentException("Unknown item '" + name + "'");
+        return prop;
     }
     
     
@@ -110,8 +118,7 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
      */
     public void add(OgcProperty<ValueType> prop)
     {
-        checkName(prop.getName());
-        
+        checkName(prop.getName());        
         items.add(prop);
         if (prop.getName() != null)
             nameMap.put(prop.getName(), prop);
@@ -128,7 +135,7 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
     public OgcProperty<ValueType> add(String name, ValueType e)
     {
         checkName(name);
-        OgcPropertyImpl<ValueType> prop = new OgcPropertyImpl<ValueType>(name, e);
+        OgcPropertyImpl<ValueType> prop = new OgcPropertyImpl<>(name, e);
         items.add(prop);
         nameMap.put(name, prop);
         return prop;
@@ -146,13 +153,46 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
     public OgcProperty<ValueType> add(String name, String href, String role)
     {
         checkName(name);
-        OgcPropertyImpl<ValueType> prop = new OgcPropertyImpl<ValueType>();
+        OgcPropertyImpl<ValueType> prop = new OgcPropertyImpl<>();
         prop.name = name;
         prop.href = href;
         prop.role = role;
         items.add(prop);
         nameMap.put(name, prop);
         return prop;
+    }
+    
+    
+    /**
+     * Removes property with the given name
+     * @param name
+     * @return The property that was just removed
+     */
+    public OgcProperty<ValueType> remove(String name)
+    {
+        OgcProperty<ValueType> prop = nameMap.remove(name);
+        if (prop == null)
+            throw new IllegalArgumentException("Unknown property '" + name + "'");
+        items.remove(prop);
+        return prop;
+    }
+    
+    
+    /**
+     * @return Read-only set of all property names
+     */
+    public Set<String> getPropertyNames()
+    {
+        return Collections.unmodifiableSet(nameMap.keySet());
+    }
+    
+    
+    /**
+     * @return Read-only list of all properties
+     */
+    public List<OgcProperty<ValueType>> getProperties()
+    {
+        return Collections.unmodifiableList(items);
     }
 
     
@@ -394,6 +434,6 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
             return;
         
         if (nameMap.containsKey(name))
-            throw new IllegalArgumentException("Name " + name + " is already in use");
+            throw new IllegalArgumentException("Item '" + name + "' already exists");
     }
 }

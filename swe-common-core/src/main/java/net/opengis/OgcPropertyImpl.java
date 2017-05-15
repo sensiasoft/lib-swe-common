@@ -53,7 +53,7 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     @Override
     public OgcPropertyImpl<ValueType> copy()
     {
-        OgcPropertyImpl<ValueType> newProp = new OgcPropertyImpl<ValueType>();
+        OgcPropertyImpl<ValueType> newProp = new OgcPropertyImpl<>();
         copyTo(newProp);
         return newProp;
     }
