@@ -37,7 +37,7 @@ public class ReferenceImpl extends net.opengis.OgcPropertyImpl<Serializable> imp
     
     public ReferenceImpl(String href)
     {
-        super(href);
+        this.href = href;
     }
     
     

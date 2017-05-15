@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import org.vast.swe.SWEConstants;
 import org.vast.unit.Unit;
 import org.vast.unit.UnitParserUCUM;
 import org.vast.unit.UnitParserURI;
@@ -33,16 +34,8 @@ public class UnitReferenceImpl extends OgcPropertyImpl<Unit> implements UnitRefe
     
     
     public UnitReferenceImpl()
-    {        
-    }
-    
-    
-    public UnitReferenceImpl(String codeOrUri)
     {
-        if (codeOrUri.startsWith("http") || codeOrUri.startsWith("urn"))
-            this.href = codeOrUri;
-        else
-            this.code = codeOrUri;
+        this.href = SWEConstants.UOM_ANY;
     }
     
     
@@ -82,6 +75,8 @@ public class UnitReferenceImpl extends OgcPropertyImpl<Unit> implements UnitRefe
     @Override
     public void setCode(String code)
     {
+        if (SWEConstants.UOM_ANY.equals(this.href))
+            this.href = null;
         this.code = code;
     }
 
@@ -91,9 +86,9 @@ public class UnitReferenceImpl extends OgcPropertyImpl<Unit> implements UnitRefe
     {
         if (value == null)
         {
-            if (isSetCode() && !code.equalsIgnoreCase(ANY_UNIT_CODE))
+            if (isSetCode())
                 value = new UnitParserUCUM().getUnit(code);
-            else if (hasHref() && !href.equalsIgnoreCase(ANY_UNIT_URI))
+            else if (hasHref())
                 value = new UnitParserURI().getUnit(href);
         }
         

@@ -20,6 +20,8 @@
 
 package org.vast.unit;
 
+import org.vast.swe.SWEConstants;
+
 /**
  * <p>
  * Uses a URN to lookup for a unit definition and create
@@ -35,9 +37,12 @@ public class UnitParserURI implements UnitParser
     
     
     @Override
-    public Unit getUnit(String urn)
+    public Unit getUnit(String uri)
     {
-        String ucumCode = getUCUMCode(urn);
+        if (SWEConstants.UOM_ANY.equals(uri))
+            return null;        
+        
+        String ucumCode = getUCUMCode(uri);
         return ucumParser.getUnit(ucumCode);
     }
 

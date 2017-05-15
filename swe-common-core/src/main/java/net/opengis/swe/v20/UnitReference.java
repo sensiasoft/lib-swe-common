@@ -26,9 +26,6 @@ import org.vast.unit.Unit;
 @SuppressWarnings("javadoc")
 public interface UnitReference extends net.opengis.OgcProperty<Unit>
 {
-    public final static String ANY_UNIT_CODE = "any";
-    public final static String ANY_UNIT_URI = "http://www.opengis.net/def/nil/OGC/0/inapplicable";
-    
     
     /**
      * Gets the code property

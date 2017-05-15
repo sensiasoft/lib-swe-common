@@ -23,7 +23,8 @@ package org.vast.unit;
 
 /**
  * <p>
- * TODO UnitParser type description
+ * Interface for all unit of measure parsers (unit string can be a code,
+ * a special string with syntax, a URI, etc.)
  * </p>
  *
  * @author Alex Robin
