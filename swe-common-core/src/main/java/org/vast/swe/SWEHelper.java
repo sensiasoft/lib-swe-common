@@ -20,7 +20,6 @@
 
 package org.vast.swe;
 
-import java.io.Serializable;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.Boolean;
@@ -37,6 +36,7 @@ import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.DataType;
+import net.opengis.swe.v20.HasUom;
 import net.opengis.swe.v20.JSONEncoding;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.ScalarComponent;
@@ -45,6 +45,8 @@ import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.Vector;
 import net.opengis.swe.v20.XMLEncoding;
+import java.io.Serializable;
+import java.util.Objects;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
@@ -60,6 +62,8 @@ import org.vast.data.SWEFactory;
 import org.vast.data.ScalarIterator;
 import org.vast.data.TextEncodingImpl;
 import org.vast.swe.fast.JsonDataWriter;
+import org.vast.unit.Unit;
+import org.vast.util.Asserts;
 
 
 /**
@@ -73,7 +77,7 @@ import org.vast.swe.fast.JsonDataWriter;
  */
 public class SWEHelper extends SWEFactory
 {  
-    public final static String PATH_SEPARATOR = "/";
+    public static final String PATH_SEPARATOR = "/";
     
     
     /**
@@ -92,21 +96,21 @@ public class SWEHelper extends SWEFactory
     }
     
     
-    public static OgcProperty<?> newLinkProperty(String href)
+    public static OgcProperty<Serializable> newLinkProperty(String href)
     {
         return newLinkProperty(null, href, null);
     }
     
     
-    public static OgcProperty<?> newLinkProperty(String name, String href)
+    public static OgcProperty<Serializable> newLinkProperty(String name, String href)
     {
         return newLinkProperty(name, href, null);
     }
     
     
-    public static OgcProperty<?> newLinkProperty(String name, String href, String role)
+    public static OgcProperty<Serializable> newLinkProperty(String name, String href, String role)
     {
-        OgcProperty<?> prop = new OgcPropertyImpl<Serializable>();
+        OgcPropertyImpl<Serializable> prop = new OgcPropertyImpl<>();
         prop.setName(name);
         prop.setHref(href);
         prop.setRole(role);
@@ -178,7 +182,7 @@ public class SWEHelper extends SWEFactory
      */
     public Count newCount(String definition, String label, String description)
     {
-        return newCount(definition, label, null, DataType.INT);
+        return newCount(definition, label, description, DataType.INT);
     }
     
     
@@ -206,11 +210,11 @@ public class SWEHelper extends SWEFactory
      * @param definition URI pointing to semantic definition of component in a dictionary
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long) or null
-     * @param uomCode UCUM code for this decimal quantity's unit of measure
+     * @param uom UCUM code or URI for this decimal quantity's unit of measure
      * @param dataType data type to use for this component (if null, {@link DataType#DOUBLE} will be used)
      * @return the new Quantity component object
      */
-    public Quantity newQuantity(String definition, String label, String description, String uomCode, DataType dataType)
+    public Quantity newQuantity(String definition, String label, String description, String uom, DataType dataType)
     {
         if (dataType == null)
             dataType = DataType.DOUBLE;
@@ -219,7 +223,11 @@ public class SWEHelper extends SWEFactory
         q.setDefinition(definition);
         q.setLabel(label);
         q.setDescription(description);
-        q.getUom().setCode(uomCode);
+        
+        if (uom.startsWith(SWEConstants.URN_PREFIX) || uom.startsWith(SWEConstants.HTTP_PREFIX))
+            q.getUom().setHref(uom);
+        else
+            q.getUom().setCode(uom);
         
         return q;
     }
@@ -230,12 +238,12 @@ public class SWEHelper extends SWEFactory
      * @param definition URI pointing to semantic definition of component in a dictionary
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long) or null
-     * @param uomCode UCUM code for this decimal quantity's unit of measure
+     * @param uom UCUM code or URI for this decimal quantity's unit of measure
      * @return the new Quantity component object
      */
-    public Quantity newQuantity(String definition, String label, String description, String uomCode)
+    public Quantity newQuantity(String definition, String label, String description, String uom)
     {
-        return newQuantity(definition, label, description, uomCode, DataType.DOUBLE);
+        return newQuantity(definition, label, description, uom, DataType.DOUBLE);
     }
     
     
@@ -352,7 +360,7 @@ public class SWEHelper extends SWEFactory
         Vector loc = newVector();
         loc.setDefinition(def);
         
-        if(crs == null)
+        if (crs == null)
             crs = SWEConstants.NIL_UNKNOWN;
         loc.setReferenceFrame(crs);
 
@@ -560,7 +568,7 @@ public class SWEHelper extends SWEFactory
             DataValue nextScalar = (DataValue)nextPath[nextPath.length-1];
             
             // build path (just use / for root)
-            StringBuffer pathString = new StringBuffer();
+            StringBuilder pathString = new StringBuilder();
             pathString.append(PATH_SEPARATOR);
             for (int i = 0; i < nextPath.length; i++)
             {
@@ -639,9 +647,9 @@ public class SWEHelper extends SWEFactory
     
     
     
-    ///////////////////////////////////////////////// 
-    // Methods for looking up components in a tree //
-    ///////////////////////////////////////////////// 
+    ////////////////////////////////////////////// 
+    // Methods for manipulating component trees //
+    ////////////////////////////////////////////// 
     
     /**
      * Finds the first component in the tree matching the given filter
@@ -757,6 +765,84 @@ public class SWEHelper extends SWEFactory
         }
         
         return data;
+    }
+    
+    
+    /**
+     * Computes the path of the component from the root of the data structure
+     * @param component
+     * @return A '/' separated path of component names
+     */
+    public static String getComponentPath(DataComponent component)
+    {
+        Asserts.checkNotNull(component, DataComponent.class);
+        Asserts.checkNotNull(component.getName(), "Component must have a name");
+        
+        StringBuilder path = new StringBuilder(component.getName());
+        DataComponent parent = component.getParent();
+        
+        while (parent != null && parent.getName() != null)
+            path.insert(0, parent.getName()).append(PATH_SEPARATOR);
+        
+        return path.toString();
+    }
+    
+    
+    /**
+     * Find the root component of the data structure that this component belongs to
+     * @param component
+     * @return the root component
+     */
+    public static DataComponent getRootComponent(DataComponent component)
+    {
+        DataComponent parentPort = component;
+        while (parentPort.getParent() != null)
+            parentPort = parentPort.getParent();
+        return parentPort;
+    }
+    
+    
+    /**
+     * Compare two component trees by checking if they are equivalent in terms
+     * of structure (including component names) and units.
+     * @param comp1 
+     * @param comp2
+     */
+    public static boolean compare(DataComponent comp1, DataComponent comp2)
+    {
+        Asserts.checkNotNull(comp1, DataComponent.class);
+        Asserts.checkNotNull(comp2, DataComponent.class);
+        
+        DataIterator it1 = new DataIterator(comp1);
+        DataIterator it2 = new DataIterator(comp2);
+        while (it1.hasNext())
+        {
+            if (!it2.hasNext())
+                return false;
+            
+            DataComponent c1 = it1.next();
+            DataComponent c2 = it2.next();
+            
+            // check that component names are the same
+            if (!Objects.equals(c1.getName(), c2.getName()))
+                return false;
+            
+            // check that component type and size are the same
+            if (c1.getClass() != c2.getClass() || c1.getComponentCount() != c2.getComponentCount())
+                return false;
+            
+            // check that units are compatible
+            if (c1 instanceof HasUom && c2 instanceof HasUom)
+            {
+                Unit uom1 = ((HasUom)c1).getUom().getValue();
+                Unit uom2 = ((HasUom)c2).getUom().getValue();
+                
+                if (uom1 != null && uom2 != null && !uom1.isCompatible(uom2))
+                    return false;
+            }
+        }
+        
+        return true;
     }
     
     
