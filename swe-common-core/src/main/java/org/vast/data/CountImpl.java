@@ -124,16 +124,6 @@ public class CountImpl extends DataValue implements Count
     
     
     /**
-     * Checks if value is set
-     */
-    @Override
-    public boolean isSetValue()
-    {
-        return (dataBlock != null);
-    }
-    
-    
-    /**
      * Sets the value property
      */
     @Override
@@ -142,16 +132,6 @@ public class CountImpl extends DataValue implements Count
         if (dataBlock == null)
             assignNewDataBlock();
         dataBlock.setIntValue(value);
-    }
-    
-    
-    /**
-     * Unsets the value property
-     */
-    @Override
-    public void unSetValue()
-    {
-        dataBlock = null;
     }
     
     

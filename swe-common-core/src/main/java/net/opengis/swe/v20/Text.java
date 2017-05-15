@@ -35,12 +35,6 @@ public interface Text extends ScalarComponent, HasConstraints<AllowedTokens>
     
     
     /**
-     * Checks if value is set
-     */
-    public boolean isSetValue();
-    
-    
-    /**
      * Sets the value property
      */
     public void setValue(String value);

@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import java.util.List;
+import org.vast.util.Asserts;
 import org.vast.util.DateTimeFormat;
 import net.opengis.DateTimeDouble;
 import net.opengis.IDateTime;
@@ -163,27 +164,12 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     
     
     /**
-     * Checks if value is set
-     */
-    @Override
-    public boolean isSetValue()
-    {
-        return (dataBlock != null);
-    }
-    
-    
-    /**
      * Sets the value property
      */
     @Override
     public void setValue(IDateTime[] value)
     {
-        if (value == null)
-        {
-            dataBlock = null;
-            return;
-        }
-        
+        Asserts.checkNotNull(value, "value");
         if (dataBlock == null)
             assignNewDataBlock();
         dataBlock.setDoubleValue(0, value[0].getAsDouble());

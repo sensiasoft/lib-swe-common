@@ -134,4 +134,16 @@ public interface SimpleComponent extends DataComponent
      * Sets the component data type
      */
     public void setDataType(DataType type);
+    
+    
+    /**
+     * Checks if value is set
+     */
+    public boolean isSetValue();
+    
+    
+    /**
+     * Unsets the value property
+     */
+    public void unSetValue();
 }

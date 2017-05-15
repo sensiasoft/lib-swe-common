@@ -37,12 +37,6 @@ public interface TimeRange extends RangeComponent, HasRefFrames, HasUom, HasCons
     
     
     /**
-     * Checks if value is set
-     */
-    public boolean isSetValue();
-    
-    
-    /**
      * Sets the value property
      */
     public void setValue(IDateTime[] value);

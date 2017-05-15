@@ -35,12 +35,6 @@ public interface QuantityRange extends RangeComponent, HasUom, HasConstraints<Al
     
     
     /**
-     * Checks if value is set
-     */
-    public boolean isSetValue();
-    
-    
-    /**
      * Sets the value property
      */
     public void setValue(double[] value);

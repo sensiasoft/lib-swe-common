@@ -35,19 +35,7 @@ public interface Quantity extends ScalarComponent, HasUom, HasConstraints<Allowe
     
     
     /**
-     * Checks if value is set
-     */
-    public boolean isSetValue();
-    
-    
-    /**
      * Sets the value property
      */
     public void setValue(double value);
-    
-    
-    /**
-     * Unsets the value property
-     */
-    public void unSetValue();
 }

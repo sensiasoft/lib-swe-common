@@ -185,6 +185,12 @@ public interface DataComponent extends AbstractSWEIdentifiable, HasCopy
     
     
     /**
+     * @return true if a datablock is associated to this component
+     */
+    public boolean hasData();
+    
+    
+    /**
      * Get the datablock associated to this component 
      * @return datablock object or null if none has been generated yet
      */
@@ -207,7 +213,7 @@ public interface DataComponent extends AbstractSWEIdentifiable, HasCopy
     
     
     /**
-     * Validates dataBlock against constraints if any.
+     * Validates datablock against constraints if any.
      * No exceptions are thrown, rather they are appended to the provided list.
      * @param errorList list to which validation exceptions will be appended
      */

@@ -115,16 +115,6 @@ public class TextImpl extends DataValue implements Text
     
     
     /**
-     * Checks if value is set
-     */
-    @Override
-    public boolean isSetValue()
-    {
-        return (dataBlock != null);
-    }
-    
-    
-    /**
      * Sets the value property
      */
     @Override

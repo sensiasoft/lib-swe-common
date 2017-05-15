@@ -39,12 +39,6 @@ public interface Time extends ScalarComponent, HasRefFrames, HasUom, HasConstrai
     
     
     /**
-     * Checks if value is set
-     */
-    public boolean isSetValue();
-    
-    
-    /**
      * Sets the value property
      */
     public void setValue(IDateTime value);

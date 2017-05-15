@@ -36,19 +36,7 @@ public interface Boolean extends ScalarComponent
     
     
     /**
-     * Checks if value is set
-     */
-    public boolean isSetValue();
-    
-    
-    /**
      * Sets the value property
      */
     public void setValue(boolean value);
-    
-    
-    /**
-     * Unsets the value property
-     */
-    public void unSetValue();
 }

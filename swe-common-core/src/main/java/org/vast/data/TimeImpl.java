@@ -160,16 +160,6 @@ public class TimeImpl extends DataValue implements Time
     
     
     /**
-     * Checks if value is set
-     */
-    @Override
-    public boolean isSetValue()
-    {
-        return (dataBlock != null);
-    }
-    
-    
-    /**
      * Sets the value property
      */
     @Override

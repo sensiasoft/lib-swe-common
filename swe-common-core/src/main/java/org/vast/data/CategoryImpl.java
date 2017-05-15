@@ -154,16 +154,6 @@ public class CategoryImpl extends DataValue implements Category
     
     
     /**
-     * Checks if value is set
-     */
-    @Override
-    public boolean isSetValue()
-    {
-        return (dataBlock != null);
-    }
-    
-    
-    /**
      * Sets the value property
      */
     @Override

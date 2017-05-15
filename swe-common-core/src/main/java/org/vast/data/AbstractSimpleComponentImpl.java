@@ -31,7 +31,7 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
 {
     private static final long serialVersionUID = -2467076901109783411L;
     protected DataType dataType;
-    protected OgcPropertyList<SimpleComponent> qualityList = new OgcPropertyList<SimpleComponent>();
+    protected OgcPropertyList<SimpleComponent> qualityList = new OgcPropertyList<>();
     protected OgcProperty<NilValues> nilValues;
     protected String referenceFrame;
     protected String axisID;
@@ -243,6 +243,20 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
     public void clearData()
     {
         this.dataBlock = null;
+    }
+    
+
+    @Override
+    public boolean isSetValue()
+    {
+        return dataBlock != null;
+    }
+    
+    
+    @Override
+    public void unSetValue()
+    {
+        clearData();
     }
     
     

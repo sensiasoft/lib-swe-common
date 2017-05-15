@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import java.util.List;
+import org.vast.util.Asserts;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedValues;
@@ -129,27 +130,12 @@ public class CountRangeImpl extends AbstractRangeComponentImpl implements CountR
     
     
     /**
-     * Checks if value is set
-     */
-    @Override
-    public boolean isSetValue()
-    {
-        return (dataBlock != null);
-    }
-    
-    
-    /**
      * Sets the value property
      */
     @Override
     public void setValue(int[] value)
     {
-        if (value == null)
-        {
-            dataBlock = null;
-            return;
-        }
-        
+        Asserts.checkNotNull(value, "value");
         if (dataBlock == null)
             assignNewDataBlock();
         dataBlock.setIntValue(0, value[0]);

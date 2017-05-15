@@ -35,12 +35,6 @@ public interface Count extends ScalarComponent, HasConstraints<AllowedValues>
     
     
     /**
-     * Checks if value is set
-     */
-    public boolean isSetValue();
-    
-    
-    /**
      * Sets the value property
      */
     public void setValue(int value);

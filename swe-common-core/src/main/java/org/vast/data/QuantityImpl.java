@@ -151,16 +151,6 @@ public class QuantityImpl extends DataValue implements Quantity
     
     
     /**
-     * Checks if value is set
-     */
-    @Override
-    public boolean isSetValue()
-    {
-        return (dataBlock != null);
-    }
-    
-    
-    /**
      * Sets the value property
      */
     @Override
@@ -169,16 +159,6 @@ public class QuantityImpl extends DataValue implements Quantity
         if (dataBlock == null)
             assignNewDataBlock();
         dataBlock.setDoubleValue(value);
-    }
-    
-    
-    /**
-     * Unsets the value property
-     */
-    @Override
-    public void unSetValue()
-    {
-        dataBlock = null;
     }
     
     
@@ -207,7 +187,7 @@ public class QuantityImpl extends DataValue implements Quantity
     @Override
     public String toString(String indent)
     {
-        StringBuffer text = new StringBuffer();
+        StringBuilder text = new StringBuilder();
         text.append("Quantity");                
         if (dataBlock != null)
             text.append(" = " + dataBlock.getStringValue());
