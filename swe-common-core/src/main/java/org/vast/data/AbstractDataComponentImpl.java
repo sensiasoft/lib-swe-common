@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package org.vast.data;
 
 import java.util.*;
+import org.vast.util.Asserts;
 import net.opengis.swe.v20.BinaryMember;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataComponent;
@@ -133,12 +134,20 @@ public abstract class AbstractDataComponentImpl extends AbstractSWEIdentifiableI
         else
             assignNewDataBlock();
     }
+	
+	
+	@Override
+	public boolean hasData()
+	{
+	    return dataBlock != null;
+	}
 
 
     @Override
     public DataBlock getData()
 	{
-		return dataBlock;
+		Asserts.checkState(dataBlock != null, "Component has no datablock assigned");
+        return dataBlock;
 	}
 
 
