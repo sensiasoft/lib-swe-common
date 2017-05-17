@@ -36,7 +36,6 @@ import net.opengis.swe.v20.BinaryEncoding;
 import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.DataType;
-import net.opengis.swe.v20.HasUom;
 import net.opengis.swe.v20.JSONEncoding;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.ScalarComponent;
@@ -46,7 +45,6 @@ import net.opengis.swe.v20.Time;
 import net.opengis.swe.v20.Vector;
 import net.opengis.swe.v20.XMLEncoding;
 import java.io.Serializable;
-import java.util.Objects;
 import org.vast.cdm.common.CDMException;
 import org.vast.cdm.common.DataStreamParser;
 import org.vast.cdm.common.DataStreamWriter;
@@ -62,7 +60,6 @@ import org.vast.data.SWEFactory;
 import org.vast.data.ScalarIterator;
 import org.vast.data.TextEncodingImpl;
 import org.vast.swe.fast.JsonDataWriter;
-import org.vast.unit.Unit;
 import org.vast.util.Asserts;
 
 
@@ -162,10 +159,7 @@ public class SWEHelper extends SWEFactory
      */
     public Count newCount(String definition, String label, String description, DataType dataType)
     {
-        if (dataType == null)
-            dataType = DataType.INT;
-        
-        Count c = newCount(dataType);
+        Count c = newCount(dataType == null ? DataType.INT : dataType);
         c.setDefinition(definition);
         c.setLabel(label);
         c.setDescription(description);
@@ -216,10 +210,7 @@ public class SWEHelper extends SWEFactory
      */
     public Quantity newQuantity(String definition, String label, String description, String uom, DataType dataType)
     {
-        if (dataType == null)
-            dataType = DataType.DOUBLE;
-        
-        Quantity q = newQuantity(dataType);
+        Quantity q = newQuantity(dataType == null ? DataType.DOUBLE : dataType);
         q.setDefinition(definition);
         q.setLabel(label);
         q.setDescription(description);
@@ -359,10 +350,7 @@ public class SWEHelper extends SWEFactory
     {
         Vector loc = newVector();
         loc.setDefinition(def);
-        
-        if (crs == null)
-            crs = SWEConstants.NIL_UNKNOWN;
-        loc.setReferenceFrame(crs);
+        loc.setReferenceFrame(crs == null ? SWEConstants.NIL_UNKNOWN : crs);
 
         Quantity c;        
         for (int i = 0; i < names.length; i++)
@@ -799,50 +787,6 @@ public class SWEHelper extends SWEFactory
         while (parentPort.getParent() != null)
             parentPort = parentPort.getParent();
         return parentPort;
-    }
-    
-    
-    /**
-     * Compare two component trees by checking if they are equivalent in terms
-     * of structure (including component names) and units.
-     * @param comp1 
-     * @param comp2
-     */
-    public static boolean compare(DataComponent comp1, DataComponent comp2)
-    {
-        Asserts.checkNotNull(comp1, DataComponent.class);
-        Asserts.checkNotNull(comp2, DataComponent.class);
-        
-        DataIterator it1 = new DataIterator(comp1);
-        DataIterator it2 = new DataIterator(comp2);
-        while (it1.hasNext())
-        {
-            if (!it2.hasNext())
-                return false;
-            
-            DataComponent c1 = it1.next();
-            DataComponent c2 = it2.next();
-            
-            // check that component names are the same
-            if (!Objects.equals(c1.getName(), c2.getName()))
-                return false;
-            
-            // check that component type and size are the same
-            if (c1.getClass() != c2.getClass() || c1.getComponentCount() != c2.getComponentCount())
-                return false;
-            
-            // check that units are compatible
-            if (c1 instanceof HasUom && c2 instanceof HasUom)
-            {
-                Unit uom1 = ((HasUom)c1).getUom().getValue();
-                Unit uom2 = ((HasUom)c2).getUom().getValue();
-                
-                if (uom1 != null && uom2 != null && !uom1.isCompatible(uom2))
-                    return false;
-            }
-        }
-        
-        return true;
     }
     
     
