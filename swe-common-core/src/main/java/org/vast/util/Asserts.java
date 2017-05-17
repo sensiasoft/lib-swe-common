@@ -752,12 +752,18 @@ public final class Asserts
     {
         if (reference == null)
         {
-            String nameOrMsg = String.valueOf(errorMessage);
-            if (nameOrMsg != null && nameOrMsg.split(" ").length > 1)
+            String nameOrMsg;            
+            if (errorMessage instanceof Class)
+                nameOrMsg = ((Class<?>)errorMessage).getSimpleName();
+            else
+                nameOrMsg = String.valueOf(errorMessage);
+            
+            if (nameOrMsg == null || nameOrMsg.contains(" "))
                 throw new NullPointerException(nameOrMsg);
             else
                 throw new NullPointerException(nameOrMsg + " cannot be null");
         }
+        
         return reference;
     }
 
@@ -1185,7 +1191,7 @@ public final class Asserts
     {
         if (index < 0)
         {
-            return format("%s (%s) must not be negative", desc, index);
+            return format("{} ({}) must not be negative", desc, index);
         }
         else if (size < 0)
         {
@@ -1193,7 +1199,7 @@ public final class Asserts
         }
         else
         { // index >= size
-            return format("%s (%s) must be less than size (%s)", desc, index, size);
+            return format("{} ({}) must be less than size ({})", desc, index, size);
         }
     }
 
@@ -1240,7 +1246,7 @@ public final class Asserts
     {
         if (index < 0)
         {
-            return format("%s (%s) must not be negative", desc, index);
+            return format("{} ({}) must not be negative", desc, index);
         }
         else if (size < 0)
         {
@@ -1248,7 +1254,7 @@ public final class Asserts
         }
         else
         { // index > size
-            return format("%s (%s) must not be greater than size (%s)", desc, index, size);
+            return format("{} ({}) must not be greater than size ({})", desc, index, size);
         }
     }
 
@@ -1286,7 +1292,7 @@ public final class Asserts
             return badPositionIndex(end, size, "end index");
         }
         // end < start
-        return format("end index (%s) must not be less than start index (%s)", end, start);
+        return format("end index ({}) must not be less than start index ({})", end, start);
     }
 
 
@@ -1310,7 +1316,7 @@ public final class Asserts
         int i = 0;
         while (i < args.length)
         {
-            int placeholderStart = template.indexOf("%s", templateStart);
+            int placeholderStart = template.indexOf("{}", templateStart);
             if (placeholderStart == -1)
             {
                 break;
