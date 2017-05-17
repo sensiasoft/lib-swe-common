@@ -273,36 +273,42 @@ public abstract class AbstractSimpleComponentImpl extends AbstractDataComponentI
     @Override
     public void addComponent(String name, DataComponent component)
     {
-        throw new UnsupportedOperationException();        
+        throw generateException();
     }
     
     @Override
     public AbstractDataComponentImpl getComponent(String name)
     {
-        throw new UnsupportedOperationException();
+        throw generateException();
     }
     
     @Override
     public int getComponentIndex(String name)
     {
-        throw new UnsupportedOperationException();
+        throw generateException();
     }
     
     @Override
     public AbstractDataComponentImpl getComponent(int index)
     {
-        throw new UnsupportedOperationException();
+        throw generateException();
     }
     
     @Override
     public AbstractDataComponentImpl removeComponent(int index)
     {
-        throw new UnsupportedOperationException();
+        throw generateException();
     }
 
     @Override
     public AbstractDataComponentImpl removeComponent(String name)
     {
-        throw new UnsupportedOperationException();
+        throw generateException();
+    }
+    
+    protected UnsupportedOperationException generateException()
+    {
+        String name = getName() == null ? "This" : getName();
+        return new UnsupportedOperationException(String.format("'%s' is a scalar component", name));
     }
 }
