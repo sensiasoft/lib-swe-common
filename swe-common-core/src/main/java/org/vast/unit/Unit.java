@@ -21,6 +21,7 @@
 package org.vast.unit;
 
 import java.io.Serializable;
+import java.util.Objects;
 import org.vast.util.NumberUtils;
 
 /**
@@ -120,7 +121,8 @@ public class Unit implements Serializable
     {
         return (isCompatible(unit) &&
                 NumberUtils.ulpEquals(this.scaleToSI, unit.scaleToSI) &&
-                NumberUtils.ulpEquals(this.pi, unit.pi));
+                NumberUtils.ulpEquals(this.pi, unit.pi) &&
+                Objects.equals(this.function, unit.function));
     }
     
     
@@ -435,7 +437,10 @@ public class Unit implements Serializable
     
     public String getUCUMExpression()
     {
-        StringBuffer buf = new StringBuffer();
+        if (getCode() != null)
+            return getCode();
+        
+        StringBuilder buf = new StringBuilder();
         
         addUnitString(buf, radian, "rad");
         addUnitString(buf, meter, "m");
@@ -446,7 +451,7 @@ public class Unit implements Serializable
         addUnitString(buf, mole, "mol");
         addUnitString(buf, candela, "cd");
         
-        if (NumberUtils.ulpEquals(scaleToSI, 1.0))
+        if (!NumberUtils.ulpEquals(scaleToSI, 1.0))
             buf.insert(0, getScaleToSI() + "*");
         
         return buf.toString();
@@ -456,7 +461,7 @@ public class Unit implements Serializable
     @Override
     public String toString()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         
         addUnitString(buf, radian, "rad");
         addUnitString(buf, meter, "m");
@@ -465,18 +470,22 @@ public class Unit implements Serializable
         addUnitString(buf, ampere, "A");
         addUnitString(buf, kelvin, "K");
         addUnitString(buf, mole, "mol");
-        addUnitString(buf, candela, "cd");        
-        buf.insert(0, getScaleToSI() + "*");
+        addUnitString(buf, candela, "cd");
+        
+        // insert scale factor
+        if (!NumberUtils.ulpEquals(scaleToSI, 1.0))
+            buf.insert(0, getScaleToSI() + "*");
         
         // insert function symbol
-        if (this.function != null)
+        if (function != null)
+        {
             buf.insert(0, 1./function.getScaleFactor() + "*" + function.getPrintSymbol() + "(");
+            buf.append(")");
+        }
         
         // insert code =
-        buf.insert(0, getCode() + " = ");
-        
-        if (function != null)
-            buf.append(")");
+        if (getCode() != null)
+            buf.insert(0, getCode() + " = ");            
         
         // also append unit name and printSymbol
         buf.append("  (" + getName() + " - " + getPrintSymbol() + ")");
@@ -485,7 +494,7 @@ public class Unit implements Serializable
     }
     
     
-    private void addUnitString(StringBuffer buf, double val, String sym)
+    private void addUnitString(StringBuilder buf, double val, String sym)
     {
         int ival = (int)val;
         
