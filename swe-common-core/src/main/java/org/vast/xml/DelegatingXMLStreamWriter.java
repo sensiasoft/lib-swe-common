@@ -32,8 +32,8 @@ import javax.xml.stream.XMLStreamWriter;
 
 /**
  * <p>
- * Abstract base for delegating XML stream writers;
- * By default, all methods are delegated to the underlying writer;
+ * Abstract base for delegating XML stream writers.<br/>
+ * By default, all methods are delegated to the underlying writer.
  * </p>
  *
  * @author Alex Robin

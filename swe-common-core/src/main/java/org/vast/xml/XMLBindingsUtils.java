@@ -14,9 +14,9 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.xml;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -50,6 +50,7 @@ public abstract class XMLBindingsUtils
         {
             DOMSource source = new DOMSource(componentElt);
             XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(source);
+            reader = new XMLStreamReaderWithLocation(reader, dom.getXmlDocument().getUri());
             return readFromXmlStream(reader, eltType);
         }
         catch (Exception e)
@@ -59,11 +60,19 @@ public abstract class XMLBindingsUtils
     }
     
     
-    public Object readFromStream(InputStream is, Enum<?> eltType) throws XMLReaderException
+    protected Object readFromStream(InputStream is, Enum<?> eltType) throws XMLReaderException
+    {
+        return readFromStream(is, null, eltType);
+    }
+    
+    
+    public Object readFromStream(InputStream is, URI baseURI, Enum<?> eltType) throws XMLReaderException
     {
         try
         {
             XMLStreamReader reader = XMLImplFinder.getStaxInputFactory().createXMLStreamReader(is, encoding);
+            if (baseURI != null)
+                reader = new XMLStreamReaderWithLocation(reader, baseURI);
             return readFromXmlStream(reader, eltType);
         }
         catch (Exception e)
@@ -93,7 +102,7 @@ public abstract class XMLBindingsUtils
     }
     
     
-    protected void writeToStream(OutputStream os, Object sweObj, Enum<?> eltType, boolean indent) throws XMLWriterException, IOException
+    protected void writeToStream(OutputStream os, Object sweObj, Enum<?> eltType, boolean indent) throws XMLWriterException
     {
         try
         {
