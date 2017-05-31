@@ -733,13 +733,13 @@ public class SWEHelper extends SWEFactory
     /**
      * Finds a component in a component tree using a path 
      * @param parent component from which to start the search
-     * @param path desired path as a String array cotnaining a sequence of component names
+     * @param path desired path as a String array containing a sequence of component names
      * @return the component with the given path
      * @throws CDMException if the specified path is incorrect
      */
     public static DataComponent findComponentByPath(DataComponent parent, String[] path) throws CDMException
     {
-        DataComponent data = parent;
+        DataComponent comp = parent;
         
         for (int i=0; i<path.length; i++)
         {
@@ -747,12 +747,12 @@ public class SWEHelper extends SWEFactory
             if (pathElt.length() == 0) // a leading '/' create an empty array element
                 continue;
             
-            data = data.getComponent(pathElt);
-            if (data == null)
+            comp = comp.getComponent(pathElt);
+            if (comp == null)
                 throw new CDMException("Unknown component " + pathElt);
         }
         
-        return data;
+        return comp;
     }
     
     
@@ -770,7 +770,10 @@ public class SWEHelper extends SWEFactory
         DataComponent parent = component.getParent();
         
         while (parent != null && parent.getName() != null)
-            path.insert(0, parent.getName()).append(PATH_SEPARATOR);
+        {
+            path.insert(0, parent.getName() + PATH_SEPARATOR);
+            parent = parent.getParent();
+        }
         
         return path.toString();
     }
