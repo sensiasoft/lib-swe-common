@@ -319,9 +319,9 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
     
     
     /**
-     * Specific to DataGroup and used by ProcessChain
+     * Specific to DataRecord and used by ProcessChain
      * Allows to combine child blocks into one mixed block
-     * when blocks are coming from different independant sources
+     * when blocks are coming from different independent sources
      */
     public void combineDataBlocks()
     {
@@ -332,8 +332,13 @@ public abstract class AbstractRecordImpl<ComponentType extends DataComponent> ex
         {
             AbstractDataComponentImpl childComponent = (AbstractDataComponentImpl)fieldList.get(i);
             
-            if (childComponent instanceof AbstractRecordImpl && childComponent.dataBlock == null)
-                ((AbstractRecordImpl<?>)childComponent).combineDataBlocks();
+            if (childComponent.dataBlock == null)
+            {
+                if (childComponent instanceof AbstractRecordImpl)
+                    ((AbstractRecordImpl<?>)childComponent).combineDataBlocks();
+                else
+                    childComponent.assignNewDataBlock();
+            }
 
             newBlock.blockArray[i] = childComponent.dataBlock;
             newBlock.atomCount += childComponent.dataBlock.atomCount;

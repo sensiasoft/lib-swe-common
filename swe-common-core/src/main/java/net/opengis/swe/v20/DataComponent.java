@@ -259,7 +259,7 @@ public interface DataComponent extends AbstractSWEIdentifiable, HasCopy
     
     
     /**
-     * Renew the datablock of this component by cloning it.
+     * Renew the datablock of this component.
      * This method is faster than recreating a datablock from scratch with createDataBlock().
      */
     public void renewDataBlock();
