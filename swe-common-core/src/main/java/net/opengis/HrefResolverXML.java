@@ -17,10 +17,13 @@ package net.opengis;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import org.vast.util.ResolveException;
 
 
 /**
@@ -33,26 +36,50 @@ import javax.xml.stream.XMLStreamReader;
  */
 public abstract class HrefResolverXML implements HrefResolver
 {    
+    URI baseURI;
+    
     
     public HrefResolverXML()
     {
     }
     
     
-    /* (non-Javadoc)
-     * @see net.opengis.HrefResolver#resolveHref(net.opengis.OgcProperty)
-     */
+    public HrefResolverXML(String baseURI)
+    {
+        try
+        {
+            this.baseURI = (baseURI == null) ? null : new URI(baseURI);
+        }
+        catch (URISyntaxException e)
+        {
+            throw new IllegalArgumentException("Invalid base URI", e);
+        }
+    }
+    
+    
     @Override
-    public boolean resolveHref(OgcProperty<?> hrefProp) throws IOException
+    public boolean resolveHref(OgcProperty<?> hrefProp) throws ResolveException
     {
         if (!hrefProp.hasHref())
             return false;
         
-        URL hrefUrl = new URL(hrefProp.getHref());
-        InputStream is = new BufferedInputStream(hrefUrl.openStream());
+        URL hrefURL;
+        try
+        {
+            URI hrefURI = new URI(hrefProp.getHref());
+            if (baseURI == null)
+                hrefURL = hrefURI.toURL();
+            else
+                hrefURL = baseURI.resolve(hrefURI).toURL();
+        }
+        catch (Exception e)
+        {
+            throw new ResolveException(String.format("Cannot resolve URI '%s'", hrefProp.getHref()), e);
+        }
                 
         try
         {
+            InputStream is = new BufferedInputStream(hrefURL.openStream());
             XMLInputFactory fac = XMLInputFactory.newInstance();
             XMLStreamReader reader = fac.createXMLStreamReader(is);
             reader.nextTag();
@@ -61,9 +88,13 @@ public abstract class HrefResolverXML implements HrefResolver
             if (hrefProp.hasValue())
                 return true;
         }
+        catch (IOException e)
+        {
+            throw new ResolveException("Cannot access XML content at " + hrefProp.getHref(), e);
+        }
         catch (XMLStreamException e)
         {
-            throw new IOException("Error while parsing remote XML content", e);
+            throw new ResolveException("Cannot parse XML content at " + hrefProp.getHref(), e);
         }
         
         return false;

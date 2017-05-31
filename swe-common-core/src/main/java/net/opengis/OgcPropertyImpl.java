@@ -16,6 +16,7 @@ package net.opengis;
 
 import java.io.IOException;
 import java.io.Serializable;
+import org.vast.util.Asserts;
 import org.vast.util.ResolveException;
 
 
@@ -174,7 +175,7 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     {
         try
         {
-            if (!hasValue() && hasHref())
+            if (hasHref() && !hasValue() && hrefResolver != null)
                 resolveHref();
             return value;
         }
@@ -195,9 +196,6 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     @Override
     public void setValue(ValueType value)
     {
-        //if (href != null)
-        //    throw new IllegalStateException("Attempting to set value of property that already has an xlink:href");
-        
         this.value = value;
     }
     
@@ -212,8 +210,11 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     @Override
     public boolean resolveHref() throws IOException
     {
-        if (hrefResolver == null || !hasHref() || hasValue())
-            return false;
+        if (hasValue())
+            return true;
+        
+        Asserts.checkState(hasHref(), "Property must have an href");
+        Asserts.checkState(hrefResolver != null, "No href resolver is configured");
         
         // call resolver and discard it so it can be GC
         boolean ret = hrefResolver.resolveHref(this);
