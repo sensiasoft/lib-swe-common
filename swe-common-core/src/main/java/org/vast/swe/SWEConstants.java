@@ -87,6 +87,7 @@ public class SWEConstants
     // SWE special units
     public static final String SWE_UOM_URI_PREFIX = "http://sensorml.com/ont/swe/uom/";
     public static final String UOM_ANY = SWE_UOM_URI_PREFIX + "Any";
+    public static final String UOM_ANY_CODE = "any";
     public static final String UOM_UNITLESS = "1";
     
     

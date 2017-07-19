@@ -21,8 +21,9 @@
 package org.vast.unit;
 
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -45,17 +46,15 @@ import org.w3c.dom.NodeList;
 public class UnitParserUCUM implements UnitParser
 {
 	private static Logger log = LoggerFactory.getLogger(UnitParserUCUM.class);
-    private static Hashtable<String, Double> prefixTable;
+    private static HashMap<String, Double> prefixTable = new HashMap<>();
     private static String termRegex = "[./]?[0-9 a-z A-Z \\[ \\] \\- \\+ \\! \\# \\* \\_]+";
     private static String intRegex = "[./]?[-+]?[0-9]+([-+][0-9])?";
     private static String funcRegex = "^[0-9 a-z A-Z]+\\(.+\\)$";
-    private static Hashtable<String, Unit> unitTable = new Hashtable<String, Unit>();
+    private static HashMap<String, Unit> unitTable = new HashMap<>();
     
     
     static
     {
-        prefixTable = new Hashtable<String, Double>();
-        
         // load prefix scale factors
         prefixTable.put("Y", 1e24);
         prefixTable.put("Z", 1e21);
@@ -173,10 +172,9 @@ public class UnitParserUCUM implements UnitParser
                 
         // first try all prefixes and see if they match
         boolean prefixFound = false;
-        Enumeration<String> prefixList = prefixTable.keys();
-        while (prefixList.hasMoreElements())
+        Set<String> prefixList = prefixTable.keySet();
+        for (String prefix: prefixList)
         {
-            String prefix = prefixList.nextElement();
             if (unitString.startsWith(prefix))
             {
                 // get remaining of string after prefix
@@ -277,7 +275,7 @@ public class UnitParserUCUM implements UnitParser
     }
 
 
-    public static Hashtable<String, Unit> getUnitTable()
+    public static Map<String, Unit> getUnitTable()
     {
         if (unitTable.isEmpty())
             new UnitParserUCUM().preloadUCUMUnits();
