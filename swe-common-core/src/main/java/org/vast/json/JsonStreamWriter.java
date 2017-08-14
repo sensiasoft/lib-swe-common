@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamWriter;
 import org.vast.util.NumberUtils;
@@ -429,7 +430,25 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     public NamespaceContext getNamespaceContext()
     {
         // no namespace support
-        return null;
+        return new NamespaceContext() {
+            @Override
+            public String getNamespaceURI(String arg0)
+            {
+                return null;
+            }
+
+            @Override
+            public String getPrefix(String arg0)
+            {
+                return null;
+            }
+
+            @Override
+            public Iterator<String> getPrefixes(String arg0)
+            {
+                return null;
+            }
+        };
     }
 
 
