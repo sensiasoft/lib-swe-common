@@ -94,9 +94,9 @@ public class GMLStaxBindings extends XMLStreamBindings
         this.readAbstractFeatureTypeElements(reader, newFeature);
                 
         // also read all other properties in a generic manner
-        reader.nextTag();
         while (reader.getEventType() != XMLStreamConstants.END_ELEMENT)
         {
+            reader.nextTag();
             QName propName = reader.getName();
             
             if (reader.hasText())
@@ -134,11 +134,11 @@ public class GMLStaxBindings extends XMLStreamBindings
                     
                     newFeature.setProperty(propName, value);
                 }
-                
-                reader.nextTag();
             }
             else
+            {
                 skipElementAndAllChildren(reader);
+            }
         }        
         
         return newFeature;
