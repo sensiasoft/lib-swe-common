@@ -195,4 +195,14 @@ public class Base64Encoder extends FilterOutputStream
             }
         }
     }
+    
+    
+    public static byte[] encode(byte[] data) throws IOException
+    {
+        ByteArrayOutputStream output = new ByteArrayOutputStream(data.length*4/3+3);
+        Base64Encoder encoder = new Base64Encoder(output);
+        encoder.write(data);
+        encoder.close();
+        return output.toByteArray();
+    }
 }
