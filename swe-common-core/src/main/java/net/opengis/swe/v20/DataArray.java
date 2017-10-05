@@ -42,6 +42,14 @@ public interface DataArray extends BlockComponent
     
     
     /**
+     * Gets the array size component whether the array has fixed, implicit
+     * or variable size.
+     * @return the Count component that contains the array size value
+     */
+    public Count getArraySizeComponent();
+    
+    
+    /**
      * Updates the size of the array (and corresponding data block if set)
      * using the size value set in the size component
      */

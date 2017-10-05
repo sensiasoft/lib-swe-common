@@ -62,7 +62,7 @@ public abstract class AbstractDataWriter extends DataBlockProcessor implements D
         }
         catch (Exception e)
         {
-            throw new IOException("Error while writing text record", e);
+            throw new IOException("Error while writing record", e);
         }
     }
     

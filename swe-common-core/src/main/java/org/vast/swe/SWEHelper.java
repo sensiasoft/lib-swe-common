@@ -622,7 +622,7 @@ public class SWEHelper extends SWEFactory
             DataComponent comp = it.next();
             if (comp instanceof DataArrayImpl)
             {
-                CountImpl count = ((DataArrayImpl)comp).getArraySizeComponent();
+                CountImpl count = (CountImpl)((DataArrayImpl)comp).getArraySizeComponent();
                 if (count != null && count.getEncodingInfo() == null)
                 {
                     BinaryComponent binaryOpts = new BinaryComponentImpl();

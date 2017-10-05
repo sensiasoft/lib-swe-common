@@ -20,6 +20,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.vast.swe.SWEDataTypeUtils;
 import org.vast.util.DateTimeFormat;
 import org.vast.util.WriterException;
@@ -61,6 +63,7 @@ public class JsonDataWriter extends AbstractDataWriter
     protected int depth;
     boolean multipleRecords;
     boolean firstBlock = true;
+    Map<String, IntegerWriter> countWriters = new HashMap<>();
     
     
     protected interface JsonWriter
@@ -115,6 +118,8 @@ public class JsonDataWriter extends AbstractDataWriter
     
     protected class IntegerWriter extends ValueWriter
     {
+        int val;
+        
         public IntegerWriter(String eltName)
         {
             this.eltName = eltName;
@@ -123,7 +128,7 @@ public class JsonDataWriter extends AbstractDataWriter
         @Override
         public void writeValue(DataBlock data, int index) throws IOException
         {
-            int val = data.getIntValue(index);
+            val = data.getIntValue(index);
             writer.write(Integer.toString(val));
         }
     }
@@ -309,6 +314,7 @@ public class JsonDataWriter extends AbstractDataWriter
     protected class ArrayWriter extends ArrayProcessor implements JsonWriter
     {
         String eltName;
+        IntegerWriter sizeWriter;
         boolean onlyScalars = true;
         
         public ArrayWriter(String eltName)
@@ -321,6 +327,10 @@ public class JsonDataWriter extends AbstractDataWriter
         {
             try
             {
+                // retrieve variable array size
+                if (sizeWriter != null)
+                    arraySize = sizeWriter.val;
+                
                 writer.write('[');
                 
                 depth++;                
@@ -541,7 +551,10 @@ public class JsonDataWriter extends AbstractDataWriter
     @Override
     public void visit(Count comp)
     {
-        addToProcessorTree(new IntegerWriter(comp.getName()));
+        IntegerWriter writer = new IntegerWriter(comp.getName());
+        if (comp.isSetId())
+            countWriters.put(comp.getId(), writer);
+        addToProcessorTree(writer);
     }
     
     
@@ -675,6 +688,12 @@ public class JsonDataWriter extends AbstractDataWriter
             ArraySizeScanner sizeWriter = new ArraySizeScanner();
             sizeWriter.arrayProcessor = arrayWriter;
             addToProcessorTree(sizeWriter);
+        }
+        else if (array.isVariableSize())
+        {
+            // look for size writer
+            String refId = array.getArraySizeComponent().getId();
+            arrayWriter.sizeWriter = countWriters.get(refId);
         }
         else
             arrayWriter.setArraySize(array.getComponentCount());

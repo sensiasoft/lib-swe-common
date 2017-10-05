@@ -205,6 +205,7 @@ public class TextDataWriter extends AbstractDataWriter
         public int process(DataBlock data, int index) throws IOException
         {
             int arraySize = data.getIntValue(index);
+            arrayProcessor.arraySize = arraySize;
             writer.write(Integer.toString(arraySize));
             return ++index;
         }

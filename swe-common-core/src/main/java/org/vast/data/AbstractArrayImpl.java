@@ -41,7 +41,8 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     protected OgcPropertyImpl<DataComponent> elementType;
     protected DataEncoding encoding;
     protected EncodedValues values;
-
+    protected CountImpl implicitElementCount;
+    
 
     public AbstractArrayImpl()
     {
@@ -183,6 +184,56 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     {
         assert(sizeComponent.isSetId());
         this.elementCount.setHref("#" + sizeComponent.getId());
+    }
+    
+    
+    @Override
+    public final Count getArraySizeComponent()
+    {
+        // case of implicit size
+        if (isImplicitSize())
+        {
+            if (implicitElementCount == null)
+                implicitElementCount = new CountImpl();
+            return implicitElementCount;
+        }
+        
+        // if variable size, try to find the size component up the component tree
+        else if (isVariableSize())
+        {
+            String sizeIdRef = elementCount.getHref().substring(1);
+            DataComponent parentComponent = this.parent;
+            DataComponent sizeComponent = this;
+            
+            while (parentComponent != null)
+            {
+                boolean found = false;
+                for (int i=0; i<parentComponent.getComponentCount(); i++)
+                {
+                    sizeComponent = parentComponent.getComponent(i);
+                    if (sizeComponent instanceof Count && sizeComponent.isSetId() && sizeComponent.getId().equals(sizeIdRef))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                
+                if (found)
+                    break;
+                
+                parentComponent = parentComponent.getParent();
+            }
+            
+            if (parentComponent == null)
+                throw new IllegalStateException("Could not find array size component with ID " + sizeIdRef);
+            
+            return (CountImpl)sizeComponent;
+        }
+        
+        if (elementCount.hasValue())
+            return elementCount.getValue();
+        else
+            throw new IllegalStateException("The array element count hasn't been set. Please use one of setElementCount() or setFixedSize() methods");
     }
 
 

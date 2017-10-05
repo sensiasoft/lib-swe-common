@@ -46,7 +46,6 @@ public class DataArrayImpl extends AbstractArrayImpl
     public static final String ARRAY_SIZE_FIELD = "elementCount";
     
     protected int currentSize;
-    protected CountImpl implicitElementCount;
     
     
     /**
@@ -180,7 +179,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     public AbstractDataComponentImpl getComponent(String name)
 	{
 		if (name.equals(ARRAY_SIZE_FIELD))
-		    return getArraySizeComponent();
+		    return (CountImpl)getArraySizeComponent();
         
 		if (!name.equals(elementType.getName()))
 			return null;
@@ -533,55 +532,6 @@ public class DataArrayImpl extends AbstractArrayImpl
         text.append(getArrayComponent().toString(indent + INDENT));
 
         return text.toString();
-    }
-    
-    
-    public final CountImpl getArraySizeComponent()
-    {
-	    // case of implicit size
-        if (isImplicitSize())
-        {
-            if (implicitElementCount == null)
-                implicitElementCount = new CountImpl();
-            return implicitElementCount;
-        }
-        
-	    // if variable size, try to find the size component up the component tree
-        else if (isVariableSize())
-	    {
-	        String sizeIdRef = elementCount.getHref().substring(1);
-	        DataComponent parentComponent = this.parent;
-	        DataComponent sizeComponent = this;
-	        
-            while (parentComponent != null)
-            {
-                boolean found = false;
-                for (int i=0; i<parentComponent.getComponentCount(); i++)
-                {
-                    sizeComponent = parentComponent.getComponent(i);
-                    if (sizeComponent.isSetId() && sizeComponent.getId().equals(sizeIdRef))
-                    {
-                        found = true;
-                        break;
-                    }
-                }
-                
-                if (found)
-                    break;
-                
-                parentComponent = parentComponent.getParent();
-            }
-            
-            if (parentComponent == null)
-                throw new IllegalStateException("Could not found array size component with ID " + sizeIdRef);
-            
-            elementCount.setValue((Count)sizeComponent);
-	    }
-	    
-        if (elementCount.hasValue())
-            return (CountImpl)elementCount.getValue();
-        else
-            throw new IllegalStateException("The array element count hasn't been set. Please use one of setElementCount() or setFixedSize() methods");
     }
 	
 	
