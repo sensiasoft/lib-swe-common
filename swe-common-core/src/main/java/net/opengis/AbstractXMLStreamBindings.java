@@ -180,6 +180,7 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
     {
         Map<String, String> attrMap = collectAttributes(reader);
         readPropertyAttributes(attrMap, prop);
+        setupHrefResolver(reader, prop);
     }
     
     
@@ -190,6 +191,12 @@ public abstract class AbstractXMLStreamBindings extends AbstractBindings
         prop.setHref(attrMap.get("href"));
         prop.setRole(attrMap.get("role"));
         prop.setArcRole(attrMap.get("arcrole"));
+    }
+    
+    
+    protected void setupHrefResolver(XMLStreamReader reader, OgcProperty<?> prop)
+    {
+        // to be implemented in subclasses
     }
     
     

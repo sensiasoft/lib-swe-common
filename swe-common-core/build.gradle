@@ -5,6 +5,7 @@ dependencies {
   compile 'ch.qos.logback:logback-classic:1.2.3'
   compile 'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
   compile 'com.google.code.gson:gson:2.8.0'
+  compile 'uk.com.robust-it:cloning:1.9.1'
 }
 
 // add info to OSGI manifest
