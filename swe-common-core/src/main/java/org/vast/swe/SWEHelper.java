@@ -239,58 +239,101 @@ public class SWEHelper extends SWEFactory
     
     
     /**
-     * Creates a new sampling time component
-     * @param uom unit of time stamp
-     * @param isUomCode true if uom is a UCUM code, false if it is a URI
-     * @param timeRef URI of temporal reference frame for this time stamp
+     * Creates a new time component
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long) or null
+     * @param uom code or URI for this time stamp unit of measure (can be {@link SWEConstants.}) 
+     * @param timeRef URI of time reference system
+     * @param dataType data type to use for this component (if null, {@link DataType#DOUBLE} will be used)
      * @return the new Time component object
      */
-    public Time newTimeStamp(String uom, boolean isUomCode, String timeRef)
+    public Time newTime(String definition, String label, String description, String uom, String timeRef, DataType dataType)
     {
-        Time ts = newTime();
-        ts.setLabel("Sampling Time");
+        Time t = newTime(dataType == null ? DataType.DOUBLE : dataType);
+        t.setDefinition(definition);
+        t.setLabel(label);
+        t.setDescription(description);
+        t.setReferenceFrame(timeRef);
         
-        if (isUomCode)
-            ts.getUom().setCode(uom);
+        if (uom.startsWith(SWEConstants.URN_PREFIX) || uom.startsWith(SWEConstants.HTTP_PREFIX))
+            t.getUom().setHref(uom);
         else
-            ts.getUom().setHref(uom);
+            t.getUom().setCode(uom);
         
-        ts.setDefinition(SWEConstants.DEF_SAMPLING_TIME);
-        ts.setReferenceFrame(timeRef);
-        
-        return ts;
+        return t;
     }
     
     
     /**
-     * Creates a new sampling time component with ISO calendar and UTC time frame
+     * Creates a new time component with double data type
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long) or null
+     * @param uom code or URI for this time stamp unit of measure (can be {@link SWEConstants.}) 
+     * @param timeRef URI of time reference system
+     * @return the new Time component object
+     */
+    public Time newTime(String definition, String label, String description, String uom, String timeRef)
+    {
+        return newTime(definition, label, description, uom, timeRef, DataType.DOUBLE);
+    }
+    
+    
+    /**
+     * Creates new time component with ISO8601 format and UTC time frame
+     * @param definition URI pointing to semantic definition of component in a dictionary
+     * @param label short human readable label identifying the component (shown in UI)
+     * @param description textual description of this component (can be long) or null
+     * @return the new Time component object
+     */
+    public Time newTimeIsoUTC(String definition, String label, String description)
+    {
+        return newTime(definition, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
+    }
+    
+    
+    /**
+     * Creates a new sampling time component with ISO8601 format and UTC time frame
      * @return the new Time component object
      */
     public Time newTimeStampIsoUTC()
     {
-        return newTimeStamp(Time.ISO_TIME_UNIT, false, SWEConstants.TIME_REF_UTC);
+        return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
     }
     
     
     /**
-     * Creates a new sampling time component with ISO calendar and UTC time frame
+     * Creates a new sampling time component with ISO8601 format and GPS time frame
      * @return the new Time component object
      */
     public Time newTimeStampIsoGPS()
     {
-        return newTimeStamp(Time.ISO_TIME_UNIT, false, SWEConstants.TIME_REF_GPS);
+        return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_GPS);
     }
     
     
     /**
-     * Creates a new sampling time component 
+     * Creates a new phenomenon time component with ISO8601 format and UTC time frame
+     * @param label short human readable label (forecast, model run, valid time etc.)
+     * @param description textual description of this component (can be long) or null
+     * @return the new Time component object
+     */
+    public Time newPhenomenonTimeIsoUTC(String label, String description)
+    {
+        return newTime(SWEConstants.DEF_PHENOMENON_TIME, label, description, Time.ISO_TIME_UNIT, SWEConstants.TIME_REF_UTC);
+    }
+    
+    
+    /**
+     * Creates a new sampling time component with decimal unit (e.g. on board clock)
      * @param uomCode time unit used for this onboard time stamp (e.g. 's', 'ms', 'ns', etc.)
      * @param timeRef URI of temporal reference frame for this time stamp (e.g. missionStart, etc.)
      * @return the new Time component object
      */
     public Time newTimeStampOnBoardClock(String uomCode, String timeRef)
     {
-        return newTimeStamp(uomCode, true, timeRef);
+        return newTime(SWEConstants.DEF_SAMPLING_TIME, "Sampling Time", null, uomCode, timeRef);
     }
     
     
@@ -801,6 +844,8 @@ public class SWEHelper extends SWEFactory
     public static ScalarIndexer getTimeStampIndexer(DataComponent parent)
     {
         ScalarComponent timeStamp = (ScalarComponent)findComponentByDefinition(parent, SWEConstants.DEF_SAMPLING_TIME);
+        if (timeStamp == null)
+            timeStamp = (ScalarComponent)findComponentByDefinition(parent, SWEConstants.DEF_PHENOMENON_TIME);
         if (timeStamp == null)
             return null;
         return new ScalarIndexer(parent, timeStamp);

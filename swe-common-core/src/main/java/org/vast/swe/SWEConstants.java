@@ -67,6 +67,7 @@ public class SWEConstants
     
     // OGC definition URIs
     public static final String OGC_PROP_URI = OGC_DEF_URI + "property/OGC/0/";
+    public static final String DEF_PHENOMENON_TIME = OGC_PROP_URI + "PhenomenonTime";
     public static final String DEF_SAMPLING_TIME = OGC_PROP_URI + "SamplingTime";
     public static final String DEF_SAMPLING_LOC = OGC_PROP_URI + "SamplingLocation";
     public static final String DEF_SENSOR_LOC = OGC_PROP_URI + "SensorLocation";
