@@ -67,13 +67,24 @@ public class SWEConstants
     
     // OGC definition URIs
     public static final String OGC_PROP_URI = OGC_DEF_URI + "property/OGC/0/";
+    public static final String DEF_ARRAY_SIZE = OGC_PROP_URI + "ArraySize";
+    public static final String DEF_NUM_POINTS = OGC_PROP_URI + "NumberOfPoints";
+    public static final String DEF_NUM_ROWS = OGC_PROP_URI + "NumberOfRows";
+    public static final String DEF_NUM_SAMPLES = OGC_PROP_URI + "NumberOfSamples";
     public static final String DEF_PHENOMENON_TIME = OGC_PROP_URI + "PhenomenonTime";
     public static final String DEF_SAMPLING_TIME = OGC_PROP_URI + "SamplingTime";
+    public static final String DEF_FORECAST_TIME = OGC_PROP_URI + "ForecastTime";
+    public static final String DEF_RUN_TIME = OGC_PROP_URI + "RunTime";
+    public static final String DEF_MISSION_START_TIME = OGC_PROP_URI + "MissionStartTime";
+    public static final String DEF_SCAN_START_TIME = OGC_PROP_URI + "ScanStartTime";
     public static final String DEF_SAMPLING_LOC = OGC_PROP_URI + "SamplingLocation";
     public static final String DEF_SENSOR_LOC = OGC_PROP_URI + "SensorLocation";
     public static final String DEF_SENSOR_ORIENT = OGC_PROP_URI + "SensorOrientation";
     public static final String DEF_PLATFORM_LOC = OGC_PROP_URI + "PlatformLocation";
     public static final String DEF_PLATFORM_ORIENT = OGC_PROP_URI + "PlatformOrientation";
+    public static final String DEF_SENSOR_TYPE = OGC_PROP_URI + "SensorType";
+    public static final String DEF_SENSOR_STATUS = OGC_PROP_URI + "SensorStatus";
+    public static final String DEF_PLATFORM_TYPE = OGC_PROP_URI + "PlatformType";
     public static final String DEF_FOI_ID = OGC_PROP_URI + "FeatureOfInterestID";
     
     // SWE definition URIs
