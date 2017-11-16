@@ -145,7 +145,17 @@ public class JsonDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
-            writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));
+            String stringVal = SWEDataTypeUtils.getDoubleOrInfAsString(val);
+            
+            // need to add quote on special values because they are not valid literal values in JSON
+            if (Double.isNaN(val) || Double.isInfinite(val))
+            {
+                writer.write('"');
+                writer.write(stringVal);
+                writer.write('"');
+            }
+            else
+                writer.write(stringVal);
         }
     }
     
