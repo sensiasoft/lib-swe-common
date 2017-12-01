@@ -60,7 +60,7 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
     }
     
     
-    protected void copyTo(OgcPropertyImpl<ValueType> other)
+    public void copyTo(OgcPropertyImpl<ValueType> other)
     {        
         other.name = this.name;
         other.href = this.href;
@@ -70,7 +70,7 @@ public class OgcPropertyImpl<ValueType extends Serializable> implements OgcPrope
         other.hrefResolver = this.hrefResolver;
         
         if (this.value != null && this.value instanceof HasCopy)
-            other.value = (ValueType)((HasCopy)this.value).copy();
+            other.setValue((ValueType)((HasCopy)this.value).copy());
         else
             other.value = this.value;
     }

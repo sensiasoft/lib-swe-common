@@ -18,6 +18,7 @@ import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataEncoding;
+import net.opengis.swe.v20.DataRecord;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
@@ -37,7 +38,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     private static final long serialVersionUID = -6508481468764422077L;
     public static final String ELT_COUNT_NAME = "elementCount";
     
-    protected OgcPropertyImpl<Count> elementCount = new OgcPropertyImpl<Count>();
+    protected OgcPropertyImpl<Count> elementCount;
     protected OgcPropertyImpl<DataComponent> elementType;
     protected DataEncoding encoding;
     protected EncodedValues values;
@@ -83,8 +84,8 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     {
         super.copyTo(other);
         
-        other.elementCount = this.elementCount.copy();
-        other.elementType = this.elementType.copy();
+        this.elementCount.copyTo(other.elementCount);
+        this.elementType.copyTo(other.elementType);
         
         if (this.encoding != null)
             other.encoding = this.encoding.copy();
@@ -207,19 +208,23 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
             
             while (parentComponent != null)
             {
-                boolean found = false;
-                for (int i=0; i<parentComponent.getComponentCount(); i++)
+                if (parentComponent instanceof DataRecord)
                 {
-                    sizeComponent = parentComponent.getComponent(i);
-                    if (sizeComponent instanceof Count && sizeComponent.isSetId() && sizeComponent.getId().equals(sizeIdRef))
+                    boolean found = false;
+                    
+                    for (int i=0; i<parentComponent.getComponentCount(); i++)
                     {
-                        found = true;
-                        break;
+                        sizeComponent = parentComponent.getComponent(i);
+                        if (sizeComponent instanceof Count && sizeComponent.isSetId() && sizeComponent.getId().equals(sizeIdRef))
+                        {
+                            found = true;
+                            break;
+                        }
                     }
+                    
+                    if (found)
+                        break;
                 }
-                
-                if (found)
-                    break;
                 
                 parentComponent = parentComponent.getParent();
             }
@@ -262,6 +267,7 @@ public abstract class AbstractArrayImpl extends AbstractDataComponentImpl implem
     {
         elementType.setName(name);
         elementType.setValue(component);
+        ((AbstractDataComponentImpl)component).setParent(this);
     }
 
 
