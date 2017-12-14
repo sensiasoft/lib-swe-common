@@ -220,7 +220,9 @@ public class DataArrayImpl extends AbstractArrayImpl
         else if (isVariableSize())
         {
             int arraySize = getArraySizeComponent().getData().getIntValue();
-            if (dataBlock.getAtomCount() % arraySize != 0)
+            int atomCount = dataBlock.getAtomCount();
+            if ((arraySize == 0 && atomCount != 0) ||
+                (arraySize > 0) && (atomCount % arraySize != 0))
                 throw new IllegalStateException("Datablock is incompatible with specified array size: " + arraySize);
         }
         

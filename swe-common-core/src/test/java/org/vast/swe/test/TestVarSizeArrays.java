@@ -63,9 +63,23 @@ public class TestVarSizeArrays
         data = rec.createDataBlock();
         assertEquals(TEST2_FAIL_MSG, arraySize*3+1, data.getAtomCount());
         
+        // test resizing to 0
+        array.updateSize(0);
+        data = rec.createDataBlock();
+        assertEquals(TEST2_FAIL_MSG, 1, data.getAtomCount());
+        
         // test set new datablock
         arraySize = 50;
         DataBlockMixed newData = new DataBlockMixed(
+                DataBlockFactory.createBlock(new int[] {arraySize}),
+                new DataBlockDouble(arraySize*3)
+        );
+        rec.setData(newData);
+        assertEquals(arraySize, array.getComponentCount());
+        
+        // test set new datablock with empty array
+        arraySize = 0;
+        newData = new DataBlockMixed(
                 DataBlockFactory.createBlock(new int[] {arraySize}),
                 new DataBlockDouble(arraySize*3)
         );
