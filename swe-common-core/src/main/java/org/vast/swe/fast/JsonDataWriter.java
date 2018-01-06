@@ -183,7 +183,10 @@ public class JsonDataWriter extends AbstractDataWriter
         {
             double val = data.getDoubleValue(index);
             writer.write('"');
-            writer.write(timeFormat.formatIso(val, 0));
+            if (Double.isNaN(val) || Double.isInfinite(val))
+                writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));
+            else
+                writer.write(timeFormat.formatIso(val, 0));
             writer.write('"');
         }
     }
