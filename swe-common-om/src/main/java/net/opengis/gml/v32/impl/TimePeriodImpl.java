@@ -51,7 +51,11 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
     @Override
     public TimePosition getBeginPosition()
     {
-        return beginPosition;
+        if (beginPosition != null)
+            return beginPosition;
+        else if (getBegin() != null)
+            return getBegin().getTimePosition();
+        return null;
     }
     
     
@@ -127,7 +131,11 @@ public class TimePeriodImpl extends AbstractTimeGeometricPrimitiveImpl implement
     @Override
     public TimePosition getEndPosition()
     {
-        return endPosition;
+        if (endPosition != null)
+            return endPosition;
+        else if (getEnd() != null)
+            return getEnd().getTimePosition();
+        return null;
     }
     
     
