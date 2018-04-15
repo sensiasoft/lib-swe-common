@@ -16,7 +16,6 @@ package org.vast.data;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.opengis.IDateTime;
 import net.opengis.swe.v20.AllowedTimes;
 
 
@@ -28,8 +27,8 @@ import net.opengis.swe.v20.AllowedTimes;
 public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
 {
     private static final long serialVersionUID = -6032939377548399837L;
-    protected ArrayList<IDateTime> valueList = new ArrayList<IDateTime>();
-    protected ArrayList<IDateTime[]> intervalList = new ArrayList<IDateTime[]>();
+    protected ArrayList<DateTimeOrDouble> valueList = new ArrayList<DateTimeOrDouble>();
+    protected ArrayList<DateTimeOrDouble[]> intervalList = new ArrayList<DateTimeOrDouble[]>();
     protected Integer significantFigures;
     
     
@@ -42,22 +41,22 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
     public AllowedTimesImpl copy()
     {
         AllowedTimesImpl newObj = new AllowedTimesImpl();
-        for (IDateTime val: valueList)
+        for (DateTimeOrDouble val: valueList)
             newObj.valueList.add(val);
-        for (IDateTime[] interval: intervalList)
-            newObj.intervalList.add(new IDateTime[]{interval[0], interval[1]});
+        for (DateTimeOrDouble[] interval: intervalList)
+            newObj.intervalList.add(new DateTimeOrDouble[]{interval[0], interval[1]});
         newObj.significantFigures = significantFigures;
         return newObj;
     }
     
     
-    public boolean isValid(IDateTime value)
+    public boolean isValid(DateTimeOrDouble value)
     {
-        for (IDateTime allowedValue: valueList)
+        for (DateTimeOrDouble allowedValue: valueList)
             if (allowedValue.equals(value))
                 return true;
         
-        for (IDateTime[] allowedRange: intervalList)
+        for (DateTimeOrDouble[] allowedRange: intervalList)
             if (value.isAfter(allowedRange[0]) && value.isBefore(allowedRange[1]))
                 return true;
         
@@ -75,11 +74,11 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
             msg.append("be one of {");
             int i = 0;
             
-            for (IDateTime allowedValue: valueList)
+            for (DateTimeOrDouble allowedValue: valueList)
             {
                 if (i++ > 0)
                     msg.append(", ");    
-                msg.append(Double.toString(allowedValue.getAsDouble()));
+                msg.append(allowedValue.toString());
             }
             
             msg.append('}');
@@ -93,14 +92,14 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
             msg.append("be within one of {");
             int i = 0;
             
-            for (IDateTime[] allowedRange: intervalList)
+            for (DateTimeOrDouble[] allowedRange: intervalList)
             {
                 if (i++ > 0)
                     msg.append(", ");    
                 msg.append('[');
-                msg.append(Double.toString(allowedRange[0].getAsDouble()));
-                msg.append(' ');
-                msg.append(Double.toString(allowedRange[1].getAsDouble()));
+                msg.append(allowedRange[0].toString());
+                msg.append('/');
+                msg.append(allowedRange[1].toString());
                 msg.append(']');
             }
             
@@ -115,7 +114,7 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
      * Gets the list of value properties
      */
     @Override
-    public List<IDateTime> getValueList()
+    public List<DateTimeOrDouble> getValueList()
     {
         return valueList;
     }
@@ -137,7 +136,7 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
      * Adds a new value property
      */
     @Override
-    public void addValue(IDateTime value)
+    public void addValue(DateTimeOrDouble value)
     {
         this.valueList.add(value);
     }
@@ -147,7 +146,7 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
      * Gets the list of interval properties
      */
     @Override
-    public List<IDateTime[]> getIntervalList()
+    public List<DateTimeOrDouble[]> getIntervalList()
     {
         return intervalList;
     }
@@ -169,7 +168,7 @@ public class AllowedTimesImpl extends AbstractSWEImpl implements AllowedTimes
      * Adds a new interval property
      */
     @Override
-    public void addInterval(IDateTime[] interval)
+    public void addInterval(DateTimeOrDouble[] interval)
     {
         this.intervalList.add(interval);
     }

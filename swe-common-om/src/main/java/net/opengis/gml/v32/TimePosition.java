@@ -15,7 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis.gml.v32;
 
 import java.io.Serializable;
-import net.opengis.IDateTime;
+import java.time.OffsetDateTime;
 
 
 
@@ -86,9 +86,9 @@ public interface TimePosition extends Serializable
     public void setIndeterminatePosition(TimeIndeterminateValue indeterminatePosition);
     
     
-    public IDateTime getDateTimeValue();
+    public OffsetDateTime getDateTimeValue();
     public boolean isSetDateTimeValue();
-    public void setDateTimeValue(IDateTime value);
+    public void setDateTimeValue(OffsetDateTime value);
     
     public double getDecimalValue();
     public void setDecimalValue(double value);

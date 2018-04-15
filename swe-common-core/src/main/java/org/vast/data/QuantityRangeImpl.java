@@ -115,7 +115,7 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
     public OgcProperty<AllowedValues> getConstraintProperty()
     {
         if (constraint == null)
-            constraint = new OgcPropertyImpl<AllowedValues>();
+            constraint = new OgcPropertyImpl<>();
         return constraint;
     }
     
@@ -137,7 +137,7 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
     public void setConstraint(AllowedValues constraint)
     {
         if (this.constraint == null)
-            this.constraint = new OgcPropertyImpl<AllowedValues>();
+            this.constraint = new OgcPropertyImpl<>();
         this.constraint.setValue(constraint);
     }
     
@@ -198,7 +198,7 @@ public class QuantityRangeImpl extends AbstractRangeComponentImpl implements Qua
     @Override
     public String toString(String indent)
     {
-        StringBuffer text = new StringBuffer();
+        StringBuilder text = new StringBuilder();
         text.append("QuantityRange");                
         if (dataBlock != null)
         {

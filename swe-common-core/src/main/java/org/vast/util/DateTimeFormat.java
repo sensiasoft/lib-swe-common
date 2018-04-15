@@ -21,6 +21,14 @@
 package org.vast.util;
 
 import java.text.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.*;
 
 
@@ -33,29 +41,23 @@ import java.util.*;
  * @author Alex Robin
  * @since Nov 29, 2005
  * */
-public class DateTimeFormat extends SimpleDateFormat
+public class DateTimeFormat
 {
-    static final long serialVersionUID = 0;
+    public static final DateTimeFormatter ISO_DATE_OR_TIME_FORMAT = new DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE)
+            .optionalStart()
+            .appendLiteral('T')
+            .append(DateTimeFormatter.ISO_LOCAL_TIME)
+            .optionalEnd()
+            .appendOffsetId()
+            .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+            .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+            .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+            .toFormatter(Locale.US);
     
-    public static final int LOCAL = 255;
-	public static final int SECONDS_IN_MINUTE = 60;
-	public static final int SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE;
-	public static final int SECONDS_IN_DAY = 24 * SECONDS_IN_HOUR;
-	public static final int SECONDS_IN_MONTH = 30 * SECONDS_IN_DAY;
-	public static final int SECONDS_IN_YEAR = 365 * SECONDS_IN_MONTH;
-	
-	Calendar calendar = new GregorianCalendar();
-	
-	
+    
 	public DateTimeFormat()
 	{
-		super("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-	}
-	
-	
-	public DateTimeFormat(String pattern)
-	{
-		super(pattern);
 	}
 	
 	
@@ -67,82 +69,17 @@ public class DateTimeFormat extends SimpleDateFormat
      */
     public double parseIsoPeriod(String iso8601) throws ParseException
     {
-        if (iso8601.charAt(0) != 'P')
-            return 0;
-        
-        iso8601.trim();
-        
-        double periodInSeconds = 0.0;
-        StringBuffer numBuffer = new StringBuffer();
-        int index = 1;
-        boolean time = false;
-        
         try
         {
-            while (index < iso8601.length())
-            {
-                char nextChar = iso8601.charAt(index);
-                
-                switch (nextChar)
-                {
-                    case 'T':
-                        time = true;
-                        break;
-                
-                    case 'Y':
-                        int years = Integer.parseInt(numBuffer.toString());
-                        periodInSeconds += years * 365 * 24 * 3600;
-                        numBuffer.setLength(0);
-                        break;
-                        
-                    case 'M':
-                        if (time)
-                        {
-                            int minutes = Integer.parseInt(numBuffer.toString());
-                            periodInSeconds += minutes * 60;
-                            numBuffer.setLength(0);
-                        }
-                        else
-                        {
-                            int months = Integer.parseInt(numBuffer.toString());
-                            periodInSeconds += months * 30 * 24 * 3600;
-                            numBuffer.setLength(0);
-                        }
-                        break;
-                        
-                    case 'D':
-                        int days = Integer.parseInt(numBuffer.toString());
-                        periodInSeconds += days * 24 * 3600;
-                        numBuffer.setLength(0);
-                        break;
-                        
-                    case 'H':
-                        int hours = Integer.parseInt(numBuffer.toString());
-                        periodInSeconds += hours * 3600;
-                        numBuffer.setLength(0);
-                        break;
-                        
-                    case 'S':
-                        int seconds = Integer.parseInt(numBuffer.toString());
-                        periodInSeconds += seconds;
-                        numBuffer.setLength(0);
-                        break;
-                        
-                    // otherwise it's a number
-                    default:
-                        numBuffer.append(nextChar);
-                        break;
-                }
-                
-                index++;
-            }
+            Duration duration = Duration.parse(iso8601);
+            return duration.getSeconds() + duration.getNano()/1e9;
         }
-        catch (NumberFormatException e)
+        catch (DateTimeParseException e)
         {
-            throw new ParseException("Invalid ISO 8601 period string", index);
+            ParseException pe = new ParseException("Invalid ISO 8601 period string", 0);
+            pe.initCause(e);
+            throw pe;
         }
-        
-        return periodInSeconds;
     }
     
     
@@ -156,55 +93,8 @@ public class DateTimeFormat extends SimpleDateFormat
 	{
 		try
 		{
-			int hour = 0;
-			int minute = 0;
-			int second = 0;
-			double secondFraction = 0;
-			
-			// parse date
-			int year = Integer.parseInt(iso8601.substring(0, 4));
-			int day = Integer.parseInt(iso8601.substring(8, 10));
-			int month = Integer.parseInt(iso8601.substring(5, 7));
-
-			// parse time if present
-			if (iso8601.indexOf('T') != -1)
-			{
-				hour = Integer.parseInt(iso8601.substring(11, 13));
-				minute = Integer.parseInt(iso8601.substring(14, 16));
-				second = Integer.parseInt(iso8601.substring(17, 19));
-			}
-			
-			// parse time zone if present
-			String timeZone = "GMT+0000";
-			int zoneIndex;
-			int decimalIndex = iso8601.indexOf('.');
-			
-			if ( ((zoneIndex = iso8601.indexOf('+', 18)) != -1) || ((zoneIndex = iso8601.indexOf('-', 18)) != -1))
-			{
-				timeZone = "GMT" + iso8601.substring(zoneIndex);
-				
-				if (decimalIndex != -1)
-					secondFraction = Double.parseDouble(iso8601.substring(decimalIndex, zoneIndex));
-			}
-			else if ((zoneIndex = iso8601.indexOf('Z')) != -1)
-			{
-				timeZone = "GMT+0000";
-				
-				if (decimalIndex != -1)
-					secondFraction = Double.parseDouble(iso8601.substring(decimalIndex, zoneIndex));
-			}
-			else
-			{
-				if (decimalIndex != -1)
-					secondFraction = Double.parseDouble(iso8601.substring(decimalIndex));
-			}
-						
-			// set up the calendar
-			calendar.setTimeInMillis(0);
-			calendar.set(year, month-1, day, hour, minute, second);			
-			calendar.setTimeZone(TimeZone.getTimeZone(timeZone));
-
-			return (calendar.getTimeInMillis()) / 1000.0 + secondFraction;
+			OffsetDateTime dateTime = OffsetDateTime.parse(iso8601);
+			return dateTime.toEpochSecond() + dateTime.getNano()/1e9;
 		}
 		catch (Exception e)
 		{
@@ -216,21 +106,15 @@ public class DateTimeFormat extends SimpleDateFormat
 	
 	
     /**
-     * Formats a period in seconds to ISO8601 time period standard
-     * using only seconds
+     * Formats a period expressed in seconds to ISO8601 time period standard
      * @param periodInSeconds
      * @return ISO string representing the period
      */
     public String formatIsoPeriod(double periodInSeconds)
     {
-        StringBuffer buf = new StringBuffer(10);
-        if (periodInSeconds < 0)
-            buf.append('-');
-        periodInSeconds = Math.abs(periodInSeconds);
-        buf.append("PT");
-        buf.append((int)periodInSeconds);
-        buf.append('S');
-        return buf.toString();
+        long seconds = (long)periodInSeconds;
+        int nanos = (int)((periodInSeconds - seconds)*1E9);
+        return Duration.ofSeconds(seconds, nanos).toString();
     }
     
     
@@ -243,85 +127,7 @@ public class DateTimeFormat extends SimpleDateFormat
      */
     public String formatIsoPeriod(double periodInSeconds, char biggestUnit)
     {
-        if (NumberUtils.ulpEquals(periodInSeconds, 0.0))
-            return "PT0S";
-        
-        StringBuffer buf = new StringBuffer(20);
-        if (periodInSeconds < 0)
-            buf.append('-');
-        buf.append('P');
-        int totalSeconds = (int)Math.abs(periodInSeconds);
-        int secondsLeft = totalSeconds;
-        
-        if (biggestUnit == 'Y')
-        {
-            int months = totalSeconds / SECONDS_IN_YEAR;
-            if (months > 0)
-            {
-                buf.append(months);
-                buf.append('M');
-            }
-            secondsLeft = totalSeconds % SECONDS_IN_YEAR;
-            biggestUnit = 'M';
-        }        
-        
-        if (biggestUnit == 'M')
-        {
-            int months = totalSeconds / SECONDS_IN_MONTH;
-            if (months > 0)
-            {
-                buf.append(months);
-                buf.append('M');
-            }
-            secondsLeft = totalSeconds % SECONDS_IN_MONTH;
-            biggestUnit = 'D';
-        }
-        
-        if (biggestUnit == 'D')
-        {
-            int days = totalSeconds / SECONDS_IN_DAY;
-            if (days > 0)
-            {
-                buf.append(days);
-                buf.append('D');
-            }
-            secondsLeft = totalSeconds % SECONDS_IN_DAY;
-            biggestUnit = 'H';
-        }
-        
-        if (secondsLeft > 0)
-            buf.append('T');
-        
-        if (biggestUnit == 'H')
-        {
-            int hours = secondsLeft / SECONDS_IN_HOUR;
-            if (hours > 0)
-            {
-                buf.append(hours);
-                buf.append('H');
-            }
-            secondsLeft = totalSeconds % SECONDS_IN_HOUR;
-            biggestUnit = 'm';
-        }
-        
-        if (biggestUnit == 'm')
-        {
-            int minutes = secondsLeft / SECONDS_IN_MINUTE;
-            if (minutes > 0)
-            {
-                buf.append(minutes);
-                buf.append('M');
-            }
-            secondsLeft = totalSeconds % SECONDS_IN_MINUTE;
-        }
-        
-        if (secondsLeft > 0)
-        {
-            buf.append(secondsLeft);
-            buf.append('S');
-        }
-        
-        return buf.toString();
+        return formatIsoPeriod(periodInSeconds);
     }
     
     
@@ -333,38 +139,9 @@ public class DateTimeFormat extends SimpleDateFormat
      */
     public String formatIso(double julianTime, int timeZone)
 	{
-		if (timeZone != LOCAL)
-		{
-			if (timeZone >= 0)
-				setTimeZone(TimeZone.getTimeZone("GMT+" + timeZone));
-			else
-				setTimeZone(TimeZone.getTimeZone("GMT" + timeZone));
-		}
-		
-		StringBuffer isoString = new StringBuffer(30);
-		
-		long time = (long)(julianTime*1e3);
-		format(new Date(time), isoString, new FieldPosition(0));
-		
-		// add the : in the zone (seems to be XML schema way)
-		if (isoString.length() > 24)
-			isoString.insert(26, ':');
-		
-		// replace +00:00 by Z (looks better)
-		String zone = isoString.substring(23,29);
-		if (zone.equals("+00:00"))
-		{
-			isoString.setCharAt(23, 'Z');
-			isoString.setLength(24);
-		}
-		
-		// remove .000 if no milliseconds
-		String millis = isoString.substring(19,23);
-		if (millis.equals(".000"))
-		{
-			isoString.replace(19,23,"");
-		}
-		
-		return isoString.toString();
+        long epochSeconds = (long)julianTime;
+        int nanos = (int)((julianTime - epochSeconds)*1E9);
+        Instant instant = Instant.ofEpochSecond(epochSeconds, nanos);
+		return OffsetDateTime.ofInstant(instant, ZoneOffset.ofHours(timeZone)).toString();
 	}
 }

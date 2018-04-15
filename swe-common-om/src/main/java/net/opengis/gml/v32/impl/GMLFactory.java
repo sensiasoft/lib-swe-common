@@ -14,8 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.time.OffsetDateTime;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import net.opengis.IDateTime;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.CodeList;
 import net.opengis.gml.v32.CodeOrNilReasonList;
@@ -106,7 +106,7 @@ public class GMLFactory implements Factory
     }
     
     
-    public final TimePosition newTimePosition(IDateTime dateTime)
+    public final TimePosition newTimePosition(OffsetDateTime dateTime)
     {
         TimePosition timePos = newTimePosition();
         timePos.setDateTimeValue(dateTime);

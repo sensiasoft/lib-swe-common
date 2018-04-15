@@ -15,7 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis.swe.v20;
 
 import java.util.List;
-import net.opengis.IDateTime;
+import org.vast.data.DateTimeOrDouble;
 
 
 /**
@@ -31,7 +31,7 @@ public interface AllowedTimes extends AbstractSWE, DataConstraint
     /**
      * Gets the list of value properties
      */
-    public List<IDateTime> getValueList();
+    public List<DateTimeOrDouble> getValueList();
     
     
     /**
@@ -43,13 +43,13 @@ public interface AllowedTimes extends AbstractSWE, DataConstraint
     /**
      * Adds a new value property
      */
-    public void addValue(IDateTime value);
+    public void addValue(DateTimeOrDouble value);
     
     
     /**
      * Gets the list of interval properties
      */
-    public List<IDateTime[]> getIntervalList();
+    public List<DateTimeOrDouble[]> getIntervalList();
     
     
     /**
@@ -61,7 +61,7 @@ public interface AllowedTimes extends AbstractSWE, DataConstraint
     /**
      * Adds a new interval property
      */
-    public void addInterval(IDateTime[] interval);
+    public void addInterval(DateTimeOrDouble[] interval);
     
     
     /**

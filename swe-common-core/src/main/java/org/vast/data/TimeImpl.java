@@ -14,10 +14,9 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import org.vast.util.DateTimeFormat;
-import net.opengis.DateTimeDouble;
-import net.opengis.IDateTime;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedTimes;
@@ -41,7 +40,7 @@ public class TimeImpl extends DataValue implements Time
     private static final long serialVersionUID = 2074207595957800332L;
     protected UnitReferenceImpl uom = new UnitReferenceImpl();
     protected OgcProperty<AllowedTimes> constraint;
-    protected IDateTime referenceTime;
+    protected OffsetDateTime referenceTime;
     protected String localFrame;
     
     
@@ -119,7 +118,7 @@ public class TimeImpl extends DataValue implements Time
     public OgcProperty<AllowedTimes> getConstraintProperty()
     {
         if (constraint == null)
-            constraint = new OgcPropertyImpl<AllowedTimes>();
+            constraint = new OgcPropertyImpl<>();
         return constraint;
     }
     
@@ -141,7 +140,7 @@ public class TimeImpl extends DataValue implements Time
     public void setConstraint(AllowedTimes constraint)
     {
         if (this.constraint == null)
-            this.constraint = new OgcPropertyImpl<AllowedTimes>();
+            this.constraint = new OgcPropertyImpl<>();
         this.constraint.setValue(constraint);
     }
     
@@ -150,12 +149,12 @@ public class TimeImpl extends DataValue implements Time
      * Gets the value property
      */
     @Override
-    public IDateTime getValue()
+    public DateTimeOrDouble getValue()
     {
         if (dataBlock == null)
             return null;
         double val = dataBlock.getDoubleValue();
-        return new DateTimeDouble(val);
+        return new DateTimeOrDouble(val, isIsoTime());
     }
     
     
@@ -163,7 +162,7 @@ public class TimeImpl extends DataValue implements Time
      * Sets the value property
      */
     @Override
-    public void setValue(IDateTime dateTime)
+    public void setValue(DateTimeOrDouble dateTime)
     {
         if (dataBlock == null)
             assignNewDataBlock();
@@ -176,7 +175,7 @@ public class TimeImpl extends DataValue implements Time
      * Gets the referenceTime property
      */
     @Override
-    public IDateTime getReferenceTime()
+    public OffsetDateTime getReferenceTime()
     {
         return referenceTime;
     }
@@ -196,7 +195,7 @@ public class TimeImpl extends DataValue implements Time
      * Sets the referenceTime property
      */
     @Override
-    public void setReferenceTime(IDateTime referenceTime)
+    public void setReferenceTime(OffsetDateTime referenceTime)
     {
         this.referenceTime = referenceTime;
     }
@@ -247,13 +246,7 @@ public class TimeImpl extends DataValue implements Time
             AllowedTimesImpl constraint = (AllowedTimesImpl)getConstraint();            
             if (!constraint.isValid(getValue()))
             {
-                String valText;                
-                if (isIsoTime())
-                    valText = new DateTimeFormat().formatIso(dataBlock.getDoubleValue(), 0);
-                else
-                    valText = dataBlock.getStringValue();
-                
-                errorList.add(new ValidationException(getName(), "Value '" + valText +
+                errorList.add(new ValidationException(getName(), "Value '" + getValue().toString() +
                     "' is not valid for component '" + getName() + "': " + constraint.getAssertionMessage()));
             }
         }
@@ -263,7 +256,7 @@ public class TimeImpl extends DataValue implements Time
     @Override
     public String toString(String indent)
     {
-        StringBuffer text = new StringBuffer();
+        StringBuilder text = new StringBuilder();
         text.append("Time");                
         if (dataBlock != null)
         {

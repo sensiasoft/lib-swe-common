@@ -111,7 +111,7 @@ public class QuantityImpl extends DataValue implements Quantity
     public OgcProperty<AllowedValues> getConstraintProperty()
     {
         if (constraint == null)
-            constraint = new OgcPropertyImpl<AllowedValues>();
+            constraint = new OgcPropertyImpl<>();
         return constraint;
     }
     
@@ -133,7 +133,7 @@ public class QuantityImpl extends DataValue implements Quantity
     public void setConstraint(AllowedValues constraint)
     {
         if (this.constraint == null)
-            this.constraint = new OgcPropertyImpl<AllowedValues>();
+            this.constraint = new OgcPropertyImpl<>();
         this.constraint.setValue(constraint);
     }
     

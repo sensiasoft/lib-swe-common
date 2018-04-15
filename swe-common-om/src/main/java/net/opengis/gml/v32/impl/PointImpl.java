@@ -69,6 +69,7 @@ public class PointImpl extends AbstractGeometryImpl implements Point
     {
         this.pos = pos;
         this.envelope = null;
+        this.srsDimension = pos.length;
     }
     
     

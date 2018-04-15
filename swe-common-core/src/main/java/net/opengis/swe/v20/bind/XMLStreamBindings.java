@@ -19,8 +19,8 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import org.vast.data.DateTimeOrDouble;
 import net.opengis.AbstractXMLStreamBindings;
-import net.opengis.IDateTime;
 import net.opengis.HrefResolverXML;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
@@ -1833,7 +1833,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             reader.nextTag();
             if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
             {
-                constraintProp.setValue(this.readAllowedTimes(reader));
+                constraintProp.setValue(readAllowedTimes(reader, bean.isIsoTime()));
                 reader.nextTag(); // end property tag
             }
             
@@ -1846,7 +1846,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             val = reader.getElementText();
             if (val != null)
-                bean.setValue(getDateTimeFromString(val));            
+                bean.setValue(getDateTimeOrDoubleFromString(val, bean.isIsoTime()));            
             reader.nextTag();
         }
     }
@@ -1908,12 +1908,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetValue() && writeInlineValues)
         {
             writer.writeStartElement(NS_URI, "value");
-            String timeString;
-            if (bean.getUom().isSetCode())
-                timeString = getStringValue(bean.getValue().getAsDouble());
-            else
-                timeString = getStringValue(bean.getValue());
-            writer.writeCharacters(timeString);
+            writer.writeCharacters(getStringValue(bean.getValue()));
             writer.writeEndElement();
         }
     }
@@ -1986,7 +1981,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             reader.nextTag();
             if (reader.getEventType() == XMLStreamConstants.START_ELEMENT)
             {
-                constraintProp.setValue(this.readAllowedTimes(reader));
+                constraintProp.setValue(readAllowedTimes(reader, bean.isIsoTime()));
                 reader.nextTag(); // end property tag
             }
             
@@ -1999,7 +1994,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         {
             val = reader.getElementText();
             if (val != null)
-                bean.setValue(getDateTimeArrayFromString(val));
+                bean.setValue(getDateTimeArrayFromString(val, bean.isIsoTime()));
             reader.nextTag();
         }
     }
@@ -2061,12 +2056,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetValue() && writeInlineValues)
         {
             writer.writeStartElement(NS_URI, "value");
-            String valueString;
-            if (bean.getUom().isSetCode())
-                valueString = getStringValueAsDoubles(bean.getValue());
-            else
-                valueString = getStringValue(bean.getValue());
-            writer.writeCharacters(valueString);
+            writer.writeCharacters(getStringValue(bean.getValue()));
             writer.writeEndElement();
         }
     }
@@ -3067,7 +3057,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Read method for AllowedTimesType complex type
      */
-    public AllowedTimes readAllowedTimesType(XMLStreamReader reader) throws XMLStreamException
+    public AllowedTimes readAllowedTimesType(XMLStreamReader reader, boolean isIso) throws XMLStreamException
     {
         AllowedTimes bean = factory.newAllowedTimes();
         
@@ -3075,7 +3065,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         this.readAllowedTimesTypeAttributes(attrMap, bean);
         
         reader.nextTag();
-        this.readAllowedTimesTypeElements(reader, bean);
+        this.readAllowedTimesTypeElements(reader, bean, isIso);
         
         return bean;
     }
@@ -3094,7 +3084,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Reads elements of AllowedTimesType complex type
      */
-    public void readAllowedTimesTypeElements(XMLStreamReader reader, AllowedTimes bean) throws XMLStreamException
+    public void readAllowedTimesTypeElements(XMLStreamReader reader, AllowedTimes bean, boolean isIso) throws XMLStreamException
     {
         this.readAbstractSWETypeElements(reader, bean);
         
@@ -3109,7 +3099,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             {
                 val = reader.getElementText();
                 if (val != null)
-                    bean.addValue(getDateTimeFromString(val));
+                    bean.addValue(getDateTimeOrDoubleFromString(val, isIso));
                 reader.nextTag();
             }
         }
@@ -3123,7 +3113,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             {
                 val = reader.getElementText();
                 if (val != null)
-                    bean.addInterval(getDateTimeArrayFromString(val));
+                    bean.addInterval(getDateTimeArrayFromString(val, isIso));
                 reader.nextTag();
             }
         }
@@ -3172,7 +3162,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         numItems = bean.getValueList().size();
         for (int i = 0; i < numItems; i++)
         {
-            IDateTime item = bean.getValueList().get(i);
+            DateTimeOrDouble item = bean.getValueList().get(i);
             writer.writeStartElement(NS_URI, "value");
             writer.writeCharacters(getStringValue(item));
             writer.writeEndElement();
@@ -3182,7 +3172,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         numItems = bean.getIntervalList().size();
         for (int i = 0; i < numItems; i++)
         {
-            IDateTime[] item = bean.getIntervalList().get(i);
+            DateTimeOrDouble[] item = bean.getIntervalList().get(i);
             writer.writeStartElement(NS_URI, "interval");
             writer.writeCharacters(getStringValue(item));
             writer.writeEndElement();
@@ -4434,13 +4424,13 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
     /**
      * Read method for AllowedTimes elements
      */
-    public AllowedTimes readAllowedTimes(XMLStreamReader reader) throws XMLStreamException
+    public AllowedTimes readAllowedTimes(XMLStreamReader reader, boolean isIso) throws XMLStreamException
     {
         boolean found = checkElementName(reader, "AllowedTimes");
         if (!found)
             throw new XMLStreamException(ERROR_INVALID_ELT + reader.getName() + errorLocationString(reader));
         
-        return this.readAllowedTimesType(reader);
+        return this.readAllowedTimesType(reader, isIso);
     }
     
     
@@ -4590,7 +4580,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         else if (localName.equals("AllowedValues"))
             return readAllowedValues(reader);
         else if (localName.equals("AllowedTimes"))
-            return readAllowedTimes(reader);
+            return readAllowedTimes(reader, true);
         else if (localName.equals("XMLEncoding"))
             return readXMLEncoding(reader);
         else if (localName.equals("TextEncoding"))

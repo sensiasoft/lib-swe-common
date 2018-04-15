@@ -14,11 +14,10 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package org.vast.data;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import org.vast.util.Asserts;
 import org.vast.util.DateTimeFormat;
-import net.opengis.DateTimeDouble;
-import net.opengis.IDateTime;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.AllowedTimes;
@@ -43,9 +42,9 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     private static final long serialVersionUID = -8005621421004922445L;
     protected UnitReferenceImpl uom = new UnitReferenceImpl();
     protected OgcProperty<AllowedTimes> constraint;
-    protected IDateTime referenceTime;
+    protected OffsetDateTime referenceTime;
     protected String localFrame;
-    protected transient IDateTime[] tmpValue = new IDateTime[2];
+    protected transient DateTimeOrDouble[] tmpValue = new DateTimeOrDouble[2];
     
     
     public TimeRangeImpl()
@@ -122,7 +121,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     public OgcProperty<AllowedTimes> getConstraintProperty()
     {
         if (constraint == null)
-            constraint = new OgcPropertyImpl<AllowedTimes>();
+            constraint = new OgcPropertyImpl<>();
         return constraint;
     }
     
@@ -144,7 +143,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     public void setConstraint(AllowedTimes constraint)
     {
         if (this.constraint == null)
-            this.constraint = new OgcPropertyImpl<AllowedTimes>();
+            this.constraint = new OgcPropertyImpl<>();
         this.constraint.setValue(constraint);
     }
     
@@ -153,12 +152,13 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
      * Gets the value property
      */
     @Override
-    public IDateTime[] getValue()
+    public DateTimeOrDouble[] getValue()
     {
         if (dataBlock == null)
             return null;
-        tmpValue[0] = new DateTimeDouble(dataBlock.getDoubleValue(0));
-        tmpValue[1] = new DateTimeDouble(dataBlock.getDoubleValue(1));
+        boolean isIso = isIsoTime();
+        tmpValue[0] = new DateTimeOrDouble(dataBlock.getDoubleValue(0), isIso);
+        tmpValue[1] = new DateTimeOrDouble(dataBlock.getDoubleValue(1), isIso);
         return tmpValue;
     }
     
@@ -167,7 +167,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
      * Sets the value property
      */
     @Override
-    public void setValue(IDateTime[] value)
+    public void setValue(DateTimeOrDouble[] value)
     {
         Asserts.checkNotNull(value, "value");
         if (dataBlock == null)
@@ -178,7 +178,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     
     
     @Override
-    public IDateTime getReferenceTime()
+    public OffsetDateTime getReferenceTime()
     {
         return referenceTime;
     }
@@ -192,7 +192,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     
     
     @Override
-    public void setReferenceTime(IDateTime referenceTime)
+    public void setReferenceTime(OffsetDateTime referenceTime)
     {
         this.referenceTime = referenceTime;
     }
@@ -232,7 +232,7 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
         if (isSetConstraint())
         {
             AllowedTimesImpl constraint = (AllowedTimesImpl)getConstraint();
-            IDateTime[] val = getValue();
+            DateTimeOrDouble[] val = getValue();
             
             if (!constraint.isValid(val[0]) || !constraint.isValid(val[1]))
             {
@@ -259,23 +259,13 @@ public class TimeRangeImpl extends AbstractRangeComponentImpl implements TimeRan
     @Override
     public String toString(String indent)
     {
-        StringBuffer text = new StringBuffer();
+        StringBuilder text = new StringBuilder();
         text.append("TimeRange");                
         if (dataBlock != null)
         {
             text.append(" = [");
-            double min = dataBlock.getDoubleValue(0);
-            double max = dataBlock.getDoubleValue(1);
-            if (isIsoTime())
-            {
-                DateTimeFormat isoFormat = new DateTimeFormat();
-                text.append(isoFormat.formatIso(min, 0)).append(' ');
-                text.append(isoFormat.formatIso(max, 0));
-            }
-            else
-            {
-                text.append(min).append(' ').append(max);
-            }
+            text.append(((Time)min).getValue().toString()).append(' ');
+            text.append(((Time)max).getValue().toString());
             text.append(']');
         }
         return text.toString();

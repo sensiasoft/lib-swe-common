@@ -57,7 +57,7 @@
 				<swe:AllowedValues>
 					<swe:interval>-INF -20.0</swe:interval>
 					<swe:interval>20.0 50.0</swe:interval>
-				  <swe:interval>60.0 +INF</swe:interval>
+				  <swe:interval>60.0 INF</swe:interval>
 				</swe:AllowedValues>
 			</swe:constraint>			
 		</swe:Quantity>
@@ -83,7 +83,7 @@
 			<swe:uom xlink:href="http://www.opengis.net/def/uom/ISO-8601/0/Gregorian"/>
 			<swe:constraint>
 				<swe:AllowedTimes>
-					<swe:interval>2009-01-01T00:00:00Z +INF</swe:interval>
+					<swe:interval>2009-01-01T00:00:00Z INF</swe:interval>
 				</swe:AllowedTimes>
 			</swe:constraint>
 		</swe:Time>

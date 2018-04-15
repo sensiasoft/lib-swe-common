@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis;
 
+import java.time.OffsetDateTime;
+import org.vast.data.DateTimeOrDouble;
 import org.vast.util.DateTimeFormat;
 
 
@@ -101,27 +103,31 @@ public abstract class AbstractBindings
     }
     
     
-    protected IDateTime getDateTimeFromString(String val)
+    protected OffsetDateTime getDateTimeFromString(String val)
     {
-        double time;
-        
         try
         {
-            try
-            {
-                time = getDoubleFromString(val);
-            }
-            catch (NumberFormatException e)
-            {
-                time = isoFormat.parseIso(val.trim());
-            }
+            if (MINUS_INFINITY.equals(val))
+                return OffsetDateTime.MIN;
+            
+            if (INFINITY.equals(val) || PLUS_INFINITY.equals(val))
+                return OffsetDateTime.MAX;
+            
+            return OffsetDateTime.parse(val.trim(), DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
         }
         catch (Exception e)
         {
             throw new IllegalArgumentException("Cannot parse date/time", e);
-        }
-        
-        return new DateTimeDouble(time);      
+        }     
+    }
+    
+    
+    protected DateTimeOrDouble getDateTimeOrDoubleFromString(String val, boolean isIso)
+    {
+        if (isIso)
+            return new DateTimeOrDouble(getDateTimeFromString(val));
+        else
+            return new DateTimeOrDouble(getDoubleFromString(val));
     }
     
     
@@ -181,12 +187,12 @@ public abstract class AbstractBindings
     }
     
     
-    protected IDateTime[] getDateTimeArrayFromString(String val)
+    protected DateTimeOrDouble[] getDateTimeArrayFromString(String val, boolean isIso)
     {
         String[] items = val.trim().split(" ");
-        IDateTime[] ret = new IDateTime[items.length];
+        DateTimeOrDouble[] ret = new DateTimeOrDouble[items.length];
         for (int i=0; i<items.length; i++)
-            ret[i] = getDateTimeFromString(items[i]);
+            ret[i] = getDateTimeOrDoubleFromString(items[i], isIso);
         return ret;
     }
 
@@ -197,18 +203,25 @@ public abstract class AbstractBindings
     }
     
     
-    protected String getStringValue(IDateTime dateTime)
+    protected String getStringValue(OffsetDateTime val)
     {
-        if (dateTime.isPositiveInfinity())
-            return PLUS_INFINITY;
+        if (OffsetDateTime.MAX.equals(val))
+            return INFINITY;
         
-        if (dateTime.isNegativeInfinity())
+        if (OffsetDateTime.MIN.equals(val))
             return MINUS_INFINITY;
-        
-        if (dateTime.isNow())
-            return TIME_NOW;
                     
-        return isoFormat.formatIso(dateTime.getAsDouble(), dateTime.getTimeZoneOffset());
+        return val.format(DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
+    }
+    
+    
+    protected String getStringValue(DateTimeOrDouble val)
+    {
+        if (val.isDateTime())
+            return getStringValue(val.getDateTime());
+        else
+            return getStringValue(val.getDecimalTime());
+        
     }
     
     
@@ -266,7 +279,7 @@ public abstract class AbstractBindings
             return MINUS_INFINITY;
         
         if (val == Double.POSITIVE_INFINITY)
-            return PLUS_INFINITY;
+            return INFINITY;
         
         return Double.toString(val);
     }
@@ -398,11 +411,11 @@ public abstract class AbstractBindings
     }
     
     
-    protected String getStringValue(IDateTime[] dateTimeList)
+    protected String getStringValue(DateTimeOrDouble[] dateTimeList)
     {
         sb.setLength(0);
         
-        for (IDateTime val: dateTimeList) {
+        for (DateTimeOrDouble val: dateTimeList) {
             sb.append(getStringValue(val));
             sb.append(' ');
         }
@@ -412,11 +425,11 @@ public abstract class AbstractBindings
     }
     
     
-    protected String getStringValueAsDoubles(IDateTime[] dateTimeList)
+    protected String getStringValueAsDoubles(DateTimeOrDouble[] dateTimeList)
     {
         sb.setLength(0);
         
-        for (IDateTime val: dateTimeList) {
+        for (DateTimeOrDouble val: dateTimeList) {
             sb.append(getStringValue(val.getAsDouble()));
             sb.append(' ');
         }

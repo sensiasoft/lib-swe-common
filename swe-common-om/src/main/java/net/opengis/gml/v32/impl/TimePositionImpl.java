@@ -14,9 +14,9 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
-import net.opengis.DateTimeDouble;
-import net.opengis.IDateTime;
+import org.vast.data.DateTimeOrDouble;
 import net.opengis.gml.v32.TimeIndeterminateValue;
 import net.opengis.gml.v32.TimePosition;
 
@@ -35,7 +35,7 @@ public class TimePositionImpl implements TimePosition
     protected String frame;
     protected String calendarEraName;
     protected TimeIndeterminateValue indeterminatePosition;
-    protected IDateTime dateTimeValue;
+    protected DateTimeOrDouble dateTimeValue;
     protected String textValue;
     
     
@@ -135,23 +135,25 @@ public class TimePositionImpl implements TimePosition
     
     
     @Override
-    public IDateTime getDateTimeValue()
+    public OffsetDateTime getDateTimeValue()
     {
-        return dateTimeValue;
+        if (dateTimeValue == null)
+            return null;
+        return dateTimeValue.getDateTime();
     }
     
     
     @Override
     public boolean isSetDateTimeValue()
     {
-        return (dateTimeValue != null);
+        return (dateTimeValue != null && dateTimeValue.isDateTime());
     }
     
     
     @Override
-    public void setDateTimeValue(IDateTime value)
+    public void setDateTimeValue(OffsetDateTime value)
     {
-        this.dateTimeValue = value;        
+        this.dateTimeValue = new DateTimeOrDouble(value);        
     }
 
 
@@ -168,7 +170,7 @@ public class TimePositionImpl implements TimePosition
     @Override
     public void setDecimalValue(double value)
     {
-        this.dateTimeValue = new DateTimeDouble(value);        
+        this.dateTimeValue = new DateTimeOrDouble(value);        
     }
 
 
@@ -196,10 +198,10 @@ public class TimePositionImpl implements TimePosition
     @Override
     public boolean equals(Object obj)
     {
-        return obj instanceof TimePosition &&
+        return obj instanceof TimePositionImpl &&
                Objects.equals(getFrame(), ((TimePosition)obj).getFrame()) &&
                Objects.equals(getCalendarEraName(), ((TimePosition)obj).getCalendarEraName()) &&
-               Objects.equals(getDecimalValue(), ((TimePosition)obj).getDecimalValue()) &&
+               Objects.equals(dateTimeValue, ((TimePositionImpl)obj).dateTimeValue) &&
                Objects.equals(getTextValue(), ((TimePosition)obj).getTextValue()) &&
                Objects.equals(getIndeterminatePosition(), ((TimePosition)obj).getIndeterminatePosition());
     }

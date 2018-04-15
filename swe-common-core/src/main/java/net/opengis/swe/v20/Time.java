@@ -14,7 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.swe.v20;
 
-import net.opengis.IDateTime;
+import java.time.OffsetDateTime;
+import org.vast.data.DateTimeOrDouble;
 
 
 /**
@@ -35,19 +36,19 @@ public interface Time extends ScalarComponent, HasRefFrames, HasUom, HasConstrai
     /**
      * Gets the value property
      */
-    public IDateTime getValue();
+    public DateTimeOrDouble getValue();
     
     
     /**
      * Sets the value property
      */
-    public void setValue(IDateTime value);
+    public void setValue(DateTimeOrDouble value);
     
     
     /**
      * Gets the referenceTime property
      */
-    public IDateTime getReferenceTime();
+    public OffsetDateTime getReferenceTime();
     
     
     /**
@@ -59,7 +60,7 @@ public interface Time extends ScalarComponent, HasRefFrames, HasUom, HasConstrai
     /**
      * Sets the referenceTime property
      */
-    public void setReferenceTime(IDateTime referenceTime);
+    public void setReferenceTime(OffsetDateTime referenceTime);
     
     
     /**

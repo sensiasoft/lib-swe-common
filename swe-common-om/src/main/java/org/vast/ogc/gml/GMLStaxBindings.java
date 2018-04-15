@@ -22,6 +22,7 @@ import org.vast.ogc.xlink.IXlinkReference;
 import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.gml.v32.AbstractGML;
 import net.opengis.gml.v32.AbstractGeometry;
+import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.AbstractTimePrimitive;
 import net.opengis.gml.v32.bind.XMLStreamBindings;
 import net.opengis.gml.v32.impl.GMLFactory;
@@ -181,6 +182,10 @@ public class GMLStaxBindings extends XMLStreamBindings
             else if (val instanceof AbstractGeometry)
             {
                 writeAbstractGeometry(writer, (AbstractGeometry)val);
+            }
+            else if (val instanceof AbstractTimeGeometricPrimitive)
+            {
+                writeAbstractTimeGeometricPrimitive(writer, (AbstractTimeGeometricPrimitive)val);
             }
             else
                 writer.writeCharacters(val.toString());                
