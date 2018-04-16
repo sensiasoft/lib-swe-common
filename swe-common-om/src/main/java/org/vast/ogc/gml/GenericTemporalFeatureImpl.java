@@ -43,14 +43,20 @@ public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements Te
         if (validTime instanceof TimeInstant)
         {
             OffsetDateTime dateTime = ((TimeInstant)validTime).getTimePosition().getDateTimeValue();
+            if (dateTime == null)
+                return null;
+            
             Instant instant = dateTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();
             return Range.singleton(instant);
         }
         else if (validTime instanceof TimePeriod)
         {
             OffsetDateTime beginTime = ((TimePeriod)validTime).getBeginPosition().getDateTimeValue();
-            Instant begin = beginTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();
             OffsetDateTime endTime = ((TimePeriod)validTime).getEndPosition().getDateTimeValue();
+            if (beginTime == null || endTime == null)
+                return null;
+            
+            Instant begin = beginTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();            
             Instant end = endTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();
             return Range.closed(begin, end);
         }
@@ -59,20 +65,20 @@ public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements Te
     }
     
     
-    public void setValidTimeInstant(Instant timeInstant)
+    public void setValidTimeInstant(OffsetDateTime dateTime)
     {
         GMLFactory gmlFac = new GMLFactory();
-        TimePosition time = gmlFac.newTimePosition(timeInstant.toEpochMilli()/1000.);
+        TimePosition time = gmlFac.newTimePosition(dateTime);
         TimeInstant instant = gmlFac.newTimeInstant(time);
         setProperty(PROP_VALID_TIME, instant);
     }
     
     
-    public void setValidTimePeriod(Instant beginTime, Instant endTime)
+    public void setValidTimePeriod(OffsetDateTime beginTime, OffsetDateTime endTime)
     {
         GMLFactory gmlFac = new GMLFactory();
-        TimePosition begin = gmlFac.newTimePosition(beginTime.toEpochMilli()/1000.);
-        TimePosition end = gmlFac.newTimePosition(endTime.toEpochMilli()/1000.);
+        TimePosition begin = gmlFac.newTimePosition(beginTime);
+        TimePosition end = gmlFac.newTimePosition(endTime);
         TimePeriod period = gmlFac.newTimePeriod(begin, end);
         setProperty(PROP_VALID_TIME, period);
     }

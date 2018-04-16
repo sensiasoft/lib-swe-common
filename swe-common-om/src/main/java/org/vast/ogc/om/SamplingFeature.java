@@ -108,6 +108,13 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
         return (GeomType)getProperty(PROP_SHAPE);
     }
     
+    
+    @Override
+    public boolean isSetLocation()
+    {
+        return properties.containsKey(PROP_SHAPE);
+    }
+    
 
     @Override
     public AbstractGeometry getLocation()
