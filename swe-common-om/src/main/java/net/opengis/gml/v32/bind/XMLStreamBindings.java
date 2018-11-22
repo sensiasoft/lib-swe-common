@@ -117,14 +117,14 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
             reader.nextTag();
         }
         
-        // location
-        found = checkElementName(reader, "location");
+        // geometry
+        found = checkElementName(reader, "geometry");
         if (found)
         {
             reader.nextTag();
             
             AbstractGeometry location = this.readAbstractGeometry(reader);
-            bean.setLocation(location);
+            bean.setGeometry(location);
             
             reader.nextTag();
             reader.nextTag();
@@ -157,12 +157,12 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         }
         
         // location
-        if (bean.isSetLocation())
+        if (bean.isSetGeometry())
         {
-            writer.writeStartElement(NS_URI, "location");
-            writePropertyAttributes(writer, bean.getLocationProperty());            
-            if (bean.getLocationProperty().hasValue())
-                this.writeAbstractGeometry(writer, bean.getLocation());            
+            writer.writeStartElement(NS_URI, "geometry");
+            writePropertyAttributes(writer, bean.getGeometryProperty());            
+            if (bean.getGeometryProperty().hasValue())
+                this.writeAbstractGeometry(writer, bean.getGeometry());            
             writer.writeEndElement();
         }
     }

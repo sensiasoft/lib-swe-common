@@ -231,7 +231,7 @@ public class ProcedureXML implements IProcedure
 
 
     @Override
-    public AbstractGeometry getLocation()
+    public AbstractGeometry getGeometry()
     {
         // TODO Auto-generated method stub
         return null;
@@ -239,7 +239,7 @@ public class ProcedureXML implements IProcedure
 
 
     @Override
-    public OgcProperty<AbstractGeometry> getLocationProperty()
+    public OgcProperty<AbstractGeometry> getGeometryProperty()
     {
         // TODO Auto-generated method stub
         return null;
@@ -247,7 +247,7 @@ public class ProcedureXML implements IProcedure
 
 
     @Override
-    public boolean isSetLocation()
+    public boolean isSetGeometry()
     {
         // TODO Auto-generated method stub
         return false;
@@ -255,7 +255,7 @@ public class ProcedureXML implements IProcedure
 
 
     @Override
-    public void setLocation(AbstractGeometry location)
+    public void setGeometry(AbstractGeometry location)
     {
         // TODO Auto-generated method stub
         

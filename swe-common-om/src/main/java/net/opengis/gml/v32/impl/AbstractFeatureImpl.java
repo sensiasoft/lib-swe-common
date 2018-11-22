@@ -81,7 +81,7 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
      * Gets the location property
      */
     @Override
-    public AbstractGeometry getLocation()
+    public AbstractGeometry getGeometry()
     {
         if (location == null)
             return null;
@@ -94,7 +94,7 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
      * Gets extra info (name, xlink, etc.) carried by the location property
      */
     @Override
-    public OgcProperty<AbstractGeometry> getLocationProperty()
+    public OgcProperty<AbstractGeometry> getGeometryProperty()
     {
         if (location == null)
             location = new OgcPropertyImpl<AbstractGeometry>();
@@ -103,10 +103,10 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
     
     
     /**
-     * Checks if location is set
+     * Checks if geometry is set
      */
     @Override
-    public boolean isSetLocation()
+    public boolean isSetGeometry()
     {
         return (location != null && location.getValue() != null);
     }
@@ -116,7 +116,7 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
      * Sets the locationAsAbstractGeometry property
      */
     @Override
-    public void setLocation(AbstractGeometry location)
+    public void setGeometry(AbstractGeometry location)
     {
         if (this.location == null)
             this.location = new OgcPropertyImpl<AbstractGeometry>();

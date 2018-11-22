@@ -128,9 +128,9 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public AbstractGeometry getLocation()
+    public AbstractGeometry getGeometry()
     {
-        return getTarget().getLocation();
+        return getTarget().getGeometry();
     }
 
 
@@ -149,9 +149,9 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public OgcProperty<AbstractGeometry> getLocationProperty()
+    public OgcProperty<AbstractGeometry> getGeometryProperty()
     {
-        return getTarget().getLocationProperty();
+        return getTarget().getGeometryProperty();
     }
 
 
@@ -184,9 +184,9 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public boolean isSetLocation()
+    public boolean isSetGeometry()
     {
-        return getTarget().isSetLocation();
+        return getTarget().isSetGeometry();
     }
 
 
@@ -205,9 +205,9 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public void setLocation(AbstractGeometry location)
+    public void setGeometry(AbstractGeometry geom)
     {
-        getTarget().setLocation(location);
+        getTarget().setGeometry(geom);
     }
 
 

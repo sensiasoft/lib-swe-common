@@ -53,25 +53,65 @@ public interface AbstractFeature extends AbstractGML
     
     /**
      * Gets the location property
+     * @deprecated use {@link #getGeometry()}
      */
-    public AbstractGeometry getLocation();
+    public default AbstractGeometry getLocation()
+    {
+        return getGeometry();
+    }
     
     
     /**
      * Gets extra info (name, xlink, etc.) carried by the location property
+     * @deprecated use {@link #getGeometryProperty()}
      */
-    public OgcProperty<AbstractGeometry> getLocationProperty();
+    public default OgcProperty<AbstractGeometry> getLocationProperty()
+    {
+        return getGeometryProperty();
+    }
     
     
     /**
      * Checks if location is set
+     * @deprecated use {@link #isSetGeometry()}
      */
-    public boolean isSetLocation();
+    public default boolean isSetLocation()
+    {
+        return isSetGeometry();
+    }
     
     
     /**
      * Sets the locationAsAbstractGeometry property
+     * @deprecated use {@link #setGeometry(AbstractGeometry)}
      */
-    public void setLocation(AbstractGeometry location);
+    public default void setLocation(AbstractGeometry location)
+    {
+        setGeometry(location);
+    }
+    
+    
+    /**
+     * Gets the geometry property
+     */
+    public AbstractGeometry getGeometry();
+    
+    
+    /**
+     * Gets extra info (name, xlink, etc.) carried by the geometry property
+     */
+    public OgcProperty<AbstractGeometry> getGeometryProperty();
+    
+    
+    /**
+     * Checks if geometry is set
+     */
+    public boolean isSetGeometry();
+    
+    
+    /**
+     * Sets the geometry property
+     */
+    public void setGeometry(AbstractGeometry geom);
 
 }

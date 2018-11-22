@@ -54,6 +54,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
 
     public String getType()
     {
+        @SuppressWarnings("unchecked")
         CachedReference<Object> ref = (CachedReference<Object>)getProperty(PROP_TYPE);
         if (ref == null)
             return null;
@@ -105,7 +106,12 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
     
     public GeomType getShape()
     {
-        return (GeomType)getProperty(PROP_SHAPE);
+        @SuppressWarnings("unchecked")
+        GeomType geom = (GeomType)getProperty(PROP_SHAPE);
+        if (geom != null)
+            return geom;
+        else
+            return getShape();
     }
     
     
@@ -117,11 +123,12 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
     
 
     @Override
-    public AbstractGeometry getLocation()
+    public GeomType getGeometry()
     {
-        AbstractGeometry location = super.getLocation();
-        if (location != null)
-            return location;
+        @SuppressWarnings("unchecked")
+        GeomType geom = (GeomType)super.getGeometry();
+        if (geom != null)
+            return geom;
         else
             return getShape();
     }
@@ -129,7 +136,8 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
     
     public SamplingFeature<? extends AbstractGeometry> getAsSpecializedType()
     {
-        String type = properties.containsKey(PROP_TYPE) ? ((CachedReference<Object>)getProperty(PROP_TYPE)).getHref() : null;
+        @SuppressWarnings("rawtypes")
+        String type = properties.containsKey(PROP_TYPE) ? ((CachedReference)getProperty(PROP_TYPE)).getHref() : null;
         SamplingFeature<? extends AbstractGeometry> sf = null;
         
         if (SamplingPoint.TYPE.equals(type))
@@ -154,7 +162,7 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
         sf.setIdentifier(getIdentifier());
         sf.setDescription(getDescription());
         sf.setBoundedByAsEnvelope(getBoundedBy());
-        sf.setLocation(getLocation());
+        sf.setGeometry(getGeometry());
         sf.setSampledFeatureUID(getSampledFeatureUID());
         sf.setHostedProcedureUID(getHostedProcedureUID());
         
