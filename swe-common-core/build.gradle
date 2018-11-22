@@ -6,6 +6,7 @@ dependencies {
   compile 'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
   compile 'com.google.code.gson:gson:2.8.0'
   compile 'com.google.guava:guava:23.6-jre'
+  compile 'net.sf.trove4j:core:3.1.0'
 }
 
 // add info to OSGI manifest
