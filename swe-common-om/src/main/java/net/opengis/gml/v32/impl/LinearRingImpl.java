@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.text.DecimalFormat;
 import net.opengis.gml.v32.LinearRing;
 
 
@@ -51,6 +52,26 @@ public class LinearRingImpl implements LinearRing
     public boolean isSetPosList()
     {
         return (posList != null);
+    }
+    
+    
+    protected void toString(StringBuilder buf, int srsDimension, DecimalFormat formatter)
+    {
+        buf.append('(');
+                
+        if (posList != null)
+        {
+            int count = 0;
+            for (double c: posList)
+            {
+                buf.append(formatter.format(c));
+                count++;
+                if (count < posList.length)
+                    buf.append(count % srsDimension == 0 ? ", " : ' ');
+            }
+        }
+        
+        buf.append(')');
     }
     
 }

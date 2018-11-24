@@ -27,6 +27,7 @@ import net.opengis.gml.v32.Envelope;
 public class AbstractGeometryImpl extends AbstractGMLImpl implements AbstractGeometry
 {
     private static final long serialVersionUID = 3854909625838988577L;
+    
     protected String srsName;
     protected Integer srsDimension;
     protected String[] axisLabels;

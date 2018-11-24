@@ -15,8 +15,11 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis.gml.v32.impl;
 
 import java.time.OffsetDateTime;
+import org.vast.util.Asserts;
+import org.vast.util.BaseBuilder;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import net.opengis.gml.v32.CodeWithAuthority;
+import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.CodeList;
 import net.opengis.gml.v32.CodeOrNilReasonList;
 import net.opengis.gml.v32.Envelope;
@@ -35,6 +38,10 @@ import net.opengis.gml.v32.Factory;
 
 public class GMLFactory implements Factory
 {
+    static final String MIN_COORDINATES_ERROR_MSG = "Must have at least {} coordinates";
+    static final String INVALID_NUMBER_COORDINATES_ERROR_MSG = "Invalid number of coordinates. Must be multiple of SRS dimension";
+    public static final String COORDINATE_FORMAT = "0.########";
+    
     boolean useJTS;
     GeometryFactory jtsFactory;
     
@@ -170,6 +177,14 @@ public class GMLFactory implements Factory
     }
     
     
+    public final Point newPoint(double... pos)
+    {
+        Point p = newPoint();
+        p.setPos(pos);
+        return p;
+    }
+    
+    
     @Override
     public final LinearRing newLinearRing()
     {
@@ -226,4 +241,130 @@ public class GMLFactory implements Factory
         env.setUpperCorner(new double[] {maxX, maxY, maxZ});
         return env;
     }
+    
+    
+    public final PointBuilder pointBuilder()
+    {
+        return new PointBuilder();
+    }
+    
+    
+    public final LineStringBuilder lineStringBuilder()
+    {
+        return new LineStringBuilder();
+    }
+    
+    
+    public final PolygonBuilder polygonBuilder()
+    {
+        return new PolygonBuilder();
+    }
+    
+    
+    public class PointBuilder extends GeometryBuilder<PointBuilder, Point>
+    {
+        protected PointBuilder()
+        {
+            super(newPoint());
+        }
+        
+        public PointBuilder withCoordinates(double... posList)
+        {
+            instance.setPos(posList);
+            return this;
+        }
+        
+        @Override
+        public Point build()
+        {
+            Asserts.checkNotNull(instance.getPos(), "pos");
+            Asserts.checkState(instance.getPos().length >= 2, MIN_COORDINATES_ERROR_MSG, 2);
+            Asserts.checkState(instance.getPos().length == instance.getSrsDimension(), INVALID_NUMBER_COORDINATES_ERROR_MSG);
+            return super.build();
+        }
+    }
+    
+    
+    public class LineStringBuilder extends GeometryBuilder<LineStringBuilder, LineString>
+    {
+        protected LineStringBuilder()
+        {
+            super(newLineString());
+        }
+        
+        public LineStringBuilder withCoordinates(double... posList)
+        {
+            instance.setPosList(posList);
+            return this;
+        }
+        
+        @Override
+        public LineString build()
+        {
+            Asserts.checkNotNull(instance.getPosList(), "posList");
+            Asserts.checkState(instance.getPosList().length >= 4, MIN_COORDINATES_ERROR_MSG, 4);
+            Asserts.checkState(instance.getPosList().length % instance.getSrsDimension() == 0, INVALID_NUMBER_COORDINATES_ERROR_MSG);
+            return super.build();
+        }
+    }
+    
+    
+    public class PolygonBuilder extends GeometryBuilder<PolygonBuilder, Polygon>
+    {       
+        protected PolygonBuilder()
+        {
+            super(newPolygon());
+        }        
+        
+        public PolygonBuilder withExterior(double... posList)
+        {
+            LinearRing exterior = newLinearRing();
+            exterior.setPosList(posList);
+            instance.setExterior(exterior);
+            return this;
+        }
+        
+        public PolygonBuilder withInterior(double... posList)
+        {
+            LinearRing hole = newLinearRing();
+            hole.setPosList(posList);
+            instance.addInterior(hole);
+            return this;
+        }
+        
+        @Override
+        public Polygon build()
+        {
+            Asserts.checkState(instance.isSetExterior(), "No exterior set");
+            Asserts.checkNotNull(instance.getExterior().getPosList(), "posList");
+            Asserts.checkState(instance.getExterior().getPosList().length >= 6, MIN_COORDINATES_ERROR_MSG, 3);
+            Asserts.checkState(instance.getExterior().getPosList().length % instance.getSrsDimension() == 0, INVALID_NUMBER_COORDINATES_ERROR_MSG);
+            return super.build();
+        }
+    }
+    
+    
+    protected abstract static class GeometryBuilder<B extends GeometryBuilder<B, T>, T extends AbstractGeometry> extends BaseBuilder<B, T>
+    {
+        protected GeometryBuilder(T instance)
+        {
+            super(instance);
+        }
+        
+        @SuppressWarnings("unchecked")
+        public B withDimension(int numDims)
+        {
+            instance.setSrsDimension(numDims);
+            return (B)this;
+        }
+        
+        @SuppressWarnings("unchecked")
+        public B withSrs(String srsName, int numDims)
+        {
+            instance.setSrsName(srsName);
+            instance.setSrsDimension(numDims);
+            return (B)this;
+        }
+    }
+    
 }

@@ -97,7 +97,7 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
     public OgcProperty<AbstractGeometry> getGeometryProperty()
     {
         if (location == null)
-            location = new OgcPropertyImpl<AbstractGeometry>();
+            location = new OgcPropertyImpl<>();
         return location;
     }
     
@@ -119,7 +119,7 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
     public void setGeometry(AbstractGeometry location)
     {
         if (this.location == null)
-            this.location = new OgcPropertyImpl<AbstractGeometry>();
+            this.location = new OgcPropertyImpl<>();
         this.location.setValue(location);
     }
 

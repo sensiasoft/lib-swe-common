@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.text.DecimalFormat;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.Point;
 
@@ -80,5 +81,31 @@ public class PointImpl extends AbstractGeometryImpl implements Point
             envelope = addCoordinatesToEnvelope(envelope, pos, srsDimension);
             
         return envelope;
+    }
+    
+    
+    @Override
+    public String toString()
+    {
+        DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
+        StringBuilder buf = new StringBuilder(32);
+        
+        buf.append("POINT (");
+        
+        if (pos != null)
+        {
+            int count = 0;
+            for (double c: pos)
+            {
+                buf.append(formatter.format(c));
+                count++;
+                if (count < pos.length)
+                    buf.append(' ');
+            }
+        }
+        
+        buf.append(')');
+        
+        return buf.toString();
     }
 }

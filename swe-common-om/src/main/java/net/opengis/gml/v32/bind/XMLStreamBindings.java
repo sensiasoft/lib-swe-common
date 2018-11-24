@@ -1006,7 +1006,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetLowerCorner())
         {
             writer.writeStartElement(NS_URI, "lowerCorner");
-            writer.writeCharacters(getStringValue(bean.getLowerCorner()));
+            writer.writeCharacters(getCoordinateStringValue(bean.getLowerCorner()));
             writer.writeEndElement();
         }
         
@@ -1014,7 +1014,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetUpperCorner())
         {
             writer.writeStartElement(NS_URI, "upperCorner");
-            writer.writeCharacters(getStringValue(bean.getUpperCorner()));
+            writer.writeCharacters(getCoordinateStringValue(bean.getUpperCorner()));
             writer.writeEndElement();
         }
     }
@@ -1110,7 +1110,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetPos())
         {
             writer.writeStartElement(NS_URI, "pos");
-            writer.writeCharacters(getStringValue(bean.getPos()));
+            writer.writeCharacters(getCoordinateStringValue(bean.getPos()));
             writer.writeEndElement();
         }
     }
@@ -1263,7 +1263,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetPosList())
         {
             writer.writeStartElement(NS_URI, "posList");
-            writer.writeCharacters(getStringValue(bean.getPosList()));
+            writer.writeCharacters(getCoordinateStringValue(bean.getPosList()));
             writer.writeEndElement();
         }
     }
@@ -1425,7 +1425,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         if (bean.isSetPosList())
         {
             writer.writeStartElement(NS_URI, "posList");
-            writer.writeCharacters(getStringValue(bean.getPosList()));
+            writer.writeCharacters(getCoordinateStringValue(bean.getPosList()));
             writer.writeEndElement();
         }
     }

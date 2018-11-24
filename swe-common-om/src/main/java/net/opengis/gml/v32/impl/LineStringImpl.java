@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.text.DecimalFormat;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.LineString;
 
@@ -70,5 +71,30 @@ public class LineStringImpl extends AbstractCurveImpl implements LineString
             envelope = addCoordinatesToEnvelope(envelope, posList, srsDimension);
             
         return envelope;
+    }
+    
+    
+    @Override
+    public String toString()
+    {
+        DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
+        StringBuilder buf = new StringBuilder(32);
+        
+        buf.append("LINESTRING (");
+        
+        if (posList != null)
+        {
+            int count = 0;
+            for (double c: posList)
+            {
+                buf.append(formatter.format(c));
+                count++;
+                if (count < posList.length)
+                    buf.append(count % srsDimension == 0 ? ", " : ' ');
+            }            
+        }
+        
+        buf.append(')');        
+        return buf.toString();
     }
 }

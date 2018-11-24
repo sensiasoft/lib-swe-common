@@ -10,6 +10,7 @@
 package org.vast.ogc.gml;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -37,7 +38,7 @@ import net.opengis.gml.v32.impl.GMLFactory;
 /**
  * <p>
  * GeoJSON bindings using Gson JsonWriter/JsonReader.<br/>
- * This class is threadsafe.
+ * This class is NOT threadsafe.
  * </p>
  *
  * @author Alex Robin
@@ -47,6 +48,7 @@ public class GeoJSONBindings
 {
     public static final String ERROR_UNSUPPORTED_TYPE = "Unsupported type: ";
     public static final String ERROR_INVALID_COORDINATES = "Invalid coordinate array";
+    DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
     GMLFactory factory;
     
     
@@ -179,10 +181,12 @@ public class GeoJSONBindings
     public void writeEnvelope(JsonWriter writer, Envelope bean) throws IOException
     {
         writer.beginArray();
-        writer.value(bean.getLowerCorner()[0]);
-        writer.value(bean.getLowerCorner()[1]);
-        writer.value(bean.getUpperCorner()[0]);
-        writer.value(bean.getUpperCorner()[1]);        
+        double[] low = bean.getLowerCorner();
+        writer.jsonValue(formatter.format(low[0]));
+        writer.jsonValue(formatter.format(low[1]));
+        double[] high = bean.getUpperCorner();
+        writer.jsonValue(formatter.format(high[0]));
+        writer.jsonValue(formatter.format(high[1]));
         writer.endArray();
     }
     
@@ -290,7 +294,7 @@ public class GeoJSONBindings
     {
         writer.beginArray();
         for (int i = index; i < index + dims; i++)
-            writer.value(coords[i]);
+            writer.jsonValue(formatter.format(coords[i]));
         writer.endArray();
     }
     

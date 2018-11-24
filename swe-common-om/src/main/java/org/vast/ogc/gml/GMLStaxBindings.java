@@ -10,6 +10,7 @@
 
 package org.vast.ogc.gml;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -46,6 +47,7 @@ public class GMLStaxBindings extends XMLStreamBindings
     protected int featureIdCounter = 1;
     protected StringBuilder sb = new StringBuilder();
     protected Map<QName, IFeatureStaxBindings> featureTypesBindings;
+    protected DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
     
     
     public GMLStaxBindings()
@@ -268,5 +270,20 @@ public class GMLStaxBindings extends XMLStreamBindings
     public final void resetTimeIdCounter(int timeIdCounter)
     {
         this.timeIdCounter = timeIdCounter;
+    }
+    
+    
+    @Override
+    protected String getCoordinateStringValue(double[] coords)
+    {
+        sb.setLength(0);
+        
+        for (double val: coords) {
+            sb.append(formatter.format(val));
+            sb.append(' ');
+        }
+        
+        sb.setLength(sb.length()-1);
+        return sb.toString();
     }
 }

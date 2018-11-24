@@ -395,6 +395,12 @@ public abstract class AbstractBindings
         sb.setLength(sb.length()-1);
         return sb.toString();
     }
+    
+    
+    protected String getCoordinateStringValue(double[] coords)
+    {
+        return getStringValue(coords);
+    }
 
 
     protected String getStringValue(String[] array)

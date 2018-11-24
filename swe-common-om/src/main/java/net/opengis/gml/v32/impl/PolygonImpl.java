@@ -14,6 +14,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import net.opengis.gml.v32.Envelope;
@@ -30,7 +31,7 @@ public class PolygonImpl extends AbstractGeometryImpl implements Polygon
 {
     private static final long serialVersionUID = -3961633226145543311L;
     protected LinearRing exterior;
-    protected ArrayList<LinearRing> interiorList = new ArrayList<LinearRing>();
+    protected ArrayList<LinearRing> interiorList = new ArrayList<>();
     
     
     @SuppressWarnings("unused")
@@ -120,5 +121,34 @@ public class PolygonImpl extends AbstractGeometryImpl implements Polygon
         }
         
         return envelope;
+    }
+    
+    
+    @Override
+    public String toString()
+    {
+        DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
+        StringBuilder buf = new StringBuilder(32);
+        
+        buf.append("POLYGON (");
+        
+        if (exterior != null)
+            ((LinearRingImpl)exterior).toString(buf, srsDimension, formatter);
+        
+        if (!interiorList.isEmpty())
+        {
+            buf.append(", ");
+            int count = 0;
+            for (LinearRing interior: interiorList)
+            {
+                ((LinearRingImpl)interior).toString(buf, srsDimension, formatter);
+                count++;
+                if (count < interiorList.size())
+                    buf.append(", ");
+            }
+        }
+        
+        buf.append(')');        
+        return buf.toString();
     }
 }
