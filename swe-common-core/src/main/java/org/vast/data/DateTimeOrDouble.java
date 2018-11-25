@@ -194,7 +194,8 @@ public class DateTimeOrDouble implements Serializable, Comparable<DateTimeOrDoub
     public void setDateTime(double julianTime, ZoneOffset offset)
     {
         long epochSeconds = (long)julianTime;
-        int nanos = (int)((julianTime - epochSeconds)*1e9);
+        // improve rounding error by pre-multiplying by 1000
+        int nanos = (int)((julianTime*1000. - epochSeconds*1000L)*1e6);
         this.utcDateTime = Instant.ofEpochSecond(epochSeconds, nanos);
         this.zoneOffset = offset;
     }

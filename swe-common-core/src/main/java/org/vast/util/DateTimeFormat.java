@@ -140,8 +140,10 @@ public class DateTimeFormat
     public String formatIso(double julianTime, int timeZone)
 	{
         long epochSeconds = (long)julianTime;
-        int nanos = (int)((julianTime - epochSeconds)*1E9);
+        // improve rounding error by pre-multiplying by 1000
+        int nanos = (int)((julianTime*1000. - epochSeconds*1000L)*1e6);
         Instant instant = Instant.ofEpochSecond(epochSeconds, nanos);
-		return OffsetDateTime.ofInstant(instant, ZoneOffset.ofHours(timeZone)).toString();
+        OffsetDateTime dateTime = OffsetDateTime.ofInstant(instant, ZoneOffset.ofHours(timeZone));
+		return dateTime.format(DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
 	}
 }

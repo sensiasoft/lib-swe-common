@@ -18,7 +18,7 @@
 	<om:resultTime>
         <gml:TimeInstant
             gml:id="T2">
-            <gml:timePosition>2005-01-11T17:22:25.020Z</gml:timePosition>
+            <gml:timePosition>2005-01-11T17:22:25.02Z</gml:timePosition>
         </gml:TimeInstant>
     </om:resultTime>
 	<om:procedure

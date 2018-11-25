@@ -10,7 +10,7 @@
    </om:phenomenonTime>
    <om:resultTime>
     <gml:TimeInstant gml:id="T2">
-         <gml:timePosition>2005-01-11T17:22:25.010Z</gml:timePosition>
+         <gml:timePosition>2005-01-11T17:22:25.01Z</gml:timePosition>
       </gml:TimeInstant>
    </om:resultTime>
    <om:procedure xlink:href="http://www.example.org/register/process/weatherStation3" />

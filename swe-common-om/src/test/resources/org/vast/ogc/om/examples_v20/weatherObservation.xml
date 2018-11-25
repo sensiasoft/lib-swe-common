@@ -10,7 +10,7 @@
    </om:phenomenonTime>
    <om:resultTime>
       <gml:TimeInstant gml:id="T2">
-         <gml:timePosition>2007-04-01T03:40:00.230Z</gml:timePosition>
+         <gml:timePosition>2007-04-01T03:40:00.23Z</gml:timePosition>
       </gml:TimeInstant>
    </om:resultTime>
    <om:procedure xlink:href="urn:vast:sensor:weatherStation" />
