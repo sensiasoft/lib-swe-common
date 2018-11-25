@@ -1373,7 +1373,7 @@ public class XMLStreamBindings extends AbstractXMLStreamBindings
         }
         
         // interior
-        numItems = bean.getInteriorList().size();
+        numItems = bean.getNumInteriors();
         for (int i = 0; i < numItems; i++)
         {
             LinearRing item = bean.getInteriorList().get(i);

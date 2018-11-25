@@ -38,19 +38,9 @@ import net.opengis.gml.v32.Reference;
 public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements Polygon
 {
     private static final long serialVersionUID = 3200774256059210125L;
-    transient AbstractGeometryImpl geom = new AbstractGeometryImpl();
-    transient LinearRing exterior;
-    
-    @SuppressWarnings("serial")
-    transient List<LinearRing> interiorList = new ArrayList<LinearRing>() {
-        @Override
-        public boolean add(LinearRing interior)
-        {
-            LinearRingJTS interiorJTS = (LinearRingJTS)interior;
-            ((JTSCoordinatesDoubleArray)interiorJTS.getCoordinateSequence()).setNumDimensions(geom.srsDimension);
-            return super.add(interior);
-        }        
-    };
+    AbstractGeometryImpl geom = new AbstractGeometryImpl();
+    LinearRing exterior;    
+    ArrayList<LinearRing> interiorList;
     
     
     public PolygonJTS(GeometryFactory jtsFactory, int numDims)
@@ -106,7 +96,9 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
     @Override
     public final void addInterior(LinearRing interior)
     {
-        this.interiorList.add(interior);
+        if (interiorList == null)
+            interiorList = new ArrayList<>();
+        interiorList.add(interior);
         this.holes = this.interiorList.toArray(this.holes);
         this.geometryChanged();
     }
@@ -181,10 +173,13 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
             ((JTSCoordinatesDoubleArray)exteriorJTS.getCoordinateSequence()).setNumDimensions(srsDimension);
         }
         
-        for (LinearRing interior: interiorList)
+        if (interiorList != null)
         {
-            LinearRingJTS interiorJTS = (LinearRingJTS)interior;
-            ((JTSCoordinatesDoubleArray)interiorJTS.getCoordinateSequence()).setNumDimensions(srsDimension);
+            for (LinearRing interior: interiorList)
+            {
+                LinearRingJTS interiorJTS = (LinearRingJTS)interior;
+                ((JTSCoordinatesDoubleArray)interiorJTS.getCoordinateSequence()).setNumDimensions(srsDimension);
+            }
         }
     }
 
@@ -364,8 +359,6 @@ public class PolygonJTS extends com.vividsolutions.jts.geom.Polygon implements P
         {
             int nDims = geom.srsDimension;
             geom.envelope = AbstractGeometryImpl.addCoordinatesToEnvelope(geom.envelope, exterior.getPosList(), nDims);
-            for (LinearRing interior: interiorList)
-                AbstractGeometryImpl.addCoordinatesToEnvelope(geom.envelope, interior.getPosList(), nDims);
         }
         
         return geom.envelope;

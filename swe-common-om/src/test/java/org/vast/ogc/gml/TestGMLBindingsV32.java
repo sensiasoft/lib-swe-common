@@ -207,7 +207,7 @@ public class TestGMLBindingsV32 extends XMLTestCase
         testEnvelope(env, 2, new double[] {1,2}, new double[] {1,2});
         
         env = readGeometryAndGetEnvelope("examples_v32/Point3D.xml");        
-        testEnvelope(env, 3, new double[] {1,2,3}, new double[] {1,2,3});
+        testEnvelope(env, 3, new double[] {1.5,2.4,3.99}, new double[] {1.5,2.4,3.99});
         
         env = readGeometryAndGetEnvelope("examples_v32/Line2D.xml");        
         testEnvelope(env, 2, new double[] {1,2}, new double[] {5,6});
@@ -216,7 +216,7 @@ public class TestGMLBindingsV32 extends XMLTestCase
         testEnvelope(env, 3, new double[] {1,2,3}, new double[] {7,8,9});
         
         env = readGeometryAndGetEnvelope("examples_v32/Polygon_noInterior.xml");        
-        testEnvelope(env, 2, new double[] {0,0}, new double[] {1,1});
+        testEnvelope(env, 2, new double[] {0,0}, new double[] {1.23456,1.23456});
         
         env = readGeometryAndGetEnvelope("examples_v32/Polygon_withInteriors.xml");        
         testEnvelope(env, 2, new double[] {0,0}, new double[] {1,1});

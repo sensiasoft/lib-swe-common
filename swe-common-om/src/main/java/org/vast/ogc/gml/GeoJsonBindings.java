@@ -44,7 +44,7 @@ import net.opengis.gml.v32.impl.GMLFactory;
  * @author Alex Robin
  * @date Nov 12, 2018
  */
-public class GeoJSONBindings
+public class GeoJsonBindings
 {
     public static final String ERROR_UNSUPPORTED_TYPE = "Unsupported type: ";
     public static final String ERROR_INVALID_COORDINATES = "Invalid coordinate array";
@@ -52,19 +52,19 @@ public class GeoJSONBindings
     GMLFactory factory;
     
     
-    public GeoJSONBindings()
+    public GeoJsonBindings()
     {
         this(false);
     }
     
     
-    public GeoJSONBindings(boolean useJTS)
+    public GeoJsonBindings(boolean useJTS)
     {
         this(new GMLFactory(useJTS));
     }
     
     
-    public GeoJSONBindings(GMLFactory factory)
+    public GeoJsonBindings(GMLFactory factory)
     {
         this.factory = factory;
     }

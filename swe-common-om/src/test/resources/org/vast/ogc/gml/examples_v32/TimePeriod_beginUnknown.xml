@@ -1,5 +1,5 @@
 <gml:TimePeriod gml:id="T1" xmlns:gml="http://www.opengis.net/gml/3.2">
    <gml:beginPosition indeterminatePosition="unknown"/>
    <gml:endPosition indeterminatePosition="now"/>
-   <gml:duration>PT3600S</gml:duration>
+   <gml:duration>PT1H</gml:duration>
 </gml:TimePeriod>

@@ -36,7 +36,7 @@ import net.opengis.gml.v32.Reference;
 public class PointJTS extends com.vividsolutions.jts.geom.Point implements Point
 {
     private static final long serialVersionUID = -5151123418510314756L;
-    transient AbstractGeometryImpl geom = new AbstractGeometryImpl();
+    AbstractGeometryImpl geom = new AbstractGeometryImpl();
     double[] pos;
     
     

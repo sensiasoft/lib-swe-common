@@ -27,13 +27,8 @@ import net.opengis.gml.v32.FeatureCollection;
 public class FeatureCollectionImpl extends AbstractFeatureImpl implements FeatureCollection
 {
     private static final long serialVersionUID = 205617168330167795L;
-    protected OgcPropertyList<AbstractFeature> featureMemberList = new OgcPropertyList<AbstractFeature>();
+    protected OgcPropertyList<AbstractFeature> featureMemberList = new OgcPropertyList<>();
         
-    
-    public FeatureCollectionImpl()
-    {
-    }
-    
     
     /**
      * Gets the list of featureMember properties

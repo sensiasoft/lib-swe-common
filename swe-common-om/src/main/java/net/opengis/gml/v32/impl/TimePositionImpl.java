@@ -170,7 +170,7 @@ public class TimePositionImpl implements TimePosition
     @Override
     public void setDecimalValue(double value)
     {
-        this.dateTimeValue = new DateTimeOrDouble(value);        
+        this.dateTimeValue = new DateTimeOrDouble(value, true);        
     }
 
 
