@@ -14,6 +14,7 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import org.vast.util.Asserts;
+import org.vast.util.NumberUtils;
 import com.google.common.base.Objects;
 
 
@@ -85,7 +86,7 @@ public class DateTimeOrDouble implements Serializable, Comparable<DateTimeOrDoub
         
         return Objects.equal(utcDateTime, other.utcDateTime) &&
                Objects.equal(zoneOffset,  other.zoneOffset) &&
-               decimalTime == other.decimalTime;
+               NumberUtils.ulpEquals(decimalTime, other.decimalTime);
     }
     
     
