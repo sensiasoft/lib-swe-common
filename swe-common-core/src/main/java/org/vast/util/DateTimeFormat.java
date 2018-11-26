@@ -93,7 +93,7 @@ public class DateTimeFormat
 	{
 		try
 		{
-			OffsetDateTime dateTime = OffsetDateTime.parse(iso8601);
+			OffsetDateTime dateTime = OffsetDateTime.parse(iso8601, ISO_DATE_OR_TIME_FORMAT);
 			return dateTime.toEpochSecond() + dateTime.getNano()/1e9;
 		}
 		catch (Exception e)
