@@ -267,7 +267,7 @@ public class GeoJsonBindings
                 writeLinearRing(writer, bean.getExterior(), bean.getSrsDimension());
             
             // interior holes
-            int numHoles = bean.getInteriorList().size();
+            int numHoles = bean.getNumInteriors();
             for (int i = 0; i < numHoles; i++)
             {
                 LinearRing item = bean.getInteriorList().get(i);
@@ -496,7 +496,9 @@ public class GeoJsonBindings
         if (geom == null)
             throw new IOException("Missing coordinates array");
         
-        geom.setSrsName(crs);
+        if (crs != null)
+            geom.setSrsName(crs);
+        
         reader.endObject();
         return geom;
     }
