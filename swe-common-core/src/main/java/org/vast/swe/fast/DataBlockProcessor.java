@@ -45,7 +45,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
 {
     DataComponent dataComponents;
     IComponentFilter filter;
-    ArrayDeque<AtomProcessor> processorStack = new ArrayDeque<AtomProcessor>();
+    ArrayDeque<AtomProcessor> processorStack = new ArrayDeque<>();
     AtomProcessor rootProcessor;
     boolean enableSubTree = true;
     boolean processorTreeReady;
@@ -65,7 +65,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    public static abstract class BaseProcessor implements AtomProcessor
+    public abstract static class BaseProcessor implements AtomProcessor
     {
         boolean enabled = true;
         
@@ -85,7 +85,7 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     
     public static class RecordProcessor extends BaseProcessor implements CompositeProcessor
     {
-        List<AtomProcessor> fieldProcessors = new ArrayList<AtomProcessor>();
+        List<AtomProcessor> fieldProcessors = new ArrayList<>();
         
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -129,9 +129,9 @@ public abstract class DataBlockProcessor implements DataComponentVisitor
     }
     
     
-    public static abstract class ChoiceProcessor extends BaseProcessor implements CompositeProcessor
+    public abstract static class ChoiceProcessor extends BaseProcessor implements CompositeProcessor
     {
-        List<AtomProcessor> itemProcessors = new ArrayList<AtomProcessor>();
+        List<AtomProcessor> itemProcessors = new ArrayList<>();
                 
         public int process(DataBlock data, int index, int selectedIndex) throws IOException
         {

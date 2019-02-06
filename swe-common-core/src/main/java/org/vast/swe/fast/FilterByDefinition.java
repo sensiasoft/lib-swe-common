@@ -22,12 +22,12 @@ import net.opengis.swe.v20.DataComponent;
 
 public class FilterByDefinition implements IComponentFilter
 {
-    HashSet<String> enabledDefUris = new HashSet<String>();;
+    HashSet<String> selectedDefUris = new HashSet<>();
     
     
     public FilterByDefinition(Collection<String> defUris)
     {
-        enabledDefUris.addAll(defUris);
+        selectedDefUris.addAll(defUris);
     }
     
     
@@ -35,10 +35,10 @@ public class FilterByDefinition implements IComponentFilter
     public boolean accept(DataComponent comp)
     {
         String def = comp.getDefinition();
-        if (def == null || enabledDefUris.contains(def))
-            return true;
-        else
+        if (def == null || !selectedDefUris.contains(def))
             return false;
+        else
+            return true;
     }
 
 }

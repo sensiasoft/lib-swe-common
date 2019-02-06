@@ -406,7 +406,7 @@ public class JsonDataWriter extends AbstractDataWriter
         public ChoiceWriter(DataChoice choice)
         {
             this.eltName = choice.getName();
-            choiceTokens = new ArrayList<String>(choice.getNumItems());
+            choiceTokens = new ArrayList<>(choice.getNumItems());
             for (DataComponent item: choice.getItemList())
                 choiceTokens.add(item.getName());
         }
