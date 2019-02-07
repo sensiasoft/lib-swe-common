@@ -207,7 +207,8 @@ public abstract class AbstractGMLImpl implements AbstractGML
     @Override
     public void setName(String name)
     {
-        addName(new CodeWithAuthorityImpl(name));
+        if (name != null)
+            addName(new CodeWithAuthorityImpl(name));
     }
     
 

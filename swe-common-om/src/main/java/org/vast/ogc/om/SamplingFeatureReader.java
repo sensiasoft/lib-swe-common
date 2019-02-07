@@ -61,26 +61,24 @@ public class SamplingFeatureReader extends GMLStaxBindings implements IFeatureSt
         this.readAbstractFeatureTypeElements(reader, newFeature);
         
         // type
-        reader.nextTag();
         if (checkElementName(reader, "type"))
         {
             OgcProperty<Serializable> prop = new OgcPropertyImpl<>();
             readPropertyAttributes(reader, prop);
             newFeature.setType(prop.getHref());
             reader.nextTag();
+            reader.nextTag();
         }
         
         // sampledFeature
-        reader.nextTag();
         if (checkElementName(reader, "sampledFeature"))
         {
             OgcProperty<Serializable> prop = new OgcPropertyImpl<>();
             readPropertyAttributes(reader, prop);
             newFeature.setSampledFeatureUID(prop.getHref());
             reader.nextTag();
+            reader.nextTag();
         }
-        
-        reader.nextTag();
         
         // lineage (skip for now)
         while (checkElementName(reader, "lineage"))
