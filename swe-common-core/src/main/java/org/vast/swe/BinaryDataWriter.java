@@ -11,7 +11,12 @@
  
  The Original Code is the "SensorML DataProcessing Engine".
  
- The Initial Developer of the Original Code is the VAST team at the University of Alabama in Huntsville (UAH). <http://vast.uah.edu> Portions created by the Initial Developer are Copyright (C) 2007 the Initial Developer. All Rights Reserved. Please Contact Mike Botts <mike.botts@uah.edu> for more information.
+ The Initial Developer of the Original Code is the VAST team at the
+ University of Alabama in Huntsville (UAH). <http://vast.uah.edu>
+ Portions created by the Initial Developer are Copyright (C) 2007
+ the Initial Developer. All Rights Reserved.
+
+ Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
     Alexandre Robin <robin@nsstc.uah.edu>
@@ -91,7 +96,9 @@ public class BinaryDataWriter extends AbstractDataWriter
 	@Override
 	public void reset()
 	{
-		try
+        super.reset();
+
+	    try
         {
             if (!componentEncodingResolved)
             	resolveComponentEncodings();
@@ -100,8 +107,6 @@ public class BinaryDataWriter extends AbstractDataWriter
         {
             throw new IllegalStateException("Invalid binary encoding mapping", e);
         }
-		
-		super.reset();
 	}
 	
 	
@@ -139,7 +144,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	/**
 	 * Parse binary component using info and encoding options
 	 * Decoded value is assigned to each DataValue
-	 * @param scalarInfo
+	 * @param component
 	 * @param binaryInfo
 	 * @throws WriterException
 	 */
