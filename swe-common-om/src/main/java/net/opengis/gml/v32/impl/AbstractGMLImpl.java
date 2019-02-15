@@ -33,11 +33,11 @@ public abstract class AbstractGMLImpl implements AbstractGML
 {
     private static final long serialVersionUID = -5559560460456343028L;
     public static final String UUID_CODE = "uid";
-    protected OgcPropertyList<Serializable> metaDataPropertyList = new OgcPropertyList<Serializable>();
+    protected OgcPropertyList<Serializable> metaDataPropertyList = new OgcPropertyList<>();
     protected String description;
     protected Reference descriptionReference;
     protected CodeWithAuthority identifier;
-    protected ArrayList<CodeWithAuthority> nameList = new ArrayList<CodeWithAuthority>();
+    protected ArrayList<CodeWithAuthority> nameList = new ArrayList<>();
     protected String id = "";
     
     
@@ -208,7 +208,12 @@ public abstract class AbstractGMLImpl implements AbstractGML
     public void setName(String name)
     {
         if (name != null)
-            addName(new CodeWithAuthorityImpl(name));
+        {
+            if (nameList.isEmpty())
+                addName(new CodeWithAuthorityImpl(name));
+            else
+                nameList.set(0, new CodeWithAuthorityImpl(name));
+        }
     }
     
 
