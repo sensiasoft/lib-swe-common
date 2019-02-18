@@ -108,12 +108,6 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     }
     
     
-    public AbstractDataComponentImpl getListComponent()
-    {
-        return (AbstractDataComponentImpl)elementType.getValue();
-    }
-    
-    
     public void resetIterator()
     {
         blockIterator = ((DataBlockList)dataBlock).blockIterator();
@@ -233,9 +227,15 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
 
         text.append("DataList[" + getComponentCount() + "] of:\n");
         text.append(indent + "  ");
-        text.append(getComponent(0).toString(indent + "  "));
+        text.append(getListComponent().toString(indent + "  "));
 
         return text.toString();
+    }
+    
+    
+    private final AbstractDataComponentImpl getListComponent()
+    {
+        return (AbstractDataComponentImpl)elementType.getValue();
     }
 
 

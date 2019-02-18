@@ -43,7 +43,7 @@ public class FilteredWriter extends AbstractDataWriter
     public FilteredWriter(AbstractDataWriter writer, Collection<String> enabledDefUris)
     {
         this.writer = writer;
-        this.enabledDefUris = new HashSet<String>();
+        this.enabledDefUris = new HashSet<>();
         this.enabledDefUris.addAll(enabledDefUris);
     }
 

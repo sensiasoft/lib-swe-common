@@ -70,7 +70,10 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
     
     public void setSampledFeatureUID(String featureUID)
     {
-        setProperty(PROP_SAMPLED_FEATURE, new FeatureRef(featureUID));
+        if (featureUID == null)
+            properties.remove(PROP_SAMPLED_FEATURE);
+        else
+            setProperty(PROP_SAMPLED_FEATURE, new FeatureRef(featureUID));
     }
     
     
@@ -85,7 +88,10 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
     
     public void setHostedProcedureUID(String processUID)
     {
-        setProperty(PROP_HOSTED_PROCEDURE, new FeatureRef(processUID));
+        if (processUID == null)
+            properties.remove(PROP_HOSTED_PROCEDURE);
+        else
+            setProperty(PROP_HOSTED_PROCEDURE, new FeatureRef(processUID));
     }
     
     
@@ -100,7 +106,10 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
     
     public void setShape(GeomType geom)
     {
-        setProperty(PROP_SHAPE, geom);
+        if (geom == null)
+            properties.remove(PROP_SHAPE);
+        else
+            setProperty(PROP_SHAPE, geom);
     }
     
     
@@ -161,8 +170,10 @@ public class SamplingFeature<GeomType extends AbstractGeometry> extends GenericF
         sf.setId(getId());
         sf.setIdentifier(getIdentifier());
         sf.setDescription(getDescription());
+        sf.setName(getName());
         sf.setBoundedByAsEnvelope(getBoundedBy());
-        sf.setGeometry(getGeometry());
+        if (sf.isSetGeometry())
+            sf.setGeometry(getGeometry());
         sf.setSampledFeatureUID(getSampledFeatureUID());
         sf.setHostedProcedureUID(getHostedProcedureUID());
         
