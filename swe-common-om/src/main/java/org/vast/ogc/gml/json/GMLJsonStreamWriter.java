@@ -12,16 +12,15 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.swe.json;
+package org.vast.ogc.gml.json;
 
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import org.vast.json.JsonStreamException;
 import org.vast.json.JsonStreamWriter;
 
 
-public class SWEJsonStreamWriter extends JsonStreamWriter
+public class GMLJsonStreamWriter extends JsonStreamWriter
 {
     protected final static String NO_PARENT = "";
     protected final static String NO_NS = "";
@@ -32,29 +31,17 @@ public class SWEJsonStreamWriter extends JsonStreamWriter
     protected Map<String, Map<String, String>> valueArrays = new HashMap<String, Map<String, String>>();
     
     
-    public SWEJsonStreamWriter(OutputStream os, String encoding) throws JsonStreamException
+    public GMLJsonStreamWriter(OutputStream os, String encoding)
     {
         super(os, encoding);
         this.markAttributes = false;
         
         // elements to encode as JSON arrays
-        addSpecialNames(arrays, NO_NS, "field", "coordinate", "item", "quality", "member");
-        addSpecialNamesWithParent(arrays, NO_NS, "AllowedValues", "value", "interval");
-        addSpecialNamesWithParent(valueArrays, NO_NS, "CountRange", "value");
-        addSpecialNamesWithParent(valueArrays, NO_NS, "QuantityRange", "value");
-        addSpecialNamesWithParent(valueArrays, NO_NS, "CategoryRange", "value");
-        addSpecialNamesWithParent(valueArrays, NO_NS, "TimeRange", "value");
-        
-        // elements with numerical values
-        addSpecialNames(numerics, NO_NS, "nilValue", "paddingBytes-after", "paddingBytes-before", "byteLength", "significantBits", "bitLength");
-        addSpecialNamesWithParent(numerics, NO_NS, "Count", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "Quantity", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "Time", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "CountRange", "value");
-        addSpecialNamesWithParent(numerics, NO_NS, "QuantityRange", "value");
+        addSpecialNames(valueArrays, NO_NS, "pos", "coordinates");
+        addSpecialNames(numerics, NO_NS, "pos", "coordinates");
     }
-    
-    
+
+
     protected void addSpecialNames(Map<String, Map<String, String>> nameMaps, String namespaceURI, String... names)
     {
         addSpecialNamesWithParent(nameMaps, namespaceURI, NO_PARENT, names);

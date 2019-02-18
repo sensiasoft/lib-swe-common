@@ -12,15 +12,15 @@ Copyright (C) 2012-2017 Sensia Software LLC. All Rights Reserved.
  
 ******************************* END LICENSE BLOCK ***************************/
 
-package org.vast.swe.json;
+package org.vast.ogc.gml.json;
 
 import java.io.InputStream;
 import java.util.HashSet;
-import org.vast.json.JsonStreamException;
+import javax.xml.stream.XMLStreamException;
 import org.vast.json.JsonStreamReader;
 
 
-public class SWEJsonStreamReader extends JsonStreamReader
+public class GMLJsonStreamReader extends JsonStreamReader
 {
     // list of XML attributes
     protected HashSet<String> xmlAttNames = new HashSet<String>();
@@ -29,17 +29,13 @@ public class SWEJsonStreamReader extends JsonStreamReader
     protected HashSet<String> inlineValueNames = new HashSet<String>();
     
     
-    public SWEJsonStreamReader(InputStream is, String encoding) throws JsonStreamException
+    public GMLJsonStreamReader(InputStream is, String encoding) throws XMLStreamException
     {
         super(is, encoding);
         
         // XML attributes
         addSpecialNames(xmlAttNames,
-                "name", "href", "role", "arcrole", "code", "id", "definition", "referenceFrame",
-                "localFrame", "axisID", "updatable", "optional", "reason",
-                "collapseWhiteSpaces", "decimalSeparator", "tokenSeparator", "blockSeparator",
-                "byteOrder", "byteEncoding", "byteLength", "significantBits", "bitLength", "dataType", "ref",
-                "compression", "encryption", "paddingBytes-after", "paddingBytes-before", "byteLength");
+                "href", "role", "arcrole", "code", "id", "srsName");
         
         // XML inline values
         addSpecialNames(inlineValueNames, "nilValue");

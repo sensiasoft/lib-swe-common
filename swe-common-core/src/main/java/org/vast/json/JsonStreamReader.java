@@ -52,6 +52,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     protected String nextName = "root";
     protected ArrayList<String> attNames = new ArrayList<String>();
     protected ArrayList<String> attValues = new ArrayList<String>();
+    protected StringBuilder valueBuilder = new StringBuilder();
     
     
     protected static class JsonContext
@@ -114,6 +115,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
         eventType = 0;
         attNames.clear();
         attValues.clear();
+        valueBuilder.setLength(0);
     }
     
     
@@ -223,6 +225,16 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
                                 return eventType;
                         }
                         
+                        /*// if value array
+                        if (currentContext.isArray)
+                        {
+                            // add to value buffer
+                            valueBuilder.append(val).append(' ');
+                            // finish start element tag if we reached end of array
+                            if (reader.peek() == JsonToken.END_ARRAY)
+                                return START_ELEMENT;
+                        }*/
+                        
                         // if we have to insert an object element
                         else if (currentContext.insertObject)
                         {
@@ -329,7 +341,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     @Override
     public String getAttributeValue(String namespaceURI, String localName)
     {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
 
@@ -338,7 +350,9 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
     {
         if (currentContext.text == null)
             throw new IllegalStateException();
-        return currentContext.text;
+        String text = currentContext.text;
+        nextTag();
+        return text;
     }
 
 
@@ -385,7 +399,7 @@ public class JsonStreamReader implements XMLStreamReader, JsonConstants
             @Override
             public Iterator<String> getPrefixes(String namespaceURI)
             {
-                return Collections.EMPTY_LIST.iterator();
+                return Collections.<String>emptyList().iterator();
             }            
         };
     }

@@ -11,12 +11,15 @@ package org.vast.ogc.gml;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.DateTimeFormat;
+import com.google.common.collect.Range;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -79,57 +82,53 @@ public class GeoJsonBindings
         writer.beginObject();        
         writeStandardFeatureProperties(writer, bean);
         
-        // properties
+        // custom properties
         boolean hasCustomProperties = bean instanceof GenericFeature && !((GenericFeature)bean).getProperties().isEmpty();
         if (hasCustomProperties)
         {
             writer.name("properties").beginObject();
             
-            // custom properties
-            if (hasCustomProperties)
+            for (Entry<QName, Object> prop: ((GenericFeature)bean).getProperties().entrySet())
             {
-                for (Entry<QName, Object> prop: ((GenericFeature)bean).getProperties().entrySet())
+                // prop name
+                QName propName = prop.getKey();
+                 
+                // prop value
+                Object val = prop.getValue();
+                
+                if (val instanceof Boolean)
                 {
-                    // prop name
-                    QName propName = prop.getKey();
-                     
-                    // prop value
-                    Object val = prop.getValue();
-                    
-                    if (val instanceof Boolean)
+                    writer.name(propName.getLocalPart());
+                    writer.value((Boolean)val);
+                }
+                else if (val instanceof Number)
+                {
+                    writer.name(propName.getLocalPart());
+                    writer.value((Number)val);
+                }
+                else if (val instanceof String)
+                {
+                    writer.name(propName.getLocalPart());
+                    writer.value((String)val);
+                }
+                else if (val instanceof IXlinkReference<?>)
+                {
+                    String href = ((IXlinkReference<?>) val).getHref();
+                    if (href != null) 
                     {
                         writer.name(propName.getLocalPart());
-                        writer.value((Boolean)val);
+                        writer.value(href);
                     }
-                    else if (val instanceof Number)
-                    {
-                        writer.name(propName.getLocalPart());
-                        writer.value((Number)val);
-                    }
-                    else if (val instanceof String)
-                    {
-                        writer.name(propName.getLocalPart());
-                        writer.value((String)val);
-                    }
-                    else if (val instanceof IXlinkReference<?>)
-                    {
-                        String href = ((IXlinkReference<?>) val).getHref();
-                        if (href != null) 
-                        {
-                            writer.name(propName.getLocalPart());
-                            writer.value(href);
-                        }
-                    }
-                    else if (val instanceof AbstractGeometry)
-                    {
-                        writer.name(propName.getLocalPart());
-                        writeGeometry(writer, (AbstractGeometry)val);
-                    }
-                    else if (val instanceof AbstractTimeGeometricPrimitive)
-                    {
-                        writer.name(propName.getLocalPart());
-                        writeTimePrimitive(writer, (AbstractTimeGeometricPrimitive)val);
-                    }
+                }
+                else if (val instanceof AbstractGeometry)
+                {
+                    writer.name(propName.getLocalPart());
+                    writeGeometry(writer, (AbstractGeometry)val);
+                }
+                else if (val instanceof AbstractTimeGeometricPrimitive)
+                {
+                    writer.name(propName.getLocalPart());
+                    writeTimePrimitive(writer, (AbstractTimeGeometricPrimitive)val);
                 }
             }
             
@@ -168,6 +167,13 @@ public class GeoJsonBindings
         {
             writer.name("geometry");
             writeGeometry(writer, bean.getGeometry());
+        }
+        
+        // geometry
+        if (bean instanceof TemporalFeature && ((TemporalFeature) bean).getValidTime() != null)
+        {
+            writer.name("validTime");
+            writeTimePeriod(writer, ((TemporalFeature)bean).getValidTime());
         }
     }
     
@@ -299,6 +305,15 @@ public class GeoJsonBindings
     }
     
     
+    public void writeTimePeriod(JsonWriter writer, Range<Instant> bean) throws IOException
+    {
+        writer.beginArray();
+        writeDateTimeValue(writer, bean.lowerEndpoint().atOffset(ZoneOffset.UTC));
+        writeDateTimeValue(writer, bean.upperEndpoint().atOffset(ZoneOffset.UTC));
+        writer.endArray();
+    }
+    
+    
     public void writeTimePrimitive(JsonWriter writer, AbstractTimeGeometricPrimitive bean) throws IOException
     {
         if (bean instanceof TimeInstant)
@@ -353,12 +368,12 @@ public class GeoJsonBindings
     }
     
     
-    protected GenericFeature createFeatureObject(String type) throws IOException
+    protected GenericFeature createFeatureObject(String type)
     {
         if (!"Feature".equals(type))
             throw new JsonParseException("The type of a GeoJSON feature must be 'Feature'");
         
-        return new GenericFeatureImpl(new QName(type));
+        return new GenericTemporalFeatureImpl(new QName(type));
     }
     
     
@@ -385,12 +400,15 @@ public class GeoJsonBindings
         else if ("geometry".equals(name))
             f.setGeometry(readGeometry(reader));
         
-        // also support name and description on root
+        // also support other attributes root        
         else if ("name".equals(name))
             f.setName(reader.nextString());
         
         else if ("description".equals(name))
             f.setDescription(reader.nextString());
+        
+        else if (f instanceof GenericTemporalFeatureImpl && "validTime".equals(name))
+            readValidTime(reader, (GenericTemporalFeatureImpl)f);
         
         else if ("properties".equals(name) && f instanceof GenericFeature)
             readCustomProperties(reader, ((GenericFeature)f).getProperties());
@@ -592,5 +610,15 @@ public class GeoJsonBindings
             throw new JsonParseException(ERROR_INVALID_COORDINATES + ": Tuples have different dimensionality");
         
         return numDims;
+    }
+    
+    
+    public void readValidTime(JsonReader reader, GenericTemporalFeatureImpl bean) throws IOException
+    {
+        reader.beginArray();
+        OffsetDateTime beginTime = OffsetDateTime.parse(reader.nextString(), DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
+        OffsetDateTime endTime = OffsetDateTime.parse(reader.nextString(), DateTimeFormat.ISO_DATE_OR_TIME_FORMAT);
+        reader.endArray();
+        bean.setValidTimePeriod(beginTime, endTime);
     }
 }

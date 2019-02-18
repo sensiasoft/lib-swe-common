@@ -55,7 +55,7 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     }
 
 
-    public JsonStreamWriter(OutputStream os, String encoding) throws JsonStreamException
+    public JsonStreamWriter(OutputStream os, String encoding)
     {
         try
         {
@@ -67,8 +67,27 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
         }
         catch (UnsupportedEncodingException e)
         {
-            throw new JsonStreamException("Cannot instantiate JSON writer", e);
+            throw new IllegalArgumentException(e);
         }
+    }
+    
+    
+    public void beginArray() throws IOException
+    {
+        writer.beginArray();
+    }
+    
+    
+    public void nextArrayElt()
+    {
+        currentContext.firstChild = true;
+    }
+    
+    
+    public void endArray() throws IOException
+    {
+        writer.endArray();
+        writer.flush();
     }
 
 
@@ -84,6 +103,12 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     }
 
 
+    protected boolean isValueArray(String namespaceURI, String localName)
+    {
+        return false;
+    }
+    
+    
     protected boolean isNumericValue(String value)
     {
         return NumberUtils.isNumericExp(value);
@@ -145,17 +170,16 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     @Override
     public void writeEndDocument() throws JsonStreamException
     {
-        try
+        /*try
         {
             // just close bracket
             //writer.write(']');
             //writer.endArray();
-            writer.endObject();
         }
         catch (IOException e)
         {
             throw new JsonStreamException("Error when closing root object", e);
-        }
+        }*/
     }
 
 
@@ -219,9 +243,10 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
                 writer.write('"');*/
                 writer.name(OBJECT_TYPE_PROPERTY);
                 writer.value(localName);
+                boolean skipParent = currentContext.parent != null;
                 pushContext(localName);
                 currentContext.firstChild = false;
-                currentContext.skipParent = true;
+                currentContext.skipParent = skipParent;
             }
             else
             {
@@ -233,16 +258,16 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
                     // start JSON array if element has multiplicity > 1
                     if (isArray(namespaceURI, localName))
                     {
+                        pushContext(localName);
                         /*writer.write("[\n");
                         indentSize++;
                         indent();*/
                         writer.beginArray();
-                        pushContext(localName);
                         currentContext.firstChild = false;
                         currentContext.isArray = true;
                     }
                 }
-
+                
                 pushContext(localName);
             }
         }
@@ -312,20 +337,19 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
             
             if (!currentContext.skipParent)
             {
-                if (!currentContext.firstChild)
+                if (currentContext.emptyElement)
+                {
+                    //writer.write("null");
+                    writer.nullValue();
+                }
+                else if (!currentContext.firstChild)
                 {
                     /*writer.write('\n');
                     indentSize--;
                     indent();
                     writer.write("}");*/
                     writer.endObject();
-                }
-                
-                else if (currentContext.emptyElement)
-                {
-                    //writer.write("null");
-                    writer.nullValue();
-                }
+                } 
             }
             
             writer.flush();
@@ -340,14 +364,35 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
 
     protected void writeValue(String value) throws IOException
     {
-        boolean isNumber = isNumericValue(value);
-
-        /*if (!isNumber)
+        /*boolean isNumber = isNumericValue(value);
+        if (!isNumber)
             writer.write('"');
         writer.write(value);
         if (!isNumber)
             writer.write('"');*/
-        if (isNumber)
+        
+        if (isValueArray(null, currentContext.eltName))
+        {
+            String[] tokens = value.split(" ");
+            if (tokens.length > 0)
+            {
+                writer.beginArray();
+                if (isNumericValue(tokens[0]))
+                {
+                    for (String val: tokens)
+                        writer.jsonValue(val);
+                }
+                else
+                {
+                    for (String val: tokens)
+                        writer.value(val);
+                }
+                writer.endArray();
+            }
+            else
+                writer.nullValue();
+        }
+        else if (isNumericValue(value))
             writer.jsonValue(value);
         else
             writer.value(value);
@@ -363,12 +408,12 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
                 localName = ATT_PREFIX + localName;
             
             prepareAppendToObject();
+            currentContext.emptyElement = false;
+            
             /*indent();            
             writeFieldName(localName);*/
             writer.name(localName);
             writeValue(value);
-            
-            currentContext.emptyElement = false;
         }
         catch (IOException e)
         {
@@ -398,18 +443,15 @@ public class JsonStreamWriter implements XMLStreamWriter, JsonConstants
     {
         try
         {
-            if (currentContext.firstChild)
-                writeValue(text);
-            else
+            if (!currentContext.firstChild)
             {
-                prepareAppendToObject();
                 /*indent();
                 writeFieldName("value");
                 writeValue(text);*/
-                writer.name("value");
-                writeValue(text);
+                writer.name("value");                
             }
             
+            writeValue(text);
             currentContext.emptyElement = false;
         }
         catch (IOException e)

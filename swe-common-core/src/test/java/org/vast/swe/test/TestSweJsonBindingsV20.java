@@ -146,11 +146,16 @@ public class TestSweJsonBindingsV20 extends TestCase
     }
     
     
+    public void testReadWriteRanges() throws Exception
+    {
+        readXmlWriteJson("examples_v20/spec/range_components.xml");
+    }
+    
+    
     public void testReadWriteRecord() throws Exception
     {
         readXmlWriteJson("examples_v20/spec/record_weather.xml");
         readXmlWriteJson("examples_v20/spec/record_coefs.xml");
-        readXmlWriteJson("examples_v20/spec/range_components.xml");
         readXmlWriteJson("examples_v20/sps/TaskingParameter_DataRecord.xml");
     }
     

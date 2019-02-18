@@ -76,6 +76,12 @@ public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements Te
     
     public void setValidTimePeriod(OffsetDateTime beginTime, OffsetDateTime endTime)
     {
+        if (beginTime.equals(endTime))
+        {
+            setValidTimeInstant(beginTime);
+            return;
+        }
+        
         GMLFactory gmlFac = new GMLFactory();
         TimePosition begin = gmlFac.newTimePosition(beginTime);
         TimePosition end = gmlFac.newTimePosition(endTime);
