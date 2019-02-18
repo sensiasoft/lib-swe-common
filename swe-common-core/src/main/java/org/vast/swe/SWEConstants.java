@@ -86,6 +86,7 @@ public class SWEConstants
     public static final String DEF_SENSOR_STATUS = OGC_PROP_URI + "SensorStatus";
     public static final String DEF_PLATFORM_TYPE = OGC_PROP_URI + "PlatformType";
     public static final String DEF_FOI_ID = OGC_PROP_URI + "FeatureOfInterestID";
+    public static final String DEF_PROCEDURE_ID = OGC_PROP_URI + "ProcedureID";
     
     // SWE definition URIs
     public static final String SWE_PROP_URI_PREFIX = "http://sensorml.com/ont/swe/property/";
