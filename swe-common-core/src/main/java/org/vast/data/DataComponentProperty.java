@@ -25,7 +25,7 @@ import net.opengis.swe.v20.DataComponent;
  * for the child data component.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @param <ComponentType> Type of data component this property can hold
  * @since Dec 1, 2017
  */

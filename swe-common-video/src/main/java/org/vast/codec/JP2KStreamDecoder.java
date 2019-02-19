@@ -19,7 +19,7 @@
  Please Contact Mike Botts <mike.botts@uah.edu> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alex.robin@sensiasoftware.com>
+    Alexandre Robin
  
  ******************************* END LICENSE BLOCK ***************************/
 
@@ -44,7 +44,7 @@ import org.vast.data.DataValue;
  * Decoder used by the BinaryDataParser to decode a binary block compressed in JPEG 2000.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Oct 16, 2009
  * */
 public class JP2KStreamDecoder implements CompressedStreamParser

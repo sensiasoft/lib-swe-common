@@ -27,7 +27,7 @@ import javax.xml.stream.XMLStreamReader;
  * resolution.
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since May 18, 2017
  */
 public class XMLStreamReaderWithLocation extends DelegatingXMLStreamReader

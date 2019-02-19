@@ -15,11 +15,11 @@
  Portions created by the Initial Developer are Copyright (C) 2014
  the Initial Developer. All Rights Reserved.
  
- Please Contact Alexandre Robin <alex.robin@sensiasoftware.com> or
+ Please Contact Alexandre Robin or
  Mike Botts <mike.botts@botts-inc.net> for more information.
  
  Contributor(s): 
-    Alexandre Robin <alex.robin@sensiasoftware.com>
+    Alexandre Robin
  
 ******************************* END LICENSE BLOCK ***************************/
 

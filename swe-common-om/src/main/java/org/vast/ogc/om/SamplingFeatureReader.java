@@ -36,7 +36,7 @@ import net.opengis.gml.v32.AbstractGeometry;
  * Custom reader for O&M sampling features
  * </p>
  *
- * @author Alex Robin <alex.robin@sensiasoftware.com>
+ * @author Alex Robin
  * @since Apr 21, 2017
  */
 public class SamplingFeatureReader extends GMLStaxBindings implements IFeatureStaxBindings

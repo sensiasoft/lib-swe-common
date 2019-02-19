@@ -17,10 +17,10 @@
  the Initial Developer. All Rights Reserved.
 
  Please Contact Mike Botts <mike.botts@uah.edu>
- or Alexandre Robin <alex.robin@sensiasoftware.com> for more information.
+ or Alexandre Robin for more information.
  
  Contributor(s): 
-    Alexandre Robin <alex.robin@sensiasoftware.com>
+    Alexandre Robin
  
 ******************************* END LICENSE BLOCK ***************************/
 
