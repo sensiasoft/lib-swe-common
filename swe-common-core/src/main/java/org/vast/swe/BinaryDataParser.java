@@ -174,8 +174,6 @@ public class BinaryDataParser extends AbstractDataParser
 	@Override
 	public void reset()
 	{
-	    super.reset();
-	    
 	    try
         {
             if (!componentEncodingResolved)
@@ -185,6 +183,8 @@ public class BinaryDataParser extends AbstractDataParser
         {
             throw new IllegalStateException("Invalid binary encoding mapping", e);
         }
+	    
+	    super.reset();
 	}
 	
 	
