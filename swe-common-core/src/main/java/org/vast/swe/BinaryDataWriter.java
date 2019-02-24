@@ -96,9 +96,7 @@ public class BinaryDataWriter extends AbstractDataWriter
 	@Override
 	public void reset()
 	{
-        super.reset();
-
-	    try
+        try
         {
             if (!componentEncodingResolved)
             	resolveComponentEncodings();
@@ -107,6 +105,8 @@ public class BinaryDataWriter extends AbstractDataWriter
         {
             throw new IllegalStateException("Invalid binary encoding mapping", e);
         }
+        
+        super.reset();
 	}
 	
 	

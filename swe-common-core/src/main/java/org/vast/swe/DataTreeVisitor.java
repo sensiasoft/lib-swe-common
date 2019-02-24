@@ -70,7 +70,7 @@ public abstract class DataTreeVisitor
 	public DataTreeVisitor(boolean parsing)
 	{
 		this.parsing = parsing;
-		this.componentStack = new Stack<Record>();
+		this.componentStack = new Stack<>();
 	}
 	
 	
@@ -198,7 +198,7 @@ public abstract class DataTreeVisitor
             // catch end of data
             if (componentStack.isEmpty())
             {
-                if (parentArray != null && parentArrayIndex == ((DataComponent)parentArray).getComponentCount())
+                if (parentArray != null && parentArrayIndex == parentArray.getComponentCount())
                     endOfArray = true;
                 
                 endDataBlock();
@@ -260,7 +260,7 @@ public abstract class DataTreeVisitor
 		// prepare next array element
 		if (parentArray != null)
         {
-            dataComponents = ((DataComponent)parentArray).getComponent(parentArrayIndex);
+            dataComponents = parentArray.getComponent(parentArrayIndex);
             parentArrayIndex++;
         }
         
@@ -336,8 +336,10 @@ public abstract class DataTreeVisitor
     public void setParentArray(BlockComponent parentArray)
     {
         this.parentArray = parentArray;
+        if (dataComponents == null)
+            dataComponents = parentArray.getElementType();
         if (parsing)
-            ((DataComponent)parentArray).renewDataBlock();
+            parentArray.renewDataBlock();
         parentArrayIndex = 0;
     }
 }
