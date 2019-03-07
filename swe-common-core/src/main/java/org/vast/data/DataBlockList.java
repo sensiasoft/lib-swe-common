@@ -57,9 +57,9 @@ public class DataBlockList extends AbstractDataBlock
     public DataBlockList(int listSize, boolean useArrayList)
     {
     	if (useArrayList)
-    		this.blockList = new ArrayList<DataBlock>(listSize);
+    		this.blockList = new ArrayList<>(listSize);
     	else
-    		this.blockList = new LinkedList<DataBlock>();
+    		this.blockList = new LinkedList<>();
     	
     	this.equalBlockSize = true;
     }
@@ -84,7 +84,7 @@ public class DataBlockList extends AbstractDataBlock
         newBlock.startIndex = this.startIndex;
         newBlock.blockAtomCount = this.blockAtomCount;
         newBlock.equalBlockSize = this.equalBlockSize;
-        newBlock.blockList = new LinkedList<DataBlock>();
+        newBlock.blockList = new LinkedList<>();
         
         // renew all blocks in the list
         Iterator<DataBlock> it = this.blockList.iterator();
@@ -102,7 +102,7 @@ public class DataBlockList extends AbstractDataBlock
         newBlock.startIndex = this.startIndex;
         newBlock.blockAtomCount = this.blockAtomCount;
         newBlock.equalBlockSize = this.equalBlockSize;
-        newBlock.blockList = new LinkedList<DataBlock>();
+        newBlock.blockList = new LinkedList<>();
         
         // fully copy (clone) all blocks in the list
         Iterator<DataBlock> it = this.blockList.iterator();

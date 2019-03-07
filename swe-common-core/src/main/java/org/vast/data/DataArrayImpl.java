@@ -235,7 +235,7 @@ public class DataArrayImpl extends AbstractArrayImpl
         else
         {
         	AbstractDataBlock childBlock = ((AbstractDataBlock)dataBlock).copy();
-    		childBlock.atomCount = getArrayComponent().scalarCount;
+    		childBlock.atomCount = getArrayComponent().getComponentCount();
     		getArrayComponent().setData(childBlock);
         }
     }

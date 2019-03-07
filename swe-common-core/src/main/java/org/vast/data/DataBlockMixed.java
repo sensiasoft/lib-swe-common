@@ -118,7 +118,7 @@ public class DataBlockMixed extends AbstractDataBlock
     }
     
     
-    public void setUnderlyingObject(AbstractDataBlock[] blockArray)
+    protected void setUnderlyingObject(AbstractDataBlock[] blockArray)
     {
         this.blockArray = blockArray;
         
@@ -132,7 +132,7 @@ public class DataBlockMixed extends AbstractDataBlock
     @Override
     public void setUnderlyingObject(Object obj)
     {
-    	this.blockArray = (AbstractDataBlock[])obj;
+        setUnderlyingObject((AbstractDataBlock[])obj);
     }
 	
 	

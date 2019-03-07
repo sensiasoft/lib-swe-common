@@ -101,7 +101,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     }
     
     
-    public void setUnderlyingObject(byte[] compressedData)
+    protected void setUnderlyingObject(byte[] compressedData)
     {
         this.compressedData = compressedData;
     }
@@ -110,7 +110,7 @@ public class DataBlockCompressed extends AbstractDataBlock
     @Override
     public void setUnderlyingObject(Object obj)
     {
-    	this.compressedData = (byte[])obj;
+        setUnderlyingObject((byte[])obj);
     }
     
     

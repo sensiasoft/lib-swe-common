@@ -19,7 +19,9 @@ import net.opengis.swe.v20.Count;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.DataType;
 import org.junit.Test;
+import org.vast.data.DataBlockByte;
 import org.vast.data.DataBlockDouble;
 import org.vast.data.DataBlockFactory;
 import org.vast.data.DataBlockMixed;
@@ -32,6 +34,7 @@ public class TestVarSizeArrays
 {
     static final String TEST1_FAIL_MSG = "Wrong data block size before resizing";
     static final String TEST2_FAIL_MSG = "Wrong data block size after resizing";
+    static final String WRONG_ARRAY_SIZE_MSG = "Wrong array size";
     
     GeoPosHelper fac = new GeoPosHelper();
     SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
@@ -165,5 +168,42 @@ public class TestVarSizeArrays
         outerArray.updateSize(outerSize);
         data = rec.createDataBlock();
         assertEquals(TEST2_FAIL_MSG, innerSize*outerSize*1+2, data.getAtomCount());        
+    }
+    
+    
+    @Test
+    public void testVarSizeArray2DSetData() throws Exception
+    {
+        DataRecord rec = fac.newDataRecord();
+        
+        Count w = fac.newCount();
+        w.setId("WIDTH");
+        rec.addField("w", w);
+        
+        Count h = fac.newCount();
+        h.setId("HEIGHT");
+        rec.addField("h", h);  
+                
+        DataArray innerArray = fac.newDataArray();
+        innerArray.setElementType("val", fac.newCount(DataType.BYTE));
+        innerArray.setElementCount(w);
+        
+        DataArray outerArray = fac.newDataArray();
+        outerArray.setElementType("inner", innerArray);
+        outerArray.setElementCount(h);       
+        
+        rec.addField("outer_array", outerArray);
+        
+        // create and assign datablock
+        int width = 320;
+        int height = 240; 
+        DataBlock dataBlk = rec.createDataBlock();
+        dataBlk.setIntValue(0, width);
+        dataBlk.setIntValue(1, height);
+        ((DataBlock[])dataBlk.getUnderlyingObject())[2] = new DataBlockByte(width*height);
+        
+        rec.setData(dataBlk);
+        assertEquals(WRONG_ARRAY_SIZE_MSG, height, outerArray.getComponentCount());
+        assertEquals(WRONG_ARRAY_SIZE_MSG, width, innerArray.getComponentCount());    
     }
 }
