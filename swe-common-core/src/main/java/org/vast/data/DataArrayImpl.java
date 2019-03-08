@@ -196,6 +196,10 @@ public class DataArrayImpl extends AbstractArrayImpl
             this.assignNewDataBlock();
         
         this.dataBlock = (AbstractDataBlock)dataBlock;
+        
+        // stop here if compressed data
+        if (dataBlock instanceof DataBlockCompressed)
+            return;
     	
     	// always update size component if implicit variable size
         if (isImplicitSize())
