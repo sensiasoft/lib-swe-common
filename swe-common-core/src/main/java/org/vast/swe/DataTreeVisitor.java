@@ -336,8 +336,7 @@ public abstract class DataTreeVisitor
     public void setParentArray(BlockComponent parentArray)
     {
         this.parentArray = parentArray;
-        if (dataComponents == null)
-            dataComponents = parentArray.getElementType();
+        this.dataComponents = parentArray.getElementType();
         if (parsing)
             parentArray.renewDataBlock();
         parentArrayIndex = 0;

@@ -16,9 +16,7 @@ package org.vast.data;
 
 import java.util.List;
 import java.util.ListIterator;
-import net.opengis.OgcPropertyImpl;
 import net.opengis.swe.v20.DataBlock;
-import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.BlockComponent;
 import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataComponentVisitor;
@@ -41,25 +39,10 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
 {
     private static final long serialVersionUID = 5597119200425453510L;
     protected transient ListIterator<DataBlock> blockIterator;
-    protected transient AbstractDataComponentImpl tempComponent = null;
     
 
     public DataList()
     {
-        // special property object to correctly set parent
-        elementType = new OgcPropertyImpl<DataComponent>()
-        {
-            private static final long serialVersionUID = -1548152803152171355L;
-
-            @Override
-            public void setValue(DataComponent value)
-            {
-                super.setValue(value);
-                ((AbstractDataComponentImpl)value).setName(this.name);
-                ((AbstractDataComponentImpl)value).setParent(DataList.this);
-                tempComponent = ((AbstractDataComponentImpl)value).copy();
-            }    
-        };
     }
     
     
@@ -79,13 +62,6 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     }
     
     
-    protected void copyTo(DataList other)
-    {
-        super.copyTo(other);
-        other.tempComponent = this.tempComponent.copy();
-    }
-    
-    
     @Override
     protected void updateStartIndex(int startIndex)
     {        
@@ -102,9 +78,9 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     public AbstractDataComponentImpl getComponent(int index)
     {
         checkIndex(index);
-        tempComponent.setData(((DataBlockList)dataBlock).blockList.get(index));
-        
-        return tempComponent;
+        AbstractDataComponentImpl component = getListComponent();
+        component.setData(((DataBlockList)dataBlock).blockList.get(index));        
+        return component;
     }
     
     
@@ -125,8 +101,9 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
         if (blockIterator == null)
             resetIterator();
         
-        tempComponent.setData(blockIterator.next());        
-        return tempComponent;
+        AbstractDataComponentImpl component = getListComponent();
+        component.setData(blockIterator.next());        
+        return component;
     }
     
     
@@ -147,8 +124,8 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     public void clearData()
     {
     	this.dataBlock = null;
-    	if (tempComponent != null)
-    	    tempComponent.clearData();
+    	if (getListComponent() != null)
+    	    getListComponent().clearData();
     }
     
     
@@ -188,7 +165,7 @@ public class DataList extends AbstractArrayImpl implements DataArray, DataStream
     {
         int listSize = getComponentCount();
         DataBlockList newDataBlock = new DataBlockList(listSize);
-        DataBlock childBlock = tempComponent.createDataBlock();
+        DataBlock childBlock = getListComponent().createDataBlock();
         newDataBlock.add(childBlock);
         newDataBlock.resize(listSize);
         return newDataBlock;
