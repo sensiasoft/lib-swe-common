@@ -203,9 +203,15 @@ public class JsonDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             String val = data.getStringValue(index);
-            writer.write('"');
-            writer.write(val);
-            writer.write('"');
+            
+            if (val != null)
+            {
+                writer.write('"');
+                writer.write(val);
+                writer.write('"');
+            }
+            else
+                writer.write("null");
         }
     }
     
