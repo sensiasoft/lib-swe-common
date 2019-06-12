@@ -38,7 +38,6 @@ import net.opengis.swe.v20.DataStream;
 import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.JSONEncoding;
 import net.opengis.swe.v20.Quantity;
-import net.opengis.swe.v20.ScalarComponent;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.TextEncoding;
 import net.opengis.swe.v20.Time;
@@ -525,6 +524,8 @@ public class SWEHelper extends SWEFactory
             parser = new BinaryDataParser();
         else if (encoding instanceof XMLEncoding)
             parser = new XmlDataParser();
+        else
+            throw new IllegalArgumentException("Unsupported encoding: " + encoding.getClass());
         
         parser.setDataEncoding(encoding);
         return parser;
@@ -548,6 +549,8 @@ public class SWEHelper extends SWEFactory
             writer = new XmlDataWriter();
         else if (encoding instanceof JSONEncoding)
             writer = new JsonDataWriter();
+        else
+            throw new IllegalArgumentException("Unsupported encoding: " + encoding.getClass());
         
         writer.setDataEncoding(encoding);
         return writer;
@@ -724,9 +727,7 @@ public class SWEHelper extends SWEFactory
             public boolean accept(DataComponent comp)
             {
                 String childName = comp.getName();
-                if (childName != null && childName.equals(name))
-                    return true;
-                return false;
+                return childName != null && childName.equals(name);
             }            
         });
     }
@@ -745,9 +746,7 @@ public class SWEHelper extends SWEFactory
             public boolean accept(DataComponent comp)
             {
                 String childDef = comp.getDefinition();
-                if (childDef != null && childDef.equals(defUri))
-                    return true;
-                return false;
+                return childDef != null && childDef.equals(defUri);
             }            
         });
     }
@@ -833,21 +832,5 @@ public class SWEHelper extends SWEFactory
         while (parentPort.getParent() != null)
             parentPort = parentPort.getParent();
         return parentPort;
-    }
-    
-    
-    /**
-     * Retrieves an indexer for the first time stamp component found in the parent structure
-     * @param parent
-     * @return indexer instance for the time stamp component or null if no time stamp could be found
-     */
-    public static ScalarIndexer getTimeStampIndexer(DataComponent parent)
-    {
-        ScalarComponent timeStamp = (ScalarComponent)findComponentByDefinition(parent, SWEConstants.DEF_SAMPLING_TIME);
-        if (timeStamp == null)
-            timeStamp = (ScalarComponent)findComponentByDefinition(parent, SWEConstants.DEF_PHENOMENON_TIME);
-        if (timeStamp == null)
-            return null;
-        return new ScalarIndexer(parent, timeStamp);
     }
 }

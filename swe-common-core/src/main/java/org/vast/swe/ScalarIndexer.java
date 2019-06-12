@@ -40,7 +40,7 @@ public class ScalarIndexer
     
     
     // the most basic sub-indexer holding a fixed offset
-    class FixedIndexer implements IndexerPart
+    static class FixedIndexer implements IndexerPart
     {
         int offset;
         
@@ -58,16 +58,17 @@ public class ScalarIndexer
         
         @Override
         public void addIndexer(IndexerPart indexer)
-        {            
+        {
+            // never include sub-indexers
         }
     }
     
     
     // sub-indexer for record and vector components
     // this maintains a list of sub-indexers that are collapsed in simple cases
-    class ListIndexer implements IndexerPart
+    static class ListIndexer implements IndexerPart
     {
-        List<IndexerPart> subIndexers = new ArrayList<IndexerPart>();
+        List<IndexerPart> subIndexers = new ArrayList<>();
         
         @Override
         public int getOffset(int startOffset, DataBlock dataBlk)
@@ -120,9 +121,9 @@ public class ScalarIndexer
     
     // sub-indexer for choice components
     // it uses a different indexer depending on the item selected
-    class ChoiceIndexer implements IndexerPart
+    static class ChoiceIndexer implements IndexerPart
     {
-        List<IndexerPart> itemIndexers = new ArrayList<IndexerPart>();
+        List<IndexerPart> itemIndexers = new ArrayList<>();
         
         @Override
         public int getOffset(int startOffset, DataBlock dataBlk)
@@ -200,7 +201,7 @@ public class ScalarIndexer
             }
             else
             {
-                
+                // TODO add support for DataArray
             }
         }
         
