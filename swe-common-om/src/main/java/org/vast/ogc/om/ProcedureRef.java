@@ -23,7 +23,9 @@
 
 package org.vast.ogc.om;
 
+import java.time.Instant;
 import org.vast.ogc.gml.FeatureRef;
+import com.google.common.collect.Range;
 
 
 /**
@@ -48,5 +50,12 @@ public class ProcedureRef extends FeatureRef implements IProcedure
     public ProcedureRef(String href)
     {
         setHref(href);
+    }
+
+
+    @Override
+    public Range<Instant> getValidTime()
+    {
+        return null;
     }
 }

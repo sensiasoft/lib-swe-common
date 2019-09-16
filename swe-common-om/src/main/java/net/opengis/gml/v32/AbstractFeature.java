@@ -15,6 +15,7 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 package net.opengis.gml.v32;
 
 import javax.xml.namespace.QName;
+import org.vast.ogc.gml.IGeoFeature;
 import net.opengis.OgcProperty;
 
 
@@ -24,7 +25,7 @@ import net.opengis.OgcProperty;
  * This is a complex type.
  */
 @SuppressWarnings("javadoc")
-public interface AbstractFeature extends AbstractGML
+public interface AbstractFeature extends IGeoFeature, AbstractGML
 {
     
     /**

@@ -170,10 +170,10 @@ public class GeoJsonBindings
         }
         
         // geometry
-        if (bean instanceof TemporalFeature && ((TemporalFeature) bean).getValidTime() != null)
+        if (bean instanceof ITemporalFeature && ((ITemporalFeature) bean).getValidTime() != null)
         {
             writer.name("validTime");
-            writeTimePeriod(writer, ((TemporalFeature)bean).getValidTime());
+            writeTimePeriod(writer, ((ITemporalFeature)bean).getValidTime());
         }
     }
     

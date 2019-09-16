@@ -11,11 +11,22 @@ package org.vast.ogc.gml;
 
 import java.time.Instant;
 import com.google.common.collect.Range;
-import net.opengis.gml.v32.AbstractFeature;
 
 
-public interface TemporalFeature extends AbstractFeature
+/**
+ * <p>
+ * Base interface for feature that only exist or whose representation is only
+ * valid during a certain time period. 
+ * </p>
+ *
+ * @author Alex Robin
+ * @date Sep 6, 2019
+ */
+public interface ITemporalFeature extends IFeature
 {
 
+    /**
+     * @return feature validity period
+     */
     public Range<Instant> getValidTime();
 }

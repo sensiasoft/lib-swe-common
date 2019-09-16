@@ -21,7 +21,7 @@ import net.opengis.gml.v32.TimePosition;
 import net.opengis.gml.v32.impl.GMLFactory;
 
 
-public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements TemporalFeature
+public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements ITemporalFeature
 {
     private static final long serialVersionUID = 2901698262626551458L;
     public static final QName PROP_VALID_TIME = new QName(GMLStaxBindings.NS_URI, "validTime", GMLStaxBindings.NS_PREFIX_GML);

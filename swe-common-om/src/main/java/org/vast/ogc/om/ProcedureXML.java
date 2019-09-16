@@ -24,6 +24,7 @@
 package org.vast.ogc.om;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -33,7 +34,10 @@ import net.opengis.gml.v32.AbstractGeometry;
 import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.Reference;
+import org.vast.ogc.gml.GenericFeature;
+import org.vast.ogc.gml.ITemporalFeature;
 import org.w3c.dom.Element;
+import com.google.common.collect.Range;
 
 
 /**
@@ -46,11 +50,11 @@ import org.w3c.dom.Element;
  * @author Alex Robin
  * @since Sep 30, 2012
  * */
-public class ProcedureXML implements IProcedure
+public class ProcedureXML implements IProcedure, GenericFeature
 {
     private static final long serialVersionUID = -1978010581789300273L;
     protected transient Element domElt;
-    protected IProcedure procedure;
+    protected GenericFeature procedure;
     
     
     public ProcedureXML(Element domElt)
@@ -371,5 +375,14 @@ public class ProcedureXML implements IProcedure
     {
         // TODO Auto-generated method stub
         
+    }
+
+
+    @Override
+    public Range<Instant> getValidTime()
+    {
+        if (procedure instanceof ITemporalFeature)
+            return ((ITemporalFeature)procedure).getValidTime();
+        return null;
     }
 }
