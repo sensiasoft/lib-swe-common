@@ -21,11 +21,10 @@ package org.vast.util;
  * </p>
  *
  * @author Alex Robin
- * @param <B> Type of builder (must be the type derived from this class)
  * @param <T> Type of object that can be built by this builder
  * @date Oct 29, 2018
  */
-public abstract class BaseBuilder<B extends BaseBuilder<B, T>, T>
+public abstract class BaseBuilder<T>
 {
     protected T instance;
     

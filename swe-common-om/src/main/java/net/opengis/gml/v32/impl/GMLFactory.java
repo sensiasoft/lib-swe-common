@@ -344,7 +344,7 @@ public class GMLFactory implements Factory
     }
     
     
-    protected abstract static class GeometryBuilder<B extends GeometryBuilder<B, T>, T extends AbstractGeometry> extends BaseBuilder<B, T>
+    protected abstract static class GeometryBuilder<B extends GeometryBuilder<B, T>, T extends AbstractGeometry> extends BaseBuilder<T>
     {
         protected GeometryBuilder(T instance)
         {
