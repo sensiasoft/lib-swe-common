@@ -35,8 +35,13 @@ public abstract class BaseBuilder<T>
     }
     
     
+    /**
+     * @return The object instance configured by this builder.
+     * This can only be called once.
+     */
     public T build()
     {
+        Asserts.checkNotNull(instance, "build can only be called once");
         T newInstance = instance;
         instance = null; // nullify instance to prevent further changes
         return newInstance;
