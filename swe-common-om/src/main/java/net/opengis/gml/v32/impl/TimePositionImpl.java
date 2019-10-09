@@ -131,6 +131,7 @@ public class TimePositionImpl implements TimePosition
     public void setIndeterminatePosition(TimeIndeterminateValue indeterminatePosition)
     {
         this.indeterminatePosition = indeterminatePosition;
+        this.dateTimeValue = null;
     }
     
     
@@ -153,7 +154,8 @@ public class TimePositionImpl implements TimePosition
     @Override
     public void setDateTimeValue(OffsetDateTime value)
     {
-        this.dateTimeValue = new DateTimeOrDouble(value);        
+        this.dateTimeValue = new DateTimeOrDouble(value);
+        this.indeterminatePosition = null;
     }
 
 
@@ -170,7 +172,8 @@ public class TimePositionImpl implements TimePosition
     @Override
     public void setDecimalValue(double value)
     {
-        this.dateTimeValue = new DateTimeOrDouble(value, true);        
+        this.dateTimeValue = new DateTimeOrDouble(value, true);
+        this.indeterminatePosition = null;       
     }
 
 

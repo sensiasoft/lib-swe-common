@@ -211,7 +211,7 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
     
     
     @Override
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public boolean addAll(Collection<? extends ValueType> c)
     {
         if (c instanceof OgcPropertyList)
@@ -357,6 +357,7 @@ public class OgcPropertyList<ValueType extends Serializable> implements List<Val
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean remove(Object o)
     {
         boolean removed = items.remove(o);
