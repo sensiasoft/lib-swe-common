@@ -29,6 +29,11 @@ public abstract class BaseBuilder<T>
     protected T instance;
     
     
+    protected BaseBuilder()
+    {
+    }
+    
+    
     protected BaseBuilder(T instance)
     {
         this.instance = instance;
