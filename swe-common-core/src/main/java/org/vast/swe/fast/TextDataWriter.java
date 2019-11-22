@@ -18,11 +18,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import org.vast.swe.SWEDataTypeUtils;
 import org.vast.util.DateTimeFormat;
-import org.vast.util.NumberUtils;
 import org.vast.util.WriterException;
 import net.opengis.swe.v20.Boolean;
 import net.opengis.swe.v20.Category;
@@ -31,6 +32,7 @@ import net.opengis.swe.v20.DataArray;
 import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
+import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.Text;
 import net.opengis.swe.v20.TextEncoding;
@@ -82,7 +84,7 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
-    protected class DecimalWriter extends BaseProcessor
+    protected class DoubleWriter extends BaseProcessor
     {
         @Override
         public int process(DataBlock data, int index) throws IOException
@@ -95,47 +97,55 @@ public class TextDataWriter extends AbstractDataWriter
     }
     
     
+    protected class FloatWriter extends BaseProcessor
+    {
+        @Override
+        public int process(DataBlock data, int index) throws IOException
+        {
+            float val = data.getFloatValue(index);
+            writeSeparator();
+            
+            if (Float.isNaN(val))
+                writer.write("NaN");
+            else if (val == Float.POSITIVE_INFINITY)
+                writer.write("+INF");
+            else if (val == Float.NEGATIVE_INFINITY)
+                writer.write("-INF");
+            else
+                writer.write(Float.toString(val));
+            
+            return ++index;
+        }
+    }
+    
+    
     protected class RoundingDecimalWriter extends BaseProcessor
     {
-        StringBuilder sb = new StringBuilder();
-        long exp = -1;
+        int scale;
         
-        public RoundingDecimalWriter(int sigDigits)
+        public RoundingDecimalWriter(int numDecimalPlaces)
         {
-            exp = 1;
-            for (int i = 0; i < sigDigits; i++)
-                exp *= 10;
+            this.scale = numDecimalPlaces;
         }        
         
         @Override
         public int process(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
-            sb.setLength(0);
             writeSeparator();
             
-            if (Double.isFinite(val))
-            {
-                if (NumberUtils.ulpEquals(val, 0.0))
-                    writer.write('0');
-                else
-                {
-                    double nval = val;
-                    int shift = 0;
-                    while (nval < exp)
-                    {
-                        nval *= 10.;
-                        shift++;
-                    }
-                    
-                    long lval = Math.round(nval);
-                    sb.append(lval);
-                    sb.insert(sb.length()-shift, '.');                
-                    writer.write(sb.toString());
-                }
-            }
+            if (Double.isNaN(val))
+                writer.write("NaN");
+            else if (val == Double.POSITIVE_INFINITY)
+                writer.write("+INF");
+            else if (val == Double.NEGATIVE_INFINITY)
+                writer.write("-INF");
             else
-                writer.write(SWEDataTypeUtils.getDoubleOrInfAsString(val));
+            {
+                BigDecimal bd = BigDecimal.valueOf(val);
+                bd = bd.setScale(scale, RoundingMode.HALF_UP).stripTrailingZeros();
+                writer.write(bd.toPlainString());
+            }
             
             return ++index;
         }
@@ -285,8 +295,10 @@ public class TextDataWriter extends AbstractDataWriter
             int sigFigures = comp.getConstraint().getSignificantFigures(); 
             addToProcessorTree(new RoundingDecimalWriter(sigFigures));
         }
+        else if (comp.getDataType() == DataType.FLOAT)
+            addToProcessorTree(new FloatWriter());
         else
-            addToProcessorTree(new DecimalWriter());
+            addToProcessorTree(new DoubleWriter());
     }
     
     
@@ -301,7 +313,7 @@ public class TextDataWriter extends AbstractDataWriter
                 addToProcessorTree(new RoundingDecimalWriter(sigFigures));
             }
             else
-                addToProcessorTree(new DecimalWriter());
+                addToProcessorTree(new DoubleWriter());
         }
         else
             addToProcessorTree(new IsoDateTimeWriter());

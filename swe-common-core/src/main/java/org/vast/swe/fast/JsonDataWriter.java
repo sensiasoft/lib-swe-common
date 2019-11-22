@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ import net.opengis.swe.v20.DataBlock;
 import net.opengis.swe.v20.DataChoice;
 import net.opengis.swe.v20.DataComponent;
 import net.opengis.swe.v20.DataRecord;
+import net.opengis.swe.v20.DataType;
 import net.opengis.swe.v20.Quantity;
 import net.opengis.swe.v20.QuantityRange;
 import net.opengis.swe.v20.Text;
@@ -134,9 +137,9 @@ public class JsonDataWriter extends AbstractDataWriter
     }
     
     
-    protected class DecimalWriter extends ValueWriter
+    protected class DoubleWriter extends ValueWriter
     {
-        public DecimalWriter(String eltName)
+        public DoubleWriter(String eltName)
         {
             this.eltName = eltName;
         }
@@ -145,26 +148,73 @@ public class JsonDataWriter extends AbstractDataWriter
         public void writeValue(DataBlock data, int index) throws IOException
         {
             double val = data.getDoubleValue(index);
-            String stringVal = SWEDataTypeUtils.getDoubleOrInfAsString(val);
             
             // need to add quote on special values because they are not valid literal values in JSON
-            if (Double.isNaN(val) || Double.isInfinite(val))
-            {
-                writer.write('"');
-                writer.write(stringVal);
-                writer.write('"');
-            }
+            if (Double.isNaN(val))
+                writer.write("\"NaN\"");
+            else if (val == Double.POSITIVE_INFINITY)
+                writer.write("\"+INF\"");
+            else if (val == Double.NEGATIVE_INFINITY)
+                writer.write("\"-INF\"");
             else
-                writer.write(stringVal);
+                writer.write(Double.toString(val));
         }
     }
     
     
-    protected class RoundingDecimalWriter extends DecimalWriter
+    protected class FloatWriter extends ValueWriter
     {
-        public RoundingDecimalWriter(String eltName, int sigDigits)
+        public FloatWriter(String eltName)
+        {
+            this.eltName = eltName;
+        }
+        
+        @Override
+        public void writeValue(DataBlock data, int index) throws IOException
+        {
+            float val = data.getFloatValue(index);
+            
+            // need to add quote on special values because they are not valid literal values in JSON
+            if (Float.isNaN(val))
+                writer.write("\"NaN\"");
+            else if (val == Float.POSITIVE_INFINITY)
+                writer.write("\"+INF\"");
+            else if (val == Float.NEGATIVE_INFINITY)
+                writer.write("\"-INF\"");
+            else
+                writer.write(Float.toString(val));
+        }
+    }
+    
+    
+    protected class RoundingDecimalWriter extends DoubleWriter
+    {
+        int scale;
+        
+        public RoundingDecimalWriter(String eltName, int numDecimalPlaces)
         {
             super(eltName);
+            this.scale = numDecimalPlaces;
+        }
+        
+        @Override
+        public void writeValue(DataBlock data, int index) throws IOException
+        {
+            double val = data.getDoubleValue(index);
+            
+            // need to add quote on special values because they are not valid literal values in JSON
+            if (Double.isNaN(val))
+                writer.write("\"NaN\"");
+            else if (val == Double.POSITIVE_INFINITY)
+                writer.write("\"+INF\"");
+            else if (val == Double.NEGATIVE_INFINITY)
+                writer.write("\"-INF\"");
+            else
+            {
+                BigDecimal bd = BigDecimal.valueOf(val);
+                bd = bd.setScale(scale, RoundingMode.HALF_UP).stripTrailingZeros();
+                writer.write(bd.toPlainString());
+            }                
         }
     }
     
@@ -585,8 +635,10 @@ public class JsonDataWriter extends AbstractDataWriter
             int sigFigures = comp.getConstraint().getSignificantFigures(); 
             addToProcessorTree(new RoundingDecimalWriter(comp.getName(), sigFigures));
         }
+        else if (comp.getDataType() == DataType.FLOAT)
+            addToProcessorTree(new FloatWriter(comp.getName()));
         else
-            addToProcessorTree(new DecimalWriter(comp.getName()));
+            addToProcessorTree(new DoubleWriter(comp.getName()));
     }
     
     
@@ -601,7 +653,7 @@ public class JsonDataWriter extends AbstractDataWriter
                 addToProcessorTree(new RoundingDecimalWriter(comp.getName(), sigFigures));
             }
             else
-                addToProcessorTree(new DecimalWriter(comp.getName()));
+                addToProcessorTree(new DoubleWriter(comp.getName()));
         }
         else
             addToProcessorTree(new IsoDateTimeWriter(comp.getName()));
