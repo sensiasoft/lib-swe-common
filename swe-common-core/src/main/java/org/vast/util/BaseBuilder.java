@@ -19,9 +19,10 @@ package org.vast.util;
  * <p>
  * Base class for all builders
  * </p>
+ * 
+ * @param <T> Type of object that can be built by this builder
  *
  * @author Alex Robin
- * @param <T> Type of object that can be built by this builder
  * @date Oct 29, 2018
  */
 public abstract class BaseBuilder<T>

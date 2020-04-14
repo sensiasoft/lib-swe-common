@@ -121,6 +121,7 @@ public class SWEHelper extends SWEFactory
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long)
      * @return the new Boolean component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Boolean newBoolean(String definition, String label, String description)
     {
@@ -138,6 +139,7 @@ public class SWEHelper extends SWEFactory
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long)
      * @return the new Text component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Text newText(String definition, String label, String description)
     {
@@ -156,6 +158,7 @@ public class SWEHelper extends SWEFactory
      * @param description textual description of this component (can be long)
      * @param dataType data type to use for this component (if null, {@link DataType#INT} will be used)
      * @return the new Count component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Count newCount(String definition, String label, String description, DataType dataType)
     {
@@ -173,6 +176,7 @@ public class SWEHelper extends SWEFactory
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long)
      * @return the new Count component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Count newCount(String definition, String label, String description)
     {
@@ -187,6 +191,7 @@ public class SWEHelper extends SWEFactory
      * @param description textual description of this component (can be long) or null
      * @param codeSpace URI of this category code space
      * @return the new Category component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Category newCategory(String definition, String label, String description, String codeSpace)
     {
@@ -207,6 +212,7 @@ public class SWEHelper extends SWEFactory
      * @param uom UCUM code or URI for this decimal quantity's unit of measure
      * @param dataType data type to use for this component (if null, {@link DataType#DOUBLE} will be used)
      * @return the new Quantity component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Quantity newQuantity(String definition, String label, String description, String uom, DataType dataType)
     {
@@ -231,6 +237,7 @@ public class SWEHelper extends SWEFactory
      * @param description textual description of this component (can be long) or null
      * @param uom UCUM code or URI for this decimal quantity's unit of measure
      * @return the new Quantity component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Quantity newQuantity(String definition, String label, String description, String uom)
     {
@@ -247,6 +254,7 @@ public class SWEHelper extends SWEFactory
      * @param timeRef URI of time reference system
      * @param dataType data type to use for this component (if null, {@link DataType#DOUBLE} will be used)
      * @return the new Time component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Time newTime(String definition, String label, String description, String uom, String timeRef, DataType dataType)
     {
@@ -273,6 +281,7 @@ public class SWEHelper extends SWEFactory
      * @param uom code or URI for this time stamp unit of measure (can be {@link SWEConstants.}) 
      * @param timeRef URI of time reference system
      * @return the new Time component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Time newTime(String definition, String label, String description, String uom, String timeRef)
     {
@@ -286,6 +295,7 @@ public class SWEHelper extends SWEFactory
      * @param label short human readable label identifying the component (shown in UI)
      * @param description textual description of this component (can be long) or null
      * @return the new Time component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Time newTimeIsoUTC(String definition, String label, String description)
     {
@@ -296,6 +306,7 @@ public class SWEHelper extends SWEFactory
     /**
      * Creates a new sampling time component with ISO8601 format and UTC time frame
      * @return the new Time component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Time newTimeStampIsoUTC()
     {
@@ -306,6 +317,7 @@ public class SWEHelper extends SWEFactory
     /**
      * Creates a new sampling time component with ISO8601 format and GPS time frame
      * @return the new Time component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Time newTimeStampIsoGPS()
     {
@@ -318,6 +330,7 @@ public class SWEHelper extends SWEFactory
      * @param label short human readable label (forecast, model run, valid time etc.)
      * @param description textual description of this component (can be long) or null
      * @return the new Time component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Time newPhenomenonTimeIsoUTC(String label, String description)
     {
@@ -330,6 +343,7 @@ public class SWEHelper extends SWEFactory
      * @param uomCode time unit used for this onboard time stamp (e.g. 's', 'ms', 'ns', etc.)
      * @param timeRef URI of temporal reference frame for this time stamp (e.g. missionStart, etc.)
      * @return the new Time component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Time newTimeStampOnBoardClock(String uomCode, String timeRef)
     {
@@ -342,6 +356,7 @@ public class SWEHelper extends SWEFactory
      * @param timeStamp Time component representing the time stamp
      * @param subComponents list of components to wrap with the time stamp
      * @return new DataRecord instance containing the time stamp and all other components
+     * @deprecated use {@link SWEBuilders} class
      */    
     public DataRecord wrapWithTimeStamp(Time timeStamp, DataComponent... subComponents)
     {
@@ -359,6 +374,7 @@ public class SWEHelper extends SWEFactory
      * Wraps the given component(s) into a record with a UTC ISO time stamp
      * @param subComponents list of components to wrap
      * @return new DataRecord instance containing the time stamp and all other components
+     * @deprecated use {@link SWEBuilders} class
      */
     public DataRecord wrapWithTimeStampUTC(DataComponent... subComponents)
     {   
@@ -370,6 +386,7 @@ public class SWEHelper extends SWEFactory
     /**
      * Creates a component for carrying system ID (e.g. station ID, sensor ID, device ID, etc...)
      * @return new Text instance
+     * @deprecated use {@link SWEBuilders} class
      */
     public Text newSystemIdComponent()
     {
@@ -388,6 +405,7 @@ public class SWEHelper extends SWEFactory
      * @param uoms array containing unit of measure of each individual vector element
      * @param axes array containing axis name of each individual vector element
      * @return the new Vector component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public Vector newVector(String def, String crs, String[] names, String[] labels, String[] uoms, String[] axes)
     {
@@ -418,6 +436,7 @@ public class SWEHelper extends SWEFactory
      * @param eltName
      * @param elementType
      * @return the new DataArray component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public DataArray newArray(Count sizeComponent, String eltName, DataComponent elementType)
     {
@@ -434,6 +453,7 @@ public class SWEHelper extends SWEFactory
      * @param height
      * @param dataType
      * @return the new DataArray component object
+     * @deprecated use {@link SWEBuilders} class
      */
     public DataArray newRgbImage(int width, int height, DataType dataType)
     {
@@ -466,6 +486,7 @@ public class SWEHelper extends SWEFactory
      * @param dataDescription description of each stream element
      * @param dataEncoding data encoding spec
      * @return the new DataStream object
+     * @deprecated use {@link SWEBuilders} class
      */
     public DataStream newDataStream(DataComponent dataDescription, DataEncoding dataEncoding)
     {

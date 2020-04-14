@@ -34,7 +34,7 @@ public class TestGeoPosHelper
     SWEUtils utils = new SWEUtils(SWEUtils.V2_0);
     
     
-   @Test
+    @Test
     public void testCreateLocationVectors() throws Exception
     {
         utils.writeComponent(System.out, fac.newLocationVectorLLA(SWEConstants.DEF_SENSOR_LOC), false, true);
