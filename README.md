@@ -1,3 +1,7 @@
+**THIS REPOSITORY HAS BEEN ARCHIVED ON Apr 14th 2020.**
+
+**PLEASE USE THE [OGC-LIB REPOSITORY](https://github.com/sensiasoft/ogc-lib) FOR ANY NEW WORK.**
+
 SWE Common Library (lib-swe-common)
 ===================================
 
