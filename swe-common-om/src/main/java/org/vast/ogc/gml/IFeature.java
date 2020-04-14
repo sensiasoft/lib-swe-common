@@ -9,6 +9,9 @@
 
 package org.vast.ogc.gml;
 
+import java.util.Collections;
+import java.util.Map;
+import javax.xml.namespace.QName;
 
 /**
  * <p>
@@ -37,5 +40,14 @@ public interface IFeature
      * @return the short description
      */
     public String getDescription();
+    
+    
+    /**
+     * @return the property list
+     */
+    public default Map<QName, Object> getProperties()
+    {
+        return Collections.emptyMap();
+    }
     
 }

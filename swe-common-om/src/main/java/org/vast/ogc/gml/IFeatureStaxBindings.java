@@ -19,22 +19,23 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import net.opengis.gml.v32.AbstractFeature;
 
 
 /**
  * <p>
  * Interface for StAX bindings of specific feature types 
  * </p>
+ * 
+ * @param <T> Feature Type
  *
  * @author Alex Robin
  * @since May 30, 2015
  */
-public interface IFeatureStaxBindings
+public interface IFeatureStaxBindings<T extends IFeature>
 {
     public Collection<QName> getSupportedFeatureTypes();
     
-    public AbstractFeature readFeature(XMLStreamReader reader, QName qName) throws XMLStreamException;
+    public T readFeature(XMLStreamReader reader, QName qName) throws XMLStreamException;
     
-    public void writeFeature(XMLStreamWriter writer, AbstractFeature bean) throws XMLStreamException;
+    public void writeFeature(XMLStreamWriter writer, T bean) throws XMLStreamException;
 }

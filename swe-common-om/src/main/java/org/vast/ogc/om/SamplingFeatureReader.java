@@ -39,7 +39,7 @@ import net.opengis.gml.v32.AbstractGeometry;
  * @author Alex Robin
  * @since Apr 21, 2017
  */
-public class SamplingFeatureReader extends GMLStaxBindings implements IFeatureStaxBindings
+public class SamplingFeatureReader extends GMLStaxBindings implements IFeatureStaxBindings<AbstractFeature>
 {
     
     @Override

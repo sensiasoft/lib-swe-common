@@ -45,7 +45,7 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
     protected String role;
     protected String arcRole;
     protected TargetType value;
-    protected IReferenceResolver<TargetType> resolver;
+    protected IReferenceResolver<? extends TargetType> resolver;
 
 
     public CachedReference()
@@ -59,7 +59,7 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
     }
     
     
-    public CachedReference(IReferenceResolver<TargetType> resolver)
+    public CachedReference(IReferenceResolver<? extends TargetType> resolver)
     {
         setResolver(resolver);
     }
@@ -131,7 +131,7 @@ public class CachedReference<TargetType> implements IXlinkReference<TargetType>
     }
     
     
-    public void setResolver(IReferenceResolver<TargetType> resolver)
+    public void setResolver(IReferenceResolver<? extends TargetType> resolver)
     {
         this.resolver = resolver;
     }

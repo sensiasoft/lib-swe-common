@@ -42,11 +42,11 @@ public class GMLStaxBindings extends XMLStreamBindings
     public final static String NS_PREFIX_GML = "gml";
     public final static String NS_PREFIX_XLINK = "xlink";
 
-    protected int geomIdCounter = 1;
-    protected int timeIdCounter = 1;
-    protected int featureIdCounter = 1;
+    protected GmlIdGenerator<AbstractGML> geomIds = new SequentialIdGenerator<>("G", true);
+    protected GmlIdGenerator<AbstractGML> timeIds = new SequentialIdGenerator<>("T", true);
+    protected GmlIdGenerator<AbstractGML> featureIds = new SequentialIdGenerator<>("F", true);
     protected StringBuilder sb = new StringBuilder();
-    protected Map<QName, IFeatureStaxBindings> featureTypesBindings;
+    protected Map<QName, IFeatureStaxBindings<AbstractFeature>> featureTypesBindings;
     protected DecimalFormat formatter = new DecimalFormat(GMLFactory.COORDINATE_FORMAT);
     
     
@@ -65,7 +65,7 @@ public class GMLStaxBindings extends XMLStreamBindings
     public GMLStaxBindings(net.opengis.gml.v32.Factory fac)
     {
         super(fac);
-        featureTypesBindings = new HashMap<QName, IFeatureStaxBindings>();        
+        featureTypesBindings = new HashMap<>();        
         nsContext.registerNamespace(NS_PREFIX_GML, net.opengis.gml.v32.bind.XMLStreamBindings.NS_URI);
         nsContext.registerNamespace(NS_PREFIX_XLINK, net.opengis.swe.v20.bind.XMLStreamBindings.XLINK_NS_URI);
     }
@@ -77,9 +77,8 @@ public class GMLStaxBindings extends XMLStreamBindings
     }
     
     
-    public void registerFeatureBindings(IFeatureStaxBindings... featureBindings)
+    public void registerFeatureBinding(IFeatureStaxBindings<AbstractFeature> binding)
     {
-        for (IFeatureStaxBindings binding: featureBindings)
         for (QName fType: binding.getSupportedFeatureTypes())
             featureTypesBindings.put(fType, binding);
     }
@@ -203,10 +202,10 @@ public class GMLStaxBindings extends XMLStreamBindings
     public AbstractFeature readAbstractFeature(XMLStreamReader reader) throws XMLStreamException
     {
         QName featureType = reader.getName();
-        IFeatureStaxBindings customBindings = featureTypesBindings.get(featureType);
+        IFeatureStaxBindings<AbstractFeature> customBindings = featureTypesBindings.get(featureType);
         
         if (customBindings != null)
-            return customBindings.readFeature(reader, featureType);
+            return (AbstractFeature)customBindings.readFeature(reader, featureType);
         else if (featureType.getNamespaceURI().equals(NS_URI))
             return super.readAbstractFeature(reader);
         else
@@ -218,7 +217,7 @@ public class GMLStaxBindings extends XMLStreamBindings
     public void writeAbstractFeature(XMLStreamWriter writer, AbstractFeature bean) throws XMLStreamException
     {
         QName featureType = bean.getQName();
-        IFeatureStaxBindings customBindings = featureTypesBindings.get(featureType);
+        IFeatureStaxBindings<AbstractFeature> customBindings = featureTypesBindings.get(featureType);
         
         if (customBindings != null)
             customBindings.writeFeature(writer, bean);
@@ -232,44 +231,19 @@ public class GMLStaxBindings extends XMLStreamBindings
     @Override
     public void writeAbstractGMLTypeAttributes(XMLStreamWriter writer, AbstractGML bean) throws XMLStreamException
     {        
+        String gmlID;
+        
         // automatically generate gml:id if not set
-        String gmlID = bean.getId();        
-        if (gmlID == null || gmlID.length() == 0)
-        {
-            sb.setLength(0);
-            
-            if (bean instanceof AbstractGeometry)
-            {
-                sb.append('G');
-                sb.append(geomIdCounter++);
-            }
-            else if (bean instanceof AbstractTimePrimitive)
-            {
-                sb.append('T');
-                sb.append(timeIdCounter++);
-            }
-            else if (bean instanceof AbstractFeature)
-            {
-                sb.append('F');
-                sb.append(featureIdCounter++);
-            }
-            
-            gmlID = sb.toString();
-        }
+        if (bean instanceof AbstractGeometry)
+            gmlID = geomIds.nextId(bean);
+        else if (bean instanceof AbstractTimePrimitive)
+            gmlID = timeIds.nextId(bean);
+        else if (bean instanceof AbstractFeature)
+            gmlID = featureIds.nextId(bean);
+        else
+            gmlID = bean.getId();
         
         writer.writeAttribute(NS_URI, "id", gmlID);
-    }
-    
-    
-    public final void resetGeomIdCounter(int geomIdCounter)
-    {
-        this.geomIdCounter = geomIdCounter;
-    }
-
-
-    public final void resetTimeIdCounter(int timeIdCounter)
-    {
-        this.timeIdCounter = timeIdCounter;
     }
     
     

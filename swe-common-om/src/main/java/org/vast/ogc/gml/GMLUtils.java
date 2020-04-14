@@ -26,6 +26,8 @@ package org.vast.ogc.gml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -36,12 +38,10 @@ import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.TimeIndeterminateValue;
 import net.opengis.gml.v32.TimeInstant;
-import net.opengis.gml.v32.TimeIntervalLength;
 import net.opengis.gml.v32.TimePeriod;
 import net.opengis.gml.v32.TimePosition;
 import net.opengis.gml.v32.impl.GMLFactory;
 import org.vast.util.Bbox;
-import org.vast.util.NumberUtils;
 import org.vast.util.TimeExtent;
 import org.vast.xml.DOMHelper;
 import org.vast.xml.IndentingXMLStreamWriter;
@@ -85,10 +85,9 @@ public class GMLUtils extends XMLBindingsUtils
     }
     
     
-    public GMLUtils(String version, IFeatureStaxBindings... featureBindings)
+    public void registerFeatureBinding(IFeatureStaxBindings<AbstractFeature> binding)
     {
-        this(version);
-        ((GMLStaxBindings)staxBindings).registerFeatureBindings(featureBindings);
+        ((GMLStaxBindings)staxBindings).registerFeatureBinding(binding);
     }
     
     
@@ -358,63 +357,53 @@ public class GMLUtils extends XMLBindingsUtils
      * @param timePrimitive GML time primitive
      * @return new TimeExtent instance
      */
-    public TimeExtent timePrimitiveToTimeExtent(AbstractTimeGeometricPrimitive timePrimitive)
+    public static TimeExtent timePrimitiveToTimeExtent(AbstractTimeGeometricPrimitive timePrimitive)
     {
-        TimePosition timePos;
-        TimeExtent timeExtent = new TimeExtent();
-        boolean beginUnknown = false;
-        boolean endUnknown = false;
+        TimeExtent timeExtent = null;
         
         if (timePrimitive instanceof TimeInstant)
         {
-            timePos = ((TimeInstant) timePrimitive).getTimePosition();
+            TimePosition timePos = ((TimeInstant) timePrimitive).getTimePosition();
             if (timePos.getIndeterminatePosition() == TimeIndeterminateValue.NOW)
-                timeExtent.setBaseAtNow(true);
+                timeExtent = TimeExtent.now();
             else if (timePos.getIndeterminatePosition() == TimeIndeterminateValue.UNKNOWN)
-                timeExtent.nullify();
+                return null;
             else
-                timeExtent.setBaseTime(timePos.getDecimalValue());            
+                timeExtent = TimeExtent.instant(timePos.getDateTimeValue().toInstant());           
         }
         else if (timePrimitive instanceof TimePeriod)
         {
             TimePeriod timePeriod = ((TimePeriod) timePrimitive);
+            TimePosition beginPos, endPos;
+            boolean beginUnknown = false, beginNow = false;
+            boolean endUnknown = false, endNow = false;
             
             // begin
-            timePos = timePeriod.getBeginPosition();
-            if (timePos.getIndeterminatePosition() == TimeIndeterminateValue.NOW)
-                timeExtent.setBeginNow(true);
-            else if (timePos.getIndeterminatePosition() == TimeIndeterminateValue.UNKNOWN)
+            beginPos = timePeriod.getBeginPosition();
+            if (beginPos.getIndeterminatePosition() == TimeIndeterminateValue.NOW)
+                beginNow = true;
+            else if (beginPos.getIndeterminatePosition() == TimeIndeterminateValue.UNKNOWN)
                 beginUnknown = true;
-            else
-                timeExtent.setStartTime(timePos.getDecimalValue());
             
             // end
-            timePos = timePeriod.getEndPosition();
-            if (timePos.getIndeterminatePosition() == TimeIndeterminateValue.NOW)
-                timeExtent.setEndNow(true);
-            else if (timePos.getIndeterminatePosition() == TimeIndeterminateValue.UNKNOWN)
+            endPos = timePeriod.getEndPosition();
+            if (endPos.getIndeterminatePosition() == TimeIndeterminateValue.NOW)
+                endNow = true;
+            else if (endPos.getIndeterminatePosition() == TimeIndeterminateValue.UNKNOWN)
                 endUnknown = true;
+            
+            if (beginUnknown)
+                timeExtent = TimeExtent.endAt(endPos.getDateTimeValue().toInstant());
+            else if (beginNow)
+                timeExtent = TimeExtent.beginNow(endPos.getDateTimeValue().toInstant());
+            else if (endNow)
+                timeExtent = TimeExtent.endNow(beginPos.getDateTimeValue().toInstant());
+            else if (endUnknown)
+                timeExtent = TimeExtent.beginAt(beginPos.getDateTimeValue().toInstant());
             else
-                timeExtent.setStopTime(timePos.getDecimalValue());
-            
-            // handle case of period specified with unknown begin or end time
-            if (timePeriod.isSetDuration())
-            {
-                double duration = timePeriod.getDuration();
-                if (beginUnknown)
-                    timeExtent.setLagTimeDelta(duration);
-                if (endUnknown)
-                    timeExtent.setLeadTimeDelta(duration);
-            }
-            else if (beginUnknown && endUnknown)
-                timeExtent.nullify();
-            
-            // get time step from timeInterval
-            if (timePeriod.isSetTimeInterval())
-            {
-                TimeIntervalLength interval = timePeriod.getTimeInterval();
-                timeExtent.setTimeStep(interval.getValue()); // for now we assume it's in seconds
-            }
+                timeExtent = TimeExtent.period(
+                    beginPos.getDateTimeValue().toInstant(),
+                    endPos.getDateTimeValue().toInstant());
         }
         
         return timeExtent;
@@ -429,20 +418,17 @@ public class GMLUtils extends XMLBindingsUtils
      */
     public AbstractTimeGeometricPrimitive timeExtentToTimePrimitive(TimeExtent timeExtent, boolean forcePeriod)
     {
-        double begin = timeExtent.getStartTime();
-        double end = timeExtent.getStopTime();
-        
         // time instant
-        if (timeExtent.isTimeInstant() && !forcePeriod)
+        if ((timeExtent == null || timeExtent.isInstant()) && !forcePeriod)
         {
             TimePosition timePosition = gmlFactory.newTimePosition();
             
-            if (timeExtent.isNull())
+            if (timeExtent == null)
                 timePosition.setIndeterminatePosition(TimeIndeterminateValue.UNKNOWN);
-            else if (timeExtent.isBeginNow() || timeExtent.isEndNow() || timeExtent.isBaseAtNow())
+            else if (timeExtent.isNow())
                 timePosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
             else
-                timePosition.setDecimalValue(begin);
+                timePosition.setDateTimeValue(timeExtent.begin().atOffset(ZoneOffset.UTC));
             
             return gmlFactory.newTimeInstant(timePosition);
         }
@@ -455,54 +441,33 @@ public class GMLUtils extends XMLBindingsUtils
             TimePeriod timePeriod = gmlFactory.newTimePeriod(beginPosition, endPosition);
             
             // case of null period
-            if (timeExtent.isNull())
+            if (timeExtent == null)
             {
                 beginPosition.setIndeterminatePosition(TimeIndeterminateValue.UNKNOWN);
                 endPosition.setIndeterminatePosition(TimeIndeterminateValue.UNKNOWN);
             }
             
-            // case of relative begin or end (now +/- period)
-            else if (timeExtent.isBaseAtNow())
-            {
-                if (timeExtent.getLeadTimeDelta() > 0.0 && timeExtent.getLagTimeDelta() > 0.0)
-                {
-                    double now = System.currentTimeMillis() / 1000.;
-                    beginPosition.setDecimalValue(now - timeExtent.getLagTimeDelta());
-                    endPosition.setDecimalValue(now + timeExtent.getLeadTimeDelta());
-                }
-                else if (NumberUtils.ulpEquals(timeExtent.getLagTimeDelta(), 0.0))
-                {
-                    beginPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
-                    endPosition.setIndeterminatePosition(TimeIndeterminateValue.AFTER);
-                    timePeriod.setDuration(timeExtent.getLeadTimeDelta());
-                }
-                else if (NumberUtils.ulpEquals(timeExtent.getLeadTimeDelta(), 0.0))
-                {
-                    beginPosition.setIndeterminatePosition(TimeIndeterminateValue.BEFORE);
-                    endPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
-                    timePeriod.setDuration(timeExtent.getLagTimeDelta());
-                }             
-            }
-            
-            // case of absolute begin and end
             else
             {
+                Instant begin = timeExtent.begin();
+                Instant end = timeExtent.end();
+                
                 // begin
-                if (timeExtent.isBeginNow())
+                if (!timeExtent.hasBegin())
+                    beginPosition.setIndeterminatePosition(TimeIndeterminateValue.UNKNOWN);
+                else if (timeExtent.beginsNow())
                     beginPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
                 else
-                    beginPosition.setDecimalValue(begin);
+                    beginPosition.setDateTimeValue(begin.atOffset(ZoneOffset.UTC));
                     
                 // end
-                if (timeExtent.isEndNow())
+                if (!timeExtent.hasEnd())
+                    endPosition.setIndeterminatePosition(TimeIndeterminateValue.UNKNOWN);
+                else if (timeExtent.endsNow())
                     endPosition.setIndeterminatePosition(TimeIndeterminateValue.NOW);
                 else
-                    endPosition.setDecimalValue(end);
+                    endPosition.setDateTimeValue(end.atOffset(ZoneOffset.UTC));
             }
-            
-            // time step
-            if (!NumberUtils.ulpEquals(timeExtent.getTimeStep(), 0.0))
-                timePeriod.setTimeInterval(timeExtent.getTimeStep());
                         
             return timePeriod;
         }

@@ -14,6 +14,8 @@ Copyright (C) 2012-2015 Sensia Software LLC. All Rights Reserved.
 
 package net.opengis.gml.v32.impl;
 
+import java.util.Collections;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import net.opengis.OgcProperty;
 import net.opengis.OgcPropertyImpl;
@@ -148,5 +150,12 @@ public abstract class AbstractFeatureImpl extends AbstractGMLImpl implements Abs
             return 0;
         
         return uid.hashCode();
+    }
+
+
+    @Override
+    public Map<QName, Object> getProperties()
+    {
+        return Collections.emptyMap();
     }
 }

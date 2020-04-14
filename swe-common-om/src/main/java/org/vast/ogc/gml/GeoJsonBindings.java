@@ -11,7 +11,6 @@ package org.vast.ogc.gml;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
@@ -19,7 +18,7 @@ import java.util.Map.Entry;
 import javax.xml.namespace.QName;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.DateTimeFormat;
-import com.google.common.collect.Range;
+import org.vast.util.TimeExtent;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -305,11 +304,11 @@ public class GeoJsonBindings
     }
     
     
-    public void writeTimePeriod(JsonWriter writer, Range<Instant> bean) throws IOException
+    public void writeTimePeriod(JsonWriter writer, TimeExtent bean) throws IOException
     {
         writer.beginArray();
-        writeDateTimeValue(writer, bean.lowerEndpoint().atOffset(ZoneOffset.UTC));
-        writeDateTimeValue(writer, bean.upperEndpoint().atOffset(ZoneOffset.UTC));
+        writeDateTimeValue(writer, bean.begin().atOffset(ZoneOffset.UTC));
+        writeDateTimeValue(writer, bean.end().atOffset(ZoneOffset.UTC));
         writer.endArray();
     }
     

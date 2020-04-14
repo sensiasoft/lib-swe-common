@@ -25,23 +25,23 @@ package org.vast.ogc.om;
 
 import java.util.List;
 import java.util.Map;
-import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.DefinitionRef;
-import org.vast.ogc.gml.GenericFeature;
+import org.vast.ogc.gml.IGeoFeature;
+import org.vast.ogc.gml.ITemporalFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
 
 
 /**
  * <p>
- * Interface for an Observation as defined by the O&M standard
+ * Read-only interface for an Observation as defined by the O&M standard
  * </p>
  *
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public interface IObservation extends GenericFeature
+public interface IObservation extends ITemporalFeature
 {
     public final static String OBS_TYPE_GENERIC = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Observation";
     public final static String OBS_TYPE_MEAS = "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement";
@@ -53,45 +53,23 @@ public interface IObservation extends GenericFeature
     
     public String getType();
     
-    public void setType(String type);
-    
     public List<IXlinkReference<IObservation>> getRelatedObservations();
     
     public void addRelatedObservation(IXlinkReference<IObservation> obsRef);
     
     public TimeExtent getPhenomenonTime();
     
-    public void setPhenomenonTime(TimeExtent time);
-    
     public TimeExtent getResultTime();
-    
-    public void setResultTime(TimeExtent time);
-    
-    public TimeExtent getValidTime();
-    
-    public void setValidTime(TimeExtent time);
     
     public DefinitionRef getObservedProperty();
     
-    public void setObservedProperty(DefinitionRef propRef);
-    
-    public AbstractFeature getFeatureOfInterest();
-    
-    public void setFeatureOfInterest(AbstractFeature foi);
+    public IGeoFeature getFeatureOfInterest();
     
     public IProcedure getProcedure();
     
-    public void setProcedure(IProcedure procedure);
-    
     public Map<String, Object> getParameters();
-    
-    public void addParameter(String name, Object value);
     
     public List<Object> getResultQuality();
     
-    public void addResultQuality(Object qualityInfo);
-    
     public DataComponent getResult();
-    
-    public void setResult(DataComponent result);
 }

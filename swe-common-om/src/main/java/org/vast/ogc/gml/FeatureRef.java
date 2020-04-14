@@ -25,20 +25,14 @@ package org.vast.ogc.gml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
-import net.opengis.OgcProperty;
-import net.opengis.OgcPropertyList;
 import net.opengis.gml.v32.AbstractGeometry;
-import net.opengis.gml.v32.CodeWithAuthority;
-import net.opengis.gml.v32.Envelope;
-import net.opengis.gml.v32.Reference;
 import org.vast.ogc.xlink.CachedReference;
 import org.vast.ogc.xlink.IReferenceResolver;
+import org.vast.util.TimeExtent;
 import org.vast.util.ResolveException;
 import org.vast.util.URIResolver;
 
@@ -52,14 +46,12 @@ import org.vast.util.URIResolver;
  * @author Alex Robin
  * @since Sep 28, 2012
  * */
-public class FeatureRef extends CachedReference<GenericFeature> implements GenericFeature
+public class FeatureRef extends CachedReference<IFeature> implements IGeoFeature, ITemporalFeature
 {
-    private static final long serialVersionUID = 8523158284557229913L;
-
-
+    
     public FeatureRef()
     {
-        this.resolver = new IReferenceResolver<GenericFeature>()
+        this.resolver = new IReferenceResolver<IFeature>()
         {            
             @Override
             public GenericFeature fetchTarget(String uri) throws IOException
@@ -86,205 +78,9 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public OgcPropertyList<Serializable> getMetaDataPropertyList()
-    {
-        return getTarget().getMetaDataPropertyList();
-    }
-
-
-    @Override
-    public Envelope getBoundedBy()
-    {
-        return getTarget().getBoundedBy();
-    }
-
-
-    @Override
-    public boolean isSetBoundedBy()
-    {
-        return getTarget().isSetBoundedBy();
-    }
-
-
-    @Override
-    public String getDescription()
-    {
-        return getTarget().getDescription();
-    }
-
-
-    @Override
-    public void setBoundedByAsEnvelope(Envelope boundedBy)
-    {
-        getTarget().setBoundedByAsEnvelope(boundedBy);
-    }
-
-
-    @Override
-    public boolean isSetDescription()
-    {
-        return getTarget().isSetDescription();
-    }
-
-
-    @Override
-    public AbstractGeometry getGeometry()
-    {
-        return getTarget().getGeometry();
-    }
-
-
-    @Override
-    public void setDescription(String description)
-    {
-        getTarget().setDescription(description);
-    }
-
-
-    @Override
-    public QName getQName()
-    {
-        return getTarget().getQName();
-    }
-
-
-    @Override
-    public OgcProperty<AbstractGeometry> getGeometryProperty()
-    {
-        return getTarget().getGeometryProperty();
-    }
-
-
-    @Override
-    public Reference getDescriptionReference()
-    {
-        return getTarget().getDescriptionReference();
-    }
-
-
-    @Override
-    public Map<QName, Object> getProperties()
-    {
-        return getTarget().getProperties();
-    }
-
-
-    @Override
-    public boolean isSetDescriptionReference()
-    {
-        return getTarget().isSetDescriptionReference();
-    }
-
-
-    @Override
-    public Object getProperty(String name)
-    {
-        return getTarget().getProperty(name);
-    }
-
-
-    @Override
-    public boolean isSetGeometry()
-    {
-        return getTarget().isSetGeometry();
-    }
-
-
-    @Override
-    public void setProperty(String name, Object value)
-    {
-        getTarget().setProperty(name, value);
-    }
-
-
-    @Override
-    public Object getProperty(QName qname)
-    {
-        return getTarget().getProperty(qname);
-    }
-
-
-    @Override
-    public void setGeometry(AbstractGeometry geom)
-    {
-        getTarget().setGeometry(geom);
-    }
-
-
-    @Override
-    public void setDescriptionReference(Reference descriptionReference)
-    {
-        getTarget().setDescriptionReference(descriptionReference);
-    }
-
-
-    @Override
-    public void setProperty(QName qname, Object value)
-    {
-        getTarget().setProperty(qname, value);
-    }
-
-
-    @Override
-    public CodeWithAuthority getIdentifier()
-    {
-        return getTarget().getIdentifier();
-    }
-
-
-    @Override
     public String getUniqueIdentifier()
     {
         return getTarget().getUniqueIdentifier();
-    }
-
-
-    @Override
-    public boolean isSetIdentifier()
-    {
-        return getTarget().isSetIdentifier();
-    }
-
-
-    @Override
-    public void setIdentifier(CodeWithAuthority identifier)
-    {
-        getTarget().setIdentifier(identifier);
-    }
-
-
-    @Override
-    public void setUniqueIdentifier(String identifier)
-    {
-        getTarget().setUniqueIdentifier(identifier);
-    }
-
-
-    @Override
-    public List<CodeWithAuthority> getNameList()
-    {
-        return getTarget().getNameList();
-    }
-
-
-    @Override
-    public int getNumNames()
-    {
-        return getTarget().getNumNames();
-    }
-
-
-    @Override
-    public void addName(CodeWithAuthority name)
-    {
-        getTarget().addName(name);
-    }
-
-
-    @Override
-    public void setName(String name)
-    {
-        getTarget().setName(name);
     }
 
 
@@ -296,15 +92,37 @@ public class FeatureRef extends CachedReference<GenericFeature> implements Gener
 
 
     @Override
-    public String getId()
+    public String getDescription()
     {
-        return getTarget().getId();
+        return getTarget().getDescription();
     }
 
 
     @Override
-    public void setId(String id)
+    public AbstractGeometry getGeometry()
     {
-        getTarget().setId(id);
+        IFeature f = getTarget();
+        if (f instanceof IGeoFeature)
+            return ((IGeoFeature)f).getGeometry();
+        else
+            return null;
+    }
+
+
+    @Override
+    public TimeExtent getValidTime()
+    {
+        IFeature f = getTarget();
+        if (f instanceof ITemporalFeature)
+            return ((ITemporalFeature)f).getValidTime();
+        else
+            return null;
+    }
+
+
+    @Override
+    public Map<QName, Object> getProperties()
+    {
+        return getTarget().getProperties();
     }
 }

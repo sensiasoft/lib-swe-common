@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import javax.xml.namespace.QName;
-import com.google.common.collect.Range;
+import org.vast.util.TimeExtent;
 import net.opengis.gml.v32.AbstractTimeGeometricPrimitive;
 import net.opengis.gml.v32.TimeInstant;
 import net.opengis.gml.v32.TimePeriod;
@@ -34,7 +34,7 @@ public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements IT
     
 
     @Override
-    public Range<Instant> getValidTime()
+    public TimeExtent getValidTime()
     {
         AbstractTimeGeometricPrimitive validTime = (AbstractTimeGeometricPrimitive)properties.get(PROP_VALID_TIME);
         if (validTime == null)
@@ -47,7 +47,7 @@ public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements IT
                 return null;
             
             Instant instant = dateTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();
-            return Range.singleton(instant);
+            return TimeExtent.instant(instant);
         }
         else if (validTime instanceof TimePeriod)
         {
@@ -58,7 +58,7 @@ public class GenericTemporalFeatureImpl extends GenericFeatureImpl implements IT
             
             Instant begin = beginTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();            
             Instant end = endTime.withOffsetSameInstant(ZoneOffset.UTC).toInstant();
-            return Range.closed(begin, end);
+            return TimeExtent.period(begin, end);
         }
         
         return null;

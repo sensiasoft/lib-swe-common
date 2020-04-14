@@ -9,8 +9,7 @@
 
 package org.vast.ogc.gml;
 
-import java.time.Instant;
-import com.google.common.collect.Range;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -26,7 +25,7 @@ public interface ITemporalFeature extends IFeature
 {
 
     /**
-     * @return feature validity period
+     * @return feature validity period (or null if always valid)
      */
-    public Range<Instant> getValidTime();
+    public TimeExtent getValidTime();
 }

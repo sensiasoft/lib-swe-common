@@ -24,7 +24,6 @@
 package org.vast.ogc.om;
 
 import java.io.Serializable;
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -36,8 +35,8 @@ import net.opengis.gml.v32.Envelope;
 import net.opengis.gml.v32.Reference;
 import org.vast.ogc.gml.GenericFeature;
 import org.vast.ogc.gml.ITemporalFeature;
+import org.vast.util.TimeExtent;
 import org.w3c.dom.Element;
-import com.google.common.collect.Range;
 
 
 /**
@@ -379,7 +378,7 @@ public class ProcedureXML implements IProcedure, GenericFeature
 
 
     @Override
-    public Range<Instant> getValidTime()
+    public TimeExtent getValidTime()
     {
         if (procedure instanceof ITemporalFeature)
             return ((ITemporalFeature)procedure).getValidTime();

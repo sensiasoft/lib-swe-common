@@ -23,9 +23,8 @@
 
 package org.vast.ogc.om;
 
-import java.time.Instant;
 import org.vast.ogc.gml.FeatureRef;
-import com.google.common.collect.Range;
+import org.vast.util.TimeExtent;
 
 
 /**
@@ -39,9 +38,7 @@ import com.google.common.collect.Range;
  * */
 public class ProcedureRef extends FeatureRef implements IProcedure
 {
-    private static final long serialVersionUID = -3202005872457706178L;
-
-
+    
     public ProcedureRef()
     {        
     }
@@ -54,7 +51,7 @@ public class ProcedureRef extends FeatureRef implements IProcedure
 
 
     @Override
-    public Range<Instant> getValidTime()
+    public TimeExtent getValidTime()
     {
         return null;
     }

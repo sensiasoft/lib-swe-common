@@ -28,11 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
-import net.opengis.gml.v32.AbstractFeature;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.GenericFeatureImpl;
+import org.vast.ogc.gml.IGeoFeature;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.util.TimeExtent;
 
@@ -56,7 +56,7 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     protected IProcedure procedure;
     protected HashMap<String, Object> parameters;
     protected DefinitionRef observedProperty;
-    protected AbstractFeature featureOfInterest;
+    protected IGeoFeature featureOfInterest;
     protected ArrayList<Object> resultQuality;
     protected DataComponent result;
 
@@ -64,7 +64,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     public ObservationImpl()
     {
         super(new QName(OGCRegistry.getNamespaceURI(OMUtils.OM, "2.0"), "OM_Observation"));
-        phenomenonTime = new TimeExtent();
     }
 
 
@@ -75,7 +74,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
-    @Override
     public void setType(String type)
     {
         this.type = type;
@@ -106,7 +104,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
-    @Override
     public void setPhenomenonTime(TimeExtent phenomenonTime)
     {
         this.phenomenonTime = phenomenonTime;
@@ -123,7 +120,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
-    @Override
     public void setResultTime(TimeExtent resultTime)
     {
         this.resultTime = resultTime;
@@ -137,7 +133,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
-    @Override
     public void setValidTime(TimeExtent validTime)
     {
         this.validTime = validTime;
@@ -151,7 +146,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
-    @Override
     public void setProcedure(IProcedure procedure)
     {
         this.procedure = procedure;
@@ -165,7 +159,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
-    @Override
     public void addParameter(String name, Object value)
     {
         if (this.parameters == null)
@@ -182,7 +175,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
     
     
-    @Override
     public void setObservedProperty(DefinitionRef observedProperty)
     {
         this.observedProperty = observedProperty;
@@ -190,14 +182,12 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
 
 
     @Override
-    public AbstractFeature getFeatureOfInterest()
+    public IGeoFeature getFeatureOfInterest()
     {
         return featureOfInterest;
     }
 
-
-    @Override
-    public void setFeatureOfInterest(AbstractFeature featureOfInterest)
+    public void setFeatureOfInterest(IGeoFeature featureOfInterest)
     {
         this.featureOfInterest = featureOfInterest;
     }
@@ -210,7 +200,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
-    @Override
     public void addResultQuality(Object resultQuality)
     {
         if (this.resultQuality == null)
@@ -227,7 +216,6 @@ public class ObservationImpl extends GenericFeatureImpl implements IObservation
     }
 
 
-    @Override
     public void setResult(DataComponent result)
     {
         this.result = result;

@@ -1,322 +1,314 @@
-/***************************************************************
- (c) Copyright 2007, University of Alabama in Huntsville (UAH)
- ALL RIGHTS RESERVED
+/***************************** BEGIN LICENSE BLOCK ***************************
 
- This software is the property of UAH.
- It cannot be duplicated, used, or distributed without the
- express written consent of UAH.
+The contents of this file are subject to the Mozilla Public License, v. 2.0.
+If a copy of the MPL was not distributed with this file, You can obtain one
+at http://mozilla.org/MPL/2.0/.
 
- This software developed by the Vis Analysis Systems Technology
- (VAST) within the Earth System Science Lab under the direction
- of Mike Botts (mike.botts@atmos.uah.edu)
- ***************************************************************/
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+for the specific language governing rights and limitations under the License.
+ 
+Copyright (C) 2019 Sensia Software LLC. All Rights Reserved.
+ 
+******************************* END LICENSE BLOCK ***************************/
 
 package org.vast.util;
 
-import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Objects;
+import com.google.common.collect.Range;
+
 
 /**
  * <p>
- * Class for storing the definition of a temporal domain.
- * This can include a base time, time bias (deviation from base time),
- * time step, and lead/lag time deltas.
+ * Immutable class for storing a time instant or time period.
+ * </p><p>
+ * This class also supports special cases of time instants at 'now', time
+ * periods beginning or ending at 'now', and open-ended time periods.
+ * </p><p>
+ * Note that no time zone information is retained. It usually means begin and
+ * end times are UTC unless otherwise specified by the application. See 
+ * {@link ZonedTimeExtent} if you need to store a time extent with a time zone.
  * </p>
  *
- * @author Tony Cook, Mike Botts, Alexandre Robin
- * @since Nov 15, 2005
+ * @author Alex Robin
+ * @since Apr 12, 2020
  * */
-public class TimeExtent implements Serializable
+public class TimeExtent
 {
-    private static final long serialVersionUID = -5475380061967935208L;
-    public static final double NOW_ACCURACY = 1000.;    
-    public static final double UNKNOWN = Double.MAX_VALUE;
-    public static final double NOW = Double.MIN_VALUE;
-    
-    protected double baseTime = Double.NaN;
-    protected double timeBias = 0;
-    protected double timeStep = 0;
-    protected double leadTimeDelta = 0;
-    protected double lagTimeDelta = 0;
-    protected boolean baseAtNow = false;  // if true baseTime is associated to machine clock
-    protected boolean endNow = false;     // if true stopTime is associated to machine clock
-    protected boolean beginNow = false;   // if true startTime is associated to machine clock
-    protected int timeZone = 0;
+    protected Instant begin = null; // null means 'now', Instant.MIN means unbounded
+    protected Instant end = null; // null means 'now', Instant.MAX means unbounded
+    transient Instant now = null;
     
     
-    public static TimeExtent getNowInstant()
+    /**
+     * @return A time extent representing the 'now' instant
+     */
+    public static TimeExtent now()
     {
+        return new TimeExtent();
+    }
+
+
+    /**
+     * @param t Time instant
+     * @return A time extent representing a time instant
+     */
+    public static TimeExtent instant(Instant t)
+    {
+        Asserts.checkNotNull(t, Instant.class);
         TimeExtent time = new TimeExtent();
-        time.setBaseAtNow(true);
+        time.begin = time.end = Asserts.checkNotNull(t, Instant.class);
         return time;
     }
     
     
-    public static TimeExtent getPeriodStartingNow(double stopTime)
+    /**
+     * @param begin Beginning of time period
+     * @param end End of time period
+     * @return A time extent representing a time period 
+     */
+    public static TimeExtent period(Instant begin, Instant end)
     {
         TimeExtent time = new TimeExtent();
-        time.setBeginNow(true);
-        time.setStopTime(stopTime);
+        time.begin = Asserts.checkNotNull(begin, "begin");
+        time.end = Asserts.checkNotNull(end, "end");
         return time;
     }
     
     
-    public static TimeExtent getPeriodEndingNow(double startTime)
+    /**
+     * @return A time extent representing all times
+     */
+    public static TimeExtent allTimes()
+    {
+        return TimeExtent.period(Instant.MIN, Instant.MAX);
+    }
+    
+    
+    /**
+     * @param begin Begin time instant
+     * @return An open-ended time extent starting at the specified time
+     */
+    public static TimeExtent beginAt(Instant begin)
+    {
+        return TimeExtent.period(begin, Instant.MAX);
+    }
+    
+    
+    /**
+     * @param end End time instant
+     * @return An open time extent ending at the specified time
+     */
+    public static TimeExtent endAt(Instant end)
+    {
+        return TimeExtent.period(Instant.MIN, end);
+    }
+    
+    
+    /**
+     * @param end End time instant
+     * @return A time extent starting 'now' and ending at the specified time
+     */
+    public static TimeExtent beginNow(Instant end)
     {
         TimeExtent time = new TimeExtent();
-        time.setStartTime(startTime);
-        time.setEndNow(true);
+        time.begin = null;
+        time.end = Asserts.checkNotNull(end, "end");
         return time;
     }
     
     
-    public TimeExtent()
+    /**
+     * @param begin Begin time instant
+     * @return A time extent starting at the specified time and ending 'now' 
+     */
+    public static TimeExtent endNow(Instant begin)
+    {
+        TimeExtent time = new TimeExtent();
+        time.begin = Asserts.checkNotNull(begin, "begin");
+        time.end = null;
+        return time;
+    }
+    
+    
+    protected TimeExtent()
     {        
     }    
 
 
-    public TimeExtent(double baseJulianTime)
+    /**
+     * @return True if begin time is defined, false otherwise
+     */
+    public boolean hasBegin()
     {
-        this.baseTime = baseJulianTime;
+        return begin != Instant.MIN;
     }
     
     
-    public TimeExtent(double startTime, double stopTime)
+    /**
+     * @return The beginning instant of {@link Instant.MIN} if undefined.
+     * If {@link #beginsAtNow()} also returns true, the current system time is returned.
+     */
+    public Instant begin()
     {
-        setStartTime(startTime);
-        setStopTime(stopTime);
+        return begin != null ? begin : getNow();
+    }
+
+
+    /**
+     * @return True if end time is defined, false otherwise
+     */
+    public boolean hasEnd()
+    {
+        return end != Instant.MAX;
+    }
+
+
+    /**
+     * @return The end instant of {@link Instant.MAX} if undefined.
+     * If {@link #endsAtNow()} also returns true, the current system time is returned.
+     */
+    public Instant end()
+    {
+        return end != null ? end : getNow();
     }
     
     
-    public TimeExtent copy()
+    /**
+     * @return True if this time extent represents a time instant,
+     * false if it represents a time period
+     */
+    public boolean isInstant()
     {
-        TimeExtent timeExtent = new TimeExtent();
+        return Objects.equals(begin,  end);
+    }
+    
+    
+    /**
+     * @return True if this time extent represents 'now', false otherwise
+     */
+    public boolean isNow()
+    {
+        return begin == null && end == null;
+    }
+    
+    
+    /**
+     * @return True if this time extent begins at 'now', false otherwise
+     */
+    public boolean beginsNow()
+    {
+        return begin == null;
+    }
+    
+    
+    /**
+     * @return True if this time extent ends at 'now', false otherwise
+     */
+    public boolean endsNow()
+    {
+        return end == null;
+    }
+
+
+    /**
+     * @return The duration of this time extent
+     */
+    public Duration duration()
+    {
+        return Duration.between(begin(), end());
+    }
+    
+    
+    /**
+     * @param other Another time extent 
+     * @return True if the specified time extent is contained within this
+     * time extent, false otherwise
+     */
+    public boolean contains(TimeExtent other)
+    {
+        Asserts.checkNotNull(other, TimeExtent.class);
+        return asRange().encloses(other.asRange());
+    }
+    
+    
+    /**
+     * @param t A time instant 
+     * @return True if the specified time instant is contained within this
+     * time extent, false otherwise
+     */
+    public boolean contains(Instant t)
+    {
+        Asserts.checkNotNull(t, Instant.class);
         
-        timeExtent.baseTime = this.getBaseTime();
-        timeExtent.timeBias = this.timeBias;
-        timeExtent.timeStep = this.timeStep;
-        timeExtent.leadTimeDelta = this.leadTimeDelta;
-        timeExtent.lagTimeDelta = this.lagTimeDelta;
-        timeExtent.baseAtNow = this.baseAtNow;
-        timeExtent.endNow = this.endNow;
-        timeExtent.beginNow = this.beginNow;
+        return t.equals(begin()) ||
+            t.equals(end()) ||
+            (t.isAfter(begin())) && (t.isBefore(end()));
+    }
+    
+    
+    /**
+     * @param other Another time extent 
+     * @return True if the specified time extent intersects this time extent,
+     * false otherwise
+     */
+    public boolean intersects(TimeExtent other)
+    {
+        Asserts.checkNotNull(other, TimeExtent.class);
+        return asRange().isConnected(other.asRange());
+    }
+
+    
+    /**
+     * @param keepNow Keep the 'now' string if set to true, otherwise use the current time
+     * @return The ISO8601 representation of this time extent
+     */
+    public String isoStringUTC(boolean keepNow)
+    {
+        if (isInstant())
+            return begin.toString();
         
-        return timeExtent;
-    }
-
-
-    public TimeExtent(double baseJulianTime, double timeBiasSeconds, double timeStepSeconds, double leadTimeDeltaSeconds, double lagTimeDeltaSeconds)
-    {
-
-        this.baseTime = baseJulianTime;
-        this.timeBias = timeBiasSeconds;
-        this.timeStep = timeStepSeconds;
-        this.leadTimeDelta = Math.abs(leadTimeDeltaSeconds);
-        this.lagTimeDelta = Math.abs(lagTimeDeltaSeconds);
-    }
-
-
-    public void setBaseTime(double baseJulianTime)
-    {
-        this.baseTime = baseJulianTime;
-    }
-
-
-    public void setTimeBias(double seconds)
-    {
-        this.timeBias = seconds;
-    }
-
-
-    public void setTimeStep(double seconds)
-    {
-        this.timeStep = seconds;
-    }
-
-
-    public void setLeadTimeDelta(double seconds)
-    {
-        this.leadTimeDelta = Math.abs(seconds);
-    }
-
-
-    public void setLagTimeDelta(double seconds)
-    {
-        this.lagTimeDelta = Math.abs(seconds);
-    }
-
-
-    public void setDeltaTimes(double leadDeltaSeconds, double lagDeltaSeconds)
-    {
-        this.leadTimeDelta = Math.abs(leadDeltaSeconds);
-        this.lagTimeDelta = Math.abs(lagDeltaSeconds);
-    }
-
-
-    /**
-     * To get baseTime without bias applied.
-     * If baseAtNow is set, this retrieves the system's current time
-     * @return base time as julian time in seconds (1970 based)
-     */
-    public double getBaseTime()
-    {
-        if (baseAtNow)
-            return getNow();
-        else
-            return baseTime;
-    }
-
-
-    /**
-     * To get baseTime or absTime with bias applied
-     * @return base time + bias as julian time in seconds (1970 based)
-     */
-    public double getAdjustedTime()
-    {
-        return (getBaseTime() + timeBias);
-    }
-
-
-    public double getTimeBias()
-    {
-        return timeBias;
-    }
-
-
-    public double getTimeStep()
-    {
-        return timeStep;
-    }
-
-
-    public double getLeadTimeDelta()
-    {
-        return leadTimeDelta;
-    }
-
-
-    public double getLagTimeDelta()
-    {
-        return lagTimeDelta;
-    }
-
-
-    public double getTimeRange()
-    {
-        return (getAdjustedLeadTime() - getAdjustedLagTime());
-    }
-
-
-    public double getAdjustedLeadTime()
-    {
-        if (endNow)
-            return getNow() + timeBias;
-        else
-            return (getBaseTime() + timeBias + leadTimeDelta);
-    }
-
-
-    public double getAdjustedLagTime()
-    {
-        if (beginNow)
-            return getNow() + timeBias;
-        else
-            return (getBaseTime() + timeBias - lagTimeDelta);
-    }
-    
-    
-    public boolean isBaseAtNow()
-    {
-        return baseAtNow;
-    }
-
-
-    public void setBaseAtNow(boolean baseAtNow)
-    {
-        this.baseAtNow = baseAtNow;
-    }
-
-
-    public boolean isBeginNow()
-    {
-        return beginNow;
-    }
-
-
-    public void setBeginNow(boolean beginNow)
-    {
-        this.beginNow = beginNow;
-    }
-
-
-    public boolean isEndNow()
-    {
-        return endNow;
-    }
-
-
-    public void setEndNow(boolean endNow)
-    {
-        this.endNow = endNow;
-    }
-
-
-    /**
-     * @return number of full time steps
-     */
-    public int getNumberOfSteps()
-    {
-        if (NumberUtils.ulpEquals(timeStep, 0.0))
-            return 1;
-        else
-            return (int) ((getAdjustedLeadTime() - getAdjustedLagTime()) / timeStep);
+        StringBuilder sb = new StringBuilder();
+        sb.append(begin != null ? begin : keepNow ? "now" : begin())
+          .append('/')
+          .append(end != null ? end : keepNow ? "now" : end());
+        return sb.toString();
     }
     
     
     /**
-     * Calculates times based on current time settings, always assuring
-     * that both endpoints are included even if an uneven time step occurs
-     * at the end
-     * @return time grid spliting the time period evenly
+     * @return This time extent as a {@link Range} of two time instants.<br/>
+     * Note that calling this method is invalid if this time extent either begins
+     * or ends at 'now'
      */
-    public double[] getTimes()
+    public Range<Instant> asRange()
     {
-        double time = getAdjustedLeadTime();
-        double lagTime = getAdjustedLagTime();
-
-        // if step is 0 returns two extreme points
-        if (NumberUtils.ulpEquals(timeStep, 0.0))
-            return new double[] {time, lagTime};
-            
-        double timeRange = Math.abs(time - lagTime);
-        double remainder = timeRange % timeStep;
-        int steps = (int) (timeRange / timeStep) + 1;       
-
-        double[] times;
-        if (!NumberUtils.ulpEquals(remainder, 0.0))
-        {
-            times = new double[steps + 1];
-            times[steps] = lagTime;
-        }
-        else
-            times = new double[steps];
-
-        for (int i = 0; i < steps; i++)
-            times[i] = time - i * timeStep;
+        if (beginsNow() || endsNow())
+            throw new IllegalStateException("A time extent relative to 'now' cannot be expressed as a range");
         
-        return times;
+        if (begin == Instant.MIN)
+            return Range.atMost(end());
+        else if (end == Instant.MAX)
+            return Range.atLeast(begin());
+        else
+            return Range.closed(begin(), end());
     }
-
-
-    @Override
-    public String toString()
+    
+    
+    /**
+     * @param timeZone The desired time zone
+     * @return A new time extent with the associated time zone
+     */
+    public ZonedTimeExtent atZone(ZoneId timeZone)
     {
-        String tString = new String("TimeExtent:");
-        tString += "\n  baseTime = " + (baseAtNow ? "now" : baseTime);
-        tString += "\n  timeBias = " + timeBias;
-        tString += "\n  timeStep = " + timeStep;
-        tString += "\n  leadTimeDelta = " + leadTimeDelta;
-        tString += "\n  lagTimeDelta = " + lagTimeDelta;
-        return tString;
+        ZonedTimeExtent te = new ZonedTimeExtent();
+        te.begin = this.begin;
+        te.end = this.end;
+        te.timeZone = Asserts.checkNotNull(timeZone, ZoneId.class);
+        return te;
     }
 
 
@@ -324,339 +316,42 @@ public class TimeExtent implements Serializable
     public boolean equals(Object obj)
     {
         if (obj == null)
-        	return false;
-        
-    	if (!(obj instanceof TimeExtent))
-        	return false;
-    	
-    	return equals((TimeExtent)obj);
-    }
-    
-    
-    /**
-     * Checks if time extents are equal (no null check)
-     * (i.e. stop=stop AND start=start)
-     * @param timeExtent
-     * @return true if time extents are equal
-     */
-    public boolean equals(TimeExtent timeExtent)
-    {
-    	if (!baseAtNow)
-    	{
-    	   	if (!NumberUtils.ulpEquals(this.getAdjustedLagTime(), timeExtent.getAdjustedLagTime()) &&
-	    	    !(this.isBeginNow() && timeExtent.isBeginNow()))
-	            return false;
-	        
-	        if (!NumberUtils.ulpEquals(this.getAdjustedLeadTime(), timeExtent.getAdjustedLeadTime()) &&
-	    	    !(this.isEndNow() && timeExtent.isEndNow()))
-	            return false;
-    	}
-    	else
-    	{
-    		if (!timeExtent.isBaseAtNow())
-    			return false;
-    		
-    		if (!NumberUtils.ulpEquals(this.getLagTimeDelta(), timeExtent.getLagTimeDelta()))
-    			return false;
-    		
-    		if (!NumberUtils.ulpEquals(this.getLeadTimeDelta(), timeExtent.getLeadTimeDelta()))
-    			return false;
-    	}
-    	
-    	if (!NumberUtils.ulpEquals(this.getTimeBias(), timeExtent.getTimeBias()))
-            return false;
-    	
-    	if (!NumberUtils.ulpEquals(this.getTimeZone(), timeExtent.getTimeZone()))
             return false;
         
-        return true;
+        if (!(obj instanceof TimeExtent))
+            return false;
+        
+        TimeExtent other = (TimeExtent)obj;
+        
+        return Objects.equals(begin, other.begin())
+            && Objects.equals(end, other.end());
     }
     
     
     @Override
     public int hashCode()
     {
-        int prime = 31;
-        int hash = 1;
-        
-        hash = prime*hash + (baseAtNow ? 0 : 1);
-        hash = prime*hash + Double.hashCode(getTimeBias());
-        hash = prime*hash + getTimeZone();
-        
-        if (!baseAtNow)
-        {
-            hash = isBeginNow() ? hash : prime*hash + Double.hashCode(getAdjustedLagTime());
-            hash = isEndNow() ? hash : prime*hash + Double.hashCode(getAdjustedLeadTime());
-        }
-        else
-        {
-            hash = prime*hash + Double.hashCode(getLagTimeDelta());
-            hash = prime*hash + Double.hashCode(getLeadTimeDelta());
-        }
-        
-        return hash;
+        return Objects.hash(begin, end);
+    }
+
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append('[')
+            .append(begin == null ? "now" : begin == Instant.MIN ? "-∞" : begin)
+            .append(' ')
+            .append(end == null ? "now" : end == Instant.MAX ? "+∞" : end)
+            .append(']');
+        return sb.toString();
     }
     
     
-    /**
-     * Checks if this TimeExtent contains the given time
-     * @param time
-     * @return true if it contains the given time point
-     */
-    public boolean contains(double time)
+    Instant getNow()
     {
-    	double thisLag = this.getAdjustedLagTime();
-        double thisLead = this.getAdjustedLeadTime();
-        
-        if (time < thisLag)
-        	return false;
-        
-        if (time > thisLead)
-        	return false;
-        
-        return true;
-    }
-    
-    
-    /**
-     * Checks if this TimeExtent contains the given TimeExtent
-     * @param timeExtent
-     * @return true if it contains the given TimeExtent
-     */
-    public boolean contains(TimeExtent timeExtent)
-    {
-        double thisLag = this.getAdjustedLagTime();
-        double thisLead = this.getAdjustedLeadTime();
-        double otherLag = timeExtent.getAdjustedLagTime();
-        double otherLead = timeExtent.getAdjustedLeadTime();
-        
-        if (otherLag < thisLag)
-            return false;
-        
-        if  (otherLag > thisLead)
-            return false;
-        
-        if (otherLead < thisLag)
-            return false;        
-        
-        if (otherLead > thisLead)
-            return false;
-        
-        return true;
-    }
-    
-    
-    /**
-     * Checks if this timeExtent intersects the given timeExtent
-     * @param timeExtent
-     * @return true if both TimeExtents intersects
-     */
-    public boolean intersects(TimeExtent timeExtent)
-    {
-        double thisLag = this.getAdjustedLagTime();
-        double thisLead = this.getAdjustedLeadTime();
-        double otherLag = timeExtent.getAdjustedLagTime();
-        double otherLead = timeExtent.getAdjustedLeadTime();
-        
-        if (otherLag > thisLag && otherLag < thisLead)
-            return true;
-        
-        if (otherLead > thisLag && otherLead < thisLead)
-            return true;
-        
-        if (otherLag <= thisLag && otherLead >= thisLead)
-            return true;
-        
-        return false;
-    }
-    
-    
-    /**
-     * Check if time is null (i.e. baseTime is not set)
-     * @return true if no base time has been set
-     */
-    public boolean isNull()
-    {
-        return (Double.isNaN(baseTime) && !baseAtNow && !beginNow && !endNow);
-    }
-    
-    
-    /**
-     * Check if this is a single point in time
-     * @return true if this is a time instant
-     */
-	public boolean isTimeInstant()
-	{
-        if (!NumberUtils.ulpEquals(leadTimeDelta, 0.0))
-            return false;
-        
-        if (!NumberUtils.ulpEquals(lagTimeDelta, 0.0))
-            return false;
-        
-        if (!baseAtNow && (beginNow || endNow))
-            return false;
-        
-        return true;
-	}
-    
-    
-    /**
-     * Resets all variables so that extent is null (i.e. unset)
-     */
-    public void nullify()
-    {
-        baseTime = Double.NaN;
-        timeBias = 0;
-        timeStep = 0;
-        leadTimeDelta = 0;
-        lagTimeDelta = 0;
-        baseAtNow = false;
-        endNow = false;
-        beginNow = false;
-    }
-    
-    
-    /**
-     * Resizes this extent so that it contains the given time value
-     * @param t time value (MUST be in same reference frame as the extent)
-     */
-    public void resizeToContain(double t)
-    {
-        if (isNull())
-        {
-            baseTime = t;
-            timeBias = 0;
-            return;
-        }    
-        
-        double adjBaseTime = getAdjustedTime();
-        if (t > getAdjustedLeadTime())
-            leadTimeDelta = t - adjBaseTime;
-        else if (t < getAdjustedLagTime())
-            lagTimeDelta = adjBaseTime - t; 
-    }
-    
-    
-    /**
-     * Return latest value for now. This would return a new 'now' value
-     * only if previous call was made more than NOW_ACCURACY seconds ago.
-     */
-    private double now = 0;
-    private double getNow()
-    {
-        double exactNow = System.currentTimeMillis()/1000.;
-        if (exactNow - now > NOW_ACCURACY)
-            now = exactNow;        
+        if (now == null)
+            now = Instant.now();
         return now;
-    }
-    
-    
-    /**
-     * Helper method to get start time
-     * @return start time as julian time in seconds (1970 based)
-     */
-    public double getStartTime()
-    {
-        return getAdjustedLagTime();
-    }
-    
-    
-    /**
-     * Helper method to set start time
-     * @param startTime start time as julian time in seconds (1970 based)
-     */
-    public void setStartTime(double startTime)
-    {
-        beginNow = false;
-        
-        if (Double.isNaN(baseTime) || baseAtNow)
-        {
-            baseTime = startTime;
-            lagTimeDelta = 0.0;
-            baseAtNow = false;
-        }
-        
-        else if (startTime > baseTime)
-        {
-            double stopTime = baseTime + leadTimeDelta;
-            baseTime = startTime;
-            leadTimeDelta = Math.max(0.0, stopTime - baseTime);
-            lagTimeDelta = 0.0;
-        }
-        
-        else
-        {
-            lagTimeDelta = baseTime - startTime;
-        }
-    }
-
-
-    /**
-     * Helper method to get stop time
-     * @return stop time as julian time in seconds (1970 based)
-     */
-    public double getStopTime()
-    {
-        return getAdjustedLeadTime();
-    }
-    
-    
-    /**
-     * Helper method to set stop time
-     * @param stopTime stop time as julian time in seconds (1970 based)
-     */
-    public void setStopTime(double stopTime)
-    {
-        endNow = false;
-        
-        if (Double.isNaN(baseTime) || baseAtNow)
-        {
-            baseTime = stopTime;
-            leadTimeDelta = 0.0;
-            baseAtNow = false;
-        }
-        
-        else if (stopTime < baseTime)
-        {
-            double startTime = baseTime - lagTimeDelta;
-            baseTime = stopTime;
-            lagTimeDelta = Math.max(0.0, baseTime - startTime);
-            leadTimeDelta = 0.0;
-        }
-        
-        else
-        {
-            leadTimeDelta = stopTime - baseTime;
-        }
-    }
-
-    
-    public String getIsoString(int zone)
-    {
-        DateTimeFormat timeFormat = new DateTimeFormat();
-        
-        if (isTimeInstant())
-        {
-            String time = baseAtNow ? "now" : timeFormat.formatIso(getBaseTime(), zone);
-            return time;
-        }
-        else
-        {
-            String start = beginNow ? "now" : timeFormat.formatIso(getStartTime(), zone);
-            String stop = endNow ? "now" : timeFormat.formatIso(getStopTime(), zone);
-            return start + "/" + stop;
-        }
-    }
-
-
-    public int getTimeZone()
-    {
-        return timeZone;
-    }
-
-
-    public void setTimeZone(int timeZone)
-    {
-        this.timeZone = timeZone;
     }
 }

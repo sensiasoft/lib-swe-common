@@ -23,14 +23,15 @@
 
 package org.vast.ogc.om;
 
-import java.text.NumberFormat;
 import java.util.Map.Entry;
 import net.opengis.gml.v32.AbstractFeature;
-import net.opengis.gml.v32.CodeWithAuthority;
 import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.OGCRegistry;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLUtils;
+import org.vast.ogc.gml.GmlIdGenerator;
+import org.vast.ogc.gml.IGeoFeature;
+import org.vast.ogc.gml.SequentialIdGenerator;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
 import org.vast.swe.SWEUtils;
@@ -52,18 +53,8 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
 {
     protected GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
     protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
-    protected int currentId;
-    protected NumberFormat idFormatter;
-    
-    
-    public ObservationWriterV20()
-    {
-        currentId = 1;
-        idFormatter = NumberFormat.getNumberInstance();
-        idFormatter.setMinimumIntegerDigits(3);
-        idFormatter.setGroupingUsed(false);
-    }
-    
+    protected GmlIdGenerator<IObservation> obsIds = new SequentialIdGenerator<>("OBS_", true);
+        
     
     @Override
     public Element write(DOMHelper dom, IObservation obs) throws XMLWriterException
@@ -73,12 +64,14 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         dom.addUserPrefix("gml", OGCRegistry.getNamespaceURI(GMLUtils.GML, GMLUtils.V3_2));
         dom.addUserPrefix("xlink", OGCRegistry.getNamespaceURI(OGCRegistry.XLINK));
         
-        Element obsElt = dom.createElement("om:" + obs.getQName().getLocalPart());
+        // elt QName
+        String eltName = "Observation";
+        if (obs instanceof AbstractFeature && ((AbstractFeature) obs).getQName() != null)
+            eltName = ((AbstractFeature) obs).getQName().getLocalPart();
+        Element obsElt = dom.createElement("om:" + eltName);
                 
         // gml:id
-        String id = obs.getId();
-        if (id == null || id.length() == 0)
-            id = "OBS_" + idFormatter.format(currentId++);
+        String id = obsIds.nextId(obs);
         dom.setAttributeValue(obsElt, "gml:id", id);
         
         // description
@@ -87,20 +80,15 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
             dom.setElementValue(obsElt, "gml:description", desc);
         
         // identifier
-        if (obs.isSetIdentifier())
+        if (obs.getUniqueIdentifier() != null)
         {
             Element elt = dom.setElementValue(obsElt, "gml:identifier", obs.getUniqueIdentifier());
             dom.setAttributeValue(elt, "@codeSpace", "uid");
         }
         
-        // names
-        for (CodeWithAuthority name: obs.getNameList())
-        {
-            Element nameElt = dom.addElement(obsElt, "+gml:name");
-            dom.setElementValue(nameElt, name.getValue());
-            if (name.getCodeSpace() != null && name.getCodeSpace().length() > 0)
-                dom.setAttributeValue(nameElt, "@codeSpace", name.getCodeSpace());
-        }
+        // name
+        if (obs.getName() != null)
+            dom.setElementValue(obsElt, "gml:name", obs.getName());
         
         // type
         String obsType = obs.getType();
@@ -200,7 +188,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         
         // foi
         Element foiPropElt = dom.addElement(obsElt, "om:featureOfInterest");
-        AbstractFeature foi = obs.getFeatureOfInterest();
+        IGeoFeature foi = obs.getFeatureOfInterest();
         if (foi != null)
             writeFOI(dom, foiPropElt, foi);
         else
@@ -231,7 +219,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
     }
     
     
-    protected void writeFOI(DOMHelper dom, Element foiPropElt, AbstractFeature foi) throws XMLWriterException
+    protected void writeFOI(DOMHelper dom, Element foiPropElt, IGeoFeature foi) throws XMLWriterException
     {
         if (foi instanceof FeatureRef)
         {
@@ -239,7 +227,7 @@ public class ObservationWriterV20 implements IXMLWriterDOM<IObservation>
         }
         else
         {
-            Element foiElt = gmlUtils.writeFeature(dom, foi);
+            Element foiElt = gmlUtils.writeFeature(dom, (AbstractFeature)foi);
             foiPropElt.appendChild(foiElt);
         }
     }

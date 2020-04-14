@@ -28,7 +28,7 @@ import net.opengis.swe.v20.DataComponent;
 import org.vast.ogc.def.DefinitionRef;
 import org.vast.ogc.gml.FeatureRef;
 import org.vast.ogc.gml.GMLUtils;
-import org.vast.ogc.gml.GenericFeature;
+import org.vast.ogc.gml.IGeoFeature;
 import org.vast.ogc.xlink.CachedReference;
 import org.vast.ogc.xlink.IXlinkReference;
 import org.vast.ogc.xlink.XlinkUtils;
@@ -53,14 +53,20 @@ import org.w3c.dom.*;
 public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
 {
 	protected SWEFilter streamFilter;
-    protected GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2, new SamplingFeatureReader());
+    protected GMLUtils gmlUtils = new GMLUtils(GMLUtils.V3_2);
     protected SWEUtils sweUtils = new SWEUtils(SWEUtils.V2_0);
+    
+    
+    public ObservationReaderV20()
+    {
+        gmlUtils.registerFeatureBinding(new SamplingFeatureReader());
+    }
     
     
     @Override
     public IObservation read(DOMHelper dom, Element obsElt) throws XMLReaderException
     {        
-        IObservation obs = new ObservationImpl();
+        ObservationImpl obs = new ObservationImpl();
         
         // local ID
         String id = dom.getAttributeValue(obsElt, "id");
@@ -205,7 +211,7 @@ public class ObservationReaderV20 implements IXMLReaderDOM<IObservation>
     }
     
     
-    protected GenericFeature readFOI(DOMHelper dom, Element foiPropElt) throws XMLReaderException
+    protected IGeoFeature readFOI(DOMHelper dom, Element foiPropElt) throws XMLReaderException
     {
         Element featureElt = dom.getFirstChildElement(foiPropElt);
         
