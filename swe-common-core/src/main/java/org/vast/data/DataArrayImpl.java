@@ -220,8 +220,16 @@ public class DataArrayImpl extends AbstractArrayImpl
         	updateSizeComponent(newSize);
         }
         
+        // otherwise just update currentSize since size component
+        // should have been updated already
+        else
+        {
+            this.currentSize = getComponentCount();
+        }
+        
         // if variable size, error if size component value is not compatible with datablock size!
-        else if (isVariableSize())
+        // but don't check if the array element can itself be of variable size (i.e. case of DataBlockList) 
+        if (isVariableSize() && !(dataBlock instanceof DataBlockList))
         {
             int arraySize = getArraySizeComponent().getData().getIntValue();
             int atomCount = dataBlock.getAtomCount();
@@ -513,7 +521,7 @@ public class DataArrayImpl extends AbstractArrayImpl
     			return arraySize;
     	}
     	
-    	return 1;
+    	return 0;
     }
     
     

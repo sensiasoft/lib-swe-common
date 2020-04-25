@@ -58,7 +58,7 @@ public class TestVarSizeArrays
              
         // test initial size
         DataBlock data = rec.createDataBlock();
-        assertEquals(TEST1_FAIL_MSG, 4, data.getAtomCount());
+        assertEquals(TEST1_FAIL_MSG, 1, data.getAtomCount());
         
         // test resizing
         int arraySize = 100;
@@ -121,7 +121,7 @@ public class TestVarSizeArrays
         
         // test initial size
         DataBlock data = rec.createDataBlock();
-        assertEquals(TEST1_FAIL_MSG, 6, data.getAtomCount());
+        assertEquals(TEST1_FAIL_MSG, 3, data.getAtomCount());
         
         // test resizing
         int arraySize = 100;
@@ -160,7 +160,7 @@ public class TestVarSizeArrays
         utils.writeEncoding(System.out, SWEHelper.getDefaultBinaryEncoding(rec), true);
         
         DataBlock data = rec.createDataBlock();
-        assertEquals(TEST1_FAIL_MSG, 3, data.getAtomCount());
+        assertEquals(TEST1_FAIL_MSG, 2, data.getAtomCount());
         
         int innerSize = 100;
         innerArray.updateSize(innerSize);
@@ -168,6 +168,58 @@ public class TestVarSizeArrays
         outerArray.updateSize(outerSize);
         data = rec.createDataBlock();
         assertEquals(TEST2_FAIL_MSG, innerSize*outerSize*1+2, data.getAtomCount());        
+    }
+    
+    
+    @Test
+    public void testNestedVarSizeArrays() throws Exception
+    {
+        DataRecord rec = fac.newDataRecord();
+        
+        rec.addField("time", fac.newTimeStampIsoUTC());
+        
+        Count numObj = fac.newCount();
+        numObj.setId("NUM_OBJECTS");
+        rec.addField("numObj", numObj);
+        
+        DataArray outerArray = fac.newDataArray();
+        outerArray.setElementCount(numObj);
+        rec.addField("outer_array", outerArray);
+        
+        DataRecord outerArrElt = fac.newDataRecord();
+        outerArray.setElementType("elt", outerArrElt);
+                
+        Count numPts = fac.newCount();
+        numPts.setId("NUM_POINTS");
+        outerArrElt.addField("numPoints", numPts);
+        
+        DataArray innerArray = fac.newDataArray();
+        innerArray.setElementType("val", fac.newQuantity());
+        innerArray.setElementCount(numPts);
+        outerArrElt.addField("profile", innerArray);
+        
+        utils.writeComponent(System.out, rec, false, true);
+        utils.writeEncoding(System.out, SWEHelper.getDefaultBinaryEncoding(rec), true);
+        
+        rec.assignNewDataBlock();
+        DataBlock data = rec.getData();
+        assertEquals(TEST1_FAIL_MSG, 2, data.getAtomCount());
+        
+        int outerSize = 100;
+        outerArray.updateSize(outerSize);
+        
+        int cumulSize = 2;
+        for (int i = 0; i < outerSize; i++)
+        {
+            int innerSize = 10+(i%2)*10+i;
+            outerArray.getComponent(i);
+            innerArray.updateSize(innerSize);
+            cumulSize += innerSize+1;
+        }
+        
+        data.setUnderlyingObject(data.getUnderlyingObject()); // force recompute atom count
+        
+        assertEquals(TEST2_FAIL_MSG, cumulSize, data.getAtomCount());
     }
     
     
