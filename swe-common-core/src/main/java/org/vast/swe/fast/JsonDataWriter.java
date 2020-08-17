@@ -257,11 +257,17 @@ public class JsonDataWriter extends AbstractDataWriter
             if (val != null)
             {
                 writer.write('"');
-                writer.write(val);
+                writer.write(escape(val));
                 writer.write('"');
             }
             else
                 writer.write("null");
+        }
+        
+        private String escape(String val)
+        {
+            return val.replace("\n", "\\n")
+                      .replace("\"", "\\\"");
         }
     }
     
